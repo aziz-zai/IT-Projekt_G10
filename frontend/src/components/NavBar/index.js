@@ -1,8 +1,10 @@
 import React from 'react'
 import './NavBar.css'
 
-export default function index() {
+function NavBar() {
   return (
-    <div>index</div>
+    <div>NavBar</div>
   )
 }
+
+export default NavBar
