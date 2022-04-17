@@ -53,13 +53,13 @@ bo = api.model('BusinessObject', {
 
 """User ist ein BusinessObject"""
 user = api.inherit('User', bo, {
-    'vornname': fields.String(attribute='vorname', description='vorname eines Benutzers'),
+    'vorname': fields.String(attribute='vorname', description='vorname eines Benutzers'),
     'nachname': fields.String(attribute='nachname', description='nachname eines Benutzers'),
 })
 
 
 
-@projectone.route('/user')
+@projectone.route('/users')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class CustomerListOperations(Resource):
     @projectone.marshal_list_with(user)
