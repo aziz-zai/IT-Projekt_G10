@@ -1,9 +1,11 @@
 import React from 'react'
 import './NavBar.css'
 import {Link} from 'react-router-dom'
+import { withStyles} from '@material-ui/core';
 
 function NavBar() {
   return (
+      
     <div className="nav">
         <div className="navContainer">
             <div className="navLogo">project.one</div>

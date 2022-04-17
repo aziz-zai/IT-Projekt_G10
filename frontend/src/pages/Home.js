@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Home.css'
 import NavBar from '../components/NavBar'
-import test from '../images/test.svg'
+import test from '../media/test.svg'
 import PropTypes from 'prop-types'
 import OneAPI from '../api/OneAPI'
 

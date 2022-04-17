@@ -88,7 +88,6 @@ class App extends React.Component {
 		return (
         <>
 				<Router basename={process.env.PUBLIC_URL}>
-          <NavBar/>
 						{
 							// Is a user signed in?
 							currentUser ?
