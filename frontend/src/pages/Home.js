@@ -53,7 +53,7 @@ export class Home extends Component {
     <div className="test">
         <img src={test}></img>
         <h1>Die Seite steht ist noch in Bearbeitung!</h1>
-        <div>{this.state.users} {console.log('users:'+ this.state.users[1])}</div>
+        {this.state.users.map(user =><div key={user.id_}>{user.vorname} {console.log('users:'+ user)}</div> )}
     </div>
     </div>
     )
