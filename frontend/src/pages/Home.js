@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Home.css'
 import NavBar from '../components/NavBar'
-import test from '../images/test.svg'
+import test from '../media/test.svg'
 import PropTypes from 'prop-types'
 import OneAPI from '../api/OneAPI'
 
@@ -49,7 +49,6 @@ export class Home extends Component {
   render() {
     return (
       <div>
-    <NavBar/>
     <div className="test">
         <img src={test}></img>
         <h1>Die Seite steht ist noch in Bearbeitung!</h1>

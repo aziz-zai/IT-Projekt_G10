@@ -1,12 +1,14 @@
 .nav{
-    background: #000;
+    background: transparent;
     height: 5em;
+    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 1rem;
     top: 0;
-    z-index: 10;
+    z-index: 1000;
+    width: 100%;
 }
 
 .navContainer{
@@ -53,10 +55,10 @@
 }
 
 .navLink:hover{
-    border-bottom: 3px solid #7EC87D;
+    border-bottom: 3px solid #5e2e94;
 }
 .navLink:active{
-    border-bottom: 3px solid #7EC87D;
+    border-bottom: 3px solid #5e2e94;
 }
 
 
