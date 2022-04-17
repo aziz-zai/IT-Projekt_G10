@@ -49,7 +49,6 @@ export class Home extends Component {
   render() {
     return (
       <div>
-    <NavBar/>
     <div className="test">
         <img src={test}></img>
         <h1>Die Seite steht ist noch in Bearbeitung!</h1>
