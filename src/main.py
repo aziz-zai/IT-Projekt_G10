@@ -7,6 +7,7 @@ from flask_cors import CORS
 
 # Wir greifen natürlich auf unsere Applikationslogik inkl. BusinessObject-Klassen zurück
 from server.Administration import Administration
+from server.bo.UserBO import User
 # Außerdem nutzen wir einen selbstgeschriebenen Decorator, der die Authentifikation übernimmt
 #from SecurityDecorator import secured
 
@@ -47,7 +48,7 @@ projectone = api.namespace('projectone', description='Funktionen des Projectone'
 
 BusinessObject dient als Basisklasse, auf der die weiteren Strukturen Customer, Account und Transaction aufsetzen."""
 bo = api.model('BusinessObject', {
-    'id_': fields.Integer(attribute='id_', description='Der Unique Identifier eines Business Object'),
+    'id': fields.Integer(attribute='id', description='Der Unique Identifier eines Business Object'),
     'timestamp': fields.String(attribute='timestamp', description='Der Unique Identifier eines Business Object'),
 })
 

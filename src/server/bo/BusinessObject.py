@@ -8,6 +8,6 @@ class BusinessObject(ABC):
     Zentrales Merkmal ist, dass jedes BusinessObject eine Nummer besitzt, die man in
     einer relationalen Datenbank auch als Primärschlüssel bezeichnen würde.
     """
-    def __init__(self, timestamp_: datetime = datetime.now() ,id_: int = 0):
-        self.timestamp = timestamp_
-        self.id_ = id_
+    def __init__(self, timestamp: datetime = datetime.now() ,id: int = 0):
+        self.timestamp = timestamp
+        self.id = id

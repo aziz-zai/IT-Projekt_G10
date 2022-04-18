@@ -1,6 +1,7 @@
 from .bo.UserBO import User
 
 from .db.UserMapper import UserMapper
+from datetime import datetime
 
 
 class Administration(object):
@@ -15,9 +16,10 @@ class Administration(object):
     """
     def create_user(self, vorname, nachname):
         """Einen Benutzer anlegen"""
-        user = User()
-        user.vorname(vorname)
-        user.nachname(nachname)
+        user = User
+        user.timestamp = datetime.now()
+        user.vorname = vorname
+        user.nachname = nachname
 
         with UserMapper() as mapper:
             return mapper.insert(user)
