@@ -58,7 +58,14 @@ export default class OneAPI {
    * @public
    */
   getUsers() {
-    return this.#fetchAdvanced(this.#getUsersURL()).then((responseJSON) => {
+    return this.#fetchAdvanced(this.#getUsersURL(),{
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      }
+    }).then((responseJSON) => {
       let usersBOs = UserBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {
