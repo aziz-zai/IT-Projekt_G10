@@ -56,6 +56,9 @@ bo = api.model('BusinessObject', {
 user = api.inherit('User', bo, {
     'vorname': fields.String(attribute='vorname', description='vorname eines Benutzers'),
     'nachname': fields.String(attribute='nachname', description='nachname eines Benutzers'),
+    'benutzername': fields.String(attribute='benutzername', description='nachname eines Benutzers'),
+    'email': fields.String(attribute='email', description='nachname eines Benutzers'),
+    'google_user_id': fields.String(attribute='google_user_id', description='nachname eines Benutzers'),
 })
 
 
@@ -94,7 +97,7 @@ class CustomerListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            u = adm.create_user(proposal.vorname, proposal.nachname)
+            u = adm.create_user(proposal.vorname, proposal.nachname, proposal.benutzername, proposal.email, proposal.google_user_id)
             return u, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.

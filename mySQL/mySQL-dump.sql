@@ -30,7 +30,7 @@ CREATE TABLE `user` (
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp ,
   `vorname` varchar(100) NOT NULL DEFAULT '',
   `nachname` varchar(100) NOT NULL DEFAULT '',
-  `user_name` varchar(100) NOT NULL DEFAULT '',
+  `benutzername` varchar(100) NOT NULL DEFAULT '',
   `email` varchar(100) NOT NULL DEFAULT '',
   `google_user_id` varchar(100) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
@@ -40,12 +40,6 @@ CREATE TABLE `user` (
 --
 -- Dumping data for table `user`
 --
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'2021-08-09 13:57:40', 'Murad', 'Zai'),(2,'2022-08-09 13:57:40', 'Aziz', 'Zai'),(3,'2023-08-09 13:57:40', 'Harbin', 'Zai'),(4,'2024-08-09 13:57:40', 'Elif', 'Zai'),(5,'2025-08-09 13:57:40', 'Malek', 'Zai'),(6,'2026-08-09 13:57:40', 'Quang', 'Zai');
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
 
 
 
