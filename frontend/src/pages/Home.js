@@ -47,17 +47,22 @@ export class Home extends Component {
 
 
   render() {
+    const {user} = this.props
     return (
       <div>
-         <NavBar nav="navBlack"/>
+         <NavBar user={user} nav="navBlack"/>
     <div className="test">
         <img src={test}></img>
         <h1>Die Seite steht ist noch in Bearbeitung!</h1>
-        {this.state.users.map(user =><div key={user.id_}>{user.vorname} {console.log('users:'+ user)}</div> )}
+        {this.state.users.map(user =><div key={user.id_}>{user.vorname}</div> )}
     </div>
     </div>
     )
   }
+}
+
+Home.propTypes = {
+  user: PropTypes.object.isRequired,
 }
 
 export default Home
