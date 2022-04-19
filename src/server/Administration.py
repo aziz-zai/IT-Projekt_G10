@@ -29,6 +29,10 @@ class Administration(object):
 
     def get_all_user(self):
         """Alle Benutzer auslesen"""
-
         with UserMapper() as mapper:
             return mapper.find_all()
+
+    def get_user_by_id(self, id):
+        """Den Benutzer mit der gegebenen ID auslesen."""
+        with UserMapper() as mapper:
+            return mapper.find_by_key(id)

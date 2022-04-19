@@ -65,7 +65,7 @@ user = api.inherit('User', bo, {
 
 @projectone.route('/users')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class CustomerListOperations(Resource):
+class UserListOperations(Resource):
     @projectone.marshal_list_with(user)
     def get(self):
         """Auslesen aller Customer-Objekte.
@@ -102,6 +102,22 @@ class CustomerListOperations(Resource):
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
+
+@projectone.route('/users/<int:id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des User-Objekts')
+class UserOperations(Resource):
+    @projectone.marshal_with(user)
+
+    def get(self, id):
+        """Auslesen eines bestimmten Customer-Objekts.
+
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        user = adm.get_user_by_id(id)
+        return user
+
 
 if __name__ == '__main__':
     app.run(debug=True)

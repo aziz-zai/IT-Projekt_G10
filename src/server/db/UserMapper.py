@@ -1,3 +1,4 @@
+from time import time
 from server.bo.UserBO import User
 from server.db.Mapper import Mapper
 
@@ -27,6 +28,39 @@ class UserMapper(Mapper):
         cursor.close()
 
         return result
+    
+    def find_by_key(self, key):
+        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
+        """
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id FROM user WHERE id={}".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (id, timestamp, vorname, nachname, benutzername, email, google_user_id) = tuples[0]
+            user = User(
+            id=id,
+            timestamp=timestamp,
+            vorname=vorname,
+            nachname=nachname,
+            benutzername=benutzername,
+            email=email,
+            google_user_id=google_user_id)
+            result = user
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
 
 
     def insert(self, user: User) -> User:
