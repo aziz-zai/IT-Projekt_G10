@@ -16,13 +16,13 @@ class BusinessObject(ABC):
         """Auslesen des Zeitstempels"""
         return self.timestamp
 
-    def set_timestamp(self, timestamp)
+    def set_timestamp(self, timestamp):
         self.timestamp = timestamp
 
     def get_id_(self):
         """Auslesen der ID"""
         return self.id_
 
-    def set_id(self)
-        self.id_ = self.id_
+    def set_id(self, id_):
+        self.id_ =  id_
     

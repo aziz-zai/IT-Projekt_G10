@@ -37,7 +37,7 @@ class Aktivitäten(BusinessObject):
     @staticmethod
     def from_dict(dictionary=dict()):
         """Umwandeln eines Python dict() in einen Customer()."""
-        obj = Aktivität()
+        obj = Aktivitäten()
         obj.set_bezeichnung(dictionary["bezeichnung"])  # eigentlich Teil von BusinessObject !
         obj.set_dauer(dictionary["dauer"])
         obj.set_kapazität(dictionary["kapazität"])
