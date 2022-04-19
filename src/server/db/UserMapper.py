@@ -3,12 +3,7 @@ from server.db.Mapper import Mapper
 
 
 class UserMapper(Mapper):
-    """Mapper-Klasse, die Customer-Objekte auf eine relationale
-    Datenbank abbildet. Hierzu wird eine Reihe von Methoden zur Verfügung
-    gestellt, mit deren Hilfe z.B. Objekte gesucht, erzeugt, modifiziert und
-    gelöscht werden können. Das Mapping ist bidirektional. D.h., Objekte können
-    in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
-    """
+
 
     def __init__(self):
         super().__init__()
@@ -21,34 +16,44 @@ class UserMapper(Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, vorname, nachname from user")
+        cursor.execute("SELECT id, timestamp, vorname, nachname, user_name, email, google_user_id from user")
         tuples = cursor.fetchall()
 
         for (id, timestamp, vorname, nachname) in tuples:
             user = User(id=id, timestamp=timestamp, vorname=vorname, nachname=nachname)
+
             result.append(user)
         self._cnx.commit()
         cursor.close()
 
         return result
 
+
     def insert(self, user: User) -> User:
         """Create user Object."""
-        cursor = self._cnx.cursor(buffered=True)
+        cursor = self._cnx.cursor()
+        cursor.execute("SELECT MAX(id) AS maxid FROM user ")
+        tuples = cursor.fetchall()
 
-        cursor.execute("SELECT MAX(id) FROM user")
-        max_id = cursor.fetchone()[0]
-        user.id = max_id + 1
+        for (maxid) in tuples:
+            if maxid[0] is not None:
+                user.id = maxid[0] + 1
+            else:
+                user.id = 1
         command = """
             INSERT INTO user (
-                id, timestamp, vorname, nachname
-            ) VALUES (%s,%s,%s,%s)
+                id, timestamp, vorname, nachname, benutzername, email, google_user_id
+            ) VALUES (%s,%s,%s,%s,%s,%s,%s)
         """
         cursor.execute(command, (
             user.id,
             user.timestamp,
             user.vorname,
-            user.nachname
+            user.nachname,
+            user.benutzername,
+            user.email,
+            user.google_user_id
         ))
         self._cnx.commit()
+
         return user
