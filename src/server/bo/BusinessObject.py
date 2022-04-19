@@ -11,3 +11,18 @@ class BusinessObject(ABC):
     def __init__(self, timestamp_: datetime = datetime.now() ,id_: int = 0):
         self.timestamp = timestamp_
         self.id_ = id_
+
+    def get_timestamp(self):
+        """Auslesen des Zeitstempels"""
+        return self.timestamp
+
+    def set_timestamp(self, timestamp)
+        self.timestamp = timestamp
+
+    def get_id_(self):
+        """Auslesen der ID"""
+        return self.id_
+
+    def set_id(self)
+        self.id_ = self.id_
+    
