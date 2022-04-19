@@ -4,6 +4,7 @@ import './LogIn.css'
 import Video from '../media/background.mp4'
 import NavBar from '../components/NavBar'
 import { FcGoogle } from 'react-icons/fc';
+import SideBar from '../components/SideBar'
 
 export class LogIn extends Component {
 	/** 
@@ -15,6 +16,7 @@ export class LogIn extends Component {
         // Init the state
         this.state = {
           nav: "nav",
+          Open: 'SideBarContainerClosed',
 
         };
       }
@@ -22,12 +24,19 @@ export class LogIn extends Component {
 	handleLogInButtonClicked = () => {
 		this.props.onLogIn();
 	}
+
+    handleOpenStateChange = () => {
+		this.setState({
+			Open: 'SideBarContainerOpen'
+		})
+	}
+
 	/** Renders the sign in page, if user objext is null */
 	render() {
   
 		const { classes, user } = this.props;
 		return (
-            <>
+            <>  
                 <NavBar nav='navTrans'/>
 			<div className="homeContainer">
                 <div className="homeBackground">

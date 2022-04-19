@@ -87,7 +87,7 @@ class App extends React.Component {
     const { currentUser, appError, authError, authLoading } = this.state;
 		return (
         <>
-		{console.log('user:', currentUser)}
+		
 				<Router basename={process.env.PUBLIC_URL}>
 						{
 							// Is a user signed in?
