@@ -37,6 +37,7 @@ export class NavBar extends Component {
                 <li className="navItem">
                     <Link to='/'className="navLink">Arbeitszeitkonto</Link>
                 </li>
+                <ProfileDropDown user={user} Ahorizontol='left' Avertical='center' Thorizontol='right' Tvertical='center'/>
             </ul>
         </div>
         

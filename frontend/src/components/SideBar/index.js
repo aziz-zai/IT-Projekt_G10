@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import MenuIcon from '@mui/icons-material/Menu';
 import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types';
+import ProfileDropDown from '../ProfileDropDown'
 import './SideBar.css'
 
 export class SideBar extends Component {
@@ -30,6 +31,7 @@ export class SideBar extends Component {
                     <Link to='/' onClick={this.handleOpenStateChange} className="SideBarLink">Projekte</Link>
                     <Link to='/' onClick={this.handleOpenStateChange} className="SideBarLink">Zeiterfassung</Link>
                     <Link to='/' onClick={this.handleOpenStateChange} className="SideBarLink">Arbeitszeitkonto</Link>
+                    <ProfileDropDown user={this.props.user} Ahorizontol='center' Avertical='top' Thorizontol='center' Tvertical='bottom'/>
                 </div>
             </div>
       </div>
@@ -41,6 +43,7 @@ export class SideBar extends Component {
 SideBar.propTypes = {
     toggle: PropTypes.any,
     Open: PropTypes.any,
+    user: PropTypes.object,
 }
 
 export default SideBar

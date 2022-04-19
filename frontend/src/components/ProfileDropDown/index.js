@@ -52,16 +52,16 @@ export class ProfileDropDown extends Component {
               </IconButton>
               <Popover open={open} anchorEl={this.#avatarButtonRef.current} onClose={this.handleClose}
                 anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'left',
+                  vertical: this.props.Avertical,
+                  horizontal: this.props.Ahorizontol,
                 }}
                 transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
+                  vertical: this.props.Tvertical,
+                  horizontal: this.props.Thorizontol,
                 }}>
                 <ClickAwayListener onClickAway={this.handleClose}>
                   <Paper >
-                    <Typography align='center'>Hello</Typography>
+                    <Typography align='center'>Wilkommen!</Typography>
                     <Divider  />
                     <Typography align='center' variant='body2'>{user.displayName}</Typography>
                     <Typography align='center' variant='body2'>{user.email}</Typography>
@@ -84,6 +84,11 @@ export class ProfileDropDown extends Component {
 
 ProfileDropDown.propTypes = {
     user: PropTypes.object,
+    Ahorizontol: PropTypes.string,
+    Avertical: PropTypes.string,
+    Thorizontol: PropTypes.string,
+    Tvertical: PropTypes.string,
+
 }
 
 
