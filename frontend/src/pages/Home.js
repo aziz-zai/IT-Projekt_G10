@@ -65,7 +65,7 @@ export class Home extends Component {
     const {user} = this.props
     return (
       <div>
-         <SideBar toggle={this.handleOpenStateChange} Open={this.state.Open}/>{console.log('open:', this.state.Open)}
+         <SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={user}/>
          <NavBar toggle={this.handleOpenStateChange} user={user} nav="navBlack"/>
     <div className="test">
         <img src={test}></img>
