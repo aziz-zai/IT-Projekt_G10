@@ -25,10 +25,10 @@ export class LogIn extends Component {
 	/** Renders the sign in page, if user objext is null */
 	render() {
   
-		const { classes } = this.props;
+		const { classes, user } = this.props;
 		return (
             <>
-                <NavBar nav='navTrans'/>
+                <NavBar user={user} nav='navTrans'/>
 			<div className="homeContainer">
                 <div className="homeBackground">
                     <video className="homeVideo" autoPlay loop muted src={Video} type='video/mp4' ></video>
@@ -56,6 +56,7 @@ LogIn.propTypes = {
 	 * Handler function, which is called if the user wants to sign in.
 	 */
 	onLogIn: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
 }
 
 export default LogIn;

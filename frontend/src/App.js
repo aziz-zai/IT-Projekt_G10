@@ -100,7 +100,7 @@ class App extends React.Component {
 								:
 								// else show the sign in page
 								<>
-                <LogIn onLogIn={this.handleSignIn} />
+                <LogIn user={currentUser} onLogIn={this.handleSignIn} />
 								</>
 						}
 				</Router>

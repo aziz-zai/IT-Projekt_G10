@@ -2,6 +2,7 @@ import './NavBar.css'
 import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import ProfileDropDown  from '../ProfileDropDown'
 
 export class NavBar extends Component {
     constructor(props) {
@@ -13,6 +14,7 @@ export class NavBar extends Component {
         };
       }
   render() {
+      const {user} = this.props
     return (
         <div className={this.state.nav}>
             {console.log('nav', this.state.nav)}
@@ -28,10 +30,8 @@ export class NavBar extends Component {
                 <li className="navItem">
                     <Link to='/'className="navLink">Arbeitszeitkonto</Link>
                 </li>
-                <li className="navItem">
-                    <Link to='/' className="navLink">Profil</Link>
-                </li>
             </ul>
+            <ProfileDropDown user={user}/>
         </div>
     </div>
     )
@@ -45,6 +45,7 @@ NavBar.propTypes = {
 	 * Handler function, which is called if the user wants to sign in.
 	 */
 	nav: PropTypes.string.isRequired,
+    user: PropTypes.object.isRequired,
 }
 
 export default NavBar
