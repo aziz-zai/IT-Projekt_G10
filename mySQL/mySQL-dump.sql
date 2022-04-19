@@ -2,7 +2,7 @@ CREATE DATABASE  IF NOT EXISTS `projectone` /*!40100 DEFAULT CHARACTER SET utf8 
 USE `projectone`;
 -- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
 --
--- Host: 127.0.0.1    Database: bankproject
+-- Host: 127.0.0.1    Database: projectone
 -- ------------------------------------------------------
 -- Server version	5.7.17
 
@@ -20,7 +20,8 @@ USE `projectone`;
 --
 -- Table structure for table `user`
 --
-
+-- Test
+-- Test2
 DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -29,6 +30,9 @@ CREATE TABLE `user` (
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp ,
   `vorname` varchar(100) NOT NULL DEFAULT '',
   `nachname` varchar(100) NOT NULL DEFAULT '',
+  `benutzername` varchar(100) NOT NULL DEFAULT '',
+  `email` varchar(100) NOT NULL DEFAULT '',
+  `google_user_id` varchar(100) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -36,12 +40,6 @@ CREATE TABLE `user` (
 --
 -- Dumping data for table `user`
 --
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'2021-08-09 13:57:40', 'Murad', 'Zai'),(2,'2022-08-09 13:57:40', 'Aziz', 'Zai'),(3,'2023-08-09 13:57:40', 'Harbin', 'Zai'),(4,'2024-08-09 13:57:40', 'Elif', 'Zai'),(5,'2025-08-09 13:57:40', 'Malek', 'Zai'),(6,'2026-08-09 13:57:40', 'Quang', 'Zai');
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
 
 
 
