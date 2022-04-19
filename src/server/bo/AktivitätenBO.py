@@ -13,25 +13,25 @@ class Aktivitäten(BusinessObject):
         """Auslesen der Bezeichnung der Aktivität."""
         return self._bezeichnung
 
-    def set_bezeichnung(self, value):
+    def set_bezeichnung(self, bezeichnung):
         """Setzen der Bezeichnung der Aktivität."""
-        self._bezeichnung = value
+        self._bezeichnung = bezeichnung
 
     def get_dauer(self):
         """Auslesen der Dauer der Aktivität."""
         return self.dauer
 
-    def set_dauer(self, value):
+    def set_dauer(self, dauer):
         """Setzen der Dauer der Aktivität."""
-        self._dauer = value 
+        self._dauer = dauer 
 
     def get_kapazität(self):
         """Auslesen der Kapazität der Aktivität."""
         return self.kapazität
 
-    def set_kapazität(self, value):
+    def set_kapazität(self, kapazität):
         """Setzen der Kapazität der Aktivität."""
-        self._kapazität = value
+        self._kapazität = kapazität
 
 
     @staticmethod
