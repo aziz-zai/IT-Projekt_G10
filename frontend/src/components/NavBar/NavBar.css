@@ -73,6 +73,11 @@
 .navLink:active{
     border-bottom: 3px solid #5e2e94;
 }
+.Profile{
+    display: flex;
+    align-items: center;
+    justify-self: flex-end;
+}
 
 
 @media screen and (max-width:960px){

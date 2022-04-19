@@ -30,10 +30,10 @@ export class NavBar extends Component {
                     <Link to='/'className="navLink">Arbeitszeitkonto</Link>
                 </li>
             </ul>
-            <div className="Profile">
+        </div>
+        <div className="Profile">
             <ProfileDropDown user={user}/>
             </div>
-        </div>
     </div>
     )
   }
