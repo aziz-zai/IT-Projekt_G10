@@ -47,10 +47,9 @@ export class ProfileDropDown extends Component {
         return (
           user ?
             <div>
-              <IconButton className={classes.avatarButton} ref={this.#avatarButtonRef} onClick={this.handleAvatarButtonClick}>
+              <IconButton  ref={this.#avatarButtonRef} onClick={this.handleAvatarButtonClick}>
                 <Avatar src={user.photoURL} />
               </IconButton>
-    
               <Popover open={open} anchorEl={this.#avatarButtonRef.current} onClose={this.handleClose}
                 anchorOrigin={{
                   vertical: 'top',
@@ -61,13 +60,13 @@ export class ProfileDropDown extends Component {
                   horizontal: 'right',
                 }}>
                 <ClickAwayListener onClickAway={this.handleClose}>
-                  <Paper className={classes.profileBox}>
+                  <Paper >
                     <Typography align='center'>Hello</Typography>
-                    <Divider className={classes.divider} />
+                    <Divider  />
                     <Typography align='center' variant='body2'>{user.displayName}</Typography>
                     <Typography align='center' variant='body2'>{user.email}</Typography>
-                    <Divider className={classes.divider} />
-                    <Grid container justify='center'>
+                    <Divider  />
+                    <Grid container justifyContent='center'>
                       <Grid item>
                         <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button>
                       </Grid>
@@ -78,12 +77,13 @@ export class ProfileDropDown extends Component {
             </div>
             : null
         )
+        
       }
     }
     
 
 ProfileDropDown.propTypes = {
-    user: PropTypes.object.isRequired,
+    user: PropTypes.object,
 }
 
 

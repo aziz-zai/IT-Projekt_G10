@@ -16,11 +16,11 @@ class UserMapper(Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, vorname, nachname, user_name, email, google_user_id from user")
+        cursor.execute("SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id from user")
         tuples = cursor.fetchall()
 
-        for (id, timestamp, vorname, nachname) in tuples:
-            user = User(id=id, timestamp=timestamp, vorname=vorname, nachname=nachname)
+        for (id, timestamp, vorname, nachname, benutzername, email, google_user_id) in tuples:
+            user = User(id=id, timestamp=timestamp, vorname=vorname, nachname=nachname, benutzername=benutzername, email=email, google_user_id=google_user_id)
 
             result.append(user)
         self._cnx.commit()

@@ -17,7 +17,6 @@ export class NavBar extends Component {
       const {user} = this.props
     return (
         <div className={this.state.nav}>
-            {console.log('nav', this.state.nav)}
         <div className="navContainer">
             <div className="navLogo">project.one</div>
             <ul className="navMenu">
@@ -31,7 +30,9 @@ export class NavBar extends Component {
                     <Link to='/'className="navLink">Arbeitszeitkonto</Link>
                 </li>
             </ul>
+            <div className="Profile">
             <ProfileDropDown user={user}/>
+            </div>
         </div>
     </div>
     )
@@ -45,7 +46,7 @@ NavBar.propTypes = {
 	 * Handler function, which is called if the user wants to sign in.
 	 */
 	nav: PropTypes.string.isRequired,
-    user: PropTypes.object.isRequired,
+    user: PropTypes.object,
 }
 
 export default NavBar
