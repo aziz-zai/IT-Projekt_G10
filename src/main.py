@@ -57,22 +57,28 @@ user = api.inherit('User', bo, {
     'nachname': fields.String(attribute='nachname', description='nachname eines Benutzers'),
 })
 
+aktivitäten = api.inherit('Aktivitäten',bo, {
+    'bezeichnung': fields.String(attribute='bezeichnung', description='bezeichnung einer Aktivität'),
+    'dauer': fields.String(attribute='dauer', description='bezeichnung der Dauer einer Aktivität'),
+    'kapazität': fields.String(attribute='kapazität', description='bezeichnung der Kapazität einer Aktivität'),
+})
 
 
-@projectone.route('/users')
+
+@projectone.route('/aktivitäten')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class CustomerListOperations(Resource):
-    @projectone.marshal_list_with(user)
+    @projectone.marshal_list_with(aktivitäten)
     def get(self):
         """Auslesen aller Customer-Objekte.
 
         Sollten keine Customer-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
         adm = Administration()
-        user = adm.get_all_user()
-        return user
+        aktivitäten = adm.get_all_aktivitäten()
+        return aktivitäten
 
-    @projectone.marshal_with(user, code=200)
-    @projectone.expect(user)  # Wir erwarten ein User-Objekt von Client-Seite.
+    @projectone.marshal_with(aktivitäten, code=200)
+    @projectone.expect(aktivitäten)  # Wir erwarten ein User-Objekt von Client-Seite.
 
     def post(self):
         """Anlegen eines neuen Customer-Objekts.
@@ -85,7 +91,7 @@ class CustomerListOperations(Resource):
         """
         adm = Administration()
 
-        proposal = User(**api.payload)
+        proposal = Aktivitäten(**api.payload)
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
@@ -93,11 +99,8 @@ class CustomerListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            u = adm.create_user(proposal.vorname, proposal.nachname)
-            return u, 200
+            a = adm.create_aktivitäten(proposal.bezeichnung, proposal.dauer, proposal.kapazität)
+            return a, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
-
-if __name__ == '__main__':
-    app.run(debug=True)
