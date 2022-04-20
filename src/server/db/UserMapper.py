@@ -24,6 +24,7 @@ class UserMapper(Mapper):
             user = User(id=id, timestamp=timestamp, vorname=vorname, nachname=nachname, benutzername=benutzername, email=email, google_user_id=google_user_id)
 
             result.append(user)
+
         self._cnx.commit()
         cursor.close()
 
@@ -61,6 +62,30 @@ class UserMapper(Mapper):
 
         return result
 
+    def find_by_name(self, nachname):
+        """Auslesen aller Benutzer anhand des Nachnamens.
+        """
+        result = []
+        cursor = self._cnx.cursor()
+        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id FROM user WHERE nachname LIKE '{}' ORDER BY nachname".format(nachname)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        for (id, timestamp, vorname, nachname, benutzername, email, google_user_id) in tuples:
+            user = User(
+            id=id,
+            timestamp=timestamp,
+            vorname=vorname,
+            nachname=nachname,
+            benutzername=benutzername,
+            email=email,
+            google_user_id=google_user_id)    
+            result.append(user)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
 
 
     def insert(self, user: User) -> User:

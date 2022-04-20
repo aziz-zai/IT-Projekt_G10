@@ -117,7 +117,20 @@ class UserOperations(Resource):
         adm = Administration()
         user = adm.get_user_by_id(id)
         return user
+@projectone.route('/users-by-nachname/<string:nachname>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('nachname', 'Der Nachname des Users')
+class UsersByNameOperations(Resource):
+    @projectone.marshal_with(user)
 
+    def get(self, nachname):
+        """ Auslesen von Customer-Objekten, die durch den Nachnamen bestimmt werden.
+
+        Die auszulesenden Objekte werden durch ```lastname``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        usern = adm.get_user_by_name(nachname)
+        return usern
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -36,3 +36,7 @@ class Administration(object):
         """Den Benutzer mit der gegebenen ID auslesen."""
         with UserMapper() as mapper:
             return mapper.find_by_key(id)
+
+    def get_user_by_name(self, nachname):
+        with UserMapper() as mapper:
+            return mapper.find_by_name(nachname)
