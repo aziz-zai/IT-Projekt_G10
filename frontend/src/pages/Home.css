@@ -5,3 +5,9 @@
     justify-content: center;
     margin-top: 15rem;
 }
+
+.testimg{
+    width:100%;
+    max-width:40rem;
+}
+

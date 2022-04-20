@@ -68,7 +68,7 @@ export class Home extends Component {
          <SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={user}/>
          <NavBar toggle={this.handleOpenStateChange} user={user} nav="navBlack"/>
     <div className="test">
-        <img src={test}></img>
+        <img className="testimg" src={test}></img>
         <h1>Die Seite steht ist noch in Bearbeitung!</h1>
         {this.state.users.map(user =><div key={user.id_}>{user.vorname}</div> )}
     </div>
