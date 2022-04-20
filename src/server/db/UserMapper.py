@@ -122,6 +122,21 @@ class UserMapper(Mapper):
         cursor.close()
 
         return result
+    
+    def update(self, user: User) -> User:
+        """Wiederholtes Schreiben eines Objekts in die Datenbank.
+
+        :param user das Objekt, das in die DB geschrieben werden soll
+        """
+        cursor = self._cnx.cursor()
+
+        command = "UPDATE user " + "SET vorname=%s, nachname=%s, benutzername=%s, email=%s WHERE google_user_id=%s"
+        data = (user.vorname, user.nachname, user.benutzername, user.email, user.google_user_id)
+        cursor.execute(command, data)
+
+        self._cnx.commit()
+        cursor.close()
+
 
     def insert(self, user: User) -> User:
         """Create user Object."""

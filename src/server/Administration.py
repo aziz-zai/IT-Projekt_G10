@@ -44,3 +44,7 @@ class Administration(object):
     def get_user_by_google_user_id(self, google_user_id):
         with UserMapper() as mapper:
             return mapper.find_by_google_user_id(google_user_id)
+
+    def update_user(self, user):
+        with UserMapper() as mapper:
+            return mapper.update(user)
