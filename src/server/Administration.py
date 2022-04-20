@@ -1,6 +1,7 @@
 from .bo.UserBO import User
 
 from .db.UserMapper import UserMapper
+from datetime import datetime
 
 
 class Administration(object):
@@ -13,17 +14,13 @@ class Administration(object):
     """
     User-spezifische Methoden
     """
-    def create_user(self, vorname, nachname):
+    def create_aktivitäten(self, bezeichnung, dauer, kapazität):
         """Einen Benutzer anlegen"""
-        user = User()
-        user.vorname(vorname)
-        user.nachname(nachname)
+        aktivitäten = Aktivitäten
+        aktivitäten.timestamp = datetime.now()
+        aktivitäten.bezeichnung = bezeichnung
+        aktivitäten.dauer = dauer
+        aktivitäten.kapazität = kapazität
 
-        with UserMapper() as mapper:
-            return mapper.insert(user)
-
-    def get_all_user(self):
-        """Alle Benutzer auslesen"""
-
-        with UserMapper() as mapper:
-            return mapper.find_all()
+        with AktivitätenMapper() as mapper:
+            return mapper.insert(aktivitäten)
