@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types';
 import ProfileDropDown from '../ProfileDropDown'
@@ -24,14 +24,16 @@ export class SideBar extends Component {
         <>
       <div className={this.props.Open}>
             <div className="SideBarIcon" onClick={this.handleOpenStateChange}>
-                <MenuIcon/>
+                <CloseIcon/>
             </div>
             <div className="SideBarWrapper">
+                <div className="SideBarProfile">
+                <ProfileDropDown user={this.props.user} Ahorizontol='center' Avertical='center' Thorizontol='right' Tvertical='top'/>
+                </div>
                 <div className="SideBarMenu">
                     <Link to='/' onClick={this.handleOpenStateChange} className="SideBarLink">Projekte</Link>
                     <Link to='/' onClick={this.handleOpenStateChange} className="SideBarLink">Zeiterfassung</Link>
                     <Link to='/' onClick={this.handleOpenStateChange} className="SideBarLink">Arbeitszeitkonto</Link>
-                    <ProfileDropDown user={this.props.user} Ahorizontol='center' Avertical='top' Thorizontol='center' Tvertical='bottom'/>
                 </div>
             </div>
       </div>

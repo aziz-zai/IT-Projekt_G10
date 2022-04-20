@@ -25,7 +25,7 @@ export class NavBar extends Component {
         <div className="navContainer">
             <div className="navLogo">project.one</div>
             <div className="navMobile" onClick={this.handleOpenStateChange}>
-                    <MenuIcon onClick={this.handleOpenStateChange} />
+                    <MenuIcon/>
             </div>
             <ul className="navMenu">
                 <li className="navItem">
@@ -37,7 +37,7 @@ export class NavBar extends Component {
                 <li className="navItem">
                     <Link to='/'className="navLink">Arbeitszeitkonto</Link>
                 </li>
-                <ProfileDropDown user={user} Ahorizontol='left' Avertical='center' Thorizontol='right' Tvertical='center'/>
+                <ProfileDropDown user={user} Ahorizontol='center' Avertical='center' Thorizontol='right' Tvertical='top'/>
             </ul>
         </div>
         
