@@ -10,7 +10,7 @@ from server.Administration import Administration
 from server.bo.UserBO import User
 # Außerdem nutzen wir einen selbstgeschriebenen Decorator, der die Authentifikation übernimmt
 #from SecurityDecorator import secured
-
+from datetime import datetime
 """
 Instanzieren von Flask. Am Ende dieser Datei erfolgt dann erst der 'Start' von Flask.
 """
@@ -65,7 +65,7 @@ user = api.inherit('User', bo, {
 
 @projectone.route('/users')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class CustomerListOperations(Resource):
+class UserListOperations(Resource):
     @projectone.marshal_list_with(user)
     def get(self):
         """Auslesen aller Customer-Objekte.
@@ -102,6 +102,85 @@ class CustomerListOperations(Resource):
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
+
+@projectone.route('/users/<int:id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des User-Objekts')
+class UserOperations(Resource):
+    @projectone.marshal_with(user)
+
+    def get(self, id):
+        """Auslesen eines bestimmten Customer-Objekts.
+
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        user = adm.get_user_by_id(id)
+        return user
+
+    @projectone.marshal_with(user)
+    def put(self, id):
+        """Update eines bestimmten User-Objekts.
+
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        Customer-Objekts.
+        """
+        adm = Administration()
+        up = User(**api.payload)
+
+
+        if up is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
+            Siehe Hinweise oben.
+            """
+            up.id = id
+            adm.update_user(up)
+            return '', 200
+        else:
+            return '', 500
+
+    @projectone.marshal_with(user)
+    def delete(self, id):
+        """Löschen eines bestimmten User-Objekts.
+
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+
+        userd = adm.get_user_by_id(id)
+        adm.delete_user(userd)
+        return '', 200
+
+@projectone.route('/users-by-nachname/<string:nachname>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('nachname', 'Der Nachname des Users')
+class UsersByNameOperations(Resource):
+    @projectone.marshal_with(user)
+
+    def get(self, nachname):
+        """ Auslesen von Customer-Objekten, die durch den Nachnamen bestimmt werden.
+
+        Die auszulesenden Objekte werden durch ```lastname``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        usern = adm.get_user_by_name(nachname)
+        return usern
+@projectone.route('/users-by-gid/<string:google_user_id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('google_user_id', 'Die G-ID des User-Objekts')
+class UserByGoogleUserIdOperations(Resource):
+    @projectone.marshal_with(user)
+
+    def get(self, google_user_id):
+        """Auslesen eines bestimmten Customer-Objekts.
+
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        userg = adm.get_user_by_google_user_id(google_user_id)
+        return userg
+
 
 if __name__ == '__main__':
     app.run(debug=True)

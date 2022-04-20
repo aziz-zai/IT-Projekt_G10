@@ -1,3 +1,4 @@
+from time import time
 from server.bo.UserBO import User
 from server.db.Mapper import Mapper
 
@@ -23,10 +24,120 @@ class UserMapper(Mapper):
             user = User(id=id, timestamp=timestamp, vorname=vorname, nachname=nachname, benutzername=benutzername, email=email, google_user_id=google_user_id)
 
             result.append(user)
+
         self._cnx.commit()
         cursor.close()
 
         return result
+    
+    def find_by_key(self, key):
+        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
+        """
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id FROM user WHERE id={}".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (id, timestamp, vorname, nachname, benutzername, email, google_user_id) = tuples[0]
+            user = User(
+            id=id,
+            timestamp=timestamp,
+            vorname=vorname,
+            nachname=nachname,
+            benutzername=benutzername,
+            email=email,
+            google_user_id=google_user_id)
+            result = user
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_by_name(self, nachname):
+        """Auslesen aller Benutzer anhand des Nachnamens.
+        """
+        result = []
+        cursor = self._cnx.cursor()
+        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id FROM user WHERE nachname LIKE '{}' ORDER BY nachname".format(nachname)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        for (id, timestamp, vorname, nachname, benutzername, email, google_user_id) in tuples:
+            user = User(
+            id=id,
+            timestamp=timestamp,
+            vorname=vorname,
+            nachname=nachname,
+            benutzername=benutzername,
+            email=email,
+            google_user_id=google_user_id)    
+            result.append(user)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_by_google_user_id(self, google_user_id):
+        """Suchen eines Benutzers mit vorgegebener Google ID. Da diese eindeutig ist,
+        wird genau ein Objekt zurückgegeben.
+
+        :param google_user_id die Google ID des gesuchten Users.
+        :return User-Objekt, das die übergebene Google ID besitzt,
+            None bei nicht vorhandenem DB-Tupel.
+        """
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id FROM user WHERE google_user_id LIKE '{}' ORDER BY google_user_id".format(google_user_id)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (id, timestamp, vorname, nachname, benutzername, email, google_user_id) = tuples[0]
+            user = User(
+            id=id,
+            timestamp=timestamp,
+            vorname=vorname,
+            nachname=nachname,
+            benutzername=benutzername,
+            email=email,
+            google_user_id=google_user_id)
+            result = user
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+    
+    def update(self, user: User) -> User:
+        """Wiederholtes Schreiben eines Objekts in die Datenbank.
+
+        :param user das Objekt, das in die DB geschrieben werden soll
+        """
+        cursor = self._cnx.cursor()
+
+        command = "UPDATE user SET timestamp=%s, vorname=%s, nachname=%s, benutzername=%s, email=%s, google_user_id=%s WHERE id=%s"
+        data = (user.timestamp, user.vorname, user.nachname, user.benutzername, user.email, user.google_user_id, user.id)
+        cursor.execute(command, data)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return user
 
 
     def insert(self, user: User) -> User:
@@ -57,3 +168,14 @@ class UserMapper(Mapper):
         self._cnx.commit()
 
         return user
+
+    def delete(self, user):
+
+        cursor = self._cnx.cursor()
+
+        command = "DELETE FROM user WHERE id={}".format(user.id)
+        cursor.execute(command)
+
+        self._cnx.commit()
+        cursor.close()
+        
