@@ -1,6 +1,6 @@
 from .bo.UserBO import User
 
-from .db.UserMapper import UserMapper
+from .db.AktivitätenMapper import AktivitätenMapper
 from datetime import datetime
 
 
@@ -16,7 +16,7 @@ class Administration(object):
     """
     def create_aktivitäten(self, bezeichnung, dauer, kapazität):
         """Einen Benutzer anlegen"""
-        aktivitäten = Aktivitäten
+        aktivitäten = aktivitäten
         aktivitäten.timestamp = datetime.now()
         aktivitäten.bezeichnung = bezeichnung
         aktivitäten.dauer = dauer
@@ -24,3 +24,10 @@ class Administration(object):
 
         with AktivitätenMapper() as mapper:
             return mapper.insert(aktivitäten)
+
+
+    def get_all_aktivitäten(self):
+        """Alle Aktivitäten auslesen"""
+        with AktivitätenMapper() as mapper:
+            return mapper.find_all()
+
