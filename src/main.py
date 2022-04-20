@@ -140,6 +140,18 @@ class UserOperations(Resource):
         else:
             return '', 500
 
+    @projectone.marshal_with(user)
+    def delete(self, id):
+        """Löschen eines bestimmten User-Objekts.
+
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+
+        userd = adm.get_user_by_id(id)
+        adm.delete_user(userd)
+        return '', 200
+
 @projectone.route('/users-by-nachname/<string:nachname>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('nachname', 'Der Nachname des Users')
