@@ -10,7 +10,7 @@ from server.Administration import Administration
 from server.bo.UserBO import User
 # Außerdem nutzen wir einen selbstgeschriebenen Decorator, der die Authentifikation übernimmt
 #from SecurityDecorator import secured
-
+from datetime import datetime
 """
 Instanzieren von Flask. Am Ende dieser Datei erfolgt dann erst der 'Start' von Flask.
 """
@@ -117,6 +117,29 @@ class UserOperations(Resource):
         adm = Administration()
         user = adm.get_user_by_id(id)
         return user
+
+    @projectone.marshal_with(user)
+    def put(self, id):
+        """Update eines bestimmten User-Objekts.
+
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        Customer-Objekts.
+        """
+        adm = Administration()
+        up = User(**api.payload)
+
+
+        if up is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
+            Siehe Hinweise oben.
+            """
+            up.id = id
+            adm.update_user(up)
+            return '', 200
+        else:
+            return '', 500
+
 @projectone.route('/users-by-nachname/<string:nachname>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('nachname', 'Der Nachname des Users')
@@ -146,27 +169,6 @@ class UserByGoogleUserIdOperations(Resource):
         userg = adm.get_user_by_google_user_id(google_user_id)
         return userg
 
-
-    @projectone.marshal_with(user)
-    def put(self, google_user_id):
-        """Update eines bestimmten User-Objekts.
-
-        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
-        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
-        Customer-Objekts.
-        """
-        adm = Administration()
-        up = User(api.payload)
-
-        if up is not None:
-            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
-            Siehe Hinweise oben.
-            """
-            up.google_user_id(google_user_id)
-            adm.update_user(up)
-            return '', 200
-        else:
-            return '', 500
 
 if __name__ == '__main__':
     app.run(debug=True)
