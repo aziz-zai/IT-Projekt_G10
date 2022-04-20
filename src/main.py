@@ -131,6 +131,20 @@ class UsersByNameOperations(Resource):
         adm = Administration()
         usern = adm.get_user_by_name(nachname)
         return usern
+@projectone.route('/users-by-gid/<string:google_user_id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('google_user_id', 'Die G-ID des User-Objekts')
+class UserByGoogleUserIdOperations(Resource):
+    @projectone.marshal_with(user)
+
+    def get(self, google_user_id):
+        """Auslesen eines bestimmten Customer-Objekts.
+
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        userg = adm.get_user_by_google_user_id(google_user_id)
+        return userg
 
 if __name__ == '__main__':
     app.run(debug=True)
