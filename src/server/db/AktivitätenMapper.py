@@ -82,6 +82,29 @@ class AktivitätenMapper(Mapper):
         cursor.close()
 
         return result
+    
+    def find_by_dauer(self, dauer):
+    
+        result = []
+        cursor = self._cnx.cursor()
+        command = "SELECT id, timestamp, bezeichnung, dauer, kapazität FROM user WHERE dauer LIKE '{}' ORDER BY dauer".format(dauer)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        for (id, timestamp, bezeichnung, dauer, kapazität) in tuples:
+            aktivitäten = aktivitäten(
+            id=id,
+            timestamp=timestamp,
+            bezeichnung=bezeichnung,
+            dauer=dauer,
+            kapazität=kapazität)
+            result = aktivitäten    
+            result.append(aktivitäten)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
         
 
     def insert(self, aktivitäten: Aktivitäten) -> Aktivitäten:
@@ -110,3 +133,29 @@ class AktivitätenMapper(Mapper):
         self._cnx.commit()
 
         return aktivitäten
+    
+    def update(self, aktivitäten: Aktivitäten) -> Aktivitäten:
+        """Wiederholtes Schreiben eines Objekts in die Datenbank.
+
+        :param user das Objekt, das in die DB geschrieben werden soll
+        """
+        cursor = self._cnx.cursor()
+
+        command = "UPDATE aktivitäten SET timestamp=%s, bezeichnung=%s, dauer=%s, kapazität=%s WHERE id=%s"
+        data = (aktivitäten.timestamp, aktivitäten.bezeichnung, aktivitäten.dauer, aktivitäten.kapazität)
+        cursor.execute(command, data)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return aktivitäten
+
+    def delete(self, aktivitäten):
+
+        cursor = self._cnx.cursor()
+
+        command = "DELETE FROM aktivitäten WHERE id={}".format(aktivitäten.id)
+        cursor.execute(command)
+
+        self._cnx.commit()
+        cursor.close()
