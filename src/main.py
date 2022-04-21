@@ -68,7 +68,6 @@ user = api.inherit('User', bo, {
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class UserListOperations(Resource):
     @projectone.marshal_list_with(user)
-    @secured
     def get(self):
         """Auslesen aller Customer-Objekte.
 
