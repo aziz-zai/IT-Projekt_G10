@@ -48,3 +48,7 @@ class Administration(object):
     def update_user(self, user):
         with UserMapper() as mapper:
             return mapper.update(user)
+
+    def save_user(self, user):
+        with UserMapper() as mapper:
+            return mapper.save(user)
