@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import ProfileDropDown  from '../ProfileDropDown'
+import MenuIcon from '@mui/icons-material/Menu';
 
 export class NavBar extends Component {
     constructor(props) {
@@ -13,12 +14,19 @@ export class NavBar extends Component {
           nav: this.props.nav,
         };
       }
+
+      handleOpenStateChange = () => {
+		this.props.toggle()
+	}
   render() {
-      const {user} = this.props
+      const {user, toggle} = this.props
     return (
         <div className={this.state.nav}>
         <div className="navContainer">
             <div className="navLogo">project.one</div>
+            <div className="navMobile" onClick={this.handleOpenStateChange}>
+                    <MenuIcon/>
+            </div>
             <ul className="navMenu">
                 <li className="navItem">
                     <Link to='/' className="navLink">Projekte</Link>
@@ -29,11 +37,10 @@ export class NavBar extends Component {
                 <li className="navItem">
                     <Link to='/'className="navLink">Arbeitszeitkonto</Link>
                 </li>
+                <ProfileDropDown user={user} Ahorizontol='center' Avertical='center' Thorizontol='right' Tvertical='top'/>
             </ul>
-            <div className="Profile">
-            <ProfileDropDown user={user}/>
-            </div>
         </div>
+        
     </div>
     )
   }
@@ -47,6 +54,7 @@ NavBar.propTypes = {
 	 */
 	nav: PropTypes.string.isRequired,
     user: PropTypes.object,
+    toggle: PropTypes.any,
 }
 
 export default NavBar
