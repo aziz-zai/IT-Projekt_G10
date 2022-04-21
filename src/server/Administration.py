@@ -1,6 +1,8 @@
 from .bo.UserBO import User
+from .bo.ProjectBO import Project
 
 from .db.UserMapper import UserMapper
+from .db.ProjectMapper import ProjectMapper
 from datetime import datetime
 
 
@@ -52,3 +54,21 @@ class Administration(object):
     def delete_user(self, user):
         with UserMapper() as mapper:
             return mapper.delete(user)
+    
+    """
+    Projekt-spezifische Methoden
+    """
+    def create_project(self, projektname, laufzeit, auftraggeber):
+        """Ein Projekt anlegen"""
+        project = Project
+        project.timestamp = datetime.now()
+        project.projektname = projektname
+        project.laufzeit = laufzeit
+        project.auftraggeber = auftraggeber
+
+        with ProjectMapper() as mapper:
+            return mapper.insert(project)
+
+    def get_all_projects(self):
+        with ProjectMapper() as mapper:
+            return mapper.find_all()

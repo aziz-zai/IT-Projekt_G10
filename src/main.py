@@ -8,6 +8,7 @@ from flask_cors import CORS
 # Wir greifen natürlich auf unsere Applikationslogik inkl. BusinessObject-Klassen zurück
 from server.Administration import Administration
 from server.bo.UserBO import User
+from server.bo.ProjectBO import Project
 # Außerdem nutzen wir einen selbstgeschriebenen Decorator, der die Authentifikation übernimmt
 #from SecurityDecorator import secured
 from datetime import datetime
@@ -61,7 +62,12 @@ user = api.inherit('User', bo, {
     'google_user_id': fields.String(attribute='google_user_id', description='nachname eines Benutzers'),
 })
 
-
+"""Project ist ein BusinessObject"""
+project = api.inherit('Project', bo, {
+    'projektname': fields.String(attribute='projektname', description='Name eines Projekts'),
+    'laufzeit': fields.Integer(attribute='laufzeit', description='Laufzeit eines Projekts'),
+    'auftraggeber': fields.String(attribute='auftraggeber', description='Auftraggeber eines Projekts'),
+})
 
 @projectone.route('/users')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -180,6 +186,34 @@ class UserByGoogleUserIdOperations(Resource):
         adm = Administration()
         userg = adm.get_user_by_google_user_id(google_user_id)
         return userg
+
+@projectone.route('/projects')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectListOperations(Resource):
+    @projectone.marshal_list_with(project)
+    def get(self):
+        """Auslesen aller Project-Objekte.
+
+        Sollten keine Project-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
+        adm = Administration()
+        project = adm.get_all_projects()
+        return project
+
+    @projectone.marshal_with(project, code=200)
+    @projectone.expect(project)  # Wir erwarten ein Project-Objekt von Client-Seite.
+    def post(self):
+        """Anlegen eines neuen Projekt-Objekts."""
+        adm = Administration()
+
+        proposal = Project(**api.payload)
+
+        if proposal is not None:
+     
+            p = adm.create_project(proposal.projektname, proposal.laufzeit, proposal.auftraggeber)
+            return p, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
 
 
 if __name__ == '__main__':
