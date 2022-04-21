@@ -17,10 +17,7 @@ USE `projectone`;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
---
 -- Table structure for table `user`
---
-
 DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -29,24 +26,163 @@ CREATE TABLE `user` (
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp ,
   `vorname` varchar(100) NOT NULL DEFAULT '',
   `nachname` varchar(100) NOT NULL DEFAULT '',
-  `user_name` varchar(100) NOT NULL DEFAULT '',
+  `benutzername` varchar(100) NOT NULL DEFAULT '',
   `email` varchar(100) NOT NULL DEFAULT '',
   `google_user_id` varchar(100) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `user`
---
+-- Table structure for table `user`
+DROP TABLE IF EXISTS `project`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `project` (
+  `id` INT(11) NOT NULL DEFAULT '0',
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `projektname` varchar(100) NOT NULL DEFAULT '',
+  `laufzeit` INT(11) NOT NULL DEFAULT '0',
+  `auftraggeber` varchar(100) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'2021-08-09 13:57:40', 'Murad', 'Zai'),(2,'2022-08-09 13:57:40', 'Aziz', 'Zai'),(3,'2023-08-09 13:57:40', 'Harbin', 'Zai'),(4,'2024-08-09 13:57:40', 'Elif', 'Zai'),(5,'2025-08-09 13:57:40', 'Malek', 'Zai'),(6,'2026-08-09 13:57:40', 'Quang', 'Zai');
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
+-- Table structure for table `arbeitszeitkonto`
+DROP TABLE IF EXISTS `arbeitszeitkonto`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `arbeitszeitkonto`(
+  `id` INT(11) NOT NULL DEFAULT '0',
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `urlaubstage` float NOT NULL DEFAULT '0',
+  `overtimehours` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 
+-- Table structure for table `activity`
+DROP TABLE IF EXISTS `activity`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `activity` (
+  `id`INT(11) NOT NULL DEFAULT '0',
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `bezeichnung` varchar(100) NOT NULL DEFAULT '',
+  `capacity` float NOT NULL DEFAULT '0', 
+  PRIMARY KEY(`id`)
+) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 
+-- Table structure for table `user`
+DROP TABLE IF EXISTS `buchung`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `buchung` (
+  `id`INT(11) NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(`id`)
+) ENGINE= InnoDB DEFAULT CHARSET=utf8;
+
+-- Table structure for table `zeitintervallbuchung`
+DROP TABLE IF EXISTS `zeitintervallbuchung`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `zeitintervallbuchung` (
+  `id`INT(11) NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(`id`)
+) ENGINE= InnoDB DEFAULT CHARSET=utf8;
+
+-- Table structure for table `ereginisbuchung`
+DROP TABLE IF EXISTS `ereignisbuchung`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ereignisbuchung` (
+  `id`INT(11) NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(`id`)
+) ENGINE= InnoDB DEFAULT CHARSET=utf8;
+
+-- Table structure for table `ereignis`
+DROP TABLE IF EXISTS `ereignis`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ereignis` (
+  `id`INT(11) NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `zeitpunkt` datetime NOT NULL DEFAULT '0',
+  PRIMARY KEY(`id`)
+) ENGINE= InnoDB DEFAULT CHARSET=utf8;
+
+-- Table structure for table `zeitintervall`
+DROP TABLE IF EXISTS `zeitintervall`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `zeitintervall` (
+  `id`INT(11) NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `start` int NOT NULL DEFAULT '0',
+  `ende` int NOT NULL DEFAULT '0',
+  `zeitdifferenz` float NOT NULL DEFAULT '0',
+  PRIMARY KEY(`id`)
+) ENGINE= InnoDB DEFAULT CHARSET=utf8;
+
+-- Table structure for table `pause`
+DROP TABLE IF EXISTS `pause`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pause` (
+  `id`INT(11) NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `start` int NOT NULL DEFAULT '0',
+  `ende` int NOT NULL DEFAULT '0',
+  `zeitdifferenz` float NOT NULL DEFAULT '0',
+  PRIMARY KEY(`id`)
+) ENGINE= InnoDB DEFAULT CHARSET=utf8;
+
+-- Table structure for table `abwesenheit`
+DROP TABLE IF EXISTS `abwesenheit`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `abwesenheit` (
+  `id`INT(11) NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `abwesenheitsart` int NOT NULL DEFAULT '0',
+  `start` int NOT NULL DEFAULT '0',
+  `ende` int NOT NULL DEFAULT '0',
+  `zeitdifferenz` float NOT NULL DEFAULT '0',
+  PRIMARY KEY(`id`)
+) ENGINE= InnoDB DEFAULT CHARSET=utf8;
+
+-- Table structure for table `projektarbeit`
+DROP TABLE IF EXISTS `projektarbeit`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `projektarbeit` (
+  `id`INT(11) NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `bezeichnung` varchar(110) NOT NULL DEFAULT '',
+  PRIMARY KEY(`id`)
+) ENGINE= InnoDB DEFAULT CHARSET=utf8;
+
+-- Table structure for table `kommen`
+DROP TABLE IF EXISTS `kommen`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `kommen` (
+  `id`INT(11) NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `zeitpunkt` datetime NOT NULL DEFAULT '0',
+  PRIMARY KEY(`id`)
+) ENGINE= InnoDB DEFAULT CHARSET=utf8;
+
+-- Table structure for table `gehen`
+DROP TABLE IF EXISTS `gehen`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `gehen` (
+  `id`INT(11) NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `zeitpunkt` datetime NOT NULL DEFAULT '0',
+  PRIMARY KEY(`id`)
+) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
