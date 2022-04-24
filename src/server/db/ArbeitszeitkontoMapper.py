@@ -3,7 +3,7 @@ from server.bo.ArbeitszeitkontoBO import Arbeitszeitkonto
 from server.db.Mapper import Mapper
 
 
-class ArbeiszeitkontoMapper(Mapper):
+class ArbeitszeitkontoMapper(Mapper):
 
 
     def __init__(self):

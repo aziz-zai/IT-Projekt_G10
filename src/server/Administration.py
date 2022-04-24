@@ -4,6 +4,8 @@ from .db.AktivitätenMapper import AktivitätenMapper
 from datetime import datetime
 from server.bo.AktivitätenBO import Aktivitäten
 from .db.UserMapper import UserMapper
+from server.bo.ArbeitszeitkontoBO import Arbeitszeitkonto
+from .db.ArbeitszeitkontoMapper import Arbeitszeitkonto
 
 
 class Administration(object):
@@ -94,3 +96,37 @@ class Administration(object):
     def delete_user(self, user):
         with UserMapper() as mapper:
             return mapper.delete(user)
+
+    """
+    User-spezifische Methoden
+    """
+    def create_arbeitszeitkonto(self, urlaubstage):
+        """Einen Benutzer anlegen"""
+        arbeitszeitkonto = Arbeitszeitkonto
+        arbeitszeitkonto.timestamp = datetime.now()
+        arbeitszeitkonto.urlaubstage = urlaubstage
+        
+
+        with ArbeitszeitkontoMapper() as mapper:
+            return mapper.insert(arbeitszeitkonto)
+
+    def get_all_arbeitszeitkonto(self):
+        """Alle Benutzer auslesen"""
+        with ArbeitszeitkontoMapper() as mapper:
+            return mapper.find_all()
+
+    def get_arbeitszeitkonto_by_id(self, id):
+        """Den Benutzer mit der gegebenen ID auslesen."""
+        with ArbeitszeitkontoMapper() as mapper:
+            return mapper.find_by_key(id)
+
+    def update_arbeitszeitkonto(self, arbeitszeitkonto):
+        with ArbeitszeitkontoMapper() as mapper:
+            return mapper.update(arbeitszeitkonto)
+
+    def delete_arbeitszeitkonto(self, arbeitszeitkonto):
+        with ArbeitszeitkontoMapper() as mapper:
+            return mapper.delete(arbeitszeitkonto)
+
+
+

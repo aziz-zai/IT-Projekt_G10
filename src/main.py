@@ -9,6 +9,7 @@ from server.bo.AktivitätenBO import Aktivitäten
 # Wir greifen natürlich auf unsere Applikationslogik inkl. BusinessObject-Klassen zurück
 from server.Administration import Administration
 from server.bo.UserBO import User
+from server.bo.ArbeitszeitkontoBO import Arbeitszeitkonto
 # Außerdem nutzen wir einen selbstgeschriebenen Decorator, der die Authentifikation übernimmt
 #from SecurityDecorator import secured
 from datetime import datetime
@@ -66,6 +67,10 @@ aktivitäten = api.inherit('Aktivitäten',bo, {
     'bezeichnung': fields.String(attribute='bezeichnung', description='bezeichnung einer Aktivität'),
     'dauer': fields.Float(attribute='dauer', description='bezeichnung der Dauer einer Aktivität'),
     'capacity': fields.Float(attribute='capacity', description='bezeichnung der Kapazität einer Aktivität'),
+})
+
+arbeitszeitkonto = api.inherit('Arbeitszeitkonto',bo, {
+    'urlaubstage': fields.Float(attribute='urlaubstage', description='urlaubstage eines Arbeitszeitkontos'),
 })
 
 
@@ -278,6 +283,46 @@ class UserByGoogleUserIdOperations(Resource):
         userg = adm.get_user_by_google_user_id(google_user_id)
         return userg
 
+
+@projectone.route('/arbeitszeitkonto')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ArbeitszeitkontoListOperations(Resource):
+    @projectone.marshal_list_with(arbeitszeitkonto)
+    def get(self):
+        """Auslesen aller Customer-Objekte.
+
+        Sollten keine Customer-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
+        adm = Administration()
+        arbeitszeitkonto = adm.get_all_arbeitszeitkonto()
+        return arbeitszeitkonto
+
+    @projectone.marshal_with(arbeitszeitkonto, code=200)
+    @projectone.expect(arbeitszeitkonto)  # Wir erwarten ein User-Objekt von Client-Seite.
+
+    def post(self):
+        """Anlegen eines neuen Customer-Objekts.
+
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
+        """
+        adm = Administration()
+
+        proposal = Arbeitszeitkonto(**api.payload)
+
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+        if proposal is not None:
+            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
+            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben. 
+            """
+            a = adm.create_arbeitszeitkonto(proposal.urlaubstage)
+            return a, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
 
 if __name__ == '__main__':
     app.run(debug=True)
