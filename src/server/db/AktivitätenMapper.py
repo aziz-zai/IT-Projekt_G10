@@ -110,7 +110,7 @@ class AktivitätenMapper(Mapper):
     def insert(self, aktivitäten: Aktivitäten) -> Aktivitäten:
         """Create user Object."""
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT MAX(id) AS maxid FROM aktivitäten")
+        cursor.execute("SELECT MAX(id) AS maxid FROM activity")
         tuples = cursor.fetchall()
 
         for (maxid) in tuples:
@@ -120,7 +120,7 @@ class AktivitätenMapper(Mapper):
                 aktivitäten.id = 1
         command = """
             INSERT INTO activity (
-                id, timestamp, bezeichnung, dauer, activity
+                id, timestamp, bezeichnung, dauer, capacity
             ) VALUES (%s,%s,%s,%s,%s)
         """
         cursor.execute(command, (

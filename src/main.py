@@ -48,7 +48,7 @@ projectone = api.namespace('projectone', description='Funktionen des Projectone'
 
 BusinessObject dient als Basisklasse, auf der die weiteren Strukturen Customer, Account und Transaction aufsetzen."""
 bo = api.model('BusinessObject', {
-    'id_': fields.Integer(attribute='id_', description='Der Unique Identifier eines Business Object'),
+    'id': fields.Integer(attribute='id', description='Der Unique Identifier eines Business Object'),
     'timestamp': fields.String(attribute='timestamp', description='Der Unique Identifier eines Business Object'),
 })
 
@@ -105,3 +105,6 @@ class CustomerListOperations(Resource):
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
+
+if __name__ == '__main__':
+    app.run(debug=True)

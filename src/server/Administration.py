@@ -2,6 +2,7 @@ from .bo.UserBO import User
 
 from .db.AktivitätenMapper import AktivitätenMapper
 from datetime import datetime
+from server.bo.AktivitätenBO import Aktivitäten
 
 
 class Administration(object):
@@ -16,7 +17,7 @@ class Administration(object):
     """
     def create_aktivitäten(self, bezeichnung, dauer, capacity):
         """Einen Benutzer anlegen"""
-        aktivitäten = aktivitäten
+        aktivitäten = Aktivitäten
         aktivitäten.timestamp = datetime.now()
         aktivitäten.bezeichnung = bezeichnung
         aktivitäten.dauer = dauer
