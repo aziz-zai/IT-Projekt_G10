@@ -29,7 +29,6 @@ CREATE TABLE `user` (
   `benutzername` varchar(100) NOT NULL DEFAULT '',
   `email` varchar(100) NOT NULL DEFAULT '',
   `google_user_id` varchar(100) NOT NULL DEFAULT '',
-  `arbeitszeitkonto`int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -60,6 +59,7 @@ CREATE TABLE `arbeitszeitkonto`(
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `urlaubstage` float NOT NULL DEFAULT '0',
   `overtimehours` float NOT NULL DEFAULT '0',
+  `user`INT NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 

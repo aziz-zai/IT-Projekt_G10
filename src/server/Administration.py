@@ -58,13 +58,16 @@ class Administration(object):
     """
     Projekt-spezifische Methoden
     """
-    def create_project(self, projektname, laufzeit, auftraggeber):
+    def create_project(self, projektname, laufzeit, auftraggeber, projektleiter, availableHours, user):
         """Ein Projekt anlegen"""
         project = Project
         project.timestamp = datetime.now()
         project.projektname = projektname
         project.laufzeit = laufzeit
         project.auftraggeber = auftraggeber
+        project.projektleiter = projektleiter
+        project.availableHours = availableHours
+        project.user = user
 
         with ProjectMapper() as mapper:
             return mapper.insert(project)

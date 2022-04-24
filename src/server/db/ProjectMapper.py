@@ -1,4 +1,5 @@
 
+from re import U
 from server.bo.ProjectBO import Project
 from server.db.Mapper import Mapper
 
@@ -20,8 +21,8 @@ class ProjectMapper(Mapper):
                 project.id = 1
         command = """
             INSERT INTO project (
-                id, timestamp, projektname, laufzeit, auftraggeber
-            ) VALUES (%s,%s,%s,%s,%s)
+                id, timestamp, projektname, laufzeit, auftraggeber, projektleiter, availableHours, user
+            ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
         """
         cursor.execute(command, (
             project.id,
@@ -29,6 +30,9 @@ class ProjectMapper(Mapper):
             project.projektname,
             project.laufzeit,
             project.auftraggeber,
+            project.projektleiter,
+            project.availableHours,
+            project.user
         ))
         self._cnx.commit()
 
@@ -39,11 +43,12 @@ class ProjectMapper(Mapper):
 
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, projektname, laufzeit, auftraggeber from project")
+        cursor.execute("SELECT id, timestamp, projektname, laufzeit, auftraggeber, projektleiter, availableHours, user from project")
         tuples = cursor.fetchall()
 
-        for (id, timestamp, projektname, laufzeit, auftraggeber) in tuples:
-            project = Project(id=id, timestamp=timestamp, projektname=projektname, laufzeit=laufzeit, auftraggeber=auftraggeber)
+        for (id, timestamp, projektname, laufzeit, auftraggeber, projektleiter, availableHours, user) in tuples:
+            project = Project(id=id, timestamp=timestamp, projektname=projektname, laufzeit=laufzeit, auftraggeber=auftraggeber, 
+            projektleiter=projektleiter, availableHours=availableHours, user=user)
 
             result.append(project)
 
@@ -56,18 +61,21 @@ class ProjectMapper(Mapper):
 
         result = None
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, projektname, laufzeit, auftraggeber FROM project WHERE id={}".format(key)
+        command = "SELECT id, timestamp, projektname, laufzeit, auftraggeber, projektleiter, availableHours, user FROM project WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, projektname, laufzeit, auftraggeber) = tuples[0]
+            (id, timestamp, projektname, laufzeit, auftraggeber, projektleiter, availableHours, user) = tuples[0]
             project = Project(
             id=id,
             timestamp=timestamp,
             projektname=projektname,
             laufzeit=laufzeit,
-            auftraggeber=auftraggeber)
+            auftraggeber=auftraggeber,
+            projektleiter=projektleiter,
+            availableHours=availableHours,
+            user=user)
             result = project
         except IndexError:
             result = None

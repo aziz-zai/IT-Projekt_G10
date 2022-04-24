@@ -60,7 +60,6 @@ user = api.inherit('User', bo, {
     'benutzername': fields.String(attribute='benutzername', description='nachname eines Benutzers'),
     'email': fields.String(attribute='email', description='nachname eines Benutzers'),
     'google_user_id': fields.String(attribute='google_user_id', description='nachname eines Benutzers'),
-    'arbeitszeitkonto': fields.Integer(attribute='arbeitszeitkonto', description='FK zu Arbeitszeitkonto eines Users'),
 })
 
 """Project ist ein BusinessObject"""
@@ -105,7 +104,7 @@ class UserListOperations(Resource):
             wird auch dem Client zurückgegeben. 
             """
             u = adm.create_user(proposal.vorname, proposal.nachname, proposal.benutzername, proposal.email, 
-            proposal.google_user_id, proposal.arbeitszeitkonto)
+            proposal.google_user_id)
             return u, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -189,7 +188,7 @@ class UserByGoogleUserIdOperations(Resource):
         userg = adm.get_user_by_google_user_id(google_user_id)
         return userg
 
-@projectone.route('/projects')
+@projectone.route('/projects/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
     @projectone.marshal_list_with(project)
@@ -203,7 +202,7 @@ class ProjectListOperations(Resource):
 
     @projectone.marshal_with(project, code=200)
     @projectone.expect(project)  # Wir erwarten ein Project-Objekt von Client-Seite.
-    def post(self):
+    def post(self, user):
         """Anlegen eines neuen Projekt-Objekts."""
         adm = Administration()
 
@@ -211,7 +210,7 @@ class ProjectListOperations(Resource):
 
         if proposal is not None:
      
-            p = adm.create_project(proposal.projektname, proposal.laufzeit, proposal.auftraggeber)
+            p = adm.create_project(proposal.projektname, proposal.laufzeit, proposal.auftraggeber, proposal.projektleiter, proposal.availableHours, user)
             return p, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
