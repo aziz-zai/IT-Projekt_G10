@@ -14,7 +14,7 @@ class Administration(object):
         pass
 
     """
-    User-spezifische Methoden
+    Aktivitäten-spezifische Methoden
     """
     def create_aktivitäten(self, bezeichnung, dauer, capacity):
         """Einen Benutzer anlegen"""
@@ -53,7 +53,9 @@ class Administration(object):
         with AktivitätenMapper() as mapper:
             return mapper.delete(aktivitäten)
 
-
+    """
+    User-spezifische Methoden
+    """
     def create_user(self, vorname, nachname, benutzername, email, google_user_id):
         """Einen Benutzer anlegen"""
         user = User
@@ -66,7 +68,6 @@ class Administration(object):
 
         with UserMapper() as mapper:
             return mapper.insert(user)
-
 
     def get_all_user(self):
         """Alle Benutzer auslesen"""

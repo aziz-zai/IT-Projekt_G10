@@ -86,7 +86,7 @@ class AktivitätenListOperations(Resource):
     @projectone.expect(aktivitäten)  # Wir erwarten ein User-Objekt von Client-Seite.
 
     def post(self):
-        """Anlegen eines neuen Customer-Objekts.
+        """Anlegen eines neuen Aktivitäten-Objekts.
 
         **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
         So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
@@ -104,7 +104,7 @@ class AktivitätenListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            a = adm.create_aktivitäten(proposal.bezeichnung, proposal.dauer, proposal.capacity)
+            a = adm.create_aktivitäten(proposal.bezeichnung, proposal.dauer, proposal.capacity, proposal.project)
             return a, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -117,7 +117,7 @@ class AktivitätenOperations(Resource):
     @projectone.marshal_with(aktivitäten)
 
     def get(self, id):
-        """Auslesen eines bestimmten Customer-Objekts.
+        """Auslesen eines bestimmten Aktivitäten-Objekts.
 
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
@@ -127,7 +127,7 @@ class AktivitätenOperations(Resource):
 
     @projectone.marshal_with(aktivitäten)
     def put(self, id):
-        """Update eines bestimmten User-Objekts.
+        """Update eines bestimmten AKtivitäten-Objekts.
 
         **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
         verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
@@ -149,7 +149,7 @@ class AktivitätenOperations(Resource):
 
     @projectone.marshal_with(aktivitäten)
     def delete(self, id):
-        """Löschen eines bestimmten User-Objekts.
+        """Löschen eines bestimmten Aktivitäten-Objekts.
 
         Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
