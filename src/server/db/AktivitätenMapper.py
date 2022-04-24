@@ -17,7 +17,7 @@ class AktivitätenMapper(Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, bezeichnung, dauer, kapazität from aktivitäten")
+        cursor.execute("SELECT id, timestamp, bezeichnung, dauer, kapazität from activity")
         tuples = cursor.fetchall()
 
         for (id, timestamp, bezeichnung, dauer, kapazität) in tuples:
@@ -119,8 +119,8 @@ class AktivitätenMapper(Mapper):
             else:
                 aktivitäten.id = 1
         command = """
-            INSERT INTO user (
-                id, timestamp, bezeichnung, dauer, kapazität
+            INSERT INTO activity (
+                id, timestamp, bezeichnung, dauer, activity
             ) VALUES (%s,%s,%s,%s,%s)
         """
         cursor.execute(command, (
@@ -128,7 +128,7 @@ class AktivitätenMapper(Mapper):
             aktivitäten.timestamp,
             aktivitäten.bezeichnung,
             aktivitäten.dauer,
-            aktivitäten.kapazität,
+            aktivitäten.capacity,
         ))
         self._cnx.commit()
 
@@ -141,7 +141,7 @@ class AktivitätenMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE aktivitäten SET timestamp=%s, bezeichnung=%s, dauer=%s, kapazität=%s WHERE id=%s"
+        command = "UPDATE aktivitäten SET timestamp=%s, bezeichnung=%s, dauer=%s, activity=%s WHERE id=%s"
         data = (aktivitäten.timestamp, aktivitäten.bezeichnung, aktivitäten.dauer, aktivitäten.kapazität)
         cursor.execute(command, data)
 
@@ -154,7 +154,7 @@ class AktivitätenMapper(Mapper):
 
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM aktivitäten WHERE id={}".format(aktivitäten.id)
+        command = "DELETE FROM activity WHERE id={}".format(aktivitäten.id)
         cursor.execute(command)
 
         self._cnx.commit()

@@ -14,13 +14,13 @@ class Administration(object):
     """
     User-spezifische Methoden
     """
-    def create_aktivitäten(self, bezeichnung, dauer, kapazität):
+    def create_aktivitäten(self, bezeichnung, dauer, capacity):
         """Einen Benutzer anlegen"""
         aktivitäten = aktivitäten
         aktivitäten.timestamp = datetime.now()
         aktivitäten.bezeichnung = bezeichnung
         aktivitäten.dauer = dauer
-        aktivitäten.kapazität = kapazität
+        aktivitäten.capacity = capacity
 
         with AktivitätenMapper() as mapper:
             return mapper.insert(aktivitäten)
