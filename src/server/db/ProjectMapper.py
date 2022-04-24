@@ -1,3 +1,4 @@
+
 from server.bo.ProjectBO import Project
 from server.db.Mapper import Mapper
 
@@ -46,6 +47,31 @@ class ProjectMapper(Mapper):
 
             result.append(project)
 
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_by_key(self, key):
+
+        result = None
+        cursor = self._cnx.cursor()
+        command = "SELECT id, timestamp, projektname, laufzeit, auftraggeber FROM project WHERE id={}".format(key)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (id, timestamp, projektname, laufzeit, auftraggeber) = tuples[0]
+            project = Project(
+            id=id,
+            timestamp=timestamp,
+            projektname=projektname,
+            laufzeit=laufzeit,
+            auftraggeber=auftraggeber)
+            result = project
+        except IndexError:
+            result = None
+        
         self._cnx.commit()
         cursor.close()
 

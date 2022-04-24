@@ -72,3 +72,7 @@ class Administration(object):
     def get_all_projects(self):
         with ProjectMapper() as mapper:
             return mapper.find_all()
+
+    def get_project_by_id(self, id):
+        with ProjectMapper() as mapper:
+            return mapper.find_by_key(id)
