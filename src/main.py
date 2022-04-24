@@ -4,6 +4,7 @@ from flask import Flask
 from flask_restx import Api, Resource, fields
 # Wir benutzen noch eine Flask-Erweiterung für Cross-Origin Resource Sharing
 from flask_cors import CORS
+from server.bo.AktivitätenBO import Aktivitäten
 
 # Wir greifen natürlich auf unsere Applikationslogik inkl. BusinessObject-Klassen zurück
 from server.Administration import Administration
@@ -61,7 +62,53 @@ user = api.inherit('User', bo, {
     'google_user_id': fields.String(attribute='google_user_id', description='nachname eines Benutzers'),
 })
 
+aktivitäten = api.inherit('Aktivitäten',bo, {
+    'bezeichnung': fields.String(attribute='bezeichnung', description='bezeichnung einer Aktivität'),
+    'dauer': fields.Float(attribute='dauer', description='bezeichnung der Dauer einer Aktivität'),
+    'capacity': fields.Float(attribute='capacity', description='bezeichnung der Kapazität einer Aktivität'),
+})
 
+
+
+@projectone.route('/aktivitäten')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class AktivitätenListOperations(Resource):
+    @projectone.marshal_list_with(aktivitäten)
+    def get(self):
+        """Auslesen aller Customer-Objekte.
+
+        Sollten keine Customer-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
+        adm = Administration()
+        aktivitäten = adm.get_all_aktivitäten()
+        return aktivitäten
+
+    @projectone.marshal_with(aktivitäten, code=200)
+    @projectone.expect(aktivitäten)  # Wir erwarten ein User-Objekt von Client-Seite.
+
+    def post(self):
+        """Anlegen eines neuen Customer-Objekts.
+
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
+        """
+        adm = Administration()
+
+        proposal = Aktivitäten(**api.payload)
+
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+        if proposal is not None:
+            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
+            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben. 
+            """
+            a = adm.create_aktivitäten(proposal.bezeichnung, proposal.dauer, proposal.capacity)
+            return a, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
 
 @projectone.route('/users')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')

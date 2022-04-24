@@ -1,7 +1,9 @@
 from .bo.UserBO import User
 
-from .db.UserMapper import UserMapper
+from .db.AktivitätenMapper import AktivitätenMapper
 from datetime import datetime
+from server.bo.AktivitätenBO import Aktivitäten
+from .db.UserMapper import UserMapper
 
 
 class Administration(object):
@@ -14,6 +16,44 @@ class Administration(object):
     """
     User-spezifische Methoden
     """
+    def create_aktivitäten(self, bezeichnung, dauer, capacity):
+        """Einen Benutzer anlegen"""
+        aktivitäten = Aktivitäten
+        aktivitäten.timestamp = datetime.now()
+        aktivitäten.bezeichnung = bezeichnung
+        aktivitäten.dauer = dauer
+        aktivitäten.capacity = capacity
+
+        with AktivitätenMapper() as mapper:
+            return mapper.insert(aktivitäten)
+
+    def get_all_aktivitäten(self):
+        """Alle Aktivitäten auslesen"""
+        with AktivitätenMapper() as mapper:
+            return mapper.find_all()
+
+    def get_aktivitäten_by_id(self, id):
+        """Den Benutzer mit der gegebenen ID auslesen."""
+        with AktivitätenMapper() as mapper:
+            return mapper.find_by_key(id)
+
+    def get_aktivitäten_by_bezeichnung(self, bezeichnung):
+        with AktivitätenMapper() as mapper:
+            return mapper.find_by_bezeichnung(bezeichnung)
+
+    def get_aktivitäten_by_dauer(self, dauer):
+        with AktivitätenMapper() as mapper:
+            return mapper.find_by_dauer(dauer)
+
+    def update_aktivitäten(self, aktivitäten):
+        with AktivitätenMapper() as mapper:
+            return mapper.update(aktivitäten)
+
+    def delete_aktivitäten(self, aktivitäten):
+        with AktivitätenMapper() as mapper:
+            return mapper.delete(aktivitäten)
+
+
     def create_user(self, vorname, nachname, benutzername, email, google_user_id):
         """Einen Benutzer anlegen"""
         user = User
@@ -26,6 +66,7 @@ class Administration(object):
 
         with UserMapper() as mapper:
             return mapper.insert(user)
+
 
     def get_all_user(self):
         """Alle Benutzer auslesen"""
