@@ -4,7 +4,7 @@ import './LogIn.css'
 import Video from '../media/background.mp4'
 import NavBar from '../components/NavBar'
 import { FcGoogle } from 'react-icons/fc';
-import Test from '../components/Test'
+import SideBar from '../components/SideBar'
 
 export class LogIn extends Component {
 	/** 
@@ -16,6 +16,7 @@ export class LogIn extends Component {
         // Init the state
         this.state = {
           nav: "nav",
+          Open: 'SideBarContainerClosed',
 
         };
       }
@@ -23,14 +24,20 @@ export class LogIn extends Component {
 	handleLogInButtonClicked = () => {
 		this.props.onLogIn();
 	}
+
+    handleOpenStateChange = () => {
+		this.setState({
+			Open: 'SideBarContainerOpen'
+		})
+	}
+
 	/** Renders the sign in page, if user objext is null */
 	render() {
   
-		const { classes } = this.props;
+		const { classes, user } = this.props;
 		return (
-            <>
+            <>  
                 <NavBar nav='navTrans'/>
-                <Test/>
 			<div className="homeContainer">
                 <div className="homeBackground">
                     <video className="homeVideo" autoPlay loop muted src={Video} type='video/mp4' ></video>
@@ -39,7 +46,7 @@ export class LogIn extends Component {
                     <h1 className="homeTitle">Project.ONE</h1>
                     <p className="homeText">Wir helfen dir deine Projekte zu organisieren!</p>
                     <div className="btnContainer">
-                        <button className="homeBtn" onClick={this.handleLogInButtonClicked}><FcGoogle></FcGoogle>&nbsp; Log In</button>
+                        <button className="homeBtn" onClick={this.handleLogInButtonClicked}><FcGoogle></FcGoogle>&nbsp; Sign In</button>
                     </div>
                 </div>
             </div>

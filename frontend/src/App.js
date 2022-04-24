@@ -87,20 +87,21 @@ class App extends React.Component {
     const { currentUser, appError, authError, authLoading } = this.state;
 		return (
         <>
+		
 				<Router basename={process.env.PUBLIC_URL}>
 						{
 							// Is a user signed in?
 							currentUser ?
 								<>
                   <Routes>
-                  <Route exact path="/" element={<Home/>} />
+                  <Route exact path="/" element={<Home user={currentUser}/>} />
                   <Route exact path="/LogIn" element={<LogIn onLogIn={this.handleSignIn} />} />
                   </Routes>
 								</>
 								:
 								// else show the sign in page
 								<>
-                <LogIn onLogIn={this.handleSignIn} />
+                <LogIn  onLogIn={this.handleSignIn} />
 								</>
 						}
 				</Router>

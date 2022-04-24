@@ -18,6 +18,12 @@ USE `projectone`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 -- Table structure for table `user`
+<<<<<<< HEAD
+=======
+--
+-- Test
+-- Test2
+>>>>>>> main
 DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -46,29 +52,6 @@ CREATE TABLE `project` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Table structure for table `arbeitszeitkonto`
-DROP TABLE IF EXISTS `arbeitszeitkonto`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `arbeitszeitkonto`(
-  `id` INT(11) NOT NULL DEFAULT '0',
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `urlaubstage` float NOT NULL DEFAULT '0',
-  `overtimehours` float NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE= InnoDB DEFAULT CHARSET=utf8;
-
--- Table structure for table `activity`
-DROP TABLE IF EXISTS `activity`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `activity` (
-  `id`INT(11) NOT NULL DEFAULT '0',
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `bezeichnung` varchar(100) NOT NULL DEFAULT '',
-  `capacity` float NOT NULL DEFAULT '0', 
-  PRIMARY KEY(`id`)
-) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 
 -- Table structure for table `user`
 DROP TABLE IF EXISTS `buchung`;

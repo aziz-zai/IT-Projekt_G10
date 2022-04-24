@@ -4,6 +4,7 @@ import NavBar from '../components/NavBar'
 import test from '../media/test.svg'
 import PropTypes from 'prop-types'
 import OneAPI from '../api/OneAPI'
+import SideBar from '../components/SideBar'
 
 
 export class Home extends Component {
@@ -15,6 +16,7 @@ export class Home extends Component {
       users: [],
       loadingInProgress: false,
       loadingError: null,
+      Open: 'SideBarContainerClosed',
     };
   }
 
@@ -45,19 +47,38 @@ export class Home extends Component {
     });
   }
 
+  handleOpenStateChange = () => {
+    if(this.state.Open =='SideBarContainerOpen'){
+      this.setState({
+        Open: 'SideBarContainerClosed'
+      })
+    }
+    if(this.state.Open =='SideBarContainerClosed'){
+		this.setState({
+			Open: 'SideBarContainerOpen'
+		})
+  }
+	}
+
 
   render() {
+    const {user} = this.props
     return (
       <div>
-         <NavBar nav="navBlack"/>
+         <SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={user}/>
+         <NavBar toggle={this.handleOpenStateChange} user={user} nav="navBlack"/>
     <div className="test">
-        <img src={test}></img>
+        <img className="testimg" src={test}></img>
         <h1>Die Seite steht ist noch in Bearbeitung!</h1>
-        {this.state.users.map(user =><div key={user.id_}>{user.vorname} {console.log('users:'+ user)}</div> )}
+        {this.state.users.map(user =><div key={user.id_}>{user.vorname}</div> )}
     </div>
     </div>
     )
   }
+}
+
+Home.propTypes = {
+  user: PropTypes.object.isRequired,
 }
 
 export default Home

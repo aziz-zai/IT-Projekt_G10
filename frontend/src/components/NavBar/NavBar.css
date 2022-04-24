@@ -73,6 +73,28 @@
 .navLink:active{
     border-bottom: 3px solid #5e2e94;
 }
+.Profile{
+    display: flex;
+    align-items: center;
+    justify-self: flex-end;
+}
+
+.navMobile{
+    display: none;
+}
+
+ @media screen and (max-width: 768px){
+     .navMobile{
+     display: block;
+     position: absolute;
+     top: 0;
+     right: 0;
+     transform: translate(-100%, 60%);
+     font-size: 1.8rem;
+     cursor: pointer;
+     color: #fff;
+     }
+ }
 
 
 @media screen and (max-width:960px){
