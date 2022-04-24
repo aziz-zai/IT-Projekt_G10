@@ -68,7 +68,7 @@ aktivitäten = api.inherit('Aktivitäten',bo, {
 
 @projectone.route('/aktivitäten')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class CustomerListOperations(Resource):
+class AktivitätenListOperations(Resource):
     @projectone.marshal_list_with(aktivitäten)
     def get(self):
         """Auslesen aller Customer-Objekte.
