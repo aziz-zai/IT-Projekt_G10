@@ -98,14 +98,14 @@ class Administration(object):
             return mapper.delete(user)
 
     """
-    User-spezifische Methoden
+    Arbeitszeitkonto-spezifische Methoden
     """
-    def create_arbeitszeitkonto(self, urlaubstage):
+    def create_arbeitszeitkonto(self, urlaubstage, user):
         """Einen Benutzer anlegen"""
         arbeitszeitkonto = Arbeitszeitkonto
         arbeitszeitkonto.timestamp = datetime.now()
         arbeitszeitkonto.urlaubstage = urlaubstage
-        
+        arbeitszeitkonto.user = user
 
         with ArbeitszeitkontoMapper() as mapper:
             return mapper.insert(arbeitszeitkonto)
@@ -115,10 +115,10 @@ class Administration(object):
         with ArbeitszeitkontoMapper() as mapper:
             return mapper.find_all()
 
-    def get_arbeitszeitkonto_by_id(self, id):
+    def get_arbeitszeitkonto_by_id(self, user):
         """Den Benutzer mit der gegebenen ID auslesen."""
         with ArbeitszeitkontoMapper() as mapper:
-            return mapper.find_by_key(id)
+            return mapper.find_by_key(user)
 
     def update_arbeitszeitkonto(self, arbeitszeitkonto):
         with ArbeitszeitkontoMapper() as mapper:

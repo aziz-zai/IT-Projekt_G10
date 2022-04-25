@@ -296,18 +296,23 @@ class ArbeitszeitkontoListOperations(Resource):
         arbeitszeitkonto = adm.get_all_arbeitszeitkonto()
         return arbeitszeitkonto
 
-    @projectone.marshal_with(arbeitszeitkonto, code=200)
-    @projectone.expect(arbeitszeitkonto)  # Wir erwarten ein User-Objekt von Client-Seite.
+@projectone.route('/arbeitszeitkonto/<int:user>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('user', 'Die ID des User-Objekts')
+class UserOperations(Resource):
+    @projectone.marshal_with(arbeitszeitkonto)
 
-    def post(self):
-        """Anlegen eines neuen Customer-Objekts.
+    def get(self, user):
+        """Auslesen eines bestimmten Arbeitszeit-Objekts.
 
-        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
-        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
-        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
-        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
-        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
+        adm = Administration()
+        arb = adm.get_arbeitszeitkonto_by_id(user)
+        return arb
+    
+    def post(self, user):
+
         adm = Administration()
 
         proposal = Arbeitszeitkonto(**api.payload)
@@ -318,11 +323,13 @@ class ArbeitszeitkontoListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            ab = adm.create_arbeitszeitkonto(proposal.urlaubstage)
+            ab = adm.create_arbeitszeitkonto(proposal.urlaubstage, user)
             return ab, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
