@@ -166,7 +166,7 @@ class UserMapper(Mapper):
             user.google_user_id
         ))
         self._cnx.commit()
-
+        
         return user
 
     def delete(self, user):

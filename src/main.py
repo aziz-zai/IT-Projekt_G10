@@ -71,6 +71,7 @@ aktivitäten = api.inherit('Aktivitäten',bo, {
 
 arbeitszeitkonto = api.inherit('Arbeitszeitkonto',bo, {
     'urlaubstage': fields.Float(attribute='urlaubstage', description='urlaubstage eines Arbeitszeitkontos'),
+    'user': fields.Integer(attribute='user', description='user eines Arbeitszeitkontos'),
 })
 
 
@@ -311,6 +312,8 @@ class UserOperations(Resource):
         arb = adm.get_arbeitszeitkonto_by_id(user)
         return arb
     
+    @projectone.marshal_with(arbeitszeitkonto, code=200)
+    @projectone.expect(arbeitszeitkonto)  # Wir erwarten ein User-Objekt von Client-Seite.
     def post(self, user):
 
         adm = Administration()
