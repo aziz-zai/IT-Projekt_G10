@@ -3,6 +3,7 @@ from server.bo.UserBO import User
 from server.db.Mapper import Mapper
 
 
+
 class UserMapper(Mapper):
 
 
@@ -166,7 +167,6 @@ class UserMapper(Mapper):
             user.google_user_id
         ))
         self._cnx.commit()
-        
         return user
 
     def delete(self, user):

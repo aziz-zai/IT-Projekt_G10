@@ -201,6 +201,7 @@ class UserListOperations(Resource):
             wird auch dem Client zurückgegeben. 
             """
             u = adm.create_user(proposal.vorname, proposal.nachname, proposal.benutzername, proposal.email, proposal.google_user_id)
+            Administration.create_arbeitszeitkonto(self, urlaubstage=0, user=u.id)
             return u, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.

@@ -1,9 +1,10 @@
+from .db.UserMapper import UserMapper
 from .bo.UserBO import User
 
 from .db.AktivitätenMapper import AktivitätenMapper
 from datetime import datetime
 from server.bo.AktivitätenBO import Aktivitäten
-from .db.UserMapper import UserMapper
+
 from server.bo.ArbeitszeitkontoBO import Arbeitszeitkonto
 from .db.ArbeitszeitkontoMapper import ArbeitszeitkontoMapper
 
