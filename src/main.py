@@ -318,8 +318,8 @@ class ArbeitszeitkontoListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            a = adm.create_arbeitszeitkonto(proposal.urlaubstage)
-            return a, 200
+            ab = adm.create_arbeitszeitkonto(proposal.urlaubstage)
+            return ab, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500

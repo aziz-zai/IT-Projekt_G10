@@ -17,11 +17,11 @@ class ArbeitszeitkontoMapper(Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, urlaubstage from arbeitszeitkonto")
+        cursor.execute("SELECT id, timestamp, urlaubstage, user from arbeitszeitkonto")
         tuples = cursor.fetchall()
 
-        for (id, timestamp, urlaubstage) in tuples:
-            arbeitszeitkonto = Arbeitszeitkonto (id=id, timestamp=timestamp, urlaubstage=urlaubstage)
+        for (id, timestamp, urlaubstage, user) in tuples:
+            arbeitszeitkonto = Arbeitszeitkonto (id=id, timestamp=timestamp, urlaubstage=urlaubstage, user=user)
 
             result.append(arbeitszeitkonto)
 
@@ -37,16 +37,17 @@ class ArbeitszeitkontoMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, urlaubstage FROM arbeitszeitkonto WHERE id={}".format(key)
+        command = "SELECT id, timestamp, urlaubstage, user FROM arbeitszeitkonto WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, urlaubstage) = tuples[0]
+            (id, timestamp, urlaubstage, user) = tuples[0]
             arbeitszeitkonto = Arbeitszeitkonto(
             id=id,
             timestamp=timestamp,
-            urlaubstage=urlaubstage)
+            urlaubstage=urlaubstage,
+            user=user)
             result = arbeitszeitkonto
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
@@ -67,7 +68,7 @@ class ArbeitszeitkontoMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE arbeitszeitkonto SET timestamp=%s, urlaubstage=%s WHERE id=%s"
-        data = (arbeitszeitkonto.timestamp, arbeitszeitkonto.urlaubstage, arbeitszeitkonto.id)
+        data = (arbeitszeitkonto.timestamp, arbeitszeitkonto.urlaubstage)
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -89,13 +90,14 @@ class ArbeitszeitkontoMapper(Mapper):
                 arbeitszeitkonto.id = 1
         command = """
             INSERT INTO arbeitszeitkonto (
-                id, timestamp, urlaubstage
-            ) VALUES (%s,%s,%s)
+                id, timestamp, urlaubstage, user
+            ) VALUES (%s,%s,%s,%s)
         """
         cursor.execute(command, (
             arbeitszeitkonto.id,
             arbeitszeitkonto.timestamp,
-            arbeitszeitkonto.urlaubstage
+            arbeitszeitkonto.urlaubstage,
+            arbeitszeitkonto.user
         ))
         self._cnx.commit()
 
