@@ -1,6 +1,5 @@
 from .bo.UserBO import User
 from .bo.ProjectBO import Project
-
 from .db.UserMapper import UserMapper
 from .db.ProjectMapper import ProjectMapper
 from datetime import datetime
@@ -58,7 +57,7 @@ class Administration(object):
     """
     Projekt-spezifische Methoden
     """
-    def create_project(self, projektname, laufzeit, auftraggeber, projektleiter, availableHours, user):
+    def create_project(self, projektname, laufzeit, auftraggeber, projektleiter, availablehours, user):
         """Ein Projekt anlegen"""
         project = Project
         project.timestamp = datetime.now()
@@ -66,7 +65,7 @@ class Administration(object):
         project.laufzeit = laufzeit
         project.auftraggeber = auftraggeber
         project.projektleiter = projektleiter
-        project.availableHours = availableHours
+        project.availablehours = availablehours
         project.user = user
 
         with ProjectMapper() as mapper:

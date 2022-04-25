@@ -67,6 +67,9 @@ project = api.inherit('Project', bo, {
     'projektname': fields.String(attribute='projektname', description='Name eines Projekts'),
     'laufzeit': fields.Integer(attribute='laufzeit', description='Laufzeit eines Projekts'),
     'auftraggeber': fields.String(attribute='auftraggeber', description='Auftraggeber eines Projekts'),
+    'projektleiter': fields.Boolean(attribute='projektleiter', description='Projektleiter eines Projekts'),
+    'availablehours': fields.Float(attribute='availablehours', description='Verfügbare Stunden eines Projekt'),
+    'user': fields.Integer(attribute='user', description='Benutzer im Projekt')
 })
 
 @projectone.route('/users')
@@ -86,12 +89,6 @@ class UserListOperations(Resource):
 
     def post(self):
         """Anlegen eines neuen Customer-Objekts.
-
-        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
-        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
-        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
-        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
-        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
         """
         adm = Administration()
 
@@ -210,7 +207,8 @@ class ProjectListOperations(Resource):
 
         if proposal is not None:
      
-            p = adm.create_project(proposal.projektname, proposal.laufzeit, proposal.auftraggeber, proposal.projektleiter, proposal.availableHours, user)
+            p = adm.create_project(proposal.projektname, proposal.laufzeit, proposal.auftraggeber, 
+            proposal.projektleiter, proposal.availablehours, user)
             return p, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.

@@ -10,7 +10,7 @@
             "request": "launch",
             "module": "flask",
             "env": {
-                "FLASK_APP": "D:/Desktop/Projects/IT-Projekt_G10/src/main.py",
+                "FLASK_APP": ".src/main.py",
                 "FLASK_ENV": "development"
             },
             "args": [
