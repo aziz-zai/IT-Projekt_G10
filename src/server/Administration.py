@@ -5,7 +5,7 @@ from datetime import datetime
 from server.bo.AktivitätenBO import Aktivitäten
 from .db.UserMapper import UserMapper
 from server.bo.ArbeitszeitkontoBO import Arbeitszeitkonto
-from .db.ArbeitszeitkontoMapper import Arbeitszeitkonto
+from .db.ArbeitszeitkontoMapper import ArbeitszeitkontoMapper
 
 
 class Administration(object):
