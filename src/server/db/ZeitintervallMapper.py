@@ -27,7 +27,7 @@ class ZeitintervallMapper(Mapper):
         return result
     
     def find_by_key(self, key):
-        """Suchen eines Zeitintervalls mit vorgegebener Zeitintervall ID, da diese eindeutig ist."""
+        """Suchen eines Zeitintervalls mit vorgegebener Zeitintervall ID, da diese eindeutig ist"""
 
         result = None
 
@@ -58,7 +58,7 @@ class ZeitintervallMapper(Mapper):
         
 
     def insert(self, zeitintervall: Zeitintervall) -> Zeitintervall:
-        """Create zeitintervall Object."""
+        """Create zeitintervall Object"""
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM zeitintervall")
         tuples = cursor.fetchall()
