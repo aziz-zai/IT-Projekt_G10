@@ -114,7 +114,7 @@ class ProjektarbeitMapper(Mapper):
             projektarbeit.zeitdifferenz,
             projektarbeit.bezeichnung,
             projektarbeit.zeitintervall_id,
-            projektarbeit.activity_id,
+            projektarbeit.activity_id
         ))
         self._cnx.commit()
 
