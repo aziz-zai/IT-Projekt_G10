@@ -1,5 +1,4 @@
-from server.bo.ZeitintervallBO import Zeitintervall
-from .BusinessObject import BusinessObject
+from .ZeitintervallBO import Zeitintervall
 from datetime import datetime
 
 
