@@ -4,6 +4,11 @@ from .db.AktivitätenMapper import AktivitätenMapper
 from datetime import datetime
 from server.bo.AktivitätenBO import Aktivitäten
 from .db.UserMapper import UserMapper
+from .bo.GehenBO import Gehen
+from .db.GehenMapper import GehenMapper
+from .bo.KommenBO import Kommen
+from .db.KommenMapper import KommenMapper
+
 
 
 class Administration(object):
@@ -94,3 +99,36 @@ class Administration(object):
     def delete_user(self, user):
         with UserMapper() as mapper:
             return mapper.delete(user)
+
+
+
+    """
+    Gehen-spezifische Methoden
+    """ 
+    def create_gehen(self, id, zeitpunkt):
+        """Gehen Eintrag anlegen"""
+        gehen = Gehen
+        gehen.id = id
+        gehen.timestamp = datetime.now()
+        gehen.zeitpunkt = zeitpunkt
+
+        with GehenMapper() as mapper:
+            return mapper.insert(gehen)
+
+    def get_all_gehen(self):
+        """Alle Gehen Einträge auslesen"""
+        with GehenMapper() as mapper:
+            return mapper.find_all()
+
+    def get_gehen_by_id(self, id):
+        """Den Gehen Eintrag mit der gegebenen ID auslesen."""
+        with GehenMapper() as mapper:
+            return mapper.find_by_key(id)
+
+    def update_gehen(self, gehen):
+        with GehenMapper() as mapper:
+            return mapper.update(gehen)
+
+    def delete_gehen(self, gehen):
+        with GehenMapper() as mapper:
+            return mapper.delete(gehen)
