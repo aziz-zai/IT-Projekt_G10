@@ -132,3 +132,35 @@ class Administration(object):
     def delete_gehen(self, gehen):
         with GehenMapper() as mapper:
             return mapper.delete(gehen)
+
+
+    """
+    Kommen-spezifische Methoden
+    """ 
+    def create_kommen(self, id, zeitpunkt):
+        """Kommen Eintrag anlegen"""
+        kommen = Kommen
+        kommen.id = id
+        kommen.timestamp = datetime.now()
+        kommen.zeitpunkt = zeitpunkt
+
+        with KommenMapper() as mapper:
+            return mapper.insert(kommen)
+
+    def get_all_kommen(self):
+        """Alle Kommen Einträge auslesen"""
+        with KommenMapper() as mapper:
+            return mapper.find_all()
+
+    def get_kommen_by_id(self, id):
+        """Den Kommen Eintrag mit der gegebenen ID auslesen."""
+        with KommenMapper() as mapper:
+            return mapper.find_by_key(id)
+
+    def update_kommen(self, kommen):
+        with KommenMapper() as mapper:
+            return mapper.update(kommen)
+
+    def delete_kommen(self, kommen):
+        with KommenMapper() as mapper:
+            return mapper.delete(kommen)
