@@ -122,7 +122,7 @@ class Administration(object):
             return mapper.find_all()
 
     def get_projektarbeit_by_id(self, id):
-        """Die Projektarbeit mit der gegebenen ID auslesen."""
+        """Die Projektarbeit mit der gegebenen ID auslesen"""
         with ProjektarbeitMapper() as mapper:
             return mapper.find_by_key(id)
 
@@ -137,3 +137,35 @@ class Administration(object):
     def delete_projektarbeit(self, projektarbeit):
         with ProjektarbeitMapper() as mapper:
             return mapper.delete(projektarbeit)
+
+
+    """Pause-spezifische Methoden"""
+
+    def create_pause(self, start, ende, zeitdifferenz):
+        """Einen Benutzer anlegen"""
+        pause = Pause
+        pause.timestamp = datetime.now()
+        pause.start = start
+        pause.ende = ende
+        pause.zeitdifferenz = zeitdifferenz
+
+        with PauseMapper() as mapper:
+            return mapper.insert(pause)
+
+    def get_all_pausen(self):
+        """Alle Pausen auslesen"""
+        with PauseMapper() as mapper:
+            return mapper.find_all()
+
+    def get_pause_by_id(self, id):
+        """Die Pause mit der gegebenen ID auslesen"""
+        with PauseMapper() as mapper:
+            return mapper.find_by_key(id)
+
+    def update_pause(self, pause):
+        with PauseMapper() as mapper:
+            return mapper.update(pause)
+
+    def delete_pause(self, pause):
+        with PauseMapper() as mapper:
+            return mapper.delete(pause)
