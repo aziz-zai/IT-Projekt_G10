@@ -1,9 +1,13 @@
 from .bo.UserBO import User
-
 from .db.AktivitätenMapper import AktivitätenMapper
 from datetime import datetime
 from server.bo.AktivitätenBO import Aktivitäten
 from .db.UserMapper import UserMapper
+from .bo.ProjektarbeitBO import Projektarbeit
+from .db.ProjektarbeitMapper import ProjektarbeitMapper
+from .bo.PauseBO import Pause
+from .db.PauseMapper import PauseMapper
+
 
 
 class Administration(object):
@@ -94,3 +98,42 @@ class Administration(object):
     def delete_user(self, user):
         with UserMapper() as mapper:
             return mapper.delete(user)
+
+
+    """Projektarbeit-spezifische Methoden"""
+
+    def create_projektarbeit(self, bezeichnung, zeitintervall, activity, start, ende, zeitdifferenz):
+        """Einen Benutzer anlegen"""
+        projektarbeit = Projektarbeit
+        projektarbeit.timestamp = datetime.now()
+        projektarbeit.start = start
+        projektarbeit.ende = ende
+        projektarbeit.zeitdifferenz = zeitdifferenz
+        projektarbeit.bezeichnung = bezeichnung
+        projektarbeit.zeitintervall = zeitintervall
+        projektarbeit.activity = activity
+
+        with ProjektarbeitMapper() as mapper:
+            return mapper.insert(projektarbeit)
+
+    def get_all_projektarbeiten(self):
+        """Alle Projektarbeiten auslesen"""
+        with ProjektarbeitMapper() as mapper:
+            return mapper.find_all()
+
+    def get_projektarbeit_by_id(self, id):
+        """Die Projektarbeit mit der gegebenen ID auslesen."""
+        with ProjektarbeitMapper() as mapper:
+            return mapper.find_by_key(id)
+
+    def get_projektarbeit_by_bezeichnung(self, bezeichnung):
+        with ProjektarbeitMapper() as mapper:
+            return mapper.find_by_bezeichnung(bezeichnung)
+
+    def update_projektarbeit(self, projektarbeit):
+        with ProjektarbeitMapper() as mapper:
+            return mapper.update(projektarbeit)
+
+    def delete_projektarbeit(self, projektarbeit):
+        with ProjektarbeitMapper() as mapper:
+            return mapper.delete(projektarbeit)
