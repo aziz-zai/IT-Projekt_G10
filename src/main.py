@@ -73,14 +73,6 @@ aktivitäten = api.inherit('Aktivitäten',bo, {
 @projectone.route('/aktivitäten')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class AktivitätenListOperations(Resource):
-    @projectone.marshal_list_with(aktivitäten)
-    def get(self):
-        """Auslesen aller Customer-Objekte.
-
-        Sollten keine Customer-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
-        adm = Administration()
-        aktivitäten = adm.get_all_aktivitäten()
-        return aktivitäten
 
     @projectone.marshal_with(aktivitäten, code=200)
     @projectone.expect(aktivitäten)  # Wir erwarten ein User-Objekt von Client-Seite.
@@ -109,6 +101,19 @@ class AktivitätenListOperations(Resource):
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
+
+@projectone.route('/aktivitäten/<int:id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class AktivitätenListOperations(Resource):
+    @projectone.marshal_list_with(aktivitäten)
+    def get(self, id):
+        """Auslesen aller Customer-Objekte.
+
+        Sollten keine Customer-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
+        adm = Administration()
+        aktivitäten = adm.get_aktivitäten_by_id(id)
+        return aktivitäten
+
 
 @projectone.route('/users')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
