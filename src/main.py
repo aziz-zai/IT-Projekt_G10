@@ -114,6 +114,40 @@ class AktivitätenListOperations(Resource):
         aktivitäten = adm.get_aktivitäten_by_id(id)
         return aktivitäten
 
+    @projectone.marshal_with(aktivitäten)
+    def put(self, id):
+        """Update eines bestimmten aktivitäten-Objekts.
+
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        Customer-Objekts.
+        """
+        adm = Administration()
+        up = Aktivitäten(**api.payload)
+
+
+        if up is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
+            Siehe Hinweise oben.
+            """
+            up.id = id
+            adm.update_aktivitäten(up)
+            return '', 200
+        else:
+            return '', 500
+
+    @projectone.marshal_with(aktivitäten)
+    def delete(self, id):
+        """Löschen eines bestimmten User-Objekts.
+
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+
+        aktivitätend = adm.get_aktivitäten_by_id(id)
+        adm.delete_(aktivitätend)
+        return '', 200
+
 
 @projectone.route('/users')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
