@@ -296,7 +296,7 @@ class ArbeitszeitkontoListOperations(Resource):
         Sollten keine Customer-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
         adm = Administration()
         arbeitszeitkonto = adm.get_all_arbeitszeitkonto()
-        return arbeitszeitkonto
+        return arbeitszeitkonto 
 
 @projectone.route('/arbeitszeitkonto/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -333,6 +333,38 @@ class UserOperations(Resource):
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
+    def put(self, user):
+        """Update eines bestimmten User-Objekts.
+
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        Customer-Objekts.
+        """
+        adm = Administration()
+        up = Arbeitszeitkonto(**api.payload)
+
+
+        if up is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
+            Siehe Hinweise oben.
+            """
+            up.user = user
+            adm.update_arbeitszeitkonto(up)
+            return '', 200
+        else:
+            return '', 500
+
+    @projectone.marshal_with(user)
+    def delete(self, user):
+        """Löschen eines bestimmten User-Objekts.
+
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+
+        userd = adm.get_arbeitszeitkonto_by_id(user)
+        adm.delete_user(userd)
+        return '', 200
 
 
 if __name__ == '__main__':
