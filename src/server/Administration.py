@@ -164,3 +164,6 @@ class Administration(object):
     def delete_kommen(self, kommen):
         with KommenMapper() as mapper:
             return mapper.delete(kommen)
+
+
+    
