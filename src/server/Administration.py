@@ -1,3 +1,4 @@
+from server.bo.EreignisbuchungBO import Ereignisbuchung
 from .bo.UserBO import User
 
 from .db.AktivitätenMapper import AktivitätenMapper
@@ -8,6 +9,9 @@ from .bo.GehenBO import Gehen
 from .db.GehenMapper import GehenMapper
 from .bo.KommenBO import Kommen
 from .db.KommenMapper import KommenMapper
+from .bo.EreignisbuchungBO import Ereignisbuchung
+from .db.EreignisbuchungMapper import EreignisbuchungMapper
+
 
 
 
@@ -165,6 +169,38 @@ class Administration(object):
     def delete_kommen(self, kommen):
         with KommenMapper() as mapper:
             return mapper.delete(kommen)
+
+
+    """
+    Ereignisbuchung-spezifische Methoden
+    """ 
+    def create_ereignisbuchung(self, id, zeitpunkt):
+        """Ereignisbuchung anlegen"""
+        ereignisbuchung = Ereignisbuchung
+        ereignisbuchung.id = id
+        ereignisbuchung.timestamp = datetime.now()
+        ereignisbuchung.zeitpunkt = zeitpunkt
+
+        with EreignisbuchungMapper() as mapper:
+            return mapper.insert(ereignisbuchung)
+
+    def get_all_ereignisbuchung(self):
+        """Alle Ereignisbuchung Einträge auslesen"""
+        with EreignisbuchungMapper() as mapper:
+            return mapper.find_all()
+
+    def get_ereignisbuchung_by_id(self, id):
+        """Den Ereignisbuchung Eintrag mit der gegebenen ID auslesen."""
+        with EreignisbuchungMapper() as mapper:
+            return mapper.find_by_key(id)
+
+    def update_ereignisbuchung(self, ereignisbuchung):
+        with EreignisbuchungMapper() as mapper:
+            return mapper.update(ereignisbuchung)
+
+    def delete_ereignisbuchung(self, ereignisbuchung):
+        with EreignisbuchungMapper() as mapper:
+            return mapper.delete(ereignisbuchung)
 
 
     

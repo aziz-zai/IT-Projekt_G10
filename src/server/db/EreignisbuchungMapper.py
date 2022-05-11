@@ -3,7 +3,7 @@ from server.bo.EreignisbuchungBO import Ereignisbuchung
 from server.db.Mapper import Mapper
 
 
-class Ereignisbuchung(Mapper):
+class EreignisbuchungMapper(Mapper):
 
 
     def __init__(self):
