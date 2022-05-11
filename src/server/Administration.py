@@ -61,7 +61,7 @@ class Administration(object):
     """
     User-spezifische Methoden
     """
-    def create_user(self, vorname, nachname, benutzername, email, google_user_id):
+    def create_user(self, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto):
         """Einen Benutzer anlegen"""
         user = User
         user.timestamp = datetime.now()
@@ -70,6 +70,7 @@ class Administration(object):
         user.benutzername = benutzername
         user.email = email
         user.google_user_id = google_user_id
+        user.arbeitszeitkonto = arbeitszeitkonto
 
         with UserMapper() as mapper:
             return mapper.insert(user)
