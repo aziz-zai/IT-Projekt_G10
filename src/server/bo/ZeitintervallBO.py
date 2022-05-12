@@ -8,4 +8,4 @@ class Zeitintervall(BusinessObject):
         self.start = start
         self.ende = ende
         self.zeitdifferenz = zeitdifferenz
-        super().__init__(timestamp=timestamp,id=id,)
+        super().__init__(timestamp=timestamp,id=id)

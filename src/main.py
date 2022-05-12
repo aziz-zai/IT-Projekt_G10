@@ -78,7 +78,6 @@ projektarbeiten = api.inherit('Projektarbeiten', bo, {
     'ende': fields.String(attribute='ende', description='Ende einer Projektarbeit'),
     'zeitdifferenz': fields.String(attribute='zeitdifferenz', description='Zeitdifferenz einer Projektarbeit'),
     'bezeichnung': fields.String(attribute='bezeichnung', description='Bezeichnung eines Projektes'),
-    'zeitintervall': fields.String(attribute='zeitintervall', description='Zeitintervall ID eines Projektes'),
     'activity': fields.String(attribute='activity', description='Aktivitäten ID eines Projektes')
 })
 
@@ -123,7 +122,7 @@ class ProjektarbeitenListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            pr = adm.create_projektarbeit(proposal.start, proposal.ende, proposal.zeitdifferenz, proposal.bezeichnung, proposal.zeitintervall, proposal.activity)
+            pr = adm.create_projektarbeit(proposal.start, proposal.ende, proposal.zeitdifferenz, proposal.bezeichnung, proposal.activity)
             return pr, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.

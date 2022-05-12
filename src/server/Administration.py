@@ -103,7 +103,7 @@ class Administration(object):
 
     """Projektarbeit-spezifische Methoden"""
 
-    def create_projektarbeit(self, bezeichnung, zeitintervall, activity, start, ende, zeitdifferenz):
+    def create_projektarbeit(self, bezeichnung, activity, start, ende, zeitdifferenz):
         """Einen Benutzer anlegen"""
         projektarbeit = Projektarbeit
         projektarbeit.timestamp = datetime.now()
@@ -111,7 +111,6 @@ class Administration(object):
         projektarbeit.ende = ende
         projektarbeit.zeitdifferenz = zeitdifferenz
         projektarbeit.bezeichnung = bezeichnung
-        projektarbeit.zeitintervall = zeitintervall
         projektarbeit.activity = activity
 
         with ProjektarbeitMapper() as mapper:
