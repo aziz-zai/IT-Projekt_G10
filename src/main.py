@@ -74,19 +74,18 @@ aktivitäten = api.inherit('Aktivitäten',bo, {
 
 
 ereignisbuchungen = api.inherit('Ereignisbuchungen', bo, {
-    'buchung': fields.String(attribute='buchung', description='bezeichnung einer Buchung eines Ereignisses'),
-    'user': fields.String(attribute='user', description='bezeichung eines Users'),
-    'arbeitszeitkonto': fields.String(attribute='arbeitszeitkonto', description='nbezeichnung eines Arbeitszeitkontos'),
+    'buchung': fields.Integer(attribute='buchung', description='bezeichnung einer Buchung eines Ereignisses'),
+    'arbeitszeitkonto': fields.Integer(attribute='arbeitszeitkonto', description='nbezeichnung eines Arbeitszeitkontos'),
 })
 
 
 gehen = api.inherit('Gehen', bo, {
-    'zeitpunkt': fields.String(attribute='zeitpunkt', description='zeitpunkt eines Gehen-Eintrags'),
+    'zeitpunkt': fields.DateTime(attribute='zeitpunkt', description='zeitpunkt eines Gehen-Eintrags'),
 })
 
 
 kommen = api.inherit('Kommen', bo, {
-    'zeitpunkt': fields.String(attribute='zeitpunkt', description='zeitpunkt eines Kommen-Eintrags'),
+    'zeitpunkt': fields.DateTime(attribute='zeitpunkt', description='zeitpunkt eines Kommen-Eintrags'),
 })
 
 
