@@ -31,7 +31,7 @@ CORS(app, resources=r'/projectone/*')
 
 """
 In dem folgenden Abschnitt bauen wir ein Modell auf, das die Datenstruktur beschreibt, 
-auf deren Basis Clients und Server Daten austauschen. Grundlage hierfür ist das Package flask-restx.
+auf deren Basis Clients und Server Daten austauschen. Grundlage hierfür ist das Package flask-restx. 
 """
 api = Api(app, version='1.0', title='Project_One_API',
     description='Project_One ist unser IT Projekt')
