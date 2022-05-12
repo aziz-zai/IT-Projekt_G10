@@ -18,12 +18,9 @@ USE `projectone`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 -- Table structure for table `user`
-<<<<<<< HEAD
-=======
 --
 -- Test
 -- Test2
->>>>>>> main
 DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
