@@ -101,9 +101,10 @@ class Administration(object):
             return mapper.delete(user)
             
     """Abwesenheit"""
-    def creat_abwesenheit (self, zeitintervallID, bemerkung):
+    def creat_abwesenheit (self, abwesenheitsart, zeitintervallID, bemerkung):
         abwesenheit = Abwesenheit
         abwesenheit.timestamp = datetime.now()
+        abwesenheit.abwesenheitsart = abwesenheitsart
         abwesenheit.zeitintervallID = zeitintervallID
         abwesenheit.bemerkung = bemerkung
 
