@@ -103,13 +103,13 @@ class Administration(object):
 
     """Projektarbeit-spezifische Methoden"""
 
-    def create_projektarbeit(self, bezeichnung, activity, start, ende, zeitdifferenz):
+    def create_projektarbeit(self, bezeichnung, activity, start, ende):
         """Einen Benutzer anlegen"""
         projektarbeit = Projektarbeit
         projektarbeit.timestamp = datetime.now()
         projektarbeit.start = start
         projektarbeit.ende = ende
-        projektarbeit.zeitdifferenz = zeitdifferenz
+        projektarbeit.zeitdifferenz = ende - start
         projektarbeit.bezeichnung = bezeichnung
         projektarbeit.activity = activity
 
@@ -141,13 +141,13 @@ class Administration(object):
 
     """Pause-spezifische Methoden"""
 
-    def create_pause(self, start, ende, zeitdifferenz):
+    def create_pause(self, start, ende):
         """Einen Benutzer anlegen"""
         pause = Pause
         pause.timestamp = datetime.now()
         pause.start = start
         pause.ende = ende
-        pause.zeitdifferenz = zeitdifferenz
+        pause.zeitdifferenz = ende - start
 
         with PauseMapper() as mapper:
             return mapper.insert(pause)
@@ -169,3 +169,6 @@ class Administration(object):
     def delete_pause(self, pause):
         with PauseMapper() as mapper:
             return mapper.delete(pause)
+
+
+        

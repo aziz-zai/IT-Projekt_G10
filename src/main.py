@@ -74,17 +74,17 @@ aktivitäten = api.inherit('Aktivitäten',bo, {
 })
 
 projektarbeiten = api.inherit('Projektarbeiten', bo, {
-    'start': fields.String(attribute='start', description='Start einer Projektarbeit'),
-    'ende': fields.String(attribute='ende', description='Ende einer Projektarbeit'),
-    'zeitdifferenz': fields.String(attribute='zeitdifferenz', description='Zeitdifferenz einer Projektarbeit'),
+    'start': fields.Integer(attribute='start', description='Start einer Projektarbeit'),
+    'ende': fields.Integer(attribute='ende', description='Ende einer Projektarbeit'),
+    'zeitdifferenz': fields.Float(attribute='zeitdifferenz', description='Zeitdifferenz einer Projektarbeit'),
     'bezeichnung': fields.String(attribute='bezeichnung', description='Bezeichnung eines Projektes'),
-    'activity': fields.String(attribute='activity', description='Aktivitäten ID eines Projektes')
+    'activity': fields.Integer(attribute='activity', description='Aktivitäten ID eines Projektes')
 })
 
 pausen = api.inherit('Pausen', bo, {
-    'start': fields.String(attribute='start', description='Start einer Pause'),
-    'ende': fields.String(attribute='ende', description='Ende einer Pause'),
-    'zeitdifferenz': fields.String(attribute='zeitdifferenz', description='Zeitdifferenz einer Pause')
+    'start': fields.Integer(attribute='start', description='Start einer Pause'),
+    'ende': fields.Integer(attribute='ende', description='Ende einer Pause'),
+    'zeitdifferenz': fields.Float(attribute='zeitdifferenz', description='Zeitdifferenz einer Pause')
 })
 
 

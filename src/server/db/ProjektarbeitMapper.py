@@ -1,4 +1,3 @@
-from time import time
 from server.bo.ProjektarbeitBO import Projektarbeit
 from server.db.Mapper import Mapper
 
@@ -86,7 +85,6 @@ class ProjektarbeitMapper(Mapper):
         cursor.close()
 
         return result
-        
 
     def insert(self, projektarbeit: Projektarbeit) -> Projektarbeit:
         """Create projektarbeit Object"""
