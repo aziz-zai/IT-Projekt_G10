@@ -111,11 +111,6 @@ class Administration(object):
         with ArbeitszeitkontoMapper() as mapper:
             return mapper.insert(arbeitszeitkonto)
 
-    def get_all_arbeitszeitkonto(self):
-        """Alle Benutzer auslesen"""
-        with ArbeitszeitkontoMapper() as mapper:
-            return mapper.find_all()
-
     def get_arbeitszeitkonto_by_id(self, user):
         """Den Benutzer mit der gegebenen ID auslesen."""
         with ArbeitszeitkontoMapper() as mapper:

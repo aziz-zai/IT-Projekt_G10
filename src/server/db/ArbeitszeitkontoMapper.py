@@ -8,27 +8,6 @@ class ArbeitszeitkontoMapper(Mapper):
 
     def __init__(self):
         super().__init__()
-
-    def find_all(self):
-        """Auslesen aller Kunde.
-
-        :return Eine Sammlung mit Customer-Objekten, die sämtliche Kunden
-                repräsentieren.
-        """
-        result = []
-        cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, urlaubstage, user from arbeitszeitkonto")
-        tuples = cursor.fetchall()
-
-        for (id, timestamp, urlaubstage, user) in tuples:
-            arbeitszeitkonto = Arbeitszeitkonto (id=id, timestamp=timestamp, urlaubstage=urlaubstage, user=user)
-
-            result.append(arbeitszeitkonto)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
     
     def find_by_key(self, key):
         """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
@@ -68,7 +47,7 @@ class ArbeitszeitkontoMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE arbeitszeitkonto SET timestamp=%s, urlaubstage=%s WHERE id=%s"
-        data = (arbeitszeitkonto.timestamp, arbeitszeitkonto.urlaubstage)
+        data = (arbeitszeitkonto.timestamp, arbeitszeitkonto.urlaubstage, arbeitszeitkonto.user)
         cursor.execute(command, data)
 
         self._cnx.commit()

@@ -286,17 +286,7 @@ class UserByGoogleUserIdOperations(Resource):
         return userg
 
 
-@projectone.route('/arbeitszeitkonto')
-@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class ArbeitszeitkontoListOperations(Resource):
-    @projectone.marshal_list_with(arbeitszeitkonto)
-    def get(self):
-        """Auslesen aller Customer-Objekte.
 
-        Sollten keine Customer-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
-        adm = Administration()
-        arbeitszeitkonto = adm.get_all_arbeitszeitkonto()
-        return arbeitszeitkonto 
 
 @projectone.route('/arbeitszeitkonto/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
