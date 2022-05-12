@@ -99,11 +99,9 @@ class Administration(object):
     def delete_user(self, user):
         with UserMapper() as mapper:
             return mapper.delete(user)
-"""
-Abwesenheit-spezifische Methoden
-""" 
-    def creat_abwesenheit (self, zeitintervallID, bemerkung)
-    """Einen Benutzer anlegen"""
+            
+    """Abwesenheit"""
+    def creat_abwesenheit (self, zeitintervallID, bemerkung):
         abwesenheit = Abwesenheit
         abwesenheit.timestamp = datetime.now()
         abwesenheit.zeitintervallID = zeitintervallID
