@@ -3,5 +3,7 @@ from datetime import datetime
 
 
 class Zeitintervallbuchung(BusinessObject):
-    def __init__(self, buchung: int, timestamp: datetime = datetime.now(), id: int= 0):
+    def __init__(self, buchung: int, arbeitszeitkonto: int timestamp: datetime = datetime.now(), id: int= 0):
         super().__init__(timestamp=timestamp,id=id, buchung=buchung)
+
+#arbeitszeitkonto als At hinzufügen

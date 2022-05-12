@@ -14,11 +14,11 @@ class AbwesenheitMapper(Mapper):
         
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, zeitintervallID, bemerkung from abwesenheit")
+        cursor.execute("SELECT id, abwesenheitsart, timestamp, zeitintervallID, bemerkung from abwesenheit")
         tuples = cursor.fetchall()
 
-        for (id, timestamp, zeitintervallID, bemerkung) in tuples:
-            Abwesenheit = Abwesenheit(id=id, timestamp=timestamp, zeitintervallID=zeitintervallID, bemerkung=bemerkung)
+        for (id, abwesenheitsart, timestamp, zeitintervallID, bemerkung) in tuples:
+            Abwesenheit = Abwesenheit(id=id, abwesenheitsart=abwesenheitsart, timestamp=timestamp, zeitintervallID=zeitintervallID, bemerkung=bemerkung)
 
             result.append(Abwesenheit)
 
@@ -34,14 +34,15 @@ class AbwesenheitMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT abwesenheitID, timestamp, zeitintervallID, bemerkung FROM abwesenheit WHERE id={}".format(key)
+        command = "SELECT abwesenheitID, abwesenheitsart, timestamp, zeitintervallID, bemerkung FROM abwesenheit WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, zeitintervallID, bemerkung) = tuples[0]
+            (id, abwesenheitsart, timestamp, zeitintervallID, bemerkung) = tuples[0]
             abwesenheit = Abwesenheit()
             id=id,
+            abwesenheitsart=abwesenheitsart,
             timestamp=timestamp,
             zeitintervallID=zeitintervallID,
             bemerkung=bemerkung,
@@ -65,9 +66,10 @@ class AbwesenheitMapper(Mapper):
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, timestamp, zeitintervallID, bemerkung) in tuples:
+        for (id, abwesenheitsart, timestamp, zeitintervallID, bemerkung) in tuples:
             Abwesenheit = Abwesenheit
             id=id,
+            abwesenheitsart=abwesenheitsart
             timestamp=timestamp,
             zeitintervallID=zeitintervallID,
             bemerkung=bemerkung, 
@@ -112,8 +114,8 @@ class AbwesenheitMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE abwesenheit SET timestamp=%s, zeitintervallID=%s, bemerkung=%s WHERE id=%s"
-        data = (abwesenheit.timestamp, abwesenheit.zeitintervallID, abwesenheit.bemerkung)
+        command = "UPDATE abwesenheit SET abwesenheitsart=%s, timestamp=%s, zeitintervallID=%s, bemerkung=%s WHERE id=%s"
+        data = (abwesenheit.abwesenheitsart, abwesenheit.timestamp, abwesenheit.zeitintervallID, abwesenheit.bemerkung)
         cursor.execute(command, data)
 
         self._cnx.commit()
