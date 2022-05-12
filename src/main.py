@@ -9,7 +9,7 @@ from server.bo.AktivitätenBO import Aktivitäten
 # Wir greifen natürlich auf unsere Applikationslogik inkl. BusinessObject-Klassen zurück
 from server.Administration import Administration
 from server.bo.UserBO import User
-from server.bo.EreignisbuchungBO import Ereignisbuchung
+from server.bo.EreignisbuchungBo import Ereignisbuchung
 from server.bo.GehenBO import Gehen
 from server.bo.KommenBO import Kommen
 
@@ -74,18 +74,17 @@ aktivitäten = api.inherit('Aktivitäten',bo, {
 
 
 ereignisbuchungen = api.inherit('Ereignisbuchungen', bo, {
-    'buchung': fields.Integer(attribute='buchung', description='bezeichnung einer Buchung eines Ereignisses'),
     'arbeitszeitkonto': fields.Integer(attribute='arbeitszeitkonto', description='nbezeichnung eines Arbeitszeitkontos'),
 })
 
 
 gehen = api.inherit('Gehen', bo, {
-    'zeitpunkt': fields.DateTime(attribute='zeitpunkt', description='zeitpunkt eines Gehen-Eintrags'),
+    'zeitpunkt': fields.String(attribute='zeitpunkt', description='zeitpunkt eines Gehen-Eintrags'),
 })
 
 
 kommen = api.inherit('Kommen', bo, {
-    'zeitpunkt': fields.DateTime(attribute='zeitpunkt', description='zeitpunkt eines Kommen-Eintrags'),
+    'zeitpunkt': fields.String(attribute='zeitpunkt', description='zeitpunkt eines Kommen-Eintrags'),
 })
 
 
@@ -406,7 +405,6 @@ class GehenListOperations(Resource):
 
     @projectone.marshal_with(gehen, code=200)
     @projectone.expect(gehen)  # Wir erwarten ein Gehen-Objekt von Client-Seite.
-
     def post(self):
         """Anlegen eines neuen Gehen-Objekts.
 

@@ -1,4 +1,4 @@
-from server.bo.EreignisbuchungBO import Ereignisbuchung
+from .bo.EreignisbuchungBo import Ereignisbuchung
 from .bo.UserBO import User
 
 from .db.AktivitätenMapper import AktivitätenMapper
@@ -9,7 +9,6 @@ from .bo.GehenBO import Gehen
 from .db.GehenMapper import GehenMapper
 from .bo.KommenBO import Kommen
 from .db.KommenMapper import KommenMapper
-from .bo.EreignisbuchungBO import Ereignisbuchung
 from .db.EreignisbuchungMapper import EreignisbuchungMapper
 
 
@@ -110,10 +109,9 @@ class Administration(object):
     """
     Gehen-spezifische Methoden
     """ 
-    def create_gehen(self, id, zeitpunkt):
+    def create_gehen(self,zeitpunkt):
         """Gehen Eintrag anlegen"""
         gehen = Gehen
-        gehen.id = id
         gehen.timestamp = datetime.now()
         gehen.zeitpunkt = zeitpunkt
 
@@ -142,10 +140,9 @@ class Administration(object):
     """
     Kommen-spezifische Methoden
     """ 
-    def create_kommen(self, id, zeitpunkt):
+    def create_kommen(self, zeitpunkt):
         """Kommen Eintrag anlegen"""
         kommen = Kommen
-        kommen.id = id
         kommen.timestamp = datetime.now()
         kommen.zeitpunkt = zeitpunkt
 

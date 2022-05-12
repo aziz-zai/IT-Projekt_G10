@@ -1,5 +1,5 @@
 from time import time
-from server.bo.EreignisbuchungBO import Ereignisbuchung
+from server.bo.EreignisbuchungBo import Ereignisbuchung
 from server.db.Mapper import Mapper
 
 
