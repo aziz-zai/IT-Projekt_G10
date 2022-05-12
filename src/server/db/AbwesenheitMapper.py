@@ -4,7 +4,7 @@ from server.bo.AbwesenheitBO import Abwesenheit
 from server.db.Mapper import Mapper
 
 
-class AktivitätenMapper(Mapper):
+class AbwesenheitMapper(Mapper):
 
 
     def __init__(self):

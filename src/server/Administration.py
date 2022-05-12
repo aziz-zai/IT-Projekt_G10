@@ -2,8 +2,12 @@ from .bo.UserBO import User
 
 from .db.AktivitätenMapper import AktivitätenMapper
 from datetime import datetime
-from server.bo.AktivitätenBO import Aktivitäten
+from .bo.AktivitätenBO import Aktivitäten
 from .db.UserMapper import UserMapper
+
+from .bo.AbwesenheitBO import Abwesenheit
+from .db.AbwesenheitMapper import AbwesenheitMapper
+
 
 
 class Administration(object):
@@ -56,7 +60,7 @@ class Administration(object):
     """
     User-spezifische Methoden
     """
-    def create_user(self, vorname, nachname, benutzername, email, google_user_id):
+    def create_user(self, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto):
         """Einen Benutzer anlegen"""
         user = User
         user.timestamp = datetime.now()
@@ -65,6 +69,7 @@ class Administration(object):
         user.benutzername = benutzername
         user.email = email
         user.google_user_id = google_user_id
+        arbeitszeitkonto=arbeitszeitkonto
 
         with UserMapper() as mapper:
             return mapper.insert(user)
@@ -94,3 +99,37 @@ class Administration(object):
     def delete_user(self, user):
         with UserMapper() as mapper:
             return mapper.delete(user)
+"""
+Abwesenheit-spezifische Methoden
+""" 
+    def creat_abwesenheit (self, zeitintervallID, bemerkung)
+    """Einen Benutzer anlegen"""
+        abwesenheit = Abwesenheit
+        abwesenheit.timestamp = datetime.now()
+        abwesenheit.zeitintervallID = zeitintervallID
+        abwesenheit.bemerkung = bemerkung
+
+        with AbwesenheitMapper() as mapper:             
+            return mapper.insert(abwesenheit)
+
+    def get_all_abwesenheit(self):
+        """Alle Abwesenheiten auslesen"""
+        with AbwesenheitMapper() as mapper:
+            return mapper.find_all()
+
+    def get_abwesenheit_by_id(self, id):
+        """Den Benutzer mit der gegebenen ID auslesen."""
+        with AbwesenheitMapper() as mapper:
+            return mapper.find_by_key(id)
+
+    def get_abwesenheit_by_bemerkung(self, bemerkung):
+        with AbwesenheitMapper() as mapper:
+            return mapper.find_by_bemerkung(bemerkung)
+
+    def update_abwesenheit(self, abwesenheit):
+        with AbwesenheitMapper() as mapper:
+            return mapper.update(abwesenheit)
+
+    def delete_abwesenheit(self, abwesenheit):
+        with AbwesenheitMapper() as mapper:
+            return mapper.delete(abwesenheit)

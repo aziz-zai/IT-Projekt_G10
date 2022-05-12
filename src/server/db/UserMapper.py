@@ -17,11 +17,11 @@ class UserMapper(Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id from user")
+        cursor.execute("SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto from user")
         tuples = cursor.fetchall()
 
-        for (id, timestamp, vorname, nachname, benutzername, email, google_user_id) in tuples:
-            user = User(id=id, timestamp=timestamp, vorname=vorname, nachname=nachname, benutzername=benutzername, email=email, google_user_id=google_user_id)
+        for (id, timestamp, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto) in tuples:
+            user = User(id=id, timestamp=timestamp, vorname=vorname, nachname=nachname, benutzername=benutzername, email=email, google_user_id=google_user_id, arbeitszeitkonto=arbeitszeitkonto)
 
             result.append(user)
 
@@ -37,12 +37,12 @@ class UserMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id FROM user WHERE id={}".format(key)
+        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto FROM user WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, vorname, nachname, benutzername, email, google_user_id) = tuples[0]
+            (id, timestamp, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto) = tuples[0]
             user = User(
             id=id,
             timestamp=timestamp,
@@ -50,7 +50,8 @@ class UserMapper(Mapper):
             nachname=nachname,
             benutzername=benutzername,
             email=email,
-            google_user_id=google_user_id)
+            google_user_id=google_user_id,
+            arbeitszeitkonto=arbeitszeitkonto)
             result = user
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
@@ -67,11 +68,11 @@ class UserMapper(Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id FROM user WHERE nachname LIKE '{}' ORDER BY nachname".format(nachname)
+        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto FROM user WHERE nachname LIKE '{}' ORDER BY nachname".format(nachname)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, timestamp, vorname, nachname, benutzername, email, google_user_id) in tuples:
+        for (id, timestamp, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto) in tuples:
             user = User(
             id=id,
             timestamp=timestamp,
@@ -79,7 +80,8 @@ class UserMapper(Mapper):
             nachname=nachname,
             benutzername=benutzername,
             email=email,
-            google_user_id=google_user_id)    
+            google_user_id=google_user_id,
+            arbeitszeitkonto=arbeitszeitkonto)
             result.append(user)
 
         self._cnx.commit()
@@ -98,12 +100,12 @@ class UserMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id FROM user WHERE google_user_id LIKE '{}' ORDER BY google_user_id".format(google_user_id)
+        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto FROM user WHERE google_user_id LIKE '{}' ORDER BY google_user_id".format(google_user_id)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, vorname, nachname, benutzername, email, google_user_id) = tuples[0]
+            (id, timestamp, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto) = tuples[0]
             user = User(
             id=id,
             timestamp=timestamp,
@@ -111,7 +113,8 @@ class UserMapper(Mapper):
             nachname=nachname,
             benutzername=benutzername,
             email=email,
-            google_user_id=google_user_id)
+            google_user_id=google_user_id,
+            arbeitszeitkonto=arbeitszeitkonto)
             result = user
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
@@ -130,8 +133,8 @@ class UserMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE user SET timestamp=%s, vorname=%s, nachname=%s, benutzername=%s, email=%s, google_user_id=%s WHERE id=%s"
-        data = (user.timestamp, user.vorname, user.nachname, user.benutzername, user.email, user.google_user_id, user.id)
+        command = "UPDATE user SET timestamp=%s, vorname=%s, nachname=%s, benutzername=%s, email=%s, google_user_id=%s, arbeitszeitkonto=%s WHERE id=%s"
+        data = (user.timestamp, user.vorname, user.nachname, user.benutzername, user.email, user.google_user_id, user.id, user.arbeitszeitkonto)
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -153,8 +156,8 @@ class UserMapper(Mapper):
                 user.id = 1
         command = """
             INSERT INTO user (
-                id, timestamp, vorname, nachname, benutzername, email, google_user_id
-            ) VALUES (%s,%s,%s,%s,%s,%s,%s)
+                id, timestamp, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto
+            ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
         """
         cursor.execute(command, (
             user.id,
@@ -163,7 +166,8 @@ class UserMapper(Mapper):
             user.nachname,
             user.benutzername,
             user.email,
-            user.google_user_id
+            user.google_user_id,
+            user.arbeitszeitkonto
         ))
         self._cnx.commit()
 
