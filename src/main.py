@@ -1,4 +1,5 @@
 # Unser Service basiert auf Flask
+from xmlrpc.client import Boolean
 from flask import Flask
 # Auf Flask aufbauend nutzen wir RestX
 from flask_restx import Api, Resource, fields
@@ -9,6 +10,8 @@ from server.bo.AktivitätenBO import Aktivitäten
 # Wir greifen natürlich auf unsere Applikationslogik inkl. BusinessObject-Klassen zurück
 from server.Administration import Administration
 from server.bo.UserBO import User
+from server.bo.ProjectBO import Project
+
 # Außerdem nutzen wir einen selbstgeschriebenen Decorator, der die Authentifikation übernimmt
 #from SecurityDecorator import secured
 #from SecurityDecorator import secured
@@ -68,8 +71,50 @@ aktivitäten = api.inherit('Aktivitäten',bo, {
     'dauer': fields.Float(attribute='dauer', description='bezeichnung der Dauer einer Aktivität'),
     'capacity': fields.Float(attribute='capacity', description='bezeichnung der Kapazität einer Aktivität'),
     'project': fields.Float(attribute='capacity', description='bezeichnung der Kapazität einer Aktivität'),
+
+})
+ 
+project = api.inherit('Project',bo, {
+    'projektname': fields.String(attribute='projektname', description='projektname'),
+    'laufzeit': fields.Integer(attribute='laufzeit', description='laufzeit'),
+    'auftraggeber': fields.String(attribute='auftraggeber', description='auftraggeber'),
+    'projektleiter': fields.Boolean(attribute='projektleiter', description='projektleiter'),
+    'availablehours': fields.Integer(attribute='availablehours', description='availablehours'),
+    'user': fields.Integer(attribute='user', description='user'),
 })
 
+
+@projectone.route('/project')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectListOperations(Resource):
+
+    @projectone.marshal_with(project, code=200)
+    @projectone.expect(project)  # Wir erwarten ein User-Objekt von Client-Seite.
+
+    def post(self):
+        """Anlegen eines neuen Customer-Objekts.
+
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
+        """
+        adm = Administration()
+
+        proposal = Project(**api.payload)
+
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+        if proposal is not None:
+            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
+            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben. 
+            """
+            a = adm.create_project(proposal.projektname, proposal.laufzeit, proposal.auftraggeber, proposal.projektleiter, proposal.availablehours, proposal.user)
+            return a, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
 
 
 @projectone.route('/aktivitäten')
@@ -103,6 +148,48 @@ class AktivitätenListOperations(Resource):
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
+
+    def get(self, id):
+        """Auslesen aller Customer-Objekte.
+
+        Sollten keine Customer-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
+        adm = Administration()
+        project = adm.get_project_by_id(id)
+        return project
+
+    @projectone.marshal_with(project)
+    def put(self, id):
+        """Update eines bestimmten aktivitäten-Objekts.
+
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        Customer-Objekts.
+        """
+        adm = Administration()
+        up = Project(**api.payload)
+
+
+        if up is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
+            Siehe Hinweise oben.
+            """
+            up.id = id
+            adm.update_project(up)
+            return '', 200
+        else:
+            return '', 500
+
+    @projectone.marshal_with(project)
+    def delete(self, id):
+        """Löschen eines bestimmten User-Objekts.
+
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+
+        project = adm.get_project_by_id(id)
+        adm.delete_(project)
+        return '', 200
 
 @projectone.route('/aktivitäten/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
