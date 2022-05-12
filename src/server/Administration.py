@@ -1,3 +1,4 @@
+from server.bo.ZeitintervallbuchungBO import Zeitintervallbuchung
 from .bo.UserBO import User
 
 from .db.AktivitätenMapper import AktivitätenMapper
@@ -7,6 +8,9 @@ from .db.UserMapper import UserMapper
 
 from .bo.AbwesenheitBO import Abwesenheit
 from .db.AbwesenheitMapper import AbwesenheitMapper
+
+from.bo.ZeitintervallbuchungBO import Zeitintervallbuchung
+from.db.ZeitintervallbuchungMapper import ZeitintervallbuchungMapper
 
 
 
@@ -132,3 +136,34 @@ class Administration(object):
     def delete_abwesenheit(self, abwesenheit):
         with AbwesenheitMapper() as mapper:
             return mapper.delete(abwesenheit)
+
+    """Zeitintervallbuchung"""
+
+    def create_zeitintervallbuchung(self, buchung, arbeitszeitkonto, timestamp):
+        zeitintervallbuchung = Zeitintervallbuchung
+        zeitintervallbuchung.timestamp = datetime.now()
+        zeitintervallbuchung.buchung = buchung
+        zeitintervallbuchung.arbeitszeitkonto = Arbeitszeitkonto
+
+        with ZeitintervallbuchungMapper() as mapper:
+            return mapper.insert(Zeitintervallbuchung)
+
+    def get_all_zeitintervallbuchung(self):
+        """Alle Zeitintervallbuchungen auslesen"""
+        with ZeitintervallbuchungMapper() as mapper:
+            return mapper.find_all()
+
+    def get_zeitintervallbuchung_by_id(self, id):
+        """Den Benutzer mit der gegebenen ID auslesen."""
+        
+        with ZeitintervallBuchungMapper as mapper:
+            return mapper.find_by_key(id)
+
+    def update_zeitintervallbuchung(self, zeitintervallbuchung):
+        with ZeitintervallBuchungMapper() as mapper:
+            return mapper.update(Zeitintervallbuchung)
+
+    def delete_zeitintervallbuchung(self, Zeitintervallbuchung):
+        with ZeitintervallBuchungMapper() as mapper:
+            return mapper.delete(Zeitintervallbuchung)
+
