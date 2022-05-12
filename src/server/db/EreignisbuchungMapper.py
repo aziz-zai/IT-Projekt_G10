@@ -17,11 +17,11 @@ class EreignisbuchungMapper(Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, buchung, user, arbeitszeitkonto from eregnisbuchung")
+        cursor.execute("SELECT id, timestamp, buchung, arbeitszeitkonto from eregnisbuchung")
         tuples = cursor.fetchall()
 
-        for (id, timestamp, buchung, user, arbeitszeitkonto) in tuples:
-            ereignisbuchung = Ereignisbuchung(user = user, id = id, timestamp = timestamp, buchung = buchung,  arbeitszeitkonto = arbeitszeitkonto)
+        for (id, timestamp, buchung, arbeitszeitkonto) in tuples:
+            ereignisbuchung = Ereignisbuchung(id = id, timestamp = timestamp, buchung = buchung,  arbeitszeitkonto = arbeitszeitkonto)
 
             result.append(ereignisbuchung)
 
@@ -37,17 +37,16 @@ class EreignisbuchungMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, buchung, user, arbeitszeitkonto FROM ereignisbuchung WHERE id={}".format(key)
+        command = "SELECT id, timestamp, buchung, arbeitszeitkonto FROM ereignisbuchung WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, buchung, user, arbeitszeitkonto) = tuples[0]
+            (id, timestamp, buchung, arbeitszeitkonto) = tuples[0]
             ereignisbuchung = Ereignisbuchung(
             id = id,
             timestamp = timestamp,
             buchung = buchung,
-            user = user,
             arbeitszeitkonto = arbeitszeitkonto)
             result = ereignisbuchung
         except IndexError:
@@ -70,8 +69,8 @@ class EreignisbuchungMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE ereignisbuchung SET timestamp = %s, user = %s, buchung = %s, arbeitszeitkonto = %s WHERE id = %s"
-        data = (ereignisbuchung.timestamp, ereignisbuchung.buchung, ereignisbuchung.user, ereignisbuchung.id)
+        command = "UPDATE ereignisbuchung SET timestamp = %s, buchung = %s, arbeitszeitkonto = %s WHERE id = %s"
+        data = (ereignisbuchung.timestamp, ereignisbuchung.buchung, ereignisbuchung.id)
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -93,13 +92,12 @@ class EreignisbuchungMapper(Mapper):
                 ereignisbuchung.id = 1
         command = """
             INSERT INTO ereignisbuchung (
-                id, timestamp, buchung, user, arbeitszeitkonto
-            ) VALUES (%s,%s,%s,%s,%s)
+                id, timestamp, buchung, arbeitszeitkonto
+            ) VALUES (%s,%s,%s,%s)
         """
         cursor.execute(command, (
             ereignisbuchung.id,
             ereignisbuchung.timestamp,
-            ereignisbuchung.user,
             ereignisbuchung.arbeitszeitkonto,
             ereignisbuchung.buchung,
         ))

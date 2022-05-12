@@ -311,7 +311,7 @@ class EreignisbuchungenListOperations(Resource):
 
         Sollten keine Ereignisbuchungen-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
         adm = Administration()
-        user = adm.get_all_ereignisbuchung()
+        ereignisbuchungen = adm.get_all_ereignisbuchung()
         return ereignisbuchungen
 
     @projectone.marshal_with(ereignisbuchungen, code=200)
@@ -336,7 +336,7 @@ class EreignisbuchungenListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            e = adm.create_ereignisbuchung(proposal.buchung, proposal.user, proposal.arbeitszeitkonto)
+            e = adm.create_ereignisbuchung(proposal.buchung, proposal.arbeitszeitkonto)
             return e, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
