@@ -1,15 +1,21 @@
 from .bo.EreignisbuchungBo import Ereignisbuchung
 from .bo.UserBO import User
-
 from .db.AktivitätenMapper import AktivitätenMapper
 from datetime import datetime
 from server.bo.AktivitätenBO import Aktivitäten
 from .db.UserMapper import UserMapper
+
 from .bo.GehenBO import Gehen
 from .db.GehenMapper import GehenMapper
 from .bo.KommenBO import Kommen
 from .db.KommenMapper import KommenMapper
 from .db.EreignisbuchungMapper import EreignisbuchungMapper
+
+
+from .bo.ProjektarbeitBO import Projektarbeit
+from .db.ProjektarbeitMapper import ProjektarbeitMapper
+from .bo.PauseBO import Pause
+from .db.PauseMapper import PauseMapper
 
 
 
@@ -103,7 +109,6 @@ class Administration(object):
     def delete_user(self, user):
         with UserMapper() as mapper:
             return mapper.delete(user)
-
 
 
     """
@@ -201,3 +206,72 @@ class Administration(object):
 
 
     
+
+    """Projektarbeit-spezifische Methoden"""
+
+    def create_projektarbeit(self, bezeichnung, activity, start, ende):
+        """Einen Benutzer anlegen"""
+        projektarbeit = Projektarbeit
+        projektarbeit.timestamp = datetime.now()
+        projektarbeit.start = start
+        projektarbeit.ende = ende
+        projektarbeit.zeitdifferenz = ende - start
+        projektarbeit.bezeichnung = bezeichnung
+        projektarbeit.activity = activity
+
+        with ProjektarbeitMapper() as mapper:
+            return mapper.insert(projektarbeit)
+
+    def get_all_projektarbeiten(self):
+        """Alle Projektarbeiten auslesen"""
+        with ProjektarbeitMapper() as mapper:
+            return mapper.find_all()
+
+    def get_projektarbeit_by_id(self, id):
+        """Die Projektarbeit mit der gegebenen ID auslesen"""
+        with ProjektarbeitMapper() as mapper:
+            return mapper.find_by_key(id)
+
+    def get_projektarbeit_by_bezeichnung(self, bezeichnung):
+        with ProjektarbeitMapper() as mapper:
+            return mapper.find_by_bezeichnung(bezeichnung)
+
+    def update_projektarbeit(self, projektarbeit):
+        with ProjektarbeitMapper() as mapper:
+            return mapper.update(projektarbeit)
+
+    def delete_projektarbeit(self, projektarbeit):
+        with ProjektarbeitMapper() as mapper:
+            return mapper.delete(projektarbeit)
+
+
+    """Pause-spezifische Methoden"""
+
+    def create_pause(self, start, ende):
+        """Einen Benutzer anlegen"""
+        pause = Pause
+        pause.timestamp = datetime.now()
+        pause.start = start
+        pause.ende = ende
+        pause.zeitdifferenz = ende - start
+
+        with PauseMapper() as mapper:
+            return mapper.insert(pause)
+
+    def get_all_pausen(self):
+        """Alle Pausen auslesen"""
+        with PauseMapper() as mapper:
+            return mapper.find_all()
+
+    def get_pause_by_id(self, id):
+        """Die Pause mit der gegebenen ID auslesen"""
+        with PauseMapper() as mapper:
+            return mapper.find_by_key(id)
+
+    def update_pause(self, pause):
+        with PauseMapper() as mapper:
+            return mapper.update(pause)
+
+    def delete_pause(self, pause):
+        with PauseMapper() as mapper:
+            return mapper.delete(pause)

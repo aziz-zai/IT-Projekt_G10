@@ -9,9 +9,15 @@ from server.bo.AktivitätenBO import Aktivitäten
 # Wir greifen natürlich auf unsere Applikationslogik inkl. BusinessObject-Klassen zurück
 from server.Administration import Administration
 from server.bo.UserBO import User
+
 from server.bo.EreignisbuchungBo import Ereignisbuchung
 from server.bo.GehenBO import Gehen
 from server.bo.KommenBO import Kommen
+
+from server.bo.ProjektarbeitBO import Projektarbeit
+from server.bo.PauseBO import Pause
+from server.bo.ZeitintervallBO import Zeitintervall
+
 
 # Außerdem nutzen wir einen selbstgeschriebenen Decorator, der die Authentifikation übernimmt
 #from SecurityDecorator import secured
@@ -64,13 +70,29 @@ user = api.inherit('User', bo, {
     'benutzername': fields.String(attribute='benutzername', description='nachname eines Benutzers'),
     'email': fields.String(attribute='email', description='nachname eines Benutzers'),
     'google_user_id': fields.String(attribute='google_user_id', description='nachname eines Benutzers'),
+    'arbeitszeitkonto': fields.String(attribute='arbeitszeitkonto', description='arbeitszeitkonto eines Benutzers')
 })
 
 aktivitäten = api.inherit('Aktivitäten',bo, {
     'bezeichnung': fields.String(attribute='bezeichnung', description='bezeichnung einer Aktivität'),
     'dauer': fields.Float(attribute='dauer', description='bezeichnung der Dauer einer Aktivität'),
-    'capacity': fields.Float(attribute='capacity', description='bezeichnung der Kapazität einer Aktivität'),
+    'capacity': fields.Float(attribute='capacity', description='bezeichnung der Kapazität einer Aktivität')
 })
+
+projektarbeiten = api.inherit('Projektarbeiten', bo, {
+    'start': fields.Integer(attribute='start', description='Start einer Projektarbeit'),
+    'ende': fields.Integer(attribute='ende', description='Ende einer Projektarbeit'),
+    'zeitdifferenz': fields.Float(attribute='zeitdifferenz', description='Zeitdifferenz einer Projektarbeit'),
+    'bezeichnung': fields.String(attribute='bezeichnung', description='Bezeichnung eines Projektes'),
+    'activity': fields.Integer(attribute='activity', description='Aktivitäten ID eines Projektes')
+})
+
+pausen = api.inherit('Pausen', bo, {
+    'start': fields.Integer(attribute='start', description='Start einer Pause'),
+    'ende': fields.Integer(attribute='ende', description='Ende einer Pause'),
+    'zeitdifferenz': fields.Float(attribute='zeitdifferenz', description='Zeitdifferenz einer Pause')
+})
+
 
 
 ereignisbuchungen = api.inherit('Ereignisbuchungen', bo, {
@@ -87,6 +109,202 @@ kommen = api.inherit('Kommen', bo, {
     'zeitpunkt': fields.String(attribute='zeitpunkt', description='zeitpunkt eines Kommen-Eintrags'),
 })
 
+
+@projectone.route('/projektarbeiten')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjektarbeitenListOperations(Resource):
+    @projectone.marshal_list_with(projektarbeiten)
+    def get(self):
+        """Auslesen aller Projektarbeit-Objekte.
+
+        Sollten keine Projektarbeit-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
+        adm = Administration()
+        projektarbeiten = adm.get_all_projektarbeiten
+        return projektarbeiten
+
+    @projectone.marshal_with(projektarbeiten, code=200)
+    @projectone.expect(projektarbeiten)  # Wir erwarten ein Projektarbeit-Objekt von der Client-Seite.
+
+    def post(self):
+        """Anlegen eines neuen Projektarbeit-Objekts.
+
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
+        """
+        adm = Administration()
+
+        proposal = Projektarbeit(**api.payload)
+
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+        if proposal is not None:
+            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
+            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben. 
+            """
+            pr = adm.create_projektarbeit(proposal.start, proposal.ende, proposal.zeitdifferenz, proposal.bezeichnung, proposal.activity)
+            return pr, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+
+@projectone.route('/projektarbeiten/<int:id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des Projektarbeit-Objekts')
+
+class ProjektarbeitenOperations(Resource):
+    @projectone.marshal_with(projektarbeiten)
+
+    def get(self, id):
+        """Auslesen eines bestimmten Projektarbeit-Objekts.
+
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        projektarbeiten = adm.get_projektarbeit_by_id(id)
+        return projektarbeiten
+
+    @projectone.marshal_with(projektarbeiten)
+    def put(self, id):
+        """Update eines bestimmten Projektarbeit-Objekts.
+
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        Projektarbeit-Objekts.
+        """
+        adm = Administration()
+        pa = Projektarbeit(**api.payload)
+
+
+        if pa is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Projektarbeit-Objekts gesetzt.
+            Siehe Hinweise oben.
+            """
+            pa.id = id
+            adm.update_projektarbeit(pa)
+            return '', 200
+        else:
+            return '', 500
+
+    @projectone.marshal_with(projektarbeiten)
+    def delete(self, id):
+        """Löschen eines bestimmten Projektarbeit-Objekts.
+
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+
+        pab = adm.get_projektarbeit_by_id(id)
+        adm.delete_projektarbeit(pab)
+        return '', 200
+
+@projectone.route('/projektarbeiten-by-bezeichnung/<string:bezeichnung>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('bezeichnung', 'Die Bezeichnung der Projektarbeit')
+class ProjektarbeitByNameOperations(Resource):
+    @projectone.marshal_with(projektarbeiten)
+
+    def get(self, bezeichnung):
+        """ Auslesen von Projektarbeit-Objekten, die durch die Bezeichnung bestimmt werden.
+
+        Die auszulesenden Objekte werden durch ```bezeichnung``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        pabe = adm.get_projektarbeit_by_bezeichnung(bezeichnung)
+        return pabe
+
+
+@projectone.route('/pausen')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class PausenListOperations(Resource):
+    @projectone.marshal_list_with(pausen)
+    def get(self):
+        """Auslesen aller Pausen-Objekte.
+
+        Sollten keine Pausen-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
+        adm = Administration()
+        pausen = adm.get_all_pausen
+        return pausen
+
+    @projectone.marshal_with(pausen, code=200)
+    @projectone.expect(pausen)  # Wir erwarten ein Pausen-Objekt von der Client-Seite.
+
+    def post(self):
+        """Anlegen eines neuen Pausen-Objekts.
+
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
+        """
+        adm = Administration()
+
+        proposal = Pause(**api.payload)
+
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+        if proposal is not None:
+            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
+            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben. 
+            """
+            pa = adm.create_pause(proposal.start, proposal.ende, proposal.zeitdifferenz)
+            return pa, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+
+@projectone.route('/pausen/<int:id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des Pausen-Objekts')
+
+class PausenOperations(Resource):
+    @projectone.marshal_with(pausen)
+
+    def get(self, id):
+        """Auslesen eines bestimmten Pausen-Objekts.
+
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        pausen = adm.get_pause_by_id(id)
+        return pausen
+
+    @projectone.marshal_with(pausen)
+    def put(self, id):
+        """Update eines bestimmten Pausen-Objekts.
+
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        Projektarbeit-Objekts.
+        """
+        adm = Administration()
+        pau = Pause(**api.payload)
+
+
+        if pau is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Pausen-Objekts gesetzt.
+            Siehe Hinweise oben.
+            """
+            pau.id = id
+            adm.update_pause(pau)
+            return '', 200
+        else:
+            return '', 500
+
+    @projectone.marshal_with(pausen)
+    def delete(self, id):
+        """Löschen eines bestimmten Pausen-Objekts.
+
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+
+        pu = adm.get_pause_by_id(id)
+        adm.delete_pause(pu)
+        return '', 200
 
 
 @projectone.route('/aktivitäten')
@@ -132,6 +350,7 @@ class AktivitätenListOperations(Resource):
 @projectone.route('/aktivitäten/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des User-Objekts')
+
 class AktivitätenOperations(Resource):
     @projectone.marshal_with(aktivitäten)
 
@@ -285,6 +504,7 @@ class UsersByNameOperations(Resource):
 @projectone.route('/users-by-gid/<string:google_user_id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('google_user_id', 'Die G-ID des User-Objekts')
+
 class UserByGoogleUserIdOperations(Resource):
     @projectone.marshal_with(user)
 
@@ -296,6 +516,7 @@ class UserByGoogleUserIdOperations(Resource):
         adm = Administration()
         userg = adm.get_user_by_google_user_id(google_user_id)
         return userg
+
 
 
 
@@ -570,6 +791,7 @@ class GehenOperations(Resource):
         komd = adm.get_kommen_by_id(id)
         adm.delete_kommen(komd)
         return '', 200
+
 
 
 if __name__ == '__main__':

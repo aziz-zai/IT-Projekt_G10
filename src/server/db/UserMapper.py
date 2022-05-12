@@ -53,6 +53,7 @@ class UserMapper(Mapper):
             google_user_id=google_user_id,
             arbeitszeitkonto=arbeitszeitkonto)
             result = user
+
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
             keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
@@ -116,6 +117,7 @@ class UserMapper(Mapper):
             google_user_id=google_user_id,
             arbeitszeitkonto=arbeitszeitkonto)
             result = user
+
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
             keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
@@ -134,7 +136,7 @@ class UserMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE user SET timestamp=%s, vorname=%s, nachname=%s, benutzername=%s, email=%s, google_user_id=%s, arbeitszeitkonto=%s WHERE id=%s"
-        data = (user.timestamp, user.vorname, user.nachname, user.benutzername, user.email, user.google_user_id, user.id, user.arbeitszeitkonto)
+
         cursor.execute(command, data)
 
         self._cnx.commit()
