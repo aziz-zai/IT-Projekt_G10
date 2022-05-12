@@ -58,7 +58,6 @@ CREATE TABLE `arbeitszeitkonto`(
   `id` INT(11) NOT NULL DEFAULT '0',
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `urlaubstage` float NOT NULL DEFAULT '0',
-  `overtimehours` float NOT NULL DEFAULT '0',
   `user`INT NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
@@ -72,6 +71,7 @@ CREATE TABLE `activity` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `bezeichnung` varchar(100) NOT NULL DEFAULT '',
   `capacity` float NOT NULL DEFAULT '0', 
+  `dauer` float NOT NULL DEFAULT '0',
   `project` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
@@ -98,8 +98,7 @@ DROP TABLE IF EXISTS `zeitintervallbuchung`;
 CREATE TABLE `zeitintervallbuchung` (
   `id`INT(11) NOT NULL DEFAULT '0',
   `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `arbeitskonto` int(11) NOT NULL DEFAULT '0',
-  `user` int(11) NOT NULL DEFAULT '0',
+  `arbeitszeitkonto` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 
@@ -110,8 +109,7 @@ DROP TABLE IF EXISTS `ereignisbuchung`;
 CREATE TABLE `ereignisbuchung` (
   `id`INT(11) NOT NULL DEFAULT '0',
   `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `arbeitskonto` int(11) NOT NULL DEFAULT '0',
-  `user` int(11) NOT NULL DEFAULT '0',
+  `arbeitszeitkonto` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 
