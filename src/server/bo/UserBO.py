@@ -1,6 +1,6 @@
 from .BusinessObject import BusinessObject
 from datetime import datetime
-from server.bo.
+
 
 
 class User(BusinessObject):
