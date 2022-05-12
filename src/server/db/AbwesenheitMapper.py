@@ -94,11 +94,12 @@ class AbwesenheitMapper(Mapper):
                 abwesenheit.id = 1
         command = """
             INSERT INTO abwesenheit (
-            id, timestamp, zeitintervallID, bemerkung
-            ) VALUES (%s,%s,%s,%s,%s)
+            id, abwesenheitsart, timestamp, zeitintervallID, bemerkung
+            ) VALUES (%s,%s,%s,%s,%s,)
         """
         cursor.execute(command, (
             abwesenheit.id,
+            abwesenheit.abwesenheitsart,
             abwesenheit.timestamp,
             abwesenheit.zeitintervallID,
             abwesenheit.bemerkung,
