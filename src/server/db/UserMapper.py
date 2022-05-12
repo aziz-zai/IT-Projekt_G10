@@ -167,7 +167,6 @@ class UserMapper(Mapper):
     
         ))
         self._cnx.commit()
-        Administration.create_arbeitszeitkonto(user)
         return user
 
     def delete(self, user):

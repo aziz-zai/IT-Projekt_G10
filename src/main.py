@@ -8,8 +8,8 @@ from flask_cors import CORS
 # Wir greifen natürlich auf unsere Applikationslogik inkl. BusinessObject-Klassen zurück
 from server.Administration import Administration
 from server.bo.UserBO import User
-from server.bo.ProjectBO import Project
 # Außerdem nutzen wir einen selbstgeschriebenen Decorator, der die Authentifikation übernimmt
+#from SecurityDecorator import secured
 #from SecurityDecorator import secured
 from datetime import datetime
 """
@@ -62,33 +62,22 @@ user = api.inherit('User', bo, {
     'google_user_id': fields.String(attribute='google_user_id', description='nachname eines Benutzers'),
 })
 
-"""Project ist ein BusinessObject"""
-project = api.inherit('Project', bo, {
-    'projektname': fields.String(attribute='projektname', description='Name eines Projekts'),
-    'laufzeit': fields.Integer(attribute='laufzeit', description='Laufzeit eines Projekts'),
-    'auftraggeber': fields.String(attribute='auftraggeber', description='Auftraggeber eines Projekts'),
-    'projektleiter': fields.Boolean(attribute='projektleiter', description='Projektleiter eines Projekts'),
-    'availablehours': fields.Float(attribute='availablehours', description='Verfügbare Stunden eines Projekt'),
-    'user': fields.Integer(attribute='user', description='Benutzer im Projekt')
-})
+
 
 @projectone.route('/users')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class UserListOperations(Resource):
-    @projectone.marshal_list_with(user)
-    def get(self):
-        """Auslesen aller Customer-Objekte.
-
-        Sollten keine Customer-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
-        adm = Administration()
-        user = adm.get_all_user()
-        return user
-
     @projectone.marshal_with(user, code=200)
     @projectone.expect(user)  # Wir erwarten ein User-Objekt von Client-Seite.
 
     def post(self):
         """Anlegen eines neuen Customer-Objekts.
+
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
         """
         adm = Administration()
 
@@ -100,14 +89,13 @@ class UserListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            u = adm.create_user(proposal.vorname, proposal.nachname, proposal.benutzername, proposal.email, 
-            proposal.google_user_id)
+            u = adm.create_user(proposal.vorname, proposal.nachname, proposal.benutzername, proposal.email, proposal.google_user_id)
             return u, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
-@projectone.route('/users-by-id/<int:id>')
+@projectone.route('/users/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des User-Objekts')
 class UserOperations(Resource):
@@ -121,28 +109,7 @@ class UserOperations(Resource):
         adm = Administration()
         user = adm.get_user_by_id(id)
         return user
-
-    @projectone.marshal_with(user)
-    def put(self, id):
-        """Update eines bestimmten User-Objekts.
-
-        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
-        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
-        Customer-Objekts.
-        """
-        adm = Administration()
-        up = User(**api.payload)
-
-
-        if up is not None:
-            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
-            Siehe Hinweise oben.
-            """
-            up.id = id
-            adm.update_user(up)
-            return '', 200
-        else:
-            return '', 500
+    
 
     @projectone.marshal_with(user)
     def delete(self, id):
@@ -184,50 +151,29 @@ class UserByGoogleUserIdOperations(Resource):
         adm = Administration()
         userg = adm.get_user_by_google_user_id(google_user_id)
         return userg
+    
+    @projectone.marshal_with(user)
+    @projectone.expect(user)
+    def put(self, google_user_id):
+        """Update eines bestimmten User-Objekts.
 
-@projectone.route('/projects/<int:user>')
-@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class ProjectListOperations(Resource):
-    @projectone.marshal_list_with(project)
-    def get(self):
-        """Auslesen aller Project-Objekte.
-
-        Sollten keine Project-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
-        adm = Administration()
-        project = adm.get_all_projects()
-        return project
-
-    @projectone.marshal_with(project, code=200)
-    @projectone.expect(project)  # Wir erwarten ein Project-Objekt von Client-Seite.
-    def post(self, user):
-        """Anlegen eines neuen Projekt-Objekts."""
-        adm = Administration()
-
-        proposal = Project(**api.payload)
-
-        if proposal is not None:
-     
-            p = adm.create_project(proposal.projektname, proposal.laufzeit, proposal.auftraggeber, 
-            proposal.projektleiter, proposal.availablehours, user)
-            return p, 200
-        else:
-            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
-            return '', 500
-
-@projectone.route('/projects-by-id/<int:id>')
-@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@projectone.param('id', 'Die ID des Project-Objekts')
-class ProjectOperations(Resource):
-    @projectone.marshal_with(project)
-
-    def get(self, id):
-        """Auslesen eines bestimmten Customer-Objekts.
-
-        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        Customer-Objekts.
         """
         adm = Administration()
-        project = adm.get_project_by_id(id)
-        return project
+        up = User(**api.payload)
+
+
+        if up is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
+            Siehe Hinweise oben.
+            """
+            up.google_user_id = google_user_id
+            adm.update_user(up)
+            return '', 200
+        else:
+            return '', 500
 
 if __name__ == '__main__':
     app.run(debug=True)
