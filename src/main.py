@@ -67,6 +67,7 @@ aktivitäten = api.inherit('Aktivitäten',bo, {
     'bezeichnung': fields.String(attribute='bezeichnung', description='bezeichnung einer Aktivität'),
     'dauer': fields.Float(attribute='dauer', description='bezeichnung der Dauer einer Aktivität'),
     'capacity': fields.Float(attribute='capacity', description='bezeichnung der Kapazität einer Aktivität'),
+    'project': fields.Float(attribute='capacity', description='bezeichnung der Kapazität einer Aktivität'),
 })
 
 
@@ -97,7 +98,7 @@ class AktivitätenListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            a = adm.create_aktivitäten(proposal.bezeichnung, proposal.dauer, proposal.capacity)
+            a = adm.create_aktivitäten(proposal.bezeichnung, proposal.dauer, proposal.capacity, proposal.project)
             return a, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
