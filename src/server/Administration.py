@@ -1,7 +1,7 @@
 from .bo.EreignisbuchungBo import Ereignisbuchung
 from .bo.UserBO import User
 from .db.AktivitätenMapper import AktivitätenMapper
-from datetime import datetime
+from datetime import date, datetime
 from server.bo.AktivitätenBO import Aktivitäten
 from .db.UserMapper import UserMapper
 
@@ -248,7 +248,17 @@ class Administration(object):
         with ProjektarbeitMapper() as mapper:
             return mapper.find_by_bezeichnung(bezeichnung)
 
-    def update_projektarbeit(self, projektarbeit):
+    def update_projektarbeit(self, projektarbeit: Projektarbeit):
+        kommen = Administration.get_kommen_by_id(self, projektarbeit.start)
+        gehen = Administration.get_gehen_by_id(self, projektarbeit.ende)
+        zeitdifferenz = datetime.strptime(gehen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
+        zeitdiff_sec = zeitdifferenz.total_seconds()
+        offset_days = zeitdiff_sec / 86400.0    
+        offset_hours = (offset_days % 1) * 24
+        offset_minutes = (offset_hours % 1) * 60
+        offset = "{:02d}:{:02d}:{:02d}".format(int(offset_days),int(offset_hours), int(offset_minutes))
+        projektarbeit.zeitdifferenz = offset
+        projektarbeit.timestamp = datetime.now()
         with ProjektarbeitMapper() as mapper:
             return mapper.update(projektarbeit)
 

@@ -123,7 +123,7 @@ class ProjektarbeitMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE projektarbeit SET timestamp=%s, start=%s, ende=%s, zeitdifferenz=%s, bezeichnung=%s, activity=%s WHERE id=%s"
-        data = (projektarbeit.timestamp, projektarbeit.start, projektarbeit.ende, projektarbeit.zeitdifferenz, projektarbeit.bezeichnung, projektarbeit.activity)
+        data = (projektarbeit.timestamp, projektarbeit.start, projektarbeit.ende, projektarbeit.zeitdifferenz, projektarbeit.bezeichnung, projektarbeit.activity, projektarbeit.id)
         cursor.execute(command, data)
 
         self._cnx.commit()
