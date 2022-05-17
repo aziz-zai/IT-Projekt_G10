@@ -13,6 +13,8 @@ from server.bo.UserBO import User
 # Außerdem nutzen wir einen selbstgeschriebenen Decorator, der die Authentifikation übernimmt
 #from SecurityDecorator import secured
 from datetime import datetime
+
+from server.bo.ZeitintervallbuchungBO import Zeitintervallbuchung
 """
 Instanzieren von Flask. Am Ende dieser Datei erfolgt dann erst der 'Start' von Flask.
 """
@@ -379,7 +381,7 @@ class AbwesenheitOperations(Resource):
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('bemerkung', 'Die Bemerkung des Users')
 class UsersByBemerkungOperations(Resource):
-    @projectone.marshal_with(user)
+    @projectone.marshal_with(abwesenheit)
 
     def get(self, bemerkung):
         """ Auslesen von Customer-Objekten, die durch die Bemerkung bestimmt werden.
@@ -389,6 +391,96 @@ class UsersByBemerkungOperations(Resource):
         adm = Administration()
         abwesenheitn = adm.get_user_by_bemerkung(bemerkung)
         return abwesenheitn
+
+
+@projectone.route('/zeitintervallbuchung')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ZeitintervallbuchungListOperations(Resource):
+    @projectone.marshal_list_with(zeitintervallbuchung)
+    def get(self):
+        """Auslesen aller Customer-Objekte.
+
+        Sollten keine Customer-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
+        adm = Administration()
+        zeitintervallbuchung = adm.get_all_zeitintervallbuchung()
+        return zeitintervallbuchung
+
+    @projectone.marshal_with(zeitintervallbuchung, code=200)
+    @projectone.expect(zeitintervallbuchung)  # Wir erwarten ein User-Objekt von Client-Seite.
+
+    def post(self):
+        """Anlegen eines neuen Zeitintervallbuchung-Objekts.
+
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
+        """
+        adm = Administration()
+
+        proposal = Zeitintervallbuchung (**api.payload)
+
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+        if proposal is not None:
+            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
+            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben. 
+            """
+            a = adm.create_abwesenheit (proposal.buchung, proposal.arbeitszeitkonto)
+            return a, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+
+@projectone.route('/zeitintervallbuchung/<int:id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des User-Objekts')
+class ZeitintervallbuchungOperations(Resource):
+    @projectone.marshal_with(zeitintervallbuchung)
+
+    def get(self, id):
+        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts.
+
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        zeitintervallbuchung = adm.get_zeitintervallbuchung_by_id(id)
+        return zeitintervallbuchung
+
+    @projectone.marshal_with(zeitintervallbuchung)
+    def put(self, id):
+        """Update eines bestimmten Zeitintervallbuchung-Objekts.
+
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        Customer-Objekts.
+        """
+        adm = Administration()
+        ze = Zeitintervallbuchung(**api.payload)
+
+
+        if ze is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
+            Siehe Hinweise oben.
+            """
+            ze.id = id
+            adm.update_zeitinterballbuchung(ze)
+            return '', 200
+        else:
+            return '', 500
+
+    @projectone.marshal_with(zeitintervallbuchung)
+    def delete(self, id):
+        """Löschen eines bestimmten Zeitintervallbuchung-Objekts.
+
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+
+        zetd = adm.get_zeitintervallbuchung_by_id(id)
+        adm.delete_zeitintervallbuchung(zetd)
+        return '', 200
 
 if __name__ == '__main__':
     app.run(debug=True)
