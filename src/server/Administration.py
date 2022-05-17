@@ -271,11 +271,21 @@ class Administration(object):
 
     def create_pause(self, start, ende):
         """Einen Benutzer anlegen"""
+        kommen = Administration.get_kommen_by_id(self, start)
+        gehen = Administration.get_gehen_by_id(self, ende)
+
         pause = Pause
         pause.timestamp = datetime.now()
         pause.start = start
         pause.ende = ende
-        pause.zeitdifferenz = ende - start
+
+        zeitdifferenz = datetime.strptime(gehen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
+        zeitdiff_sec = zeitdifferenz.total_seconds()
+        offset_days = zeitdiff_sec / 86400.0    
+        offset_hours = (offset_days % 1) * 24
+        offset_minutes = (offset_hours % 1) * 60
+        offset = "{:02d}:{:02d}:{:02d}".format(int(offset_days),int(offset_hours), int(offset_minutes))
+        pause.zeitdifferenz = offset
 
         with PauseMapper() as mapper:
             return mapper.insert(pause)
