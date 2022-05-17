@@ -1,3 +1,4 @@
+from .db.UserMapper import UserMapper
 from .bo.UserBO import User
 
 from .db.AktivitätenMapper import AktivitätenMapper
@@ -6,7 +7,9 @@ from .db.UserMapper import UserMapper
 from .db.ProjectMapper import ProjectMapper
 from datetime import datetime
 from server.bo.AktivitätenBO import Aktivitäten
-from .db.UserMapper import UserMapper
+
+from server.bo.ArbeitszeitkontoBO import Arbeitszeitkonto
+from .db.ArbeitszeitkontoMapper import ArbeitszeitkontoMapper
 
 
 class Administration(object):
@@ -17,7 +20,7 @@ class Administration(object):
         pass
 
     """
-    User-spezifische Methoden
+    Aktivitäten-spezifische Methoden
     """
     def create_aktivitäten(self, bezeichnung, dauer, capacity, project):
         """Einen Benutzer anlegen"""
@@ -57,7 +60,9 @@ class Administration(object):
         with AktivitätenMapper() as mapper:
             return mapper.delete(aktivitäten)
 
-
+    """
+    User-spezifische Methoden
+    """
     def create_user(self, vorname, nachname, benutzername, email, google_user_id):
         """Einen Benutzer anlegen"""
         user = User
@@ -70,7 +75,6 @@ class Administration(object):
 
         with UserMapper() as mapper:
             return mapper.insert(user)
-
 
     def get_all_user(self):
         """Alle Benutzer auslesen"""
@@ -126,3 +130,32 @@ class Administration(object):
     def update_project(self, project):
         with ProjectMapper() as mapper:
             return mapper.update(project)
+
+    """
+    Arbeitszeitkonto-spezifische Methoden
+    """
+    def create_arbeitszeitkonto(self, urlaubstage, user):
+        """Einen Benutzer anlegen"""
+        arbeitszeitkonto = Arbeitszeitkonto
+        arbeitszeitkonto.timestamp = datetime.now()
+        arbeitszeitkonto.urlaubstage = urlaubstage
+        arbeitszeitkonto.user = user
+
+        with ArbeitszeitkontoMapper() as mapper:
+            return mapper.insert(arbeitszeitkonto)
+
+    def get_arbeitszeitkonto_by_id(self, user):
+        """Den Benutzer mit der gegebenen ID auslesen."""
+        with ArbeitszeitkontoMapper() as mapper:
+            return mapper.find_by_key(user)
+
+    def update_arbeitszeitkonto(self, arbeitszeitkonto):
+        with ArbeitszeitkontoMapper() as mapper:
+            return mapper.update(arbeitszeitkonto)
+
+    def delete_arbeitszeitkonto(self, arbeitszeitkonto):
+        with ArbeitszeitkontoMapper() as mapper:
+            return mapper.delete(arbeitszeitkonto)
+
+
+

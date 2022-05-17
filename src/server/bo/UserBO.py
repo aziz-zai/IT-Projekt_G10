@@ -11,5 +11,4 @@ class User(BusinessObject):
         self.benutzername = benutzername
         self.email = email
         self.google_user_id = google_user_id
-
         super().__init__(timestamp=timestamp,id=id)
