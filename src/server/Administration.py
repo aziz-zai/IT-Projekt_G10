@@ -176,12 +176,13 @@ class Administration(object):
     """
     Ereignisbuchung-spezifische Methoden
     """ 
-    def create_ereignisbuchung(self, id, zeitpunkt):
+    def create_ereignisbuchung(self, arbeitszeitkonto, ereignis):
         """Ereignisbuchung anlegen"""
         ereignisbuchung = Ereignisbuchung
         ereignisbuchung.id = id
         ereignisbuchung.timestamp = datetime.now()
-        ereignisbuchung.zeitpunkt = zeitpunkt
+        ereignisbuchung.ereignis = ereignis
+        ereignisbuchung.arbeitszeitkonto = arbeitszeitkonto
 
         with EreignisbuchungMapper() as mapper:
             return mapper.insert(ereignisbuchung)
@@ -209,15 +210,26 @@ class Administration(object):
 
     """Projektarbeit-spezifische Methoden"""
 
-    def create_projektarbeit(self, bezeichnung, activity, start, ende):
+    def create_projektarbeit(self, start, ende, bezeichnung, activity):
         """Einen Benutzer anlegen"""
+        kommen = Administration.get_kommen_by_id(self, start)
+        gehen = Administration.get_gehen_by_id(self, ende)
+
         projektarbeit = Projektarbeit
         projektarbeit.timestamp = datetime.now()
         projektarbeit.start = start
         projektarbeit.ende = ende
-        projektarbeit.zeitdifferenz = ende - start
         projektarbeit.bezeichnung = bezeichnung
         projektarbeit.activity = activity
+        
+        zeitdifferenz = datetime.strptime(gehen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
+        zeitdiff_sec = zeitdifferenz.total_seconds()
+        offset_days = zeitdiff_sec / 86400.0    
+        offset_hours = (offset_days % 1) * 24
+        offset_minutes = (offset_hours % 1) * 60
+        offset = "{:02d}:{:02d}:{:02d}".format(int(offset_days),int(offset_hours), int(offset_minutes))
+        projektarbeit.zeitdifferenz = offset
+        
 
         with ProjektarbeitMapper() as mapper:
             return mapper.insert(projektarbeit)

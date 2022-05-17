@@ -82,7 +82,7 @@ aktivitäten = api.inherit('Aktivitäten',bo, {
 projektarbeiten = api.inherit('Projektarbeiten', bo, {
     'start': fields.Integer(attribute='start', description='Start einer Projektarbeit'),
     'ende': fields.Integer(attribute='ende', description='Ende einer Projektarbeit'),
-    'zeitdifferenz': fields.Float(attribute='zeitdifferenz', description='Zeitdifferenz einer Projektarbeit'),
+    'zeitdifferenz': fields.String(attribute='zeitdifferenz', description='Zeitdifferenz einer Projektarbeit'),
     'bezeichnung': fields.String(attribute='bezeichnung', description='Bezeichnung eines Projektes'),
     'activity': fields.Integer(attribute='activity', description='Aktivitäten ID eines Projektes')
 })
@@ -144,7 +144,7 @@ class ProjektarbeitenListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            pr = adm.create_projektarbeit(proposal.start, proposal.ende, proposal.zeitdifferenz, proposal.bezeichnung, proposal.activity)
+            pr = adm.create_projektarbeit(proposal.start, proposal.ende, proposal.bezeichnung, proposal.activity)
             return pr, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -555,7 +555,7 @@ class EreignisbuchungenListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            e = adm.create_ereignisbuchung(proposal.buchung, proposal.arbeitszeitkonto)
+            e = adm.create_ereignisbuchung(proposal.arbeitszeitkonto, proposal.ereignis)
             return e, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -625,7 +625,6 @@ class GehenListOperations(Resource):
         return gehen
 
     @projectone.marshal_with(gehen, code=200)
-    @projectone.expect(gehen)  # Wir erwarten ein Gehen-Objekt von Client-Seite.
     def post(self):
         """Anlegen eines neuen Gehen-Objekts.
 
@@ -637,7 +636,7 @@ class GehenListOperations(Resource):
         """
         adm = Administration()
 
-        proposal = Gehen(**api.payload)
+        proposal = Gehen(zeitpunkt=datetime.now())
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
@@ -729,7 +728,7 @@ class KommenListOperations(Resource):
         """
         adm = Administration()
 
-        proposal = Kommen(**api.payload)
+        proposal = Kommen(zeitpunkt=datetime.now())
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
