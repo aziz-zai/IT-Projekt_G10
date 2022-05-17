@@ -17,6 +17,9 @@ from .db.ProjektarbeitMapper import ProjektarbeitMapper
 from .bo.PauseBO import Pause
 from .db.PauseMapper import PauseMapper
 
+from .bo.ZeitintervallbuchungBO import Zeitintervallbuchung
+from .db.ZeitintervallbuchungMapper import ZeitintervallbuchungMapper
+
 
 
 
@@ -222,15 +225,6 @@ class Administration(object):
         projektarbeit.bezeichnung = bezeichnung
         projektarbeit.activity = activity
         
-        zeitdifferenz = datetime.strptime(gehen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
-        zeitdiff_sec = zeitdifferenz.total_seconds()
-        offset_days = zeitdiff_sec / 86400.0    
-        offset_hours = (offset_days % 1) * 24
-        offset_minutes = (offset_hours % 1) * 60
-        offset = "{:02d}:{:02d}:{:02d}".format(int(offset_days),int(offset_hours), int(offset_minutes))
-        projektarbeit.zeitdifferenz = offset
-        
-
         with ProjektarbeitMapper() as mapper:
             return mapper.insert(projektarbeit)
 
@@ -307,3 +301,42 @@ class Administration(object):
     def delete_pause(self, pause):
         with PauseMapper() as mapper:
             return mapper.delete(pause)
+
+    def create_zeitintervallbuchung(self, zeitintervall, arbeitszeitkonto):
+        zeitintervallbuchung = Zeitintervallbuchung
+        zeitintervallbuchung.timestamp = datetime.now()
+        zeitintervallbuchung.zeitintervall = zeitintervall.id
+        zeitintervallbuchung.arbeitszeitkonto = arbeitszeitkonto
+
+        kommen = Administration.get_kommen_by_id(self, zeitintervall.start)
+        gehen = Administration.get_gehen_by_id(self, zeitintervall.ende)
+
+        zeitdifferenz = datetime.strptime(gehen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
+        zeitdiff_sec = zeitdifferenz.total_seconds()
+        offset_days = zeitdiff_sec / 86400.0    
+        offset_hours = (offset_days % 1) * 24
+        offset_minutes = (offset_hours % 1) * 60
+        offset = "{:02d}:{:02d}:{:02d}".format(int(offset_days),int(offset_hours), int(offset_minutes))
+        zeitintervallbuchung.zeitdifferenz = offset
+        
+        with ZeitintervallbuchungMapper() as mapper:
+            return mapper.insert(zeitintervallbuchung)
+
+    def get_all_zeitintervallbuchung(self):
+        """Alle Zeitintervallbuchungen auslesen"""
+        with ZeitintervallbuchungMapper() as mapper:
+            return mapper.find_all()
+
+    def get_zeitintervallbuchung_by_id(self, id):
+        """Den Benutzer mit der gegebenen ID auslesen."""
+        
+        with ZeitintervallbuchungMapper() as mapper:
+            return mapper.find_by_key(id)
+
+    def update_zeitintervallbuchung(self, zeitintervallbuchung):
+        with ZeitintervallbuchungMapper() as mapper:
+            return mapper.update(Zeitintervallbuchung)
+
+    def delete_zeitintervallbuchung(self, Zeitintervallbuchung):
+        with ZeitintervallbuchungMapper() as mapper:
+            return mapper.delete(Zeitintervallbuchung)

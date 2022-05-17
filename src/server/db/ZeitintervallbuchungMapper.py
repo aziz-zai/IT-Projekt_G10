@@ -70,13 +70,14 @@ class ZeitintervallbuchungMapper(Mapper):
                 zeitintervallbuchung.id = 1
         command = """
             INSERT INTO zeitintervallbuchung (
-                id, buchung, arbeitszeitkonto, timestamp
-            ) VALUES (%s,%s,%s,%s)
+                id, arbeitszeitkonto, zeitintervall, zeitdifferenz, timestamp
+            ) VALUES (%s,%s,%s,%s,%s)
         """
         cursor.execute(command, (
             zeitintervallbuchung.id,
-            zeitintervallbuchung.buchung,
             zeitintervallbuchung.arbeitszeitkonto,
+            zeitintervallbuchung.zeitintervall,
+            zeitintervallbuchung.zeitdifferenz,
             zeitintervallbuchung.timestamp,
         ))
         self._cnx.commit()

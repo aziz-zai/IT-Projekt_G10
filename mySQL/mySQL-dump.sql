@@ -99,6 +99,8 @@ CREATE TABLE `zeitintervallbuchung` (
   `id`INT(11) NOT NULL DEFAULT '0',
   `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `arbeitszeitkonto` int(11) NOT NULL DEFAULT '0',
+  `zeitintervall` int(11) NOT NULL DEFAULT '0',
+  `zeitdifferenz` varchar(100) NOT NULL DEFAULT '',
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 

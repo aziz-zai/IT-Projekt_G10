@@ -1,9 +1,11 @@
-from .BusinessObject import BusinessObject
+from .BuchungBO import Buchung
 from datetime import datetime
 
 
 class Zeitintervallbuchung(Buchung):
-    def __init__(self, buchung: int, arbeitszeitkonto: int, timestamp: datetime = datetime.now(), id: int= 0):
+    def __init__(self, arbeitszeitkonto: int,zeitintervall: int, zeitdifferenz:str="", timestamp: datetime = datetime.now(), id: int= 0):
+        self.zeidifferenz = zeitdifferenz
+        self.zeitintervall = zeitintervall
         
-        super().__init__(timestamp=timestamp,id=id, buchung=buchung, arbeitszeitkonto=arbeitszeitkonto)
+        super().__init__(timestamp=timestamp,id=id, arbeitszeitkonto=arbeitszeitkonto)
 
