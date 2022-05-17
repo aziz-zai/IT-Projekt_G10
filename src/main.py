@@ -5,6 +5,7 @@ from flask_restx import Api, Resource, fields
 # Wir benutzen noch eine Flask-Erweiterung für Cross-Origin Resource Sharing
 from flask_cors import CORS
 from server.bo.AktivitätenBO import Aktivitäten
+from server.bo.AbwesenheitBO import Abwesenheit
 
 # Wir greifen natürlich auf unsere Applikationslogik inkl. BusinessObject-Klassen zurück
 from server.Administration import Administration
@@ -22,6 +23,8 @@ from server.bo.ZeitintervallBO import Zeitintervall
 # Außerdem nutzen wir einen selbstgeschriebenen Decorator, der die Authentifikation übernimmt
 #from SecurityDecorator import secured
 from datetime import datetime
+
+from server.bo.ZeitintervallbuchungBO import Zeitintervallbuchung
 """
 Instanzieren von Flask. Am Ende dieser Datei erfolgt dann erst der 'Start' von Flask.
 """
@@ -108,6 +111,13 @@ gehen = api.inherit('Gehen', bo, {
 kommen = api.inherit('Kommen', bo, {
     'zeitpunkt': fields.String(attribute='zeitpunkt', description='zeitpunkt eines Kommen-Eintrags'),
 })
+
+abwesenheit = api.inherit('Abwesenheit', bo, {
+    'abwesenheitsart': fields.String(attribute='abwesenheit', description='abwesenheit eines Benutzers'),
+    'zeitintervallID': fields.String(attribute='zeitintervallID', description='ZeitintervallID eines Benutzers'),
+    'bemerkung': fields.String(attribute='bemerkung', description='bemerkung eines Benutzers'),
+})
+
 
 
 @projectone.route('/projektarbeiten')
@@ -305,6 +315,7 @@ class PausenOperations(Resource):
         pu = adm.get_pause_by_id(id)
         adm.delete_pause(pu)
         return '', 200
+
 
 
 @projectone.route('/aktivitäten')
