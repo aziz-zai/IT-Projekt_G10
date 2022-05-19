@@ -78,7 +78,8 @@ user = api.inherit('User', bo, {
 aktivitäten = api.inherit('Aktivitäten',bo, {
     'bezeichnung': fields.String(attribute='bezeichnung', description='bezeichnung einer Aktivität'),
     'dauer': fields.Float(attribute='dauer', description='bezeichnung der Dauer einer Aktivität'),
-    'capacity': fields.Float(attribute='capacity', description='bezeichnung der Kapazität einer Aktivität')
+    'capacity': fields.Float(attribute='capacity', description='bezeichnung der Kapazität einer Aktivität'),
+    'project': fields.Integer(attribute='project', description='Project ID'),
 })
 
 projektarbeiten = api.inherit('Projektarbeiten', bo, {
@@ -402,8 +403,8 @@ class AktivitätenOperations(Resource):
 
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
-        adm = Administration()
-        aktivitäten = adm.get_aktivitäten_by_id(id)
+        akt = Administration()
+        aktivitäten = akt.get_aktivitäten_by_id(id)
         return aktivitäten
 
     @projectone.marshal_with(aktivitäten)

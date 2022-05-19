@@ -20,9 +20,6 @@ from .db.PauseMapper import PauseMapper
 from .bo.ZeitintervallbuchungBO import Zeitintervallbuchung
 from .db.ZeitintervallbuchungMapper import ZeitintervallbuchungMapper
 
-
-
-
 class Administration(object):
 
     """Diese Klasse aggregiert nahezu sämtliche Applikationslogik (engl. Business Logic).
@@ -33,13 +30,14 @@ class Administration(object):
     """
     Aktivitäten-spezifische Methoden
     """
-    def create_aktivitäten(self, bezeichnung, dauer, capacity):
+    def create_aktivitäten(self, bezeichnung, dauer, capacity, project):
         """Einen Benutzer anlegen"""
         aktivitäten = Aktivitäten
         aktivitäten.timestamp = datetime.now()
         aktivitäten.bezeichnung = bezeichnung
         aktivitäten.dauer = dauer
         aktivitäten.capacity = capacity
+        aktivitäten.project = project
 
         with AktivitätenMapper() as mapper:
             return mapper.insert(aktivitäten)

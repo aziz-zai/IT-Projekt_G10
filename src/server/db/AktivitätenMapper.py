@@ -13,11 +13,11 @@ class AktivitätenMapper(Mapper):
         
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, bezeichnung, dauer, capacity from activity")
+        cursor.execute("SELECT id, timestamp, bezeichnung, dauer, capacity, project from activity")
         tuples = cursor.fetchall()
 
-        for (id, timestamp, bezeichnung, dauer, capacity) in tuples:
-            aktivitäten = Aktivitäten(id=id, timestamp=timestamp, bezeichnung=bezeichnung, dauer=dauer, capacity = capacity)
+        for (id, timestamp, bezeichnung, dauer, capacity, project) in tuples:
+            aktivitäten = Aktivitäten(id=id, timestamp=timestamp, bezeichnung=bezeichnung, dauer=dauer, capacity=capacity, project=project)
 
             result.append(aktivitäten)
 
@@ -33,18 +33,19 @@ class AktivitätenMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, bezeichnung, dauer, capacity FROM activity WHERE id={}".format(key)
+        command = "SELECT id, timestamp, bezeichnung, dauer, capacity, project FROM activity WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, bezeichnung, dauer, capacity) = tuples[0]
-            aktivitäten = Aktivitäten()
+            (id, timestamp, bezeichnung, dauer, capacity, project) = tuples[0]
+            aktivitäten = Aktivitäten(
             id=id,
             timestamp=timestamp,
             bezeichnung=bezeichnung,
             dauer=dauer,
             capacity=capacity,
+            project=project)
             result = aktivitäten
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
@@ -61,17 +62,18 @@ class AktivitätenMapper(Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, bezeichnung, dauer, capacity FROM activity WHERE bezeichnung LIKE '{}' ORDER BY bezeichnung".format(bezeichnung)
+        command = "SELECT id, timestamp, bezeichnung, dauer, capacity, project FROM activity WHERE bezeichnung LIKE '{}' ORDER BY bezeichnung".format(bezeichnung)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, timestamp, bezeichnung, dauer, capacity) in tuples:
+        for (id, timestamp, bezeichnung, dauer, capacity, project) in tuples:
             aktivitäten = Aktivitäten
             id=id,
             timestamp=timestamp,
             bezeichnung=bezeichnung,
             dauer=dauer,
             capacity=capacity, 
+            project=project,
             result.append(aktivitäten)
 
         self._cnx.commit()
@@ -83,17 +85,18 @@ class AktivitätenMapper(Mapper):
     
         result = []
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, bezeichnung, dauer, capacity FROM activity WHERE dauer LIKE '{}' ORDER BY dauer".format(dauer)
+        command = "SELECT id, timestamp, bezeichnung, dauer, capacity, project FROM activity WHERE dauer LIKE '{}' ORDER BY dauer".format(dauer)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, timestamp, bezeichnung, dauer, capacity) in tuples:
+        for (id, timestamp, bezeichnung, dauer, capacity, project) in tuples:
             aktivitäten = Aktivitäten(
             id=id,
             timestamp=timestamp,
             bezeichnung=bezeichnung,
             dauer=dauer,
-            capacity=capacity,)
+            capacity=capacity,
+            project=project)
             result = aktivitäten    
             result.append(aktivitäten)
 
@@ -116,8 +119,8 @@ class AktivitätenMapper(Mapper):
                 aktivitäten.id = 1
         command = """
             INSERT INTO activity (
-                id, timestamp, bezeichnung, dauer, capacity
-            ) VALUES (%s,%s,%s,%s,%s)
+                id, timestamp, bezeichnung, dauer, capacity, project
+            ) VALUES (%s,%s,%s,%s,%s,%s)
         """
         cursor.execute(command, (
             aktivitäten.id,
@@ -125,6 +128,7 @@ class AktivitätenMapper(Mapper):
             aktivitäten.bezeichnung,
             aktivitäten.dauer,
             aktivitäten.capacity,
+            aktivitäten.project
         ))
         self._cnx.commit()
 
@@ -137,8 +141,8 @@ class AktivitätenMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE activity SET timestamp=%s, bezeichnung=%s, dauer=%s, capacity=%s WHERE id=%s"
-        data = (aktivitäten.timestamp, aktivitäten.bezeichnung, aktivitäten.dauer, aktivitäten.capacity)
+        command = "UPDATE activity SET timestamp=%s, bezeichnung=%s, dauer=%s, capacity=%s, project=%s WHERE id=%s"
+        data = (aktivitäten.timestamp, aktivitäten.bezeichnung, aktivitäten.dauer, aktivitäten.capacity, aktivitäten.project, aktivitäten.id)
         cursor.execute(command, data)
 
         self._cnx.commit()
