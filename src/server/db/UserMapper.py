@@ -17,11 +17,11 @@ class UserMapper(Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto from user")
+        cursor.execute("SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id from user")
         tuples = cursor.fetchall()
 
-        for (id, timestamp, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto) in tuples:
-            user = User(id=id, timestamp=timestamp, vorname=vorname, nachname=nachname, benutzername=benutzername, email=email, google_user_id=google_user_id, arbeitszeitkonto=arbeitszeitkonto)
+        for (id, timestamp, vorname, nachname, benutzername, email, google_user_id) in tuples:
+            user = User(id=id, timestamp=timestamp, vorname=vorname, nachname=nachname, benutzername=benutzername, email=email, google_user_id=google_user_id)
 
             result.append(user)
 
@@ -37,12 +37,12 @@ class UserMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto FROM user WHERE id={}".format(key)
+        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id FROM user WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto) = tuples[0]
+            (id, timestamp, vorname, nachname, benutzername, email, google_user_id) = tuples[0]
             user = User(
             id=id,
             timestamp=timestamp,
@@ -50,8 +50,7 @@ class UserMapper(Mapper):
             nachname=nachname,
             benutzername=benutzername,
             email=email,
-            google_user_id=google_user_id,
-            arbeitszeitkonto=arbeitszeitkonto)
+            google_user_id=google_user_id)
             result = user
 
         except IndexError:
@@ -69,11 +68,11 @@ class UserMapper(Mapper):
         """
         result = []
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto FROM user WHERE nachname LIKE '{}' ORDER BY nachname".format(nachname)
+        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id FROM user WHERE nachname LIKE '{}' ORDER BY nachname".format(nachname)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, timestamp, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto) in tuples:
+        for (id, timestamp, vorname, nachname, benutzername, email, google_user_id) in tuples:
             user = User(
             id=id,
             timestamp=timestamp,
@@ -81,8 +80,7 @@ class UserMapper(Mapper):
             nachname=nachname,
             benutzername=benutzername,
             email=email,
-            google_user_id=google_user_id,
-            arbeitszeitkonto=arbeitszeitkonto)    
+            google_user_id=google_user_id)    
             result.append(user)
 
         self._cnx.commit()
@@ -101,12 +99,12 @@ class UserMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto FROM user WHERE google_user_id LIKE '{}' ORDER BY google_user_id".format(google_user_id)
+        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id FROM user WHERE google_user_id LIKE '{}' ORDER BY google_user_id".format(google_user_id)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto) = tuples[0]
+            (id, timestamp, vorname, nachname, benutzername, email, google_user_id) = tuples[0]
             user = User(
             id=id,
             timestamp=timestamp,
@@ -114,8 +112,7 @@ class UserMapper(Mapper):
             nachname=nachname,
             benutzername=benutzername,
             email=email,
-            google_user_id=google_user_id,
-            arbeitszeitkonto=arbeitszeitkonto)
+            google_user_id=google_user_id)
             result = user
 
         except IndexError:
@@ -135,7 +132,7 @@ class UserMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE user SET timestamp=%s, vorname=%s, nachname=%s, benutzername=%s, email=%s, google_user_id=%s, arbeitszeitkonto=%s WHERE id=%s"
+        command = "UPDATE user SET timestamp=%s, vorname=%s, nachname=%s, benutzername=%s, email=%s, google_user_id=%s WHERE id=%s"
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -157,8 +154,8 @@ class UserMapper(Mapper):
                 user.id = 1
         command = """
             INSERT INTO user (
-                id, timestamp, vorname, nachname, benutzername, email, google_user_id, arbeitszeitkonto
-            ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+                id, timestamp, vorname, nachname, benutzername, email, google_user_id
+            ) VALUES (%s,%s,%s,%s,%s,%s,%s)
         """
         cursor.execute(command, (
             user.id,
@@ -168,7 +165,6 @@ class UserMapper(Mapper):
             user.benutzername,
             user.email,
             user.google_user_id,
-            user.arbeitszeitkonto
         ))
         self._cnx.commit()
 

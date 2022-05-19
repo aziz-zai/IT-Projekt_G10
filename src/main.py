@@ -72,8 +72,7 @@ user = api.inherit('User', bo, {
     'nachname': fields.String(attribute='nachname', description='nachname eines Benutzers'),
     'benutzername': fields.String(attribute='benutzername', description='nachname eines Benutzers'),
     'email': fields.String(attribute='email', description='nachname eines Benutzers'),
-    'google_user_id': fields.String(attribute='google_user_id', description='nachname eines Benutzers'),
-    'arbeitszeitkonto': fields.String(attribute='arbeitszeitkonto', description='arbeitszeitkonto eines Benutzers')
+    'google_user_id': fields.String(attribute='google_user_id', description='nachname eines Benutzers')
 })
 
 aktivitäten = api.inherit('Aktivitäten',bo, {
