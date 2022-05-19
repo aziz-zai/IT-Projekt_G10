@@ -27,7 +27,7 @@ CORS(app, resources={r"/bank/*": {"origins": "*"}})
 Allerdings würde dies dann eine Missbrauch Tür und Tor öffnen, so dass es ratsamer wäre, nicht alle
 "origins" zuzulassen, sondern diese explizit zu nennen. Weitere Infos siehe Doku zum Package flask-cors.
 """
-CORS(app, resources=r'/projectone/*')
+CORS(app, resources=r'/projectone/*', supports_credentials=True)
 
 """
 In dem folgenden Abschnitt bauen wir ein Modell auf, das die Datenstruktur beschreibt, 
@@ -78,7 +78,6 @@ class UserListOperations(Resource):
 
     @projectone.marshal_with(user, code=200)
     @projectone.expect(user)  # Wir erwarten ein User-Objekt von Client-Seite.
-
     def post(self):
         """Anlegen eines neuen Customer-Objekts.
 

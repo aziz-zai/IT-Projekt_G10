@@ -2,7 +2,7 @@ import './App.css'
 import React from 'react';
 import Home from './pages/Home'
 import LogIn from './pages/LogIn'
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import {BrowserRouter as Router, Routes, Route, useLocation} from 'react-router-dom'
 import { Navigate } from 'react-router'
 import NavBar from './components/NavBar'
 import firebase from 'firebase/compat/app';
@@ -88,22 +88,27 @@ class App extends React.Component {
 		return (
         <>
 		
-				<Router basename={process.env.PUBLIC_URL}>
-						{
-							// Is a user signed in?
+				<Router>
+					<Routes>
+						<Route>
+						<Route path={process.env.PUBLIC_URL + '/'} element={
 							currentUser ?
-								<>
-                  <Routes>
-                  <Route exact path="/" element={<Home user={currentUser}/>} />
-                  <Route exact path="/LogIn" element={<LogIn onLogIn={this.handleSignIn} />} />
-                  </Routes>
-								</>
-								:
-								// else show the sign in page
-								<>
-                <LogIn  onLogIn={this.handleSignIn} />
-								</>
-						}
+							<Navigate replace to={process.env.PUBLIC_URL + '/home'} />
+							:
+							<LogIn  onLogIn={this.handleSignIn} />
+						}/>
+						<Route path={process.env.PUBLIC_URL + '/'} element={
+							currentUser ?
+							<Navigate replace to={process.env.PUBLIC_URL + '/home'} />
+							:
+							<LogIn  onLogIn={this.handleSignIn} />
+						}/>
+
+
+                  		<Route path="/home" element={<Secured user={currentUser}><Home user={currentUser}/></Secured>} />
+                  		<Route path="/LogIn" element={<LogIn onLogIn={this.handleSignIn} />} />
+				  		</Route>
+					</Routes>
 				</Router>
         </>
 		);
@@ -111,3 +116,17 @@ class App extends React.Component {
 }
 
 export default App;
+
+function Secured(props) {
+	let location = useLocation();
+
+	if (!props.user) {
+		// Redirect them to the /login page, but save the current location they were
+		// trying to go to when they were redirected. This allows us to send them
+		// along to that page after they login, which is a nicer user experience
+		// than dropping them off on the home page.
+		return <Navigate to={process.env.PUBLIC_URL + '/LogIn'} state={{ from: location }} replace />;
+	}
+
+	return props.children;
+}
