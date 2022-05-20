@@ -1,9 +1,14 @@
 from .bo.EreignisbuchungBo import Ereignisbuchung
 from .bo.UserBO import User
 from .db.AktivitätenMapper import AktivitätenMapper
-from datetime import date, datetime
-from server.bo.AktivitätenBO import Aktivitäten
+from .bo.ProjectBO import Project
 from .db.UserMapper import UserMapper
+from .db.ProjectMapper import ProjectMapper
+from datetime import datetime
+from server.bo.AktivitätenBO import Aktivitäten
+
+from server.bo.ArbeitszeitkontoBO import Arbeitszeitkonto
+from .db.ArbeitszeitkontoMapper import ArbeitszeitkontoMapper
 
 from .bo.GehenBO import Gehen
 from .db.GehenMapper import GehenMapper
@@ -337,3 +342,61 @@ class Administration(object):
     def delete_zeitintervallbuchung(self, Zeitintervallbuchung):
         with ZeitintervallbuchungMapper() as mapper:
             return mapper.delete(Zeitintervallbuchung)
+    
+    """
+    Projekt-spezifische Methoden
+    """
+    def create_project(self, projektname, laufzeit, auftraggeber, projektleiter, availablehours, user):
+        """Ein Projekt anlegen"""
+        project = Project
+        project.timestamp = datetime.now()
+        project.projektname = projektname
+        project.laufzeit = laufzeit
+        project.auftraggeber = auftraggeber
+        project.projektleiter = projektleiter
+        project.availablehours = availablehours
+        project.user = user
+
+        with ProjectMapper() as mapper:
+            return mapper.insert(project)
+
+    def get_all_projects(self):
+        with ProjectMapper() as mapper:
+            return mapper.find_all()
+
+    def get_project_by_id(self, id):
+        with ProjectMapper() as mapper:
+            return mapper.find_by_key(id)
+
+    def update_project(self, project):
+        with ProjectMapper() as mapper:
+            return mapper.update(project)
+
+    """
+    Arbeitszeitkonto-spezifische Methoden
+    """
+    def create_arbeitszeitkonto(self, urlaubstage, user):
+        """Einen Benutzer anlegen"""
+        arbeitszeitkonto = Arbeitszeitkonto
+        arbeitszeitkonto.timestamp = datetime.now()
+        arbeitszeitkonto.urlaubstage = urlaubstage
+        arbeitszeitkonto.user = user
+
+        with ArbeitszeitkontoMapper() as mapper:
+            return mapper.insert(arbeitszeitkonto)
+
+    def get_arbeitszeitkonto_by_id(self, user):
+        """Den Benutzer mit der gegebenen ID auslesen."""
+        with ArbeitszeitkontoMapper() as mapper:
+            return mapper.find_by_key(user)
+
+    def update_arbeitszeitkonto(self, arbeitszeitkonto):
+        with ArbeitszeitkontoMapper() as mapper:
+            return mapper.update(arbeitszeitkonto)
+
+    def delete_arbeitszeitkonto(self, arbeitszeitkonto):
+        with ArbeitszeitkontoMapper() as mapper:
+            return mapper.delete(arbeitszeitkonto)
+
+
+
