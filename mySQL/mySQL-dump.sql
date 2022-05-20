@@ -85,7 +85,7 @@ CREATE TABLE `projektarbeit` (
   `bezeichnung` varchar(110) NOT NULL DEFAULT '',
   `start` int(11) NOT NULL DEFAULT '0',
   `ende` int(11) NOT NULL DEFAULT '0',
-  `zeitdifferenz` float NOT NULL DEFAULT '0',
+  `zeitdifferenz` varchar(110) NOT NULL DEFAULT '',
   `activity` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
@@ -98,6 +98,8 @@ CREATE TABLE `zeitintervallbuchung` (
   `id`INT(11) NOT NULL DEFAULT '0',
   `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `arbeitszeitkonto` int(11) NOT NULL DEFAULT '0',
+  `zeitintervall` int(11) NOT NULL DEFAULT '0',
+  `zeitdifferenz` varchar(100) NOT NULL DEFAULT '',
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 
@@ -109,6 +111,7 @@ CREATE TABLE `ereignisbuchung` (
   `id`INT(11) NOT NULL DEFAULT '0',
   `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `arbeitszeitkonto` int(11) NOT NULL DEFAULT '0',
+  `ereignis` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 
