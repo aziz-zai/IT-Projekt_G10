@@ -402,6 +402,44 @@ class ProjectListOperations(Resource):
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
+@projectone.route('/project/<int:id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectListOperations(Resource):
+    @projectone.marshal_with(project)
+    def get(self, id):
+        """Auslesen aller Customer-Objekte.
+
+        Sollten keine Customer-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
+        adm = Administration()
+        project = adm.get_project_by_id(id)
+        return project
+
+    @projectone.marshal_with(project)
+    def put(self, id):
+        """Update eines bestimmten aktivitäten-Objekts."""
+        adm = Administration()
+        pr = Aktivitäten(**api.payload)
+
+
+        if pr is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
+            Siehe Hinweise oben.
+            """
+            pr.id = id
+            adm.update_project(pr)
+            return '', 200
+        else:
+            return '', 500
+
+    
+    @projectone.marshal_with(project)
+    def delete(self, id):
+        """Löschen eines bestimmten User-Objekts."""
+        adm = Administration()
+
+        project = adm.get_project_by_id(id)
+        adm.delete_project(project)
+        return '', 200
 
 
 @projectone.route('/aktivitäten')
@@ -435,18 +473,6 @@ class AktivitätenListOperations(Resource):
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
-
-    def get(self, id):
-        """Auslesen aller Customer-Objekte.
-
-        Sollten keine Customer-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
-        adm = Administration()
-        project = adm.get_project_by_id(id)
-        return project
-
-    @projectone.marshal_with(project)
-    def put(self, id):
-        """Update eines bestimmten aktivitäten-Objekts."""
 
 @projectone.route('/aktivitäten/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -486,9 +512,7 @@ class AktivitätenOperations(Resource):
         else:
             return '', 500
 
-    @projectone.marshal_with(project)
-    def delete(self, id):
-        """Löschen eines bestimmten User-Objekts."""
+
 
     @projectone.marshal_with(aktivitäten)
     def delete(self, id):
@@ -497,12 +521,6 @@ class AktivitätenOperations(Resource):
         Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
-
-        project = adm.get_project_by_id(id)
-        adm.delete_(project)
-        return '', 200
-
-
         aktd = adm.get_aktivitäten_by_id(id)
         adm.delete_aktivitäten(aktd)
         return '', 200
