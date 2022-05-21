@@ -14,7 +14,7 @@ export default class OneAPI {
 
 
   // Local Python backend
-  #OneServerBaseURL = 'http://localhost:5000/projectone';
+  #OneServerBaseURL = '/projectone';
 
   // Local http-fake-backend 
   //#bankServerBaseURL = '/api/bank';
