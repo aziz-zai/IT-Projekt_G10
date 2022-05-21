@@ -532,7 +532,7 @@ class AktivitätenListOperations(Resource):
         adm = Administration()
 
         aktivitätend = adm.get_aktivitäten_by_id(id)
-        adm.delete_(aktivitätend)
+        adm.delete_aktivitäten(aktivitätend)
         return '', 200
 
 
