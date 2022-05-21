@@ -44,7 +44,7 @@ export class LogIn extends Component {
                 </div>
                 <div className="homeContent">
                     <h1 className="homeTitle">Project.ONE</h1>
-                    <p className="homeText">Wir helfen dir deine Projekte zu organisieren!</p>
+                    <p className="homeText">Wir helfen dir, deine Projekte zu organisieren!</p>
                     <div className="btnContainer">
                         <button className="homeBtn" onClick={this.handleLogInButtonClicked}><FcGoogle></FcGoogle>&nbsp; Sign In</button>
                     </div>

@@ -97,9 +97,13 @@ class Administration(object):
         with UserMapper() as mapper:
             return mapper.update(user)
 
-    def delete_user(self, user):
+    def save_user(self, user):
         with UserMapper() as mapper:
-            return mapper.delete(user)
+            return mapper.save(user)
+
+    def delete_user(self, id):
+        with UserMapper() as mapper:
+            return mapper.delete(id)
 
 
     """

@@ -94,8 +94,6 @@ class UserMapper(Mapper):
         self._cnx.commit()
         cursor.close()
 
-        return user
-
 
     def insert(self, user: User) -> User:
         """Create user Object."""
@@ -125,11 +123,11 @@ class UserMapper(Mapper):
         self._cnx.commit()
         return user
 
-    def delete(self, user):
+    def delete(self, id):
 
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM user WHERE id={}".format(user.id)
+        command = "DELETE FROM user WHERE id={}".format(id)
         cursor.execute(command)
 
         self._cnx.commit()

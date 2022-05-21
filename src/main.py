@@ -25,7 +25,7 @@ from server.bo.ProjectBO import Project
 from server.bo.ArbeitszeitkontoBO import Arbeitszeitkonto
 # Außerdem nutzen wir einen selbstgeschriebenen Decorator, der die Authentifikation übernimmt
 #from SecurityDecorator import secured
-#from SecurityDecorator import secured
+from SecurityDecorator import secured
 from datetime import datetime
 
 from server.bo.ZeitintervallbuchungBO import Zeitintervallbuchung
@@ -44,7 +44,7 @@ CORS(app, resources={r"/bank/*": {"origins": "*"}})
 Allerdings würde dies dann eine Missbrauch Tür und Tor öffnen, so dass es ratsamer wäre, nicht alle
 "origins" zuzulassen, sondern diese explizit zu nennen. Weitere Infos siehe Doku zum Package flask-cors.
 """
-CORS(app, resources=r'/projectone/*')
+CORS(app, resources=r'/projectone/*', supports_credentials=True)
 
 """
 In dem folgenden Abschnitt bauen wir ein Modell auf, das die Datenstruktur beschreibt, 
@@ -145,7 +145,7 @@ zeitintervallbuchung = api.inherit('Zeitintervallbuchung', bo, {
 
 @projectone.route('/projektarbeiten')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class ProjektarbeitenListOperations(Resource):
+class UserListOperations(Resource):
 
     @projectone.marshal_with(projektarbeiten, code=200)
     @projectone.expect(projektarbeiten)  # Wir erwarten ein Projektarbeit-Objekt von der Client-Seite.
@@ -159,7 +159,6 @@ class ProjektarbeitenListOperations(Resource):
         zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
         """
         adm = Administration()
-
         proposal = Projektarbeit(**api.payload)
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
@@ -259,7 +258,6 @@ class PausenListOperations(Resource):
 
     @projectone.marshal_with(pausen, code=200)
     @projectone.expect(pausen)  # Wir erwarten ein Pausen-Objekt von der Client-Seite.
-
     def post(self):
         """Anlegen eines neuen Pausen-Objekts.
 
@@ -1017,6 +1015,16 @@ class ZeitintervallbuchungOperations(Resource):
         adm.delete_zeitintervallbuchung(zetd)
         return '', 200
 
+
+        if up is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
+            Siehe Hinweise oben.
+            """
+            up.google_user_id = google_user_id
+            adm.update_user(up)
+            return '', 200
+        else:
+            return '', 500
 
 if __name__ == '__main__':
     app.run(debug=True)
