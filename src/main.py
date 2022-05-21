@@ -146,18 +146,9 @@ zeitintervallbuchung = api.inherit('Zeitintervallbuchung', bo, {
 @projectone.route('/projektarbeiten')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjektarbeitenListOperations(Resource):
-    @projectone.marshal_list_with(projektarbeiten)
-    def get(self):
-        """Auslesen aller Projektarbeit-Objekte.
-
-        Sollten keine Projektarbeit-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
-        adm = Administration()
-        projektarbeiten = adm.get_all_projektarbeiten
-        return projektarbeiten
 
     @projectone.marshal_with(projektarbeiten, code=200)
     @projectone.expect(projektarbeiten)  # Wir erwarten ein Projektarbeit-Objekt von der Client-Seite.
-
     def post(self):
         """Anlegen eines neuen Projektarbeit-Objekts.
 
@@ -186,7 +177,6 @@ class ProjektarbeitenListOperations(Resource):
 @projectone.route('/projektarbeiten/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Projektarbeit-Objekts')
-
 class ProjektarbeitenOperations(Resource):
     @projectone.marshal_with(projektarbeiten)
 
@@ -233,25 +223,10 @@ class ProjektarbeitenOperations(Resource):
         adm.delete_projektarbeit(pab)
         return '', 200
 
-@projectone.route('/projektarbeiten-by-bezeichnung/<string:bezeichnung>')
-@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@projectone.param('bezeichnung', 'Die Bezeichnung der Projektarbeit')
-class ProjektarbeitByNameOperations(Resource):
-    @projectone.marshal_with(projektarbeiten)
-
-    def get(self, bezeichnung):
-        """ Auslesen von Projektarbeit-Objekten, die durch die Bezeichnung bestimmt werden.
-
-        Die auszulesenden Objekte werden durch ```bezeichnung``` in dem URI bestimmt.
-        """
-        adm = Administration()
-        pabe = adm.get_projektarbeit_by_bezeichnung(bezeichnung)
-        return pabe
 
 @projectone.route('/projektarbeit/Gehen/<int:id>/<int:Ak_id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Projektarbeit-Objekts')
-
 class ProjektarbeitenDetailOperations(Resource):
     @projectone.marshal_with(projektarbeiten)
     def put(self, id, Ak_id):
@@ -281,14 +256,6 @@ class ProjektarbeitenDetailOperations(Resource):
 @projectone.route('/pausen')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class PausenListOperations(Resource):
-    @projectone.marshal_list_with(pausen)
-    def get(self):
-        """Auslesen aller Pausen-Objekte.
-
-        Sollten keine Pausen-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
-        adm = Administration()
-        pausen = adm.get_all_pausen
-        return pausen
 
     @projectone.marshal_with(pausen, code=200)
     @projectone.expect(pausen)  # Wir erwarten ein Pausen-Objekt von der Client-Seite.
@@ -376,7 +343,6 @@ class ProjectListOperations(Resource):
 
     @projectone.marshal_with(project, code=200)
     @projectone.expect(project)  # Wir erwarten ein User-Objekt von Client-Seite.
-
     def post(self):
         """Anlegen eines neuen Customer-Objekts.
 
@@ -448,7 +414,6 @@ class AktivitätenListOperations(Resource):
 
     @projectone.marshal_with(aktivitäten, code=200)
     @projectone.expect(aktivitäten)  # Wir erwarten ein User-Objekt von Client-Seite.
-
     def post(self):
         """Anlegen eines neuen Aktivitäten-Objekts.
 
@@ -513,7 +478,6 @@ class AktivitätenOperations(Resource):
             return '', 500
 
 
-
     @projectone.marshal_with(aktivitäten)
     def delete(self, id):
         """Löschen eines bestimmten Aktivitäten-Objekts.
@@ -526,7 +490,6 @@ class AktivitätenOperations(Resource):
         return '', 200
 
 @projectone.route('/aktivitäten/<int:id>')
-@projectone.route('/users')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class AktivitätenListOperations(Resource):
     @projectone.marshal_list_with(aktivitäten)
@@ -633,24 +596,10 @@ class UserOperations(Resource):
         adm.delete_user(userd)
         return '', 200
 
-@projectone.route('/users-by-nachname/<string:nachname>')
-@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@projectone.param('nachname', 'Der Nachname des Users')
-class UsersByNameOperations(Resource):
-    @projectone.marshal_with(user)
 
-    def get(self, nachname):
-        """ Auslesen von Customer-Objekten, die durch den Nachnamen bestimmt werden.
-
-        Die auszulesenden Objekte werden durch ```lastname``` in dem URI bestimmt.
-        """
-        adm = Administration()
-        usern = adm.get_user_by_name(nachname)
-        return usern
 @projectone.route('/users-by-gid/<string:google_user_id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('google_user_id', 'Die G-ID des User-Objekts')
-
 class UserByGoogleUserIdOperations(Resource):
     @projectone.marshal_with(user)
 
@@ -674,8 +623,9 @@ class UserByGoogleUserIdOperations(Resource):
         """
         adm = Administration()
         up = User(**api.payload)
-
-
+        up.google_user_id = google_user_id
+        adm.update_user(up)
+        return up
 
 
 @projectone.route('/arbeitszeitkonto/<int:user>')
@@ -747,24 +697,12 @@ class UserOperations(Resource):
         return '', 200
 
 
-
-
-
 @projectone.route('/ereignisbuchungen')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class EreignisbuchungenListOperations(Resource):
-    @projectone.marshal_list_with(ereignisbuchungen)
-    def get(self):
-        """Auslesen aller Ereignisbuchungen-Objekte.
-
-        Sollten keine Ereignisbuchungen-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
-        adm = Administration()
-        ereignisbuchungen = adm.get_all_ereignisbuchung()
-        return ereignisbuchungen
 
     @projectone.marshal_with(ereignisbuchungen, code=200)
     @projectone.expect(ereignisbuchungen)  # Wir erwarten ein Ereignisbuchungen-Objekt von Client-Seite.
-
     def post(self):
         """Anlegen eines neuen Ereignisbuchung-Objekts.
 
@@ -844,14 +782,6 @@ class EreignisbuchungenOperations(Resource):
 @projectone.route('/gehen')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class GehenListOperations(Resource):
-    @projectone.marshal_list_with(gehen)
-    def get(self):
-        """Auslesen aller Gehen-Objekte.
-
-        Sollten keine Gehen-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
-        adm = Administration()
-        gehen = adm.get_all_gehen()
-        return gehen
 
     @projectone.marshal_with(gehen, code=200)
     def post(self):
@@ -934,18 +864,9 @@ class GehenOperations(Resource):
 @projectone.route('/kommen')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class KommenListOperations(Resource):
-    @projectone.marshal_list_with(kommen)
-    def get(self):
-        """Auslesen aller Kommen-Objekte.
-
-        Sollten keine Kommen-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
-        adm = Administration()
-        kommen = adm.get_all_kommen()
-        return kommen
 
     @projectone.marshal_with(kommen, code=200)
     @projectone.expect(kommen)  # Wir erwarten ein Kommen-Objekt von Client-Seite.
-
     def post(self):
         """Anlegen eines neuen Kommen-Objekts.
 
@@ -1023,17 +944,9 @@ class GehenOperations(Resource):
 @projectone.route('/zeitintervallbuchung')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ZeitintervallbuchungListOperations(Resource):
-    @projectone.marshal_list_with(zeitintervallbuchung)
-    def get(self):
-        """Auslesen aller Customer-Objekte.
-        Sollten keine Customer-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
-        adm = Administration()
-        zeitintervallbuchung = adm.get_all_zeitintervallbuchung()
-        return zeitintervallbuchung
 
     @projectone.marshal_with(zeitintervallbuchung, code=200)
     @projectone.expect(zeitintervallbuchung)  # Wir erwarten ein User-Objekt von Client-Seite.
-
     def post(self):
         """Anlegen eines neuen Zeitintervallbuchung-Objekts.
         **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.

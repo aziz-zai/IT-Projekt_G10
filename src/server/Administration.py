@@ -47,11 +47,6 @@ class Administration(object):
         with AktivitätenMapper() as mapper:
             return mapper.insert(aktivitäten)
 
-    def get_all_aktivitäten(self):
-        """Alle Aktivitäten auslesen"""
-        with AktivitätenMapper() as mapper:
-            return mapper.find_all()
-
     def get_aktivitäten_by_id(self, id):
         """Den Benutzer mit der gegebenen ID auslesen."""
         with AktivitätenMapper() as mapper:
@@ -89,19 +84,10 @@ class Administration(object):
         with UserMapper() as mapper:
             return mapper.insert(user)
 
-    def get_all_user(self):
-        """Alle Benutzer auslesen"""
-        with UserMapper() as mapper:
-            return mapper.find_all()
-
     def get_user_by_id(self, id):
         """Den Benutzer mit der gegebenen ID auslesen."""
         with UserMapper() as mapper:
             return mapper.find_by_key(id)
-
-    def get_user_by_name(self, nachname):
-        with UserMapper() as mapper:
-            return mapper.find_by_name(nachname)
 
     def get_user_by_google_user_id(self, google_user_id):
         with UserMapper() as mapper:
@@ -128,11 +114,6 @@ class Administration(object):
         with GehenMapper() as mapper:
             return mapper.insert(gehen)
 
-    def get_all_gehen(self):
-        """Alle Gehen Einträge auslesen"""
-        with GehenMapper() as mapper:
-            return mapper.find_all()
-
     def get_gehen_by_id(self, id):
         """Den Gehen Eintrag mit der gegebenen ID auslesen."""
         with GehenMapper() as mapper:
@@ -158,11 +139,6 @@ class Administration(object):
 
         with KommenMapper() as mapper:
             return mapper.insert(kommen)
-
-    def get_all_kommen(self):
-        """Alle Kommen Einträge auslesen"""
-        with KommenMapper() as mapper:
-            return mapper.find_all()
 
     def get_kommen_by_id(self, id):
         """Den Kommen Eintrag mit der gegebenen ID auslesen."""
@@ -191,11 +167,6 @@ class Administration(object):
 
         with EreignisbuchungMapper() as mapper:
             return mapper.insert(ereignisbuchung)
-
-    def get_all_ereignisbuchung(self):
-        """Alle Ereignisbuchung Einträge auslesen"""
-        with EreignisbuchungMapper() as mapper:
-            return mapper.find_all()
 
     def get_ereignisbuchung_by_id(self, id):
         """Den Ereignisbuchung Eintrag mit der gegebenen ID auslesen."""
@@ -230,19 +201,10 @@ class Administration(object):
         with ProjektarbeitMapper() as mapper:
             return mapper.insert(projektarbeit)
 
-    def get_all_projektarbeiten(self):
-        """Alle Projektarbeiten auslesen"""
-        with ProjektarbeitMapper() as mapper:
-            return mapper.find_all()
-
     def get_projektarbeit_by_id(self, id):
         """Die Projektarbeit mit der gegebenen ID auslesen"""
         with ProjektarbeitMapper() as mapper:
             return mapper.find_by_key(id)
-
-    def get_projektarbeit_by_bezeichnung(self, bezeichnung):
-        with ProjektarbeitMapper() as mapper:
-            return mapper.find_by_bezeichnung(bezeichnung)
 
     def update_projektarbeit(self, projektarbeit: Projektarbeit):
         kommen = Administration.get_kommen_by_id(self, projektarbeit.start)
@@ -286,11 +248,6 @@ class Administration(object):
         with PauseMapper() as mapper:
             return mapper.insert(pause)
 
-    def get_all_pausen(self):
-        """Alle Pausen auslesen"""
-        with PauseMapper() as mapper:
-            return mapper.find_all()
-
     def get_pause_by_id(self, id):
         """Die Pause mit der gegebenen ID auslesen"""
         with PauseMapper() as mapper:
@@ -324,11 +281,6 @@ class Administration(object):
         with ZeitintervallbuchungMapper() as mapper:
             return mapper.insert(zeitintervallbuchung)
 
-    def get_all_zeitintervallbuchung(self):
-        """Alle Zeitintervallbuchungen auslesen"""
-        with ZeitintervallbuchungMapper() as mapper:
-            return mapper.find_all()
-
     def get_zeitintervallbuchung_by_id(self, id):
         """Den Benutzer mit der gegebenen ID auslesen."""
         
@@ -359,10 +311,6 @@ class Administration(object):
 
         with ProjectMapper() as mapper:
             return mapper.insert(project)
-
-    def get_all_projects(self):
-        with ProjectMapper() as mapper:
-            return mapper.find_all()
 
     def get_project_by_id(self, id):
         with ProjectMapper() as mapper:

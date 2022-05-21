@@ -8,23 +8,6 @@ class AktivitätenMapper(Mapper):
 
     def __init__(self):
         super().__init__()
-
-    def find_all(self):
-        
-        result = []
-        cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, bezeichnung, dauer, capacity, project from activity")
-        tuples = cursor.fetchall()
-
-        for (id, timestamp, bezeichnung, dauer, capacity, project) in tuples:
-            aktivitäten = Aktivitäten(id=id, timestamp=timestamp, bezeichnung=bezeichnung, dauer=dauer, capacity=capacity, project=project)
-
-            result.append(aktivitäten)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
     
     def find_by_key(self, key):
         """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
@@ -57,53 +40,6 @@ class AktivitätenMapper(Mapper):
 
         return result
 
-    def find_by_bezeichnung(self, bezeichnung):
-        """Auslesen aller Aktivitäten anhand der bezeichnung.
-        """
-        result = []
-        cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, bezeichnung, dauer, capacity, project FROM activity WHERE bezeichnung LIKE '{}' ORDER BY bezeichnung".format(bezeichnung)
-        cursor.execute(command)
-        tuples = cursor.fetchall()
-
-        for (id, timestamp, bezeichnung, dauer, capacity, project) in tuples:
-            aktivitäten = Aktivitäten
-            id=id,
-            timestamp=timestamp,
-            bezeichnung=bezeichnung,
-            dauer=dauer,
-            capacity=capacity, 
-            project=project,
-            result.append(aktivitäten)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
-    
-    def find_by_dauer(self, dauer):
-    
-        result = []
-        cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, bezeichnung, dauer, capacity, project FROM activity WHERE dauer LIKE '{}' ORDER BY dauer".format(dauer)
-        cursor.execute(command)
-        tuples = cursor.fetchall()
-
-        for (id, timestamp, bezeichnung, dauer, capacity, project) in tuples:
-            aktivitäten = Aktivitäten(
-            id=id,
-            timestamp=timestamp,
-            bezeichnung=bezeichnung,
-            dauer=dauer,
-            capacity=capacity,
-            project=project)
-            result = aktivitäten    
-            result.append(aktivitäten)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
         
 
     def insert(self, aktivitäten: Aktivitäten) -> Aktivitäten:

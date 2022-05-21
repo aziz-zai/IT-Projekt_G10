@@ -8,23 +8,6 @@ class PauseMapper(Mapper):
 
     def __init__(self):
         super().__init__()
-
-    def find_all(self):
-        
-        result = []
-        cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, start, ende, zeitdifferenz from pause")
-        tuples = cursor.fetchall()
-
-        for (id, timestamp, start, ende, zeitdifferenz) in tuples:
-            pause = Pause(id=id, timestamp=timestamp, start=start, ende=ende, zeitdifferenz=zeitdifferenz)
-
-            result.append(pause)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
     
     def find_by_key(self, key):
         """Suchen eines Projektes mit vorgegebener Pausen ID, da diese eindeutig ist"""

@@ -9,23 +9,6 @@ class ZeitintervallbuchungMapper(Mapper):
 
     def __init__(self):
         super().__init__()
-
-    def find_all(self):
-        
-        result = []
-        cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, buchung, arbeitszeitkonto, timestamp, from zeitintervallbuchung")
-        tuples = cursor.fetchall()
-
-        for (id, buchung, arbeitszeitkonto, timestamp) in tuples:
-            zeitintervallbuchung = zeitintervallbuchung(id=id, buchung=buchung, arbeitszeitkonto=arbeitszeitkonto, timestamp=timestamp)
-
-            result.append(zeitintervallbuchung)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
     
     def find_by_key(self, key):
         """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,

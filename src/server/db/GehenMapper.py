@@ -9,26 +9,6 @@ class GehenMapper(Mapper):
     def __init__(self):
         super().__init__()
 
-    def find_all(self):
-        """Auslesen aller Gehen einträge.
-
-        :return Eine Sammlung mit Gehen-Objekten, die sämtliche Gehen
-                repräsentieren.
-        """
-        result = []
-        cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, zeitpunkt from gehen")
-        tuples = cursor.fetchall()
-
-        for (id, timestamp, zeitpunkt) in tuples:
-            gehen = Gehen(id = id, timestamp = timestamp, zeitpunkt = zeitpunkt)
-
-            result.append(gehen)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
     
     def find_by_key(self, key):
         """Suchen eines Gehen-Eintrags mit vorgegebener Gehen ID. Da diese eindeutig ist,

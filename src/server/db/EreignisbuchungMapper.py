@@ -8,30 +8,6 @@ class EreignisbuchungMapper(Mapper):
 
     def __init__(self):
         super().__init__()
-
-    def find_all(self):
-        """Auslesen aller Ereignisbuchungen.
-
-        :return Eine Sammlung mit Ereignisbuchung-Objekten, die sämtliche Ereignisbuchungen
-                repräsentieren.
-        """
-        result = []
-        cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, arbeitszeitkonto, ereignis from ereignisbuchung")
-        tuples = cursor.fetchall()
-
-        for (id, timestamp, arbeitszeitkonto, ereignis) in tuples:
-            ereignisbuchung = Ereignisbuchung(id = id, 
-                                timestamp = timestamp, 
-                                arbeitszeitkonto = arbeitszeitkonto,
-                                ereignis=ereignis)
-
-            result.append(ereignisbuchung)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
     
     def find_by_key(self, key):
         """Suchen einer Ereignisbuchung mit vorgegebener ID. Da diese eindeutig ist,

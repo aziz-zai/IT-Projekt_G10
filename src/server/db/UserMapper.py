@@ -10,27 +10,6 @@ class UserMapper(Mapper):
     def __init__(self):
         super().__init__()
 
-    def find_all(self):
-        """Auslesen aller Kunde.
-
-        :return Eine Sammlung mit Customer-Objekten, die sämtliche Kunden
-                repräsentieren.
-        """
-        result = []
-        cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id from user")
-        tuples = cursor.fetchall()
-
-        for (id, timestamp, vorname, nachname, benutzername, email, google_user_id) in tuples:
-            user = User(id=id, timestamp=timestamp, vorname=vorname, nachname=nachname, benutzername=benutzername, email=email, google_user_id=google_user_id)
-
-            result.append(user)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
-    
     def find_by_key(self, key):
         """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
         """
@@ -64,30 +43,6 @@ class UserMapper(Mapper):
 
         return result
 
-    def find_by_name(self, nachname):
-        """Auslesen aller Benutzer anhand des Nachnamens.
-        """
-        result = []
-        cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id FROM user WHERE nachname LIKE '{}' ORDER BY nachname".format(nachname)
-        cursor.execute(command)
-        tuples = cursor.fetchall()
-
-        for (id, timestamp, vorname, nachname, benutzername, email, google_user_id) in tuples:
-            user = User(
-            id=id,
-            timestamp=timestamp,
-            vorname=vorname,
-            nachname=nachname,
-            benutzername=benutzername,
-            email=email,
-            google_user_id=google_user_id)    
-            result.append(user)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
 
     def find_by_google_user_id(self, google_user_id):
         """Suchen eines Benutzers mit vorgegebener Google ID. Da diese eindeutig ist,

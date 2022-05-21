@@ -9,23 +9,6 @@ class AbwesenheitMapper(Mapper):
 
     def __init__(self):
         super().__init__()
-
-    def find_all(self):
-        
-        result = []
-        cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, abwesenheitsart, timestamp, zeitintervallID, bemerkung from abwesenheit")
-        tuples = cursor.fetchall()
-
-        for (id, abwesenheitsart, timestamp, zeitintervallID, bemerkung) in tuples:
-            Abwesenheit = Abwesenheit(id=id, abwesenheitsart=abwesenheitsart, timestamp=timestamp, zeitintervallID=zeitintervallID, bemerkung=bemerkung)
-
-            result.append(Abwesenheit)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
     
     def find_by_key(self, key):
         """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
@@ -51,29 +34,6 @@ class AbwesenheitMapper(Mapper):
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
             keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
             result = None
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
-
-    def find_by_bemerkung(self, bemerkung):
-        """Auslesen aller Abwesenheiten anhand der bemerkung.
-        """
-        result = []
-        cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, zeitintervallID, bemerkung FROM Abwesenheit WHERE bemerkung LIKE '{}' ORDER BY bemerkung".format(bemerkung)
-        cursor.execute(command)
-        tuples = cursor.fetchall()
-
-        for (id, abwesenheitsart, timestamp, zeitintervallID, bemerkung) in tuples:
-            Abwesenheit = Abwesenheit
-            id=id,
-            abwesenheitsart=abwesenheitsart
-            timestamp=timestamp,
-            zeitintervallID=zeitintervallID,
-            bemerkung=bemerkung, 
-            result.append(Abwesenheit)
 
         self._cnx.commit()
         cursor.close()

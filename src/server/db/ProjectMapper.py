@@ -54,24 +54,6 @@ class ProjectMapper(Mapper):
 
         return project   
 
-    def find_all(self):
-        """ Auslesen aller Projekt-Objekte"""
-
-        result = []
-        cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, projektname, laufzeit, auftraggeber, projektleiter, availablehours, user from project")
-        tuples = cursor.fetchall()
-
-        for (id, timestamp, projektname, laufzeit, auftraggeber, projektleiter, availablehours, user) in tuples:
-            project = Project(id=id, timestamp=timestamp, projektname=projektname, laufzeit=laufzeit, auftraggeber=auftraggeber, 
-            projektleiter=projektleiter, availablehours=availablehours, user=user)
-
-            result.append(project)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
 
     def find_by_key(self, key):
 

@@ -7,24 +7,6 @@ class ProjektarbeitMapper(Mapper):
 
     def __init__(self):
         super().__init__()
-
-    def find_all(self):
-        
-        result = []
-        cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, start, ende, bezeichnung, activity from projektarbeit")
-        tuples = cursor.fetchall()
-
-        for (id, timestamp, start, ende, bezeichnung, activity) in tuples:
-            projektarbeit = Projektarbeit(id=id, timestamp=timestamp, start=start, ende=ende,
-                            bezeichnung=bezeichnung, activity=activity)
-
-            result.append(projektarbeit)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
     
     def find_by_key(self, key):
         """Suchen eines Projektes mit vorgegebener Projekt ID, da diese eindeutig ist"""
@@ -52,32 +34,6 @@ class ProjektarbeitMapper(Mapper):
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
             keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
             result = None
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
-
-    def find_by_bezeichnung(self, bezeichnung):
-
-        """Auslesen aller Aktivitäten anhand der Bezeichnung"""
-
-        result = []
-        cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, start, ende, bezeichnung, activity FROM projektarbeit WHERE bezeichnung LIKE '{}' ORDER BY bezeichnung".format(bezeichnung)
-        cursor.execute(command)
-        tuples = cursor.fetchall()
-
-        for (id, timestamp, start, ende, bezeichnung, activity) in tuples:
-            projektarbeit = Projektarbeit(
-            id=id,
-            timestamp=timestamp,
-            start=start,
-            ende=ende,
-            bezeichnung=bezeichnung,
-            activity=activity)
-
-            result.append(projektarbeit)
 
         self._cnx.commit()
         cursor.close()

@@ -8,27 +8,6 @@ class KommenMapper(Mapper):
 
     def __init__(self):
         super().__init__()
-
-    def find_all(self):
-        """Auslesen aller Kommen einträge.
-
-        :return Eine Sammlung mit Kommen-Objekten, die sämtliche Kommen
-                repräsentieren.
-        """
-        result = []
-        cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, zeitpunkt from kommen")
-        tuples = cursor.fetchall()
-
-        for (id, timestamp, zeitpunkt) in tuples:
-            kommen = Kommen(id = id, timestamp = timestamp, zeitpunkt = zeitpunkt)
-
-            result.append(kommen)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
     
     def find_by_key(self, key):
         """Suchen eines Kommen-Eintrags mit vorgegebener Kommen ID. Da diese eindeutig ist,
