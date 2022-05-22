@@ -7,6 +7,7 @@ from flask_restx import Api, Resource, fields
 from flask_cors import CORS
 from server.bo.AktivitätenBO import Aktivitäten
 from server.bo.AbwesenheitBO import Abwesenheit
+from server.bo.MembershipBO import Membership
 
 # Wir greifen natürlich auf unsere Applikationslogik inkl. BusinessObject-Klassen zurück
 from server.Administration import Administration
@@ -99,7 +100,12 @@ pausen = api.inherit('Pausen', bo, {
     'zeitdifferenz': fields.Float(attribute='zeitdifferenz', description='Zeitdifferenz einer Pause')
 })
 
+membership = api.inherit('Membership', bo, {
+    'user': fields.Integer(attribute='user', description='User_id des Memberships'),
+    'project': fields.Integer(attribute='project', description='project_id des Memberships'),
+    'projektleiter': fields.Boolean(attribute='projektleiter', description='Projektleiter eines Memberships')
 
+})
 
 ereignisbuchungen = api.inherit('Ereignisbuchungen', bo, {
     'arbeitszeitkonto': fields.Integer(attribute='arbeitszeitkonto', description='nbezeichnung eines Arbeitszeitkontos'),
@@ -140,7 +146,24 @@ zeitintervallbuchung = api.inherit('Zeitintervallbuchung', bo, {
     'bemerkung': fields.String(attribute='bemerkung', description='bemerkung eines Benutzers'),
 })
 
+@projectone.route('/membership')
+@projectone.response(500, 'Falls es zu einem Server-seitigem Fehler kommt.')
+class MembershipOperations(Resource):
+    @projectone.marshal_with(membership, code=200)
+    @projectone.expect(membership)  # Wir erwarten ein Membership-Objekt von der Client-Seite.
+    def post(self):
+        """Anlegen eines neuen Membership-Objekts.
+        """
+        adm = Administration()
+        proposal = Membership(**api.payload)
 
+        if proposal is not None:
+            m = adm.create_membership(proposal.user, proposal.project, proposal.projektleiter)
+            return m, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+    
 @projectone.route('/projektarbeiten')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class UserListOperations(Resource):
