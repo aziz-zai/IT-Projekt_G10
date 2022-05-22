@@ -163,6 +163,53 @@ class MembershipOperations(Resource):
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
+
+@projectone.route('/membership/<int:id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des Membership-Objekts')
+class MembershipOperations(Resource):
+    @projectone.marshal_with(membership)
+
+    def get(self, id):
+        """Auslesen eines bestimmten Membership-Objekts.
+
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        membership = adm.get_membership_by_id(id)
+        return membership
+
+    @projectone.marshal_with(membership)
+    def put(self, id):
+
+        adm = Administration()
+        ms = Membership(**api.payload)
+
+
+        if ms is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Membership-Objekts gesetzt.
+            Siehe Hinweise oben.
+            """
+            ms.id = id
+            ms.timestamp = datetime.now()
+            adm.update_membership(ms)
+            return '', 200
+        else:
+            return '', 500
+
+    @projectone.marshal_with(membership)
+    def delete(self, id):
+        """Löschen eines bestimmten Membership-Objekts.
+
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+
+        mbs = adm.get_membership_by_id(id)
+        adm.delete_membership(mbs)
+        return '', 200
+
+
     
 @projectone.route('/projektarbeiten')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -392,16 +439,14 @@ class ProjectListOperations(Resource):
 class ProjectListOperations(Resource):
     @projectone.marshal_with(project)
     def get(self, id):
-        """Auslesen aller Customer-Objekte.
 
-        Sollten keine Customer-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
         adm = Administration()
         project = adm.get_project_by_id(id)
         return project
 
     @projectone.marshal_with(project)
     def put(self, id):
-        """Update eines bestimmten aktivitäten-Objekts."""
+        """Update eines bestimmten Project-Objekts."""
         adm = Administration()
         pr = Project(**api.payload)
 
