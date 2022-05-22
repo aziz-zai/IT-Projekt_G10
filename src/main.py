@@ -571,7 +571,7 @@ class UserListOperations(Resource):
 @projectone.param('id', 'Die ID des User-Objekts')
 class UserOperations(Resource):
     @projectone.marshal_with(user)
-
+    @secured
     def get(self, id):
         """Auslesen eines bestimmten Customer-Objekts.
 

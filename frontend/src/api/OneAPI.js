@@ -22,7 +22,7 @@ export default class OneAPI {
  
 
   // User related
-  #getUsersURL = () => `${this.#OneServerBaseURL}/users`;
+  #getUsersURL = (id) => `${this.#OneServerBaseURL}/users/${id}`;
 
   /** 
    * Get the Singelton instance 
@@ -57,8 +57,8 @@ export default class OneAPI {
    * 
    * @public
    */
-  getUsers() {
-    return this.#fetchAdvanced(this.#getUsersURL()).then((responseJSON) => {
+  getUsers(id) {
+    return this.#fetchAdvanced(this.#getUsersURL(id)).then((responseJSON) => {
       let usersBOs = UserBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {

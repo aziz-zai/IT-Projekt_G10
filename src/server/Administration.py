@@ -99,7 +99,7 @@ class Administration(object):
 
     def save_user(self, user):
         with UserMapper() as mapper:
-            return mapper.save(user)
+            return mapper.update(user)
 
     def delete_user(self, id):
         with UserMapper() as mapper:

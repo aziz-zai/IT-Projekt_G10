@@ -26,7 +26,7 @@ export class Home extends Component {
 
   /** gets the balance for this account */
   getUsers = () => {
-    OneAPI.getAPI().getUsers().then(users =>
+    OneAPI.getAPI().getUsers(1).then(users =>
       this.setState({
         users: users,
         loadingInProgress: false,

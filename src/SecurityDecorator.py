@@ -23,12 +23,12 @@ def secured(function):
 
     def wrapper(*args, **kwargs):
         # Verify Firebase auth.
-        token = request.cookies.get("token")
+        id_token = request.cookies.get("token")
         error_message = None
         claims = None
         objects = None
 
-        if token:
+        if id_token:
             try:
                 # Verify the token against the Firebase Auth API. This example
                 # verifies the token on each page load. For improved performance,
@@ -42,9 +42,10 @@ def secured(function):
                     
                     google_user_id = claims.get("user_id")
                     email = claims.get("email")
-                    name = claims.get("name")
-
-                    user = Administration.get_user_by_google_user_id(google_user_id)
+                    benutzername = claims.get("name")
+                    
+                    adm = Administration()
+                    user = adm.get_user_by_google_user_id(google_user_id=google_user_id)
                     if user is not None:
                         """Fall: Der Benutzer ist unserem System bereits bekannt.
                         Wir gehen davon aus, dass die google_user_id sich nicht ändert.
@@ -52,14 +53,17 @@ def secured(function):
                         E-Mail-Adresse ändern. Daher werden diese beiden Daten sicherheitshalber
                         in unserem System geupdated."""
                         user.email= email
-                        user.benutzername = name
-                        Administration.save_user(user)
+                        user.benutzername = benutzername
+                        user.google_user_id = google_user_id
+                        user.vorname = ""
+                        user.nachname = ""
+                        adm.save_user(user=user)
                     else:
                         """Fall: Der Benutzer war bislang noch nicht eingelogged. 
                         Wir legen daher ein neues User-Objekt an, um dieses ggf. später
                         nutzen zu können.
                         """
-                        Administration.create_user(user.vorname, user.nachname, user.benutzername, user.email, user.google_user_id)
+                        adm.create_user("", "", benutzername, email, google_user_id)
 
                     print(request.method, request.path, "angefragt durch:", email)
 
