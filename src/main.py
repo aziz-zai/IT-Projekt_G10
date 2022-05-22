@@ -111,9 +111,7 @@ project = api.inherit('Project',bo, {
     'projektname': fields.String(attribute='projektname', description='projektname'),
     'laufzeit': fields.Integer(attribute='laufzeit', description='laufzeit'),
     'auftraggeber': fields.String(attribute='auftraggeber', description='auftraggeber'),
-    'projektleiter': fields.Boolean(attribute='projektleiter', description='projektleiter'),
-    'availablehours': fields.Integer(attribute='availablehours', description='availablehours'),
-    'user': fields.Integer(attribute='user', description='user'),
+    'availablehours': fields.Float(attribute='availablehours', description='availablehours'),
 })
 
 arbeitszeitkonto = api.inherit('Arbeitszeitkonto',bo, {
@@ -335,14 +333,14 @@ class PausenOperations(Resource):
 
 
 
-@projectone.route('/project')
+@projectone.route('/projects')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
 
     @projectone.marshal_with(project, code=200)
     @projectone.expect(project)  # Wir erwarten ein User-Objekt von Client-Seite.
     def post(self):
-        """Anlegen eines neuen Customer-Objekts.
+        """Anlegen eines neuen Project-Objekts.
 
         **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
         So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
@@ -360,13 +358,13 @@ class ProjectListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            a = adm.create_project(proposal.projektname, proposal.laufzeit, proposal.auftraggeber, proposal.projektleiter, proposal.availablehours, proposal.user)
+            a = adm.create_project(proposal.projektname, proposal.laufzeit, proposal.auftraggeber, proposal.availablehours)
             return a, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
-@projectone.route('/project/<int:id>')
+@projectone.route('/projects/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
     @projectone.marshal_with(project)
@@ -382,7 +380,7 @@ class ProjectListOperations(Resource):
     def put(self, id):
         """Update eines bestimmten aktivitäten-Objekts."""
         adm = Administration()
-        pr = Aktivitäten(**api.payload)
+        pr = Project(**api.payload)
 
 
         if pr is not None:
