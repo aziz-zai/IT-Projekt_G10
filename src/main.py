@@ -388,10 +388,11 @@ class ProjectListOperations(Resource):
             Siehe Hinweise oben.
             """
             pr.id = id
+            pr.timestamp = datetime.now()
             adm.update_project(pr)
-            return '', 200
+            return pr, 200
         else:
-            return '', 500
+            return pr, 500
 
     
     @projectone.marshal_with(project)
