@@ -1,5 +1,6 @@
 from time import time
 from server.bo.MembershipBO import Membership
+from server.bo.ProjectBO import Project
 from server.db.Mapper import Mapper
 
 
@@ -39,6 +40,32 @@ class MembershipMapper(Mapper):
 
         return result
 
+    def find_by_project(self, project: int):
+            """Gets Membership by id 'project'."""
+            result = []
+
+            cursor = self._cnx.cursor()
+            command = """
+                SELECT id, timestamp, user, project, projektleiter from projectone.membership WHERE project=%s
+                
+                """
+            cursor.execute(command, project)
+            tuples = cursor.fetchall()
+
+            for (id, timestamp, project, projektleiter, user) in tuples:
+                membership = Membership(
+                    id=id,
+                    timestamp=timestamp,
+                    project=project,
+                    projektleiter=projektleiter,
+                    user=user,
+                )
+                result.append(membership)
+
+            self._cnx.commit()
+            cursor.close()
+
+            return result
 
     
     def update(self, membership: Membership) -> Membership:

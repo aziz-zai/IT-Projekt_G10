@@ -378,4 +378,8 @@ class Administration(object):
     def delete_membership(self, membership):
         with MembershipMapper() as mapper:
             return mapper.delete(membership)
+
+    def get_membership_by_project(self, project):
+        with MembershipMapper() as mapper:
+            return mapper.find_by_project(project)
        
