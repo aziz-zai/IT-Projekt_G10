@@ -186,8 +186,6 @@ class Administration(object):
             return mapper.delete(ereignisbuchung)
 
 
-    
-
     """Projektarbeit-spezifische Methoden"""
 
     def create_projektarbeit(self, start, ende, bezeichnung, activity):

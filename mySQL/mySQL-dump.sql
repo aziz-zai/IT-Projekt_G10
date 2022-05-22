@@ -29,6 +29,7 @@ CREATE TABLE `user` (
   `benutzername` varchar(100) NOT NULL DEFAULT '',
   `email` varchar(100) NOT NULL DEFAULT '',
   `google_user_id` varchar(100) NOT NULL DEFAULT '',
+  `urlaubstage` int(11) NOT NULL DEFAULT '0', /*festgesetzter Urlaubststand*/
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -43,9 +44,19 @@ CREATE TABLE `project` (
   `projektname` varchar(100) NOT NULL DEFAULT '',
   `laufzeit` INT(11) NOT NULL DEFAULT '0',
   `auftraggeber` varchar(100) NOT NULL DEFAULT '',
-  `projektleiter` boolean,
   `availableHours` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `membership`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `membership` (
+  `id` INT(11) NOT NULL DEFAULT '0',
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `projektleiter` boolean,
   `user`int(11) NOT NULL DEFAULT '0',
+  `project` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -56,8 +67,11 @@ DROP TABLE IF EXISTS `arbeitszeitkonto`;
 CREATE TABLE `arbeitszeitkonto`(
   `id` INT(11) NOT NULL DEFAULT '0',
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `urlaubstage` float NOT NULL DEFAULT '0',
+  `urlaubskonto` int(11) NOT NULL DEFAULT '0', /* aktueller Stand der urlaubstage */
+  `arbeitsleistung` float NOT NULL DEFAULT '0',
+  `gleitzeit` float NOT NULL DEFAULT '0',
   `user`INT NOT NULL DEFAULT '0',
+
   PRIMARY KEY (`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 
@@ -82,10 +96,10 @@ DROP TABLE IF EXISTS `projektarbeit`;
 CREATE TABLE `projektarbeit` (
   `id`INT(11) NOT NULL DEFAULT '0',
   `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `bezeichnung` varchar(110) NOT NULL DEFAULT '',
+  `bezeichnung` varchar(110) NOT NULL DEFAULT '',/* bezeichnung wäre "projektarbeit" */
+  `beschreibung` varchar(110) NOT NULL DEFAULT '',/* beschreibung wäre "Datei erstellt"*/
   `start` int(11) NOT NULL DEFAULT '0',
   `ende` int(11) NOT NULL DEFAULT '0',
-  `zeitdifferenz` varchar(110) NOT NULL DEFAULT '',
   `activity` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
@@ -97,7 +111,9 @@ DROP TABLE IF EXISTS `zeitintervallbuchung`;
 CREATE TABLE `zeitintervallbuchung` (
   `id`INT(11) NOT NULL DEFAULT '0',
   `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `arbeitszeitkonto` int(11) NOT NULL DEFAULT '0',
+  `erstellt_von` int(11) NOT NULL DEFAULT '0', /* Benutzer Fremdschlüssel*/
+  `erstellt_für` int(11) NOT NULL DEFAULT '0', /* Arbeitszeitkonto Fremdschlüssel*/
+  `ist_buchung` boolean, 
   `zeitintervall` int(11) NOT NULL DEFAULT '0',
   `zeitdifferenz` varchar(100) NOT NULL DEFAULT '',
   PRIMARY KEY(`id`)
@@ -110,7 +126,9 @@ DROP TABLE IF EXISTS `ereignisbuchung`;
 CREATE TABLE `ereignisbuchung` (
   `id`INT(11) NOT NULL DEFAULT '0',
   `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `arbeitszeitkonto` int(11) NOT NULL DEFAULT '0',
+  `erstellt_von` int(11) NOT NULL DEFAULT '0', /* Benutzer Fremdschlüssel*/
+  `erstellt_für` int(11) NOT NULL DEFAULT '0', /* Arbeitszeitkonto Fremdschlüssel*/
+  `ist_buchung` boolean, 
   `ereignis` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
@@ -124,7 +142,7 @@ CREATE TABLE `pause` (
   `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `start` int NOT NULL DEFAULT '0',
   `ende` int NOT NULL DEFAULT '0',
-  `zeitdifferenz` float NOT NULL DEFAULT '0',
+  `bezeichnung` varchar(110) NOT NULL DEFAULT '',/* bezeichnung wäre "pause" */
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 
@@ -138,7 +156,7 @@ CREATE TABLE `abwesenheit` (
   `abwesenheitsart` int NOT NULL DEFAULT '0',
   `start` int NOT NULL DEFAULT '0',
   `ende` int NOT NULL DEFAULT '0',
-  `zeitdifferenz` float NOT NULL DEFAULT '0',
+  `bezeichnung` varchar(110) NOT NULL DEFAULT '',/* bezeichnung wäre "abwesenheit" */
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 
@@ -150,6 +168,7 @@ CREATE TABLE `kommen` (
   `id`INT(11) NOT NULL DEFAULT '0',
   `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `zeitpunkt` datetime NOT NULL DEFAULT '0',
+  `bezeichnung` varchar(110) NOT NULL DEFAULT '',/* bezeichnung wäre "kommen" */
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 
@@ -161,6 +180,7 @@ CREATE TABLE `gehen` (
   `id`INT(11) NOT NULL DEFAULT '0',
   `timestamp`timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `zeitpunkt` datetime NOT NULL DEFAULT '0',
+  `bezeichnung` varchar(110) NOT NULL DEFAULT '',/* bezeichnung wäre "gehen" */
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 
