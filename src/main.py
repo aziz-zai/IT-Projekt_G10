@@ -486,7 +486,7 @@ class AktivitätenOperations(Resource):
         aktd = adm.get_aktivitäten_by_id(id)
         adm.delete_aktivitäten(aktd)
         return '', 200
-
+"""""
 @projectone.route('/aktivitäten/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class AktivitätenListOperations(Resource):
@@ -531,6 +531,57 @@ class AktivitätenListOperations(Resource):
 
         aktivitätend = adm.get_aktivitäten_by_id(id)
         adm.delete_aktivitäten(aktivitätend)
+        return '', 200
+"""""
+
+@projectone.route('/aktivitäten/<int:project_id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des User-Objekts')
+
+class AktivitätenOperations(Resource):
+    @projectone.marshal_with(aktivitäten)
+
+    def get(self, project_id):
+        """Auslesen eines bestimmten Aktivitäten-Objekts.
+
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        akt = Administration()
+        aktivitäten = akt.get_activities_by_project_id(project_id)
+        return aktivitäten
+
+    @projectone.marshal_with(aktivitäten)
+    def put(self, id):
+        """Update eines bestimmten AKtivitäten-Objekts.
+
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        Customer-Objekts.
+        """
+        adm = Administration()
+        ak = Aktivitäten(**api.payload)
+
+
+        if ak is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
+            Siehe Hinweise oben.
+            """
+            ak.id = id
+            adm.update_aktivitäten(ak)
+            return '', 200
+        else:
+            return '', 500
+
+
+    @projectone.marshal_with(aktivitäten)
+    def delete(self, project_id):
+        """Löschen eines bestimmten Aktivitäten-Objekts.
+
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        aktd = adm.get_activities_by_project_id(project_id)
+        adm.delete_aktivitäten(aktd)
         return '', 200
 
 
