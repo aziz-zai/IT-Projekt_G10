@@ -45,20 +45,17 @@ class MembershipMapper(Mapper):
             result = []
 
             cursor = self._cnx.cursor()
-            command = """
-                SELECT id, timestamp, user, project, projektleiter from projectone.membership WHERE project=%s
-                
-                """
+            command = "SELECT id, timestamp, user, project, projektleiter from projectone.membership WHERE project={}".format(project)
             cursor.execute(command, project)
             tuples = cursor.fetchall()
 
-            for (id, timestamp, project, projektleiter, user) in tuples:
+            for (id, timestamp, user, project, projektleiter) in tuples:
                 membership = Membership(
                     id=id,
                     timestamp=timestamp,
+                    user=user,
                     project=project,
                     projektleiter=projektleiter,
-                    user=user,
                 )
                 result.append(membership)
 

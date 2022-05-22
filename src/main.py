@@ -155,8 +155,7 @@ class MembershipOperations(Resource):
         """Anlegen eines neuen Membership-Objekts.
         """
         adm = Administration()
-        proposal = Membership(**api.payload)
-
+        proposal = Membership(**api.payload, projektleiter=False)
         if proposal is not None:
             m = adm.create_membership(proposal.user, proposal.project, proposal.projektleiter)
             return m, 200
@@ -416,13 +415,13 @@ class PausenOperations(Resource):
 
 
 
-@projectone.route('/projects')
+@projectone.route('/projects/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
 
     @projectone.marshal_with(project, code=200)
     @projectone.expect(project)  # Wir erwarten ein User-Objekt von Client-Seite.
-    def post(self):
+    def post(self, user):
         """Anlegen eines neuen Project-Objekts.
 
         **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
@@ -442,6 +441,7 @@ class ProjectListOperations(Resource):
             wird auch dem Client zurückgegeben. 
             """
             a = adm.create_project(proposal.projektname, proposal.laufzeit, proposal.auftraggeber, proposal.availablehours)
+            adm.create_membership(user=user, project=a.id, projektleiter=True)
             return a, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
