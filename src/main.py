@@ -222,6 +222,17 @@ class MembershipOperations(Resource):
         adm = Administration()
         membership = adm.get_membership_by_project(project)
         return membership
+
+@projectone.route('/membership-by-user/<int:user>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des Membership-Objekts')
+class MembershipOperations(Resource):
+    @projectone.marshal_with(membership)
+
+    def get(self, user):
+        adm = Administration()
+        mu = adm.get_membership_by_user(user)
+        return mu
     
 @projectone.route('/projektarbeiten')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')

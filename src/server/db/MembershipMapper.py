@@ -64,6 +64,30 @@ class MembershipMapper(Mapper):
 
             return result
 
+    def find_by_user(self, user: int):
+            """Gets Membership by id 'user'."""
+            result = []
+
+            cursor = self._cnx.cursor()
+            command = "SELECT id, timestamp, user, project, projektleiter from membership WHERE user={}".format(user)
+            cursor.execute(command, user)
+            tuples = cursor.fetchall()
+
+            for (id, timestamp, user, project, projektleiter) in tuples:
+                membership = Membership(
+                    id=id,
+                    timestamp=timestamp,
+                    user=user,
+                    project=project,
+                    projektleiter=projektleiter,
+                )
+                result.append(membership)
+
+            self._cnx.commit()
+            cursor.close()
+
+            return result
+
     
     def update(self, membership: Membership) -> Membership:
         """Wiederholtes Schreiben eines Objekts in die Datenbank.

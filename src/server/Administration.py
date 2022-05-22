@@ -382,4 +382,8 @@ class Administration(object):
     def get_membership_by_project(self, project):
         with MembershipMapper() as mapper:
             return mapper.find_by_project(project)
+    
+    def get_membership_by_user(self, user):
+        with MembershipMapper() as mapper:
+            return mapper.find_by_user(user)
        
