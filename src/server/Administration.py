@@ -224,6 +224,7 @@ class Administration(object):
         offset = "{:02d}:{:02d}:{:02d}".format(int(offset_days),int(offset_hours), int(offset_minutes))
         projektarbeit.zeitdifferenz = offset
         projektarbeit.timestamp = datetime.now()
+        
         with ProjektarbeitMapper() as mapper:
             return mapper.update(projektarbeit)
 
@@ -244,14 +245,6 @@ class Administration(object):
         pause.start = start
         pause.ende = ende
 
-        zeitdifferenz = datetime.strptime(gehen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
-        zeitdiff_sec = zeitdifferenz.total_seconds()
-        offset_days = zeitdiff_sec / 86400.0    
-        offset_hours = (offset_days % 1) * 24
-        offset_minutes = (offset_hours % 1) * 60
-        offset = "{:02d}:{:02d}:{:02d}".format(int(offset_days),int(offset_hours), int(offset_minutes))
-        pause.zeitdifferenz = offset
-
         with PauseMapper() as mapper:
             return mapper.insert(pause)
 
@@ -260,13 +253,26 @@ class Administration(object):
         with PauseMapper() as mapper:
             return mapper.find_by_key(id)
 
-    def update_pause(self, pause):
+    def update_pause(self, pause: Pause):
+        kommen = Administration.get_kommen_by_id(self, start)
+        gehen = Administration.get_gehen_by_id(self, ende)
+        zeitdifferenz = datetime.strptime(gehen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
+        zeitdiff_sec = zeitdifferenz.total_seconds()
+        offset_days = zeitdiff_sec / 86400.0    
+        offset_hours = (offset_days % 1) * 24
+        offset_minutes = (offset_hours % 1) * 60
+        offset = "{:02d}:{:02d}:{:02d}".format(int(offset_days),int(offset_hours), int(offset_minutes))
+        pause.zeitdifferenz = offset
+        pause.timestamp = datetime.now()
+
         with PauseMapper() as mapper:
             return mapper.update(pause)
 
     def delete_pause(self, pause):
         with PauseMapper() as mapper:
             return mapper.delete(pause)
+
+    """Zeitintervallbuchung-spezifische Methoden"""
 
     def create_zeitintervallbuchung(self, zeitintervall, arbeitszeitkonto):
         zeitintervallbuchung = Zeitintervallbuchung
