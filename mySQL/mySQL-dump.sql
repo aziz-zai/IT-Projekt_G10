@@ -44,7 +44,7 @@ CREATE TABLE `project` (
   `projektname` varchar(100) NOT NULL DEFAULT '',
   `laufzeit` INT(11) NOT NULL DEFAULT '0',
   `auftraggeber` varchar(100) NOT NULL DEFAULT '',
-  `availableHours` float NOT NULL DEFAULT '0',
+  `availablehours` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
