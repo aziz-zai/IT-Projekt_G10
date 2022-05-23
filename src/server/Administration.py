@@ -168,13 +168,12 @@ class Administration(object):
     """ 
     def create_ereignisbuchung(self, erstellt_von, erstellt_für, ist_buchung, ereignis):
         """Ereignisbuchung anlegen"""
-        ereignisbuchung = Ereignisbuchung
-        ereignisbuchung.id = id
-        ereignisbuchung.timestamp = datetime.now()
-        ereignisbuchung.erstellt_von = erstellt_von,
-        ereignisbuchung.erstellt_für = erstellt_für,
-        ereignisbuchung.ist_buchung = ist_buchung,
-        ereignisbuchung.ereignis = ereignis
+        ereignisbuchung = Ereignisbuchung(
+        timestamp = datetime.now(),
+        erstellt_von = erstellt_von,
+        erstellt_für = erstellt_für,
+        ist_buchung = ist_buchung,
+        ereignis = ereignis)
 
         with EreignisbuchungMapper() as mapper:
             return mapper.insert(ereignisbuchung)

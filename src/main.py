@@ -105,12 +105,11 @@ pausen = api.inherit('Pausen', bo, {
 ereignisbuchungen = api.inherit('Ereignisbuchungen', bo, {
     'erstellt_von': fields.Integer(attribute='erstellt_von', description='bezeichnung Ersteller'),
     'erstellt_für': fields.Integer(attribute='erstellt_für', describtion='bezeichnung Empfänger'),
-    'ist_buchung': fields.Integer(attribute='ist_buchung', describtion='bezeichnung der Ist-Buchung'),
+    'ist_buchung': fields.Boolean(attribute='ist_buchung', describtion='bezeichnung der Ist-Buchung'),
     'ereignis': fields.Integer(attribute='ereignis', describtion='bezeichnung vom Ereignis'),
-    'project': fields.Float(attribute='capacity', description='bezeichnung der Kapazität einer Aktivität'),
 
 })
- 
+
 project = api.inherit('Project',bo, {
     'projektname': fields.String(attribute='projektname', description='projektname'),
     'laufzeit': fields.Integer(attribute='laufzeit', description='laufzeit'),
