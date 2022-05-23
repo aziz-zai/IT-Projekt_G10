@@ -499,41 +499,10 @@ class ProjectListOperations(Resource):
         return '', 200
 
 
-@projectone.route('/aktivitäten')
-@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class AktivitätenListOperations(Resource):
-
-    @projectone.marshal_with(aktivitäten, code=200)
-    @projectone.expect(aktivitäten)  # Wir erwarten ein User-Objekt von Client-Seite.
-    def post(self):
-        """Anlegen eines neuen Aktivitäten-Objekts.
-
-        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
-        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
-        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
-        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
-        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
-        """
-        adm = Administration()
-
-        proposal = Aktivitäten(**api.payload)
-
-        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
-        if proposal is not None:
-            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
-            wird auch dem Client zurückgegeben. 
-            """
-            a = adm.create_aktivitäten(proposal.bezeichnung, proposal.dauer, proposal.capacity, proposal.project)
-            return a, 200
-        else:
-            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
-            return '', 500
 
 @projectone.route('/aktivitäten-by-id/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des User-Objekts')
-
 class AktivitätenOperations(Resource):
     @projectone.marshal_with(aktivitäten)
 
@@ -595,6 +564,38 @@ class AktivitätenOperations(Resource):
         akt = Administration()
         aktivitäten = akt.get_activities_by_project(project)
         return aktivitäten
+
+
+@projectone.route('/aktivitäten-by-secured-project/<int:project>/<int:member>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des User-Objekts')
+class AktivitätenProktleiterOperations(Resource):
+    
+    @projectone.marshal_with(aktivitäten, code=200)
+    @projectone.expect(aktivitäten)  # Wir erwarten ein User-Objekt von Client-Seite.
+    def post(self, project, member):
+        """Anlegen eines neuen Aktivitäten-Objekts.
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
+        """
+        adm = Administration()
+        
+        proposal = Aktivitäten(**api.payload)
+
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+        if proposal is not None:
+            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
+            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben. 
+            """
+            a = adm.create_aktivitäten(proposal.bezeichnung, proposal.dauer, proposal.capacity, proposal.project)
+            return a, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
 
 
 @projectone.route('/users')
