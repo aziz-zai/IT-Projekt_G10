@@ -1,3 +1,4 @@
+from server.bo.EreignisBO import Ereignis
 from .bo.EreignisbuchungBo import Ereignisbuchung
 from .bo.UserBO import User
 from .db.AktivitätenMapper import AktivitätenMapper
@@ -347,6 +348,8 @@ class Administration(object):
     def delete_arbeitszeitkonto(self, arbeitszeitkonto):
         with ArbeitszeitkontoMapper() as mapper:
             return mapper.delete(arbeitszeitkonto)
+
+
 
 
 
