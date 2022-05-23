@@ -633,7 +633,7 @@ class UserByGoogleUserIdOperations(Resource):
 @projectone.route('/arbeitszeitkonto/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('user', 'Die ID des User-Objekts')
-class UserOperations(Resource):
+class ArbeitszeitkontoOperations(Resource):
     @projectone.marshal_with(arbeitszeitkonto)
 
     def get(self, user):
@@ -659,8 +659,8 @@ class UserOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            ab = adm.create_arbeitszeitkonto(proposal.urlaubstage, user)
-            return ab, 200
+            ab = adm.create_arbeitszeitkonto(proposal.urlaubskonto, proposal.user, proposal.arbeitsleistung, proposal.überstunden)
+            return ab, 200  
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500

@@ -321,12 +321,14 @@ class Administration(object):
     """
     Arbeitszeitkonto-spezifische Methoden 
     """
-    def create_arbeitszeitkonto(self, urlaubstage, user):
+    def create_arbeitszeitkonto(self, urlaubskonto, user, arbeitsleistung, überstunden):
         """Einen Benutzer anlegen"""
         arbeitszeitkonto = Arbeitszeitkonto
         arbeitszeitkonto.timestamp = datetime.now()
-        arbeitszeitkonto.urlaubstage = urlaubstage
+        arbeitszeitkonto.urlaubskonto = urlaubskonto
         arbeitszeitkonto.user = user
+        arbeitszeitkonto.arbeitsleistung = arbeitsleistung
+        arbeitszeitkonto.überstunden = überstunden
 
         with ArbeitszeitkontoMapper() as mapper:
             return mapper.insert(arbeitszeitkonto)
@@ -338,7 +340,7 @@ class Administration(object):
 
     def get_arbeitszeitkonto_by_userID(self, userID):
         """Den Ereignisbuchung Eintrag mit der gegebenen ID auslesen."""
-        with EreignisbuchungMapper() as mapper:
+        with ArbeitszeitkontoMapper() as mapper:
             return mapper.find_arbeitszeitkonto_by_userID(userID)
 
     def update_arbeitszeitkonto(self, arbeitszeitkonto):

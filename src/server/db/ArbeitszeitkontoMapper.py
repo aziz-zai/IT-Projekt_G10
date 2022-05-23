@@ -16,17 +16,20 @@ class ArbeitszeitkontoMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, urlaubstage, user FROM arbeitszeitkonto WHERE id={}".format(key)
+        command = "SELECT id, timestamp, user, urlaubskonto, arbeitsleistung, überstunden FROM arbeitszeitkonto WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, urlaubstage, user) = tuples[0]
+            (id, timestamp, user, urlaubskonto, arbeitsleistung, überstunden) = tuples[0]
             arbeitszeitkonto = Arbeitszeitkonto(
             id=id,
             timestamp=timestamp,
-            urlaubstage=urlaubstage,
-            user=user)
+            user=user,
+            urlaubskonto=urlaubskonto,
+            arbeitsleistung=arbeitsleistung,
+            überstunden=überstunden
+            )
             result = arbeitszeitkonto
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
@@ -49,17 +52,20 @@ class ArbeitszeitkontoMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, urlaubstage, user FROM arbeitszeitkonto WHERE id={}".format(userID)
+        command = "SELECT id, timestamp, user, urlaubskonto, arbeitsleistung, überstunden FROM arbeitszeitkonto WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, urlaubstage, user) = tuples[0]
+            (id, timestamp, user, urlaubskonto, arbeitsleistung, überstunden) = tuples[0]
             arbeitszeitkonto = Arbeitszeitkonto(
             id=id,
             timestamp=timestamp,
-            urlaubstage=urlaubstage,
-            user=user)
+            user=user,
+            urlaubskonto=urlaubskonto,
+            arbeitsleistung=arbeitsleistung,
+            überstunden=überstunden
+            )
             result = arbeitszeitkonto
 
         except IndexError:
@@ -80,7 +86,7 @@ class ArbeitszeitkontoMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE arbeitszeitkonto SET timestamp=%s, urlaubstage=%s WHERE id=%s"
+        command = "UPDATE arbeitszeitkonto SET timestamp=%s, user=%s, urlaubskonto=%s, arbeitsleistung=%s, überstunden=%s WHERE id=%s"
         data = (arbeitszeitkonto.timestamp, arbeitszeitkonto.urlaubstage, arbeitszeitkonto.user)
         cursor.execute(command, data)
 
@@ -103,14 +109,16 @@ class ArbeitszeitkontoMapper(Mapper):
                 arbeitszeitkonto.id = 1
         command = """
             INSERT INTO arbeitszeitkonto (
-                id, timestamp, urlaubstage, user
-            ) VALUES (%s,%s,%s,%s)
+                id, timestamp, user, urlaubskonto, arbeitsleistung, überstunden
+            ) VALUES (%s,%s,%s,%s,%s,%s)
         """
         cursor.execute(command, (
             arbeitszeitkonto.id,
             arbeitszeitkonto.timestamp,
-            arbeitszeitkonto.urlaubstage,
-            arbeitszeitkonto.user
+            arbeitszeitkonto.user,
+            arbeitszeitkonto.urlaubskonto,
+            arbeitszeitkonto.arbeitsleistung,
+            arbeitszeitkonto.überstunden
         ))
         self._cnx.commit()
 
