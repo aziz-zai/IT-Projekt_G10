@@ -1,3 +1,5 @@
+from server.bo.MembershipBO import Membership
+from server.db.MembershipMapper import MembershipMapper
 from .bo.EreignisbuchungBo import Ereignisbuchung
 from .bo.UserBO import User
 from .db.AktivitätenMapper import AktivitätenMapper
@@ -15,7 +17,8 @@ from .db.GehenMapper import GehenMapper
 from .bo.KommenBO import Kommen
 from .db.KommenMapper import KommenMapper
 from .db.EreignisbuchungMapper import EreignisbuchungMapper
-
+from .db.MembershipMapper import MembershipMapper
+from .bo.MembershipBO import Membership
 
 from .bo.ProjektarbeitBO import Projektarbeit
 from .db.ProjektarbeitMapper import ProjektarbeitMapper
@@ -296,16 +299,14 @@ class Administration(object):
     """
     Projekt-spezifische Methoden
     """
-    def create_project(self, projektname, laufzeit, auftraggeber, projektleiter, availablehours, user):
+    def create_project(self, projektname, laufzeit, auftraggeber, availablehours):
         """Ein Projekt anlegen"""
         project = Project
         project.timestamp = datetime.now()
         project.projektname = projektname
         project.laufzeit = laufzeit
         project.auftraggeber = auftraggeber
-        project.projektleiter = projektleiter
         project.availablehours = availablehours
-        project.user = user
 
         with ProjectMapper() as mapper:
             return mapper.insert(project)
@@ -317,6 +318,10 @@ class Administration(object):
     def update_project(self, project):
         with ProjectMapper() as mapper:
             return mapper.update(project)
+    
+    def delete_project(self, project):
+        with ProjectMapper() as mapper:
+            return mapper.delete(project)
 
     """
     Arbeitszeitkonto-spezifische Methoden 
@@ -352,4 +357,36 @@ class Administration(object):
             return mapper.delete(arbeitszeitkonto)
 
 
+    """
+    Membership-spezifische Methoden
+    """
+    def create_membership(self, user, project, projektleiter):
+        membership = Membership
+        membership.timestamp = datetime.now()
+        membership.user = user
+        membership.project = project
+        membership.projektleiter = projektleiter
 
+        with MembershipMapper() as mapper:
+            return mapper.insert(membership)
+
+    def get_membership_by_id(self, id):
+        with MembershipMapper() as mapper:
+            return mapper.find_by_key(id)
+    
+    def update_membership(self, membership):
+        with MembershipMapper() as mapper:
+            return mapper.update(membership)
+    
+    def delete_membership(self, membership):
+        with MembershipMapper() as mapper:
+            return mapper.delete(membership)
+
+    def get_membership_by_project(self, project):
+        with MembershipMapper() as mapper:
+            return mapper.find_by_project(project)
+    
+    def get_membership_by_user(self, user):
+        with MembershipMapper() as mapper:
+            return mapper.find_by_user(user)
+       

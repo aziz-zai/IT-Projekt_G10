@@ -7,6 +7,7 @@ from flask_restx import Api, Resource, fields
 from flask_cors import CORS
 from server.bo.AktivitätenBO import Aktivitäten
 from server.bo.AbwesenheitBO import Abwesenheit
+from server.bo.MembershipBO import Membership
 
 # Wir greifen natürlich auf unsere Applikationslogik inkl. BusinessObject-Klassen zurück
 from server.Administration import Administration
@@ -99,7 +100,12 @@ pausen = api.inherit('Pausen', bo, {
     'zeitdifferenz': fields.Float(attribute='zeitdifferenz', description='Zeitdifferenz einer Pause')
 })
 
+membership = api.inherit('Membership', bo, {
+    'user': fields.Integer(attribute='user', description='User_id des Memberships'),
+    'project': fields.Integer(attribute='project', description='project_id des Memberships'),
+    'projektleiter': fields.Boolean(attribute='projektleiter', description='Projektleiter eines Memberships')
 
+})
 
 ereignisbuchungen = api.inherit('Ereignisbuchungen', bo, {
     'arbeitszeitkonto': fields.Integer(attribute='arbeitszeitkonto', description='nbezeichnung eines Arbeitszeitkontos'),
@@ -111,9 +117,7 @@ project = api.inherit('Project',bo, {
     'projektname': fields.String(attribute='projektname', description='projektname'),
     'laufzeit': fields.Integer(attribute='laufzeit', description='laufzeit'),
     'auftraggeber': fields.String(attribute='auftraggeber', description='auftraggeber'),
-    'projektleiter': fields.Boolean(attribute='projektleiter', description='projektleiter'),
-    'availablehours': fields.Integer(attribute='availablehours', description='availablehours'),
-    'user': fields.Integer(attribute='user', description='user'),
+    'availablehours': fields.Float(attribute='availablehours', description='availablehours'),
 })
 
 arbeitszeitkonto = api.inherit('Arbeitszeitkonto',bo, {
@@ -144,7 +148,94 @@ zeitintervallbuchung = api.inherit('Zeitintervallbuchung', bo, {
     'bemerkung': fields.String(attribute='bemerkung', description='bemerkung eines Benutzers'),
 })
 
+@projectone.route('/membership')
+@projectone.response(500, 'Falls es zu einem Server-seitigem Fehler kommt.')
+class MembershipOperations(Resource):
+    @projectone.marshal_with(membership, code=200)
+    @projectone.expect(membership)  # Wir erwarten ein Membership-Objekt von der Client-Seite.
+    def post(self):
+        """Anlegen eines neuen Membership-Objekts.
+        """
+        adm = Administration()
+        proposal = Membership(**api.payload, projektleiter=False)
+        if proposal is not None:
+            m = adm.create_membership(proposal.user, proposal.project, proposal.projektleiter)
+            return m, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
 
+@projectone.route('/membership/<int:id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des Membership-Objekts')
+class MembershipOperations(Resource):
+    @projectone.marshal_with(membership)
+
+    def get(self, id):
+        """Auslesen eines bestimmten Membership-Objekts.
+
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        membership = adm.get_membership_by_id(id)
+        return membership
+
+    @projectone.marshal_with(membership)
+    def put(self, id):
+
+        adm = Administration()
+        ms = Membership(**api.payload)
+
+
+        if ms is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Membership-Objekts gesetzt.
+            Siehe Hinweise oben.
+            """
+            ms.id = id
+            ms.timestamp = datetime.now()
+            adm.update_membership(ms)
+            return '', 200
+        else:
+            return '', 500
+
+    @projectone.marshal_with(membership)
+    def delete(self, id):
+        """Löschen eines bestimmten Membership-Objekts.
+
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+
+        mbs = adm.get_membership_by_id(id)
+        adm.delete_membership(mbs)
+        return '', 200
+
+@projectone.route('/membership-by-project/<int:project>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des Membership-Objekts')
+class MembershipOperations(Resource):
+    @projectone.marshal_with(membership)
+
+    def get(self, project):
+        """Auslesen eines bestimmten Membership-Objekts nach Projektid
+
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        membership = adm.get_membership_by_project(project)
+        return membership
+
+@projectone.route('/membership-by-user/<int:user>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des Membership-Objekts')
+class MembershipOperations(Resource):
+    @projectone.marshal_with(membership)
+
+    def get(self, user):
+        adm = Administration()
+        mu = adm.get_membership_by_user(user)
+        return mu
+    
 @projectone.route('/projektarbeiten')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class UserListOperations(Resource):
@@ -337,14 +428,14 @@ class PausenOperations(Resource):
 
 
 
-@projectone.route('/project')
+@projectone.route('/projects/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
 
     @projectone.marshal_with(project, code=200)
     @projectone.expect(project)  # Wir erwarten ein User-Objekt von Client-Seite.
-    def post(self):
-        """Anlegen eines neuen Customer-Objekts.
+    def post(self, user):
+        """Anlegen eines neuen Project-Objekts.
 
         **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
         So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
@@ -362,29 +453,28 @@ class ProjectListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            a = adm.create_project(proposal.projektname, proposal.laufzeit, proposal.auftraggeber, proposal.projektleiter, proposal.availablehours, proposal.user)
+            a = adm.create_project(proposal.projektname, proposal.laufzeit, proposal.auftraggeber, proposal.availablehours)
+            adm.create_membership(user=user, project=a.id, projektleiter=True)
             return a, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
-@projectone.route('/project/<int:id>')
+@projectone.route('/projects/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
     @projectone.marshal_with(project)
     def get(self, id):
-        """Auslesen aller Customer-Objekte.
 
-        Sollten keine Customer-Objekte verfügbar sein, so wird eine leere Sequenz zurückgegeben."""
         adm = Administration()
         project = adm.get_project_by_id(id)
         return project
 
     @projectone.marshal_with(project)
     def put(self, id):
-        """Update eines bestimmten aktivitäten-Objekts."""
+        """Update eines bestimmten Project-Objekts."""
         adm = Administration()
-        pr = Aktivitäten(**api.payload)
+        pr = Project(**api.payload)
 
 
         if pr is not None:
@@ -392,10 +482,11 @@ class ProjectListOperations(Resource):
             Siehe Hinweise oben.
             """
             pr.id = id
+            pr.timestamp = datetime.now()
             adm.update_project(pr)
-            return '', 200
+            return pr, 200
         else:
-            return '', 500
+            return pr, 500
 
     
     @projectone.marshal_with(project)
