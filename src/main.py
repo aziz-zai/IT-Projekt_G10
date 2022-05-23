@@ -291,7 +291,7 @@ class PausenListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            pa = adm.create_pause(proposal.start, proposal.ende, proposal.zeitdifferenz)
+            pa = adm.create_pause(proposal.start, proposal.ende)
             return pa, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.

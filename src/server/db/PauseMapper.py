@@ -15,15 +15,16 @@ class PauseMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, start, ende FROM pause WHERE id={}".format(key)
+        command = "SELECT id, timestamp, bezeichnung, start, ende FROM pause WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, start, ende) = tuples[0]
+            (id, timestamp, bezeichnung, start, ende) = tuples[0]
             pause = Pause(
             id=id,
             timestamp=timestamp,
+            bezeichnung=bezeichnung,
             start=start,
             ende=ende)
 
@@ -53,12 +54,13 @@ class PauseMapper(Mapper):
                 pause.id = 1
         command = """
             INSERT INTO pause (
-                id, timestamp, start, ende
-            ) VALUES (%s,%s,%s,%s)
+                id, timestamp, bezeichnung, start, ende
+            ) VALUES (%s,%s,%s,%s,%s)
         """
         cursor.execute(command, (
             pause.id,
             pause.timestamp,
+            pause.bezeichnung,
             pause.start,
             pause.ende
         ))
@@ -73,8 +75,8 @@ class PauseMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE pause SET timestamp=%s, start=%s, ende=%s WHERE id=%s"
-        data = (pause.timestamp, pause.start, pause.ende)
+        command = "UPDATE pause SET timestamp=%s, bezeichnung=%s, start=%s, ende=%s WHERE id=%s"
+        data = (pause.timestamp, pause.bezeichnung, pause.start, pause.ende)
         cursor.execute(command, data)
 
         self._cnx.commit()

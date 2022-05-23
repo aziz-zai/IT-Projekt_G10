@@ -235,13 +235,14 @@ class Administration(object):
 
     """Pause-spezifische Methoden"""
 
-    def create_pause(self, start, ende):
+    def create_pause(self, bezeichnung, start, ende):
         """Einen Benutzer anlegen"""
         kommen = Administration.get_kommen_by_id(self, start)
         gehen = Administration.get_gehen_by_id(self, ende)
 
         pause = Pause
         pause.timestamp = datetime.now()
+        pause.bezeichnung = bezeichnung
         pause.start = start
         pause.ende = ende
 
