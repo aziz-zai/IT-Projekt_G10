@@ -1028,5 +1028,85 @@ class ZeitintervallbuchungOperations(Resource):
         else:
             return '', 500
 
+@projectone.route('/abwesenheit')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class AbwesenheitListOperations(Resource):
+
+    @projectone.marshal_with(abwesenheit, code=200)
+    @projectone.expect(abwesenheit)  # Wir erwarten ein User-Objekt von Client-Seite.
+    def post(self):
+        """Anlegen eines neuen Zeitintervallbuchung-Objekts.
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
+        """
+        adm = Administration()
+
+        proposal = Abwesenheit (**api.payload)
+
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+        if proposal is not None:
+            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
+            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben. 
+            """
+            a = adm.create_abwesenheit (proposal.start, proposal.ende, proposal.abwesenheitsart)
+            return a, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+
+
+@projectone.route('/abwesenheit/<int:id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des User-Objekts')
+class AbwesenheitOperations(Resource):
+    @projectone.marshal_with(abwesenheit)
+
+    def get(self, id):
+        """Auslesen eines bestimmten Abwesenheit-Objekts.
+
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        abwesenheit = adm.get_abwesenheit_by_id(id)
+        return abwesenheit
+
+    @projectone.marshal_with(abwesenheit)
+    def put(self, id):
+        """Update eines bestimmten Abwesenheit-Objekts.
+
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        Customer-Objekts.
+        """
+        adm = Administration()
+        ab = Abwesenheit(**api.payload)
+
+
+        if ab is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
+            Siehe Hinweise oben.
+            """
+            ab.id = id
+            adm.update_abwesenheit(ab)
+            return '', 200
+        else:
+            return '', 500
+
+    @projectone.marshal_with(abwesenheit)
+    def delete(self, id):
+        """Löschen eines bestimmten Abwesenheit-Objekts.
+
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+
+        abtd = adm.get_abwesenheit_by_id(id)
+        adm.delete_abwesenheit(abtd)
+        return '', 200
+
 if __name__ == '__main__':
     app.run(debug=True)
