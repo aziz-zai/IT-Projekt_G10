@@ -52,9 +52,9 @@ class Administration(object):
         with AktivitätenMapper() as mapper:
             return mapper.find_by_key(id)
 
-    def get_activities_by_project_id(self, project_id):
+    def get_activities_by_project(self, project):
         with AktivitätenMapper() as mapper:
-            return mapper.find_all_activties_by_project_id(project_id)
+            return mapper.find_all_activties_by_project(project)
 
     def update_aktivitäten(self, aktivitäten):
         with AktivitätenMapper() as mapper:

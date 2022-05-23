@@ -40,14 +40,14 @@ class AktivitätenMapper(Mapper):
 
         return result
 
-    def find_all_activties_by_project_id(self, project_id):
+    def find_all_activties_by_project(self, project: int):
         """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
         """
 
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, bezeichnung, dauer, capacity, project FROM activity WHERE id={}".format(project_id)
+        command = "SELECT id, timestamp, bezeichnung, dauer, capacity, project FROM activity WHERE project={}".format(project)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
