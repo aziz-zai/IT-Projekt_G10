@@ -208,6 +208,11 @@ class Administration(object):
         with ProjektarbeitMapper() as mapper:
             return mapper.find_by_key(id)
 
+    def get_projektarbeit_by_activity_id(self, activity):
+        """Die Projektarbeit anhand der Aktivitäten ID auslesen"""
+        with ProjektarbeitMapper() as mapper:
+            return mapper.find_by_activity_id(activity)
+
     def update_projektarbeit(self, projektarbeit: Projektarbeit):
         kommen = Administration.get_kommen_by_id(self, projektarbeit.start)
         gehen = Administration.get_gehen_by_id(self, projektarbeit.ende)

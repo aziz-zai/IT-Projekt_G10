@@ -222,6 +222,20 @@ class ProjektarbeitenOperations(Resource):
         adm.delete_projektarbeit(pab)
         return '', 200
 
+@projectone.route('/projektarbeiten/<int:activity>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des Projektarbeit-Objekts')
+class ProjektarbeitenByActivityIdOperations(Resource):
+    @projectone.marshal_with(projektarbeiten)
+
+    def get(self, activity):
+        """Auslesen eines bestimmten Projektarbeit-Objekts anhand der Aktivitäten-ID.
+
+        Das auszulesende Objekt wird durch die ```Activity-ID``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        projektarbeitenac = adm.get_projektarbeit_by_activity_id(activity)
+        return projektarbeitenac
 
 @projectone.route('/projektarbeit/Gehen/<int:id>/<int:Ak_id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
