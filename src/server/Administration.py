@@ -188,16 +188,17 @@ class Administration(object):
 
     """Projektarbeit-spezifische Methoden"""
 
-    def create_projektarbeit(self, start, ende, bezeichnung, activity):
+    def create_projektarbeit(self, bezeichnung, beschreibung, start, ende, activity):
         """Einen Benutzer anlegen"""
         kommen = Administration.get_kommen_by_id(self, start)
         gehen = Administration.get_gehen_by_id(self, ende)
 
         projektarbeit = Projektarbeit
         projektarbeit.timestamp = datetime.now()
+        projektarbeit.bezeichnung = bezeichnung
+        projektarbeit.beschreibung = beschreibung
         projektarbeit.start = start
         projektarbeit.ende = ende
-        projektarbeit.bezeichnung = bezeichnung
         projektarbeit.activity = activity
         
         with ProjektarbeitMapper() as mapper:

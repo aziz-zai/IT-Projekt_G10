@@ -87,9 +87,10 @@ aktivitäten = api.inherit('Aktivitäten',bo, {
 })
 
 projektarbeiten = api.inherit('Projektarbeiten', bo, {
+    'bezeichnung': fields.String(attribute='bezeichnung', description='Bezeichnung eines Projektes'),
+    'beschreibung': fields.String(attribute='beschreibung', description='Beschreibung eines Projektes'),
     'start': fields.Integer(attribute='start', description='Start einer Projektarbeit'),
     'ende': fields.Integer(attribute='ende', description='Ende einer Projektarbeit'),
-    'bezeichnung': fields.String(attribute='bezeichnung', description='Bezeichnung eines Projektes'),
     'activity': fields.Integer(attribute='activity', description='Aktivitäten ID eines Projektes')
 })
 
@@ -167,7 +168,7 @@ class UserListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            pr = adm.create_projektarbeit(proposal.start, proposal.ende, proposal.bezeichnung, proposal.activity)
+            pr = adm.create_projektarbeit(proposal.bezeichnung, proposal.beschreibung, proposal.start, proposal.ende, proposal.activity)
             return pr, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -291,7 +292,7 @@ class PausenListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            pa = adm.create_pause(proposal.start, proposal.ende)
+            pa = adm.create_pause(proposal.bezeichnung, proposal.start, proposal.ende)
             return pa, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.

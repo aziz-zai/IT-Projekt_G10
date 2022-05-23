@@ -14,18 +14,19 @@ class ProjektarbeitMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, start, ende, bezeichnung, activity FROM projektarbeit WHERE id={}".format(key)
+        command = "SELECT id, timestamp, bezeichnung, beschreibung, start, ende, activity FROM projektarbeit WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, start, ende, bezeichnung, activity) = tuples[0]
+            (id, timestamp, bezeichnung, beschreibung, start, ende, activity) = tuples[0]
             projektarbeit = Projektarbeit(
             id=id,
             timestamp=timestamp,
+            bezeichnung=bezeichnung,
+            beschreibung=beschreibung,
             start=start,
             ende=ende,
-            bezeichnung=bezeichnung,
             activity=activity)
 
             result = projektarbeit
@@ -47,18 +48,19 @@ class ProjektarbeitMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, start, ende, bezeichnung, activity FROM projektarbeit WHERE id={}".format(activity)
+        command = "SELECT id, timestamp, bezeichnung, beschreivung, start, ende, activity FROM projektarbeit WHERE id={}".format(activity)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, start, ende, bezeichnung, activity) = tuples[0]
+            (id, timestamp, bezeichnung, beschreibung, start, ende, activity) = tuples[0]
             projektarbeit = Projektarbeit(
             id=id,
             timestamp=timestamp,
+            bezeichnung=bezeichnung,
+            beschreibung=beschreibung,
             start=start,
             ende=ende,
-            bezeichnung=bezeichnung,
             activity=activity)
 
             result = projektarbeit
@@ -86,15 +88,16 @@ class ProjektarbeitMapper(Mapper):
                 projektarbeit.id = 1
         command = """
             INSERT INTO projektarbeit (
-                id, timestamp, start, ende, bezeichnung, activity
-            ) VALUES (%s,%s,%s,%s,%s,%s)
+                id, timestamp, bezeichnung, beschreibung, start, ende, activity
+            ) VALUES (%s,%s,%s,%s,%s,%s,%s)
         """
         cursor.execute(command, (
             projektarbeit.id,
             projektarbeit.timestamp,
+            projektarbeit.bezeichnung,
+            projektarbeit.beschreibung,
             projektarbeit.start,
             projektarbeit.ende,
-            projektarbeit.bezeichnung,
             projektarbeit.activity
         ))
         self._cnx.commit()
@@ -108,8 +111,8 @@ class ProjektarbeitMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE projektarbeit SET timestamp=%s, start=%s, ende=%s, bezeichnung=%s, activity=%s WHERE id=%s"
-        data = (projektarbeit.timestamp, projektarbeit.start, projektarbeit.ende, projektarbeit.bezeichnung, projektarbeit.activity, projektarbeit.id)
+        command = "UPDATE projektarbeit SET timestamp=%s, bezeichnung=%s, beschreibung=%s, start=%s, ende=%s, activity=%s WHERE id=%s"
+        data = (projektarbeit.timestamp, projektarbeit.bezeichnung, projektarbeit.beschreibung, projektarbeit.start, projektarbeit.ende, projektarbeit.activity, projektarbeit.id)
         cursor.execute(command, data)
 
         self._cnx.commit()
