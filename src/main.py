@@ -168,7 +168,7 @@ class MembershipOperations(Resource):
 @projectone.route('/membership/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Membership-Objekts')
-class MembershipOperations(Resource):
+class MembershipByIDOperations(Resource):
     @projectone.marshal_with(membership)
 
     def get(self, id):
@@ -213,7 +213,7 @@ class MembershipOperations(Resource):
 @projectone.route('/membership-by-project/<int:project>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Membership-Objekts')
-class MembershipOperations(Resource):
+class MembershipByProjectOperations(Resource):
     @projectone.marshal_with(membership)
 
     def get(self, project):
@@ -225,10 +225,25 @@ class MembershipOperations(Resource):
         membership = adm.get_membership_by_project(project)
         return membership
 
+@projectone.route('/membership-by-user-and-project/<int:user>/<int:project>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des Membership-Objekts')
+class MembershipByUserAndProject(Resource):
+    @projectone.marshal_with(membership)
+
+    def get(self, user, project):
+        """Auslesen eines bestimmten Membership-Objekts nach Projektid
+
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        membership = adm.get_membership_by_user_and_project(user, project)
+        return membership
+
 @projectone.route('/membership-by-user/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Membership-Objekts')
-class MembershipOperations(Resource):
+class MembershipByUserOperations(Resource):
     @projectone.marshal_with(membership)
 
     def get(self, user):
