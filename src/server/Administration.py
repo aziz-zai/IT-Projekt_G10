@@ -321,14 +321,14 @@ class Administration(object):
     """
     Arbeitszeitkonto-spezifische Methoden 
     """
-    def create_arbeitszeitkonto(self, urlaubskonto, user, arbeitsleistung, überstunden):
+    def create_arbeitszeitkonto(self, urlaubskonto, user, arbeitsleistung, gleitzeit):
         """Einen Benutzer anlegen"""
         arbeitszeitkonto = Arbeitszeitkonto
         arbeitszeitkonto.timestamp = datetime.now()
         arbeitszeitkonto.urlaubskonto = urlaubskonto
         arbeitszeitkonto.user = user
         arbeitszeitkonto.arbeitsleistung = arbeitsleistung
-        arbeitszeitkonto.überstunden = überstunden
+        arbeitszeitkonto.gleitzeit = gleitzeit
 
         with ArbeitszeitkontoMapper() as mapper:
             return mapper.insert(arbeitszeitkonto)

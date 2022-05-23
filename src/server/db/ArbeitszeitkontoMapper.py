@@ -16,19 +16,19 @@ class ArbeitszeitkontoMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, user, urlaubskonto, arbeitsleistung, überstunden FROM arbeitszeitkonto WHERE id={}".format(key)
+        command = "SELECT id, timestamp, user, urlaubskonto, arbeitsleistung, gleitzeit FROM arbeitszeitkonto WHERE user={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, user, urlaubskonto, arbeitsleistung, überstunden) = tuples[0]
+            (id, timestamp, user, urlaubskonto, arbeitsleistung, gleitzeit) = tuples[0]
             arbeitszeitkonto = Arbeitszeitkonto(
             id=id,
             timestamp=timestamp,
             user=user,
             urlaubskonto=urlaubskonto,
             arbeitsleistung=arbeitsleistung,
-            überstunden=überstunden
+            gleitzeit=gleitzeit
             )
             result = arbeitszeitkonto
         except IndexError:
@@ -41,7 +41,7 @@ class ArbeitszeitkontoMapper(Mapper):
 
         return result
 
-    def find_arbeitszeitkonto_by_userID(self, userID):
+    def find_arbeitszeitkonto_by_userID(self, user: int):
         """Suchen eines Benutzers mit vorgegebener Google ID. Da diese eindeutig ist,
         wird genau ein Objekt zurückgegeben.
 
@@ -52,19 +52,19 @@ class ArbeitszeitkontoMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, user, urlaubskonto, arbeitsleistung, überstunden FROM arbeitszeitkonto WHERE id={}".format(key)
+        command = "SELECT id, timestamp, user, urlaubskonto, arbeitsleistung, gleitzeit FROM arbeitszeitkonto WHERE user={}".format(user)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, user, urlaubskonto, arbeitsleistung, überstunden) = tuples[0]
+            (id, timestamp, user, urlaubskonto, arbeitsleistung, gleitzeit) = tuples[0]
             arbeitszeitkonto = Arbeitszeitkonto(
             id=id,
             timestamp=timestamp,
             user=user,
             urlaubskonto=urlaubskonto,
             arbeitsleistung=arbeitsleistung,
-            überstunden=überstunden
+            gleitzeit=gleitzeit
             )
             result = arbeitszeitkonto
 
@@ -86,8 +86,8 @@ class ArbeitszeitkontoMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE arbeitszeitkonto SET timestamp=%s, user=%s, urlaubskonto=%s, arbeitsleistung=%s, überstunden=%s WHERE id=%s"
-        data = (arbeitszeitkonto.timestamp, arbeitszeitkonto.urlaubstage, arbeitszeitkonto.user)
+        command = "UPDATE arbeitszeitkonto SET timestamp=%s, user=%s, urlaubskonto=%s, arbeitsleistung=%s, gleitzeit=%s WHERE user=%s"
+        data = (arbeitszeitkonto.timestamp, arbeitszeitkonto.user, arbeitszeitkonto.urlaubskonto, arbeitszeitkonto.arbeitsleistung, arbeitszeitkonto.gleitzeit, arbeitszeitkonto.user)
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -109,7 +109,7 @@ class ArbeitszeitkontoMapper(Mapper):
                 arbeitszeitkonto.id = 1
         command = """
             INSERT INTO arbeitszeitkonto (
-                id, timestamp, user, urlaubskonto, arbeitsleistung, überstunden
+                id, timestamp, user, urlaubskonto, arbeitsleistung, gleitzeit
             ) VALUES (%s,%s,%s,%s,%s,%s)
         """
         cursor.execute(command, (
@@ -118,7 +118,7 @@ class ArbeitszeitkontoMapper(Mapper):
             arbeitszeitkonto.user,
             arbeitszeitkonto.urlaubskonto,
             arbeitszeitkonto.arbeitsleistung,
-            arbeitszeitkonto.überstunden
+            arbeitszeitkonto.gleitzeit
         ))
         self._cnx.commit()
 

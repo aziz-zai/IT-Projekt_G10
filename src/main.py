@@ -117,8 +117,10 @@ project = api.inherit('Project',bo, {
 })
 
 arbeitszeitkonto = api.inherit('Arbeitszeitkonto',bo, {
-    'urlaubstage': fields.Float(attribute='urlaubstage', description='urlaubstage eines Arbeitszeitkontos'),
+    'urlaubskonto': fields.Float(attribute='urlaubskonto', description='urlaubskonto eines Arbeitszeitkontos'),
     'user': fields.Integer(attribute='user', description='user eines Arbeitszeitkontos'),
+    'gleitzeit': fields.Float(attribute='gleitzeit', description='gleitzeit eines Arbeitszeitkontos'),
+    'arbeitsleistung': fields.Float(attribute='arbeitsleistung', description='arbeitsleistung eines Arbeitszeitkontos'),
 })
 
 gehen = api.inherit('Gehen', bo, {
@@ -596,7 +598,7 @@ class UserByGoogleUserIdOperations(Resource):
         return up
 
 
-@projectone.route('/arbeitszeitkonto/<int:user>')
+@projectone.route('/arbeitszeitkonto-by-user/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('user', 'Die ID des User-Objekts')
 class ArbeitszeitkontoOperations(Resource):
@@ -608,7 +610,7 @@ class ArbeitszeitkontoOperations(Resource):
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
-        arb = adm.get_arbeitszeitkonto_by_id(user)
+        arb = adm.get_arbeitszeitkonto_by_userID(user)
         return arb
     
     @projectone.marshal_with(arbeitszeitkonto, code=200)
@@ -625,12 +627,13 @@ class ArbeitszeitkontoOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            ab = adm.create_arbeitszeitkonto(proposal.urlaubskonto, proposal.user, proposal.arbeitsleistung, proposal.überstunden)
+            ab = adm.create_arbeitszeitkonto(proposal.urlaubskonto, proposal.user, proposal.arbeitsleistung, proposal.gleitzeit)
             return ab, 200  
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
+    @projectone.marshal_with(arbeitszeitkonto)
     def put(self, user):
         """Update eines bestimmten User-Objekts.
 
@@ -652,7 +655,7 @@ class ArbeitszeitkontoOperations(Resource):
         else:
             return '', 500
 
-    @projectone.marshal_with(user)
+    @projectone.marshal_with(arbeitszeitkonto)
     def delete(self, user):
         """Löschen eines bestimmten User-Objekts.
 
@@ -660,10 +663,9 @@ class ArbeitszeitkontoOperations(Resource):
         """
         adm = Administration()
 
-        userd = adm.get_arbeitszeitkonto_by_id(user)
-        adm.delete_user(userd)
+        arb = adm.get_arbeitszeitkonto_by_id(user)
+        adm.delete_arbeitszeitkonto(arb)
         return '', 200
-
 
 @projectone.route('/ereignisbuchungen')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
