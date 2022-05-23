@@ -15,6 +15,7 @@ from server.bo.UserBO import User
 from server.bo.EreignisbuchungBo import Ereignisbuchung
 from server.bo.GehenBO import Gehen
 from server.bo.KommenBO import Kommen
+from server.bo.EreignisBO import Ereignis
 
 from server.bo.ProjektarbeitBO import Projektarbeit
 from server.bo.PauseBO import Pause
@@ -142,6 +143,9 @@ zeitintervallbuchung = api.inherit('Zeitintervallbuchung', bo, {
     'bemerkung': fields.String(attribute='bemerkung', description='bemerkung eines Benutzers'),
 })
 
+ereignis = api.inherit('Ereignis', bo, {
+    'zeitpunkt': fields.Integer(attribute = 'zeitpunkt', description = 'zeitpunkt eines Ereignisses')
+})
 
 @projectone.route('/projektarbeiten')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -1025,6 +1029,91 @@ class ZeitintervallbuchungOperations(Resource):
             return '', 200
         else:
             return '', 500
+
+
+
+
+@projectone.route('/ereignis')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class EreignisListOperations(Resource):
+
+    @projectone.marshal_with(ereignis, code=200)
+    @projectone.expect(ereignis)  # Wir erwarten ein Ereignis-Objekt von Client-Seite.
+    def post(self):
+        """Anlegen eines neuen Ereignis-Objekts.
+
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
+        """
+        adm = Administration()
+
+        proposal = Ereignis(**api.payload)
+
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+        if proposal is not None:
+            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
+            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben. 
+            """
+            er = adm.create_ereignis(proposal.zeitpunkt)
+            return er, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+
+@projectone.route('/ereignis/<int:id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des Ereignis-Objekts')
+class EreignisOperations(Resource):
+    @projectone.marshal_with(ereignis)
+
+    def get(self, id):
+        """Auslesen eines bestimmten Ereignis-Objekts.
+
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        ereignis = adm.get_ereignis_by_id(id)
+        return ereignis
+
+    @projectone.marshal_with(ereignis)
+    def put(self, id):
+        """Update eines bestimmten Ereignis-Objekts.
+
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        Customer-Objekts.
+        """
+        adm = Administration()
+        eri = Ereignis(**api.payload)
+
+
+        if eri is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
+            Siehe Hinweise oben.
+            """
+            eri.id = id
+            adm.update_ereignis(eri)
+            return '', 200
+        else:
+            return '', 500
+
+    @projectone.marshal_with(ereignis)
+    def delete(self, id):
+        """Löschen eines bestimmten Ereignis-Objekts.
+
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+
+        erid = adm.get_ereignis_by_id(id)
+        adm.delete_ereignis(erid)
+        return '', 200
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
