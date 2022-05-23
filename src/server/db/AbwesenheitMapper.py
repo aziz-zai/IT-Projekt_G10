@@ -1,4 +1,3 @@
-from sqlite3 import Timestamp
 from time import time
 from server.bo.AbwesenheitBO import Abwesenheit
 from server.db.Mapper import Mapper
@@ -17,18 +16,18 @@ class AbwesenheitMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT abwesenheitID, abwesenheitsart, timestamp, zeitintervallID, bemerkung FROM abwesenheit WHERE id={}".format(key)
+        command = "SELECT start, ende, abwesenheitsart, timestamp FROM abwesenheit WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, abwesenheitsart, timestamp, zeitintervallID, bemerkung) = tuples[0]
+            (start, ende, abwesenheitsart, timestamp , id) = tuples[0]
             abwesenheit = Abwesenheit()
-            id=id,
+            start=start,
+            ende=ende,
             abwesenheitsart=abwesenheitsart,
             timestamp=timestamp,
-            zeitintervallID=zeitintervallID,
-            bemerkung=bemerkung,
+            id=id,
             result = abwesenheit
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
@@ -54,15 +53,15 @@ class AbwesenheitMapper(Mapper):
                 abwesenheit.id = 1
         command = """
             INSERT INTO abwesenheit (
-            id, abwesenheitsart, timestamp, zeitintervallID, bemerkung
+            start, ende, abwesenheitsart, timestamp, id
             ) VALUES (%s,%s,%s,%s,%s,)
         """
         cursor.execute(command, (
-            abwesenheit.id,
+            abwesenheit.start,
+            abwesenheit.ende,
             abwesenheit.abwesenheitsart,
             abwesenheit.timestamp,
-            abwesenheit.zeitintervallID,
-            abwesenheit.bemerkung,
+            abwesenheit.id,
         ))
         self._cnx.commit()
 
@@ -75,8 +74,8 @@ class AbwesenheitMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE abwesenheit SET abwesenheitsart=%s, timestamp=%s, zeitintervallID=%s, bemerkung=%s WHERE id=%s"
-        data = (abwesenheit.abwesenheitsart, abwesenheit.timestamp, abwesenheit.zeitintervallID, abwesenheit.bemerkung)
+        command = "UPDATE abwesenheit SET start=%s, ende=%s, abwesenheitsart=%s, timestamp=%s WHERE id=%s"
+        data = (abwesenheit.start, abwesenheit.ende, abwesenheit.abwesenheitsart)
         cursor.execute(command, data)
 
         self._cnx.commit()

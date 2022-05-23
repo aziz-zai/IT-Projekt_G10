@@ -29,6 +29,7 @@ from SecurityDecorator import secured
 from datetime import datetime
 
 from server.bo.ZeitintervallbuchungBO import Zeitintervallbuchung
+from server.bo.AbwesenheitBO import Abwesenheit
 """
 Instanzieren von Flask. Am Ende dieser Datei erfolgt dann erst der 'Start' von Flask.
 """
@@ -135,6 +136,7 @@ abwesenheit = api.inherit('Abwesenheit', bo, {
     'zeitintervallID': fields.String(attribute='zeitintervallID', description='ZeitintervallID eines Benutzers'),
     'bemerkung': fields.String(attribute='bemerkung', description='bemerkung eines Benutzers'),
 })
+
 
 zeitintervallbuchung = api.inherit('Zeitintervallbuchung', bo, {
     'arbeitszeitkonto': fields.Integer(attribute='abwesenheit', description='abwesenheit eines Benutzers'),
