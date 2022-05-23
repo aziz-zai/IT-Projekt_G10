@@ -319,7 +319,7 @@ class Administration(object):
             return mapper.update(project)
 
     """
-    Arbeitszeitkonto-spezifische Methoden
+    Arbeitszeitkonto-spezifische Methoden 
     """
     def create_arbeitszeitkonto(self, urlaubstage, user):
         """Einen Benutzer anlegen"""
@@ -335,6 +335,11 @@ class Administration(object):
         """Den Benutzer mit der gegebenen ID auslesen."""
         with ArbeitszeitkontoMapper() as mapper:
             return mapper.find_by_key(user)
+
+    def get_arbeitszeitkonto_by_userID(self, userID):
+        """Den Ereignisbuchung Eintrag mit der gegebenen ID auslesen."""
+        with EreignisbuchungMapper() as mapper:
+            return mapper.find_arbeitszeitkonto_by_userID(userID)
 
     def update_arbeitszeitkonto(self, arbeitszeitkonto):
         with ArbeitszeitkontoMapper() as mapper:
