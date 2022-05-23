@@ -16,6 +16,7 @@ from .db.GehenMapper import GehenMapper
 from .bo.KommenBO import Kommen
 from .db.KommenMapper import KommenMapper
 from .db.EreignisbuchungMapper import EreignisbuchungMapper
+from .db.EreignisMapper import EreignisMapper
 
 
 from .bo.ProjektarbeitBO import Projektarbeit
@@ -351,5 +352,30 @@ class Administration(object):
 
 
 
+    """
+    Ereignis-spezifische Methoden
+    """ 
+    def create_ereignis(self, zeitpunkt):
+        """Ereignis anlegen"""
+        ereignis = Ereignis
+        ereignis.id = id
+        ereignis.timestamp = datetime.now()
+        ereignis.zeitpunkt = zeitpunkt
+
+        with EreignisMapper() as mapper:
+            return mapper.insert(ereignis)
+
+    def get_ereignis_by_id(self, id):
+        """Den Ereignis Eintrag mit der gegebenen ID auslesen."""
+        with EreignisMapper() as mapper:
+            return mapper.find_by_key(id)
+
+    def update_ereignis(self, ereignis):
+        with EreignisMapper() as mapper:
+            return mapper.update(ereignis)
+
+    def delete_ereignis(self, ereignis):
+        with EreignisMapper() as mapper:
+            return mapper.delete(ereignis)
 
 
