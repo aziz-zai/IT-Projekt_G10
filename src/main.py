@@ -103,7 +103,10 @@ pausen = api.inherit('Pausen', bo, {
 
 
 ereignisbuchungen = api.inherit('Ereignisbuchungen', bo, {
-    'arbeitszeitkonto': fields.Integer(attribute='arbeitszeitkonto', description='nbezeichnung eines Arbeitszeitkontos'),
+    'erstellt_von': fields.Integer(attribute='erstellt_von', description='bezeichnung Ersteller'),
+    'erstellt_für': fields.Integer(attribute='erstellt_für', describtion='bezeichnung Empfänger'),
+    'ist_buchung': fields.Integer(attribute='ist_buchung', describtion='bezeichnung der Ist-Buchung'),
+    'ereignis': fields.Integer(attribute='ereignis', describtion='bezeichnung vom Ereignis'),
     'project': fields.Float(attribute='capacity', description='bezeichnung der Kapazität einer Aktivität'),
 
 })
@@ -724,7 +727,7 @@ class EreignisbuchungenListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            e = adm.create_ereignisbuchung(proposal.arbeitszeitkonto, proposal.ereignis)
+            e = adm.create_ereignisbuchung(proposal.erstellt_von, proposal.erstellt_für, proposal.ist_buchung, proposal.ereignis)
             return e, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -797,7 +800,7 @@ class GehenListOperations(Resource):
         """
         adm = Administration()
 
-        proposal = Gehen(zeitpunkt=datetime.now())
+        proposal = Gehen(zeitpunkt=datetime.now(), bezeichnung="gehen")
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
@@ -805,7 +808,7 @@ class GehenListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            g = adm.create_gehen(proposal.zeitpunkt)
+            g = adm.create_gehen(proposal.zeitpunkt, proposal.bezeichnung)
             return g, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -880,7 +883,7 @@ class KommenListOperations(Resource):
         """
         adm = Administration()
 
-        proposal = Kommen(zeitpunkt=datetime.now())
+        proposal = Kommen(zeitpunkt=datetime.now(), bezeichnung="kommen")
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
@@ -888,7 +891,7 @@ class KommenListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            k = adm.create_kommen(proposal.zeitpunkt)
+            k = adm.create_kommen(proposal.zeitpunkt, proposal.bezeichnung)
             return k, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.

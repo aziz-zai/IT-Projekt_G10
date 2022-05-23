@@ -111,11 +111,12 @@ class Administration(object):
     """
     Gehen-spezifische Methoden
     """ 
-    def create_gehen(self,zeitpunkt):
+    def create_gehen(self,zeitpunkt, bezeichnung):
         """Gehen Eintrag anlegen"""
         gehen = Gehen
         gehen.timestamp = datetime.now()
         gehen.zeitpunkt = zeitpunkt
+        gehen.bezeichnung = bezeichnung
 
         with GehenMapper() as mapper:
             return mapper.insert(gehen)
@@ -137,11 +138,13 @@ class Administration(object):
     """
     Kommen-spezifische Methoden
     """ 
-    def create_kommen(self, zeitpunkt):
+    def create_kommen(self, zeitpunkt, bezeichnung):
         """Kommen Eintrag anlegen"""
         kommen = Kommen
         kommen.timestamp = datetime.now()
         kommen.zeitpunkt = zeitpunkt
+        kommen.bezeichnung = bezeichnung
+        
 
         with KommenMapper() as mapper:
             return mapper.insert(kommen)
@@ -163,13 +166,15 @@ class Administration(object):
     """
     Ereignisbuchung-spezifische Methoden
     """ 
-    def create_ereignisbuchung(self, arbeitszeitkonto, ereignis):
+    def create_ereignisbuchung(self, erstellt_von, erstellt_für, ist_buchung, ereignis):
         """Ereignisbuchung anlegen"""
         ereignisbuchung = Ereignisbuchung
         ereignisbuchung.id = id
         ereignisbuchung.timestamp = datetime.now()
+        ereignisbuchung.erstellt_von = erstellt_von,
+        ereignisbuchung.erstellt_für = erstellt_für,
+        ereignisbuchung.ist_buchung = ist_buchung,
         ereignisbuchung.ereignis = ereignis
-        ereignisbuchung.arbeitszeitkonto = arbeitszeitkonto
 
         with EreignisbuchungMapper() as mapper:
             return mapper.insert(ereignisbuchung)
