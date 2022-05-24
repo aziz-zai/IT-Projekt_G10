@@ -148,7 +148,8 @@ zeitintervallbuchung = api.inherit('Zeitintervallbuchung', bo, {
 })
 
 ereignis = api.inherit('Ereignis', bo, {
-    'zeitpunkt': fields.String(attribute = 'zeitpunkt', description = 'zeitpunkt eines Ereignisses')
+    'zeitpunkt': fields.String(attribute = 'zeitpunkt', description = 'zeitpunkt eines Ereignisses'),
+    'bezeichnung': fields.String(attribute = 'bezeichnung', description = 'bezeichnung eines Ereignis-Eintrags'),
 })
 
 @projectone.route('/projektarbeiten')
@@ -1062,7 +1063,7 @@ class EreignisListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            er = adm.create_ereignis(proposal.zeitpunkt)
+            er = adm.create_ereignis(proposal.zeitpunkt, proposal.bezeichnung)
             return er, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
