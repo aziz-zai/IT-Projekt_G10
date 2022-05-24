@@ -6,6 +6,7 @@ import PropTypes from 'prop-types'
 import OneAPI from '../api/OneAPI'
 import UserBO from '../api/UserBO';
 import SideBar from '../components/SideBar'
+import Project from '../components/Project'
 import { getTabsUtilityClass } from '@mui/material';
 
 
@@ -62,7 +63,7 @@ export class Home extends Component {
           userid: null,
           loadingInProgress: false,
           loadingError: e
-        }), console.log('user loading failed')
+        })
       );
     // set loading to true
     this.setState({
@@ -92,13 +93,13 @@ export class Home extends Component {
       <div>
          <SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={user}/>
          <NavBar toggle={this.handleOpenStateChange} user={user} nav="navBlack"/>
-    <div className="test"><button >User</button>
+    <div className="test">
 
       {users ? 
-      console.log('succes', users[0].vorname): console.log('fail')}
+      console.log('succes', users[0].vorname): console.log('fail', users)}
       {userid ? 
-      console.log('succes', userid[0].vorname): console.log('fail')}
-        <img className="testimg" src={test}></img>
+      console.log('succes', userid[0].vorname): console.log('fail', users)}
+      <Project/>
     </div>
     </div>
     )
