@@ -126,11 +126,13 @@ arbeitszeitkonto = api.inherit('Arbeitszeitkonto',bo, {
 
 gehen = api.inherit('Gehen', bo, {
     'zeitpunkt': fields.String(attribute='zeitpunkt', description='zeitpunkt eines Gehen-Eintrags'),
+    'bezeichnung': fields.String(attribute='bezeichnung', description='bezeichnung eines Gehen-Eintrags'),
 })
 
 
 kommen = api.inherit('Kommen', bo, {
     'zeitpunkt': fields.String(attribute='zeitpunkt', description='zeitpunkt eines Kommen-Eintrags'),
+    'bezeichnung': fields.String(attribute='bezeichnung', description='bezeichnung eines Kommen-Eintrags'),
 })
 
 abwesenheit = api.inherit('Abwesenheit', bo, {
