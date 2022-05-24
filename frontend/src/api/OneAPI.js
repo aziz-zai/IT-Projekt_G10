@@ -16,10 +16,10 @@ export default class OneAPI {
 
 
   // Local Python backend
-  #OneServerBaseURL = '/projectone';
+  #OneServerBaseURL = 'http://127.0.0.1:5000/projectone';
 
   // User related
-  #getUsersURL = (id) => `${this.#OneServerBaseURL}/users/${id}`;
+  #getUsersURL = (id) => `${this.#OneServerBaseURL}/users-by-gid/${id}`;
 
   // Project related
   #getProjectsURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;

@@ -684,25 +684,9 @@ class UserOperations(Resource):
         adm.delete_user(userd)
         return '', 200
 
-
-@projectone.route('/users-by-gid/<string:google_user_id>')
-@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@projectone.param('google_user_id', 'Die G-ID des User-Objekts')
-class UserByGoogleUserIdOperations(Resource):
-    @projectone.marshal_with(user)
-
-    def get(self, google_user_id):
-        """Auslesen eines bestimmten Customer-Objekts.
-
-        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
-        adm = Administration()
-        userg = adm.get_user_by_google_user_id(google_user_id)
-        return userg
-    
     @projectone.marshal_with(user)
     @projectone.expect(user)
-    def put(self, google_user_id):
+    def put(self, id):
         """Update eines bestimmten User-Objekts.
 
         **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
@@ -711,9 +695,24 @@ class UserByGoogleUserIdOperations(Resource):
         """
         adm = Administration()
         up = User(**api.payload)    
-        up.google_user_id = google_user_id
-        adm.update_user(up)
+        up.id = id
+        adm.save_user(up)
         return up
+
+@projectone.route('/users-by-gid/<string:google_user_id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('google_user_id', 'Die G-ID des User-Objekts')
+class UserByGoogleUserIdOperations(Resource):
+
+    @projectone.marshal_with(user)
+    def get(self, google_user_id):
+        """Auslesen eines bestimmten Customer-Objekts.
+
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        userg = adm.get_user_by_google_user_id(google_user_id)
+        return userg
 
 
 @projectone.route('/arbeitszeitkonto-by-user/<int:user>')
@@ -1104,17 +1103,6 @@ class ZeitintervallbuchungOperations(Resource):
         zetd = adm.get_zeitintervallbuchung_by_id(id)
         adm.delete_zeitintervallbuchung(zetd)
         return '', 200
-
-
-        if up is not None:
-            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
-            Siehe Hinweise oben.
-            """
-            up.google_user_id = google_user_id
-            adm.update_user(up)
-            return '', 200
-        else:
-            return '', 500
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -56,8 +56,8 @@ class UserMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id, urlaubstage FROM user WHERE google_user_id = %s"
-        cursor.execute(command, google_user_id)
+        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id, urlaubstage FROM user WHERE google_user_id LIKE '{}'".format(google_user_id)
+        cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
