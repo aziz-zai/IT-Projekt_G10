@@ -95,9 +95,9 @@ projektarbeiten = api.inherit('Projektarbeiten', bo, {
 })
 
 pausen = api.inherit('Pausen', bo, {
+    'bezeichnung': fields.String(attribute='bezeichnung', description='Bezeichnung einer Pause'),
     'start': fields.Integer(attribute='start', description='Start einer Pause'),
-    'ende': fields.Integer(attribute='ende', description='Ende einer Pause'),
-    'zeitdifferenz': fields.Float(attribute='zeitdifferenz', description='Zeitdifferenz einer Pause')
+    'ende': fields.Integer(attribute='ende', description='Ende einer Pause')
 })
 
 

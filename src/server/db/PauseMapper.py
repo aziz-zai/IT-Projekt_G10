@@ -76,7 +76,7 @@ class PauseMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE pause SET timestamp=%s, bezeichnung=%s, start=%s, ende=%s WHERE id=%s"
-        data = (pause.timestamp, pause.bezeichnung, pause.start, pause.ende)
+        data = (pause.timestamp, pause.bezeichnung, pause.start, pause.ende, pause.id)
         cursor.execute(command, data)
 
         self._cnx.commit()

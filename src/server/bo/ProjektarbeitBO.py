@@ -8,4 +8,5 @@ class Projektarbeit(Zeitintervall):
 
         self.beschreibung = beschreibung
         self.activity = activity
+        
         super().__init__(timestamp=timestamp,id=id,start=start,ende=ende, bezeichnung=bezeichnung)
