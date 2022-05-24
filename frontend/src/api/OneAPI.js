@@ -14,7 +14,7 @@ export default class OneAPI {
 
 
   // Local Python backend
-  #OneServerBaseURL = '/projectone';
+  #OneServerBaseURL = 'http://127.0.0.1:5000/projectone';
 
   // Local http-fake-backend 
   //#bankServerBaseURL = '/api/bank';
@@ -22,7 +22,7 @@ export default class OneAPI {
  
 
   // User related
-  #getUsersURL = (id) => `${this.#OneServerBaseURL}/users/${id}`;
+  #getUsersURL = (id) => `${this.#OneServerBaseURL}/users-by-gid/${id}`;
 
   /** 
    * Get the Singelton instance 

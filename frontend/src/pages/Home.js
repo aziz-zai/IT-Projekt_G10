@@ -4,6 +4,7 @@ import NavBar from '../components/NavBar'
 import test from '../media/test.svg'
 import PropTypes from 'prop-types'
 import OneAPI from '../api/OneAPI'
+import UserBO from '../api/UserBO';
 import SideBar from '../components/SideBar'
 
 
@@ -13,7 +14,7 @@ export class Home extends Component {
 
     // Init state
     this.state = {
-      users: [],
+      users: null,
       loadingInProgress: false,
       loadingError: null,
       Open: 'SideBarContainerClosed',
@@ -21,17 +22,16 @@ export class Home extends Component {
   }
 
   componentDidMount() {
-    this.getUsers();
+    this.getUserbygid();
   }
 
   /** gets the balance for this account */
-  getUsers = () => {
-    OneAPI.getAPI().getUsers(1).then(users =>
+  getUserbygid = () => {
+    OneAPI.getAPI().getUsers(this.props.user.uid).then(users =>
       this.setState({
         users: users,
         loadingInProgress: false,
         loadingError: null
-        
       })).catch(e =>
         this.setState({ // Reset state with error from catch 
           users: null,
@@ -39,7 +39,6 @@ export class Home extends Component {
           loadingError: e
         })
       );
-
     // set loading to true
     this.setState({
       loadingInProgress: true,
@@ -68,9 +67,10 @@ export class Home extends Component {
          <SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={user}/>
          <NavBar toggle={this.handleOpenStateChange} user={user} nav="navBlack"/>
     <div className="test">
+
+      {this.state.users ?
+      this.state.users.map(user=><h1>{user.vorname}</h1> ): null}
         <img className="testimg" src={test}></img>
-        <h1>Die Seite ist noch in Bearbeitung!</h1>
-        {this.state.users.map(user =><div key={user.id_}>{user.vorname}</div> )}
     </div>
     </div>
     )
