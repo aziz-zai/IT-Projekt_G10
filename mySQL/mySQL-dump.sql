@@ -133,6 +133,19 @@ CREATE TABLE `ereignisbuchung` (
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 
+-- Table structure for table `Ereginis`
+DROP TABLE IF EXISTS `ereignis`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ereignis` (
+  `id`INT(11) NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT 0,
+  `zeitpunkt` datetime NOT NULL DEFAULT '0',
+  `bezeichnung` varchar(110) NOT NULL DEFAULT '',/* bezeichnung wäre "kommen" */
+  PRIMARY KEY(`id`)
+) ENGINE= InnoDB DEFAULT CHARSET=utf8;
+
+
 -- Table structure for table `pause`
 DROP TABLE IF EXISTS `pause`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
