@@ -19,7 +19,8 @@ export default class OneAPI {
   #OneServerBaseURL = 'http://127.0.0.1:5000/projectone';
 
   // User related
-  #getUsersURL = (id) => `${this.#OneServerBaseURL}/users-by-gid/${id}`;
+  #getUserGidURL = (id) => `${this.#OneServerBaseURL}/users-by-gid/${id}`;
+  #getUserURL = (id) => `${this.#OneServerBaseURL}/users/${id}`;
 
   // Project related
   #getProjectsURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
@@ -90,8 +91,18 @@ export default class OneAPI {
    * 
    * @public
    */
-  getUsers(id) {
-    return this.#fetchAdvanced(this.#getUsersURL(id)).then((responseJSON) => {
+  getUserGid(id) {
+    return this.#fetchAdvanced(this.#getUserGidURL(id)).then((responseJSON) => {
+      let usersBOs = UserBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(usersBOs);
+      })
+    })
+  }
+
+  getUser(id) {
+    return this.#fetchAdvanced(this.#getUserURL(id)).then((responseJSON) => {
       let usersBOs = UserBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {
