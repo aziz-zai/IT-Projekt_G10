@@ -75,8 +75,8 @@ class EreignisMapper(Mapper):
             ) VALUES (%s,%s,%s)
         """
         cursor.execute(command, (
-            ereignis.id,
             ereignis.timestamp,
+            ereignis.id,
             ereignis.zeitpunkt
         ))
         self._cnx.commit()

@@ -362,7 +362,6 @@ class Administration(object):
     def create_ereignis(self, zeitpunkt):
         """Ereignis anlegen"""
         ereignis = Ereignis
-        ereignis.id = id
         ereignis.timestamp = datetime.now()
         ereignis.zeitpunkt = zeitpunkt
 

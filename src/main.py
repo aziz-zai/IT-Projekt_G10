@@ -148,7 +148,7 @@ zeitintervallbuchung = api.inherit('Zeitintervallbuchung', bo, {
 })
 
 ereignis = api.inherit('Ereignis', bo, {
-    'zeitpunkt': fields.Integer(attribute = 'zeitpunkt', description = 'zeitpunkt eines Ereignisses')
+    'zeitpunkt': fields.String(attribute = 'zeitpunkt', description = 'zeitpunkt eines Ereignisses')
 })
 
 @projectone.route('/projektarbeiten')
