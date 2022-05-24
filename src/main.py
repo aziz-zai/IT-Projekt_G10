@@ -689,8 +689,8 @@ class UserOperations(Resource):
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('google_user_id', 'Die G-ID des User-Objekts')
 class UserByGoogleUserIdOperations(Resource):
+    
     @projectone.marshal_with(user)
-
     def get(self, google_user_id):
         """Auslesen eines bestimmten Customer-Objekts.
 
