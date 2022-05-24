@@ -92,10 +92,6 @@ class Administration(object):
         with UserMapper() as mapper:
             return mapper.find_by_google_user_id(google_user_id)
 
-    def update_user(self, user):
-        with UserMapper() as mapper:
-            return mapper.update(user)
-
     def save_user(self, user):
         with UserMapper() as mapper:
             return mapper.update(user)
