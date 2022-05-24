@@ -52,7 +52,7 @@ class EreignisbuchungMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE ereignisbuchung SET timestamp = %s, erstellt_von = %s, erstellt_für = %s, ist_buchung, ereignis = %s WHERE id = %s"
+        command = "UPDATE ereignisbuchung SET timestamp = %s, erstellt_von = %s, erstellt_für = %s, ist_buchung = %s, ereignis = %s WHERE id = %s"
         data = (ereignisbuchung.timestamp, ereignisbuchung.erstellt_von, ereignisbuchung.erstellt_für, ereignisbuchung.ist_buchung, ereignisbuchung.ereignis, ereignisbuchung.id)
         cursor.execute(command, data)
 
