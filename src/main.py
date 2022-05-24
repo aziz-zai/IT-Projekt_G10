@@ -132,9 +132,9 @@ kommen = api.inherit('Kommen', bo, {
 })
 
 abwesenheit = api.inherit('Abwesenheit', bo, {
-    'abwesenheitsart': fields.String(attribute='abwesenheit', description='abwesenheit eines Benutzers'),
-    'zeitintervallID': fields.String(attribute='zeitintervallID', description='ZeitintervallID eines Benutzers'),
-    'bemerkung': fields.String(attribute='bemerkung', description='bemerkung eines Benutzers'),
+    'abwesenheitsart': fields.String(attribute='abwesenheitsart', description='abwesenheit eines Benutzers'),
+    'start': fields.Integer(attribute='start', description='ZeitintervallID eines Benutzers'),
+    'ende': fields.Integer(attribute='ende', description='bemerkung eines Benutzers'),
 })
 
 

@@ -356,7 +356,7 @@ class Administration(object):
 
 
     
-    def create_abwesenheit (start, ende, abwesenheitsart):
+    def create_abwesenheit (self, start, ende, abwesenheitsart):
 
         abwesenheit = Abwesenheit
         abwesenheit.start=start

@@ -16,19 +16,21 @@ class AbwesenheitMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT start, ende, abwesenheitsart, timestamp FROM abwesenheit WHERE id={}".format(key)
+        command = "SELECT id, timestamp, start, ende, abwesenheitsart FROM abwesenheit WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (start, ende, abwesenheitsart, timestamp , id) = tuples[0]
-            abwesenheit = Abwesenheit()
+            (id, timestamp, start, ende, abwesenheitsart) = tuples[0]
+            abwesenheit= Abwesenheit(
+            id=id,
+            timestamp=timestamp,
             start=start,
             ende=ende,
-            abwesenheitsart=abwesenheitsart,
-            timestamp=timestamp,
-            id=id,
+            abwesenheitsart=abwesenheitsart)
+
             result = abwesenheit
+
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
             keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
@@ -54,7 +56,7 @@ class AbwesenheitMapper(Mapper):
         command = """
             INSERT INTO abwesenheit (
             start, ende, abwesenheitsart, timestamp, id
-            ) VALUES (%s,%s,%s,%s,%s,)
+            ) VALUES (%s,%s,%s,%s,%s)
         """
         cursor.execute(command, (
             abwesenheit.start,
@@ -75,7 +77,7 @@ class AbwesenheitMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE abwesenheit SET start=%s, ende=%s, abwesenheitsart=%s, timestamp=%s WHERE id=%s"
-        data = (abwesenheit.start, abwesenheit.ende, abwesenheit.abwesenheitsart)
+        data = (abwesenheit.start, abwesenheit.ende, abwesenheit.abwesenheitsart, abwesenheit.timestamp, abwesenheit.id)
         cursor.execute(command, data)
 
         self._cnx.commit()
