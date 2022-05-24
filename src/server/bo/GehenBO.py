@@ -4,6 +4,6 @@ from datetime import datetime
 
 class Gehen(Ereignis):
     def __init__(self, zeitpunkt:datetime, bezeichnung: str, timestamp: datetime = datetime.now(), id: int= 0):
-        self.bezeichnung = bezeichnung
+        
 
-        super().__init__(timestamp = timestamp, id = id, zeitpunkt = zeitpunkt)
+        super().__init__(timestamp = timestamp, id = id, zeitpunkt = zeitpunkt, bezeichnung = bezeichnung)

@@ -49,7 +49,7 @@ class GehenMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE gehen SET timestamp = %s, zeitpunkt = %s, bezeichnung = %s WHERE id=%s"
-        data = (gehen.timestamp, gehen.zeitpunkt, gehen.id, gehen.bezeichnung)
+        data = (gehen.timestamp, gehen.zeitpunkt, gehen.bezeichnung, gehen.id)
         cursor.execute(command, data)
 
         self._cnx.commit()
