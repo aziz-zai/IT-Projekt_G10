@@ -88,16 +88,17 @@ aktivitäten = api.inherit('Aktivitäten',bo, {
 })
 
 projektarbeiten = api.inherit('Projektarbeiten', bo, {
+    'bezeichnung': fields.String(attribute='bezeichnung', description='Bezeichnung eines Projektes'),
+    'beschreibung': fields.String(attribute='beschreibung', description='Beschreibung eines Projektes'),
     'start': fields.Integer(attribute='start', description='Start einer Projektarbeit'),
     'ende': fields.Integer(attribute='ende', description='Ende einer Projektarbeit'),
-    'bezeichnung': fields.String(attribute='bezeichnung', description='Bezeichnung eines Projektes'),
     'activity': fields.Integer(attribute='activity', description='Aktivitäten ID eines Projektes')
 })
 
 pausen = api.inherit('Pausen', bo, {
+    'bezeichnung': fields.String(attribute='bezeichnung', description='Bezeichnung einer Pause'),
     'start': fields.Integer(attribute='start', description='Start einer Pause'),
-    'ende': fields.Integer(attribute='ende', description='Ende einer Pause'),
-    'zeitdifferenz': fields.Float(attribute='zeitdifferenz', description='Zeitdifferenz einer Pause')
+    'ende': fields.Integer(attribute='ende', description='Ende einer Pause')
 })
 
 
@@ -155,29 +156,19 @@ ereignis = api.inherit('Ereignis', bo, {
 
 @projectone.route('/projektarbeiten')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class UserListOperations(Resource):
+class ProjektarbeitListOperations(Resource):
 
     @projectone.marshal_with(projektarbeiten, code=200)
     @projectone.expect(projektarbeiten)  # Wir erwarten ein Projektarbeit-Objekt von der Client-Seite.
     def post(self):
         """Anlegen eines neuen Projektarbeit-Objekts.
-
-        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
-        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
-        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
-        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
-        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
         """
         adm = Administration()
         proposal = Projektarbeit(**api.payload)
 
-        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
-            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
-            wird auch dem Client zurückgegeben. 
-            """
-            pr = adm.create_projektarbeit(proposal.start, proposal.ende, proposal.bezeichnung, proposal.activity)
+           
+            pr = adm.create_projektarbeit(proposal.bezeichnung, proposal.beschreibung, proposal.start, proposal.ende, proposal.activity)
             return pr, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -232,6 +223,20 @@ class ProjektarbeitenOperations(Resource):
         adm.delete_projektarbeit(pab)
         return '', 200
 
+@projectone.route('/projektarbeiten-activity/<int:activity>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des Projektarbeit-Objekts')
+class ProjektarbeitenByActivityIdOperations(Resource):
+    @projectone.marshal_with(projektarbeiten)
+
+    def get(self, activity):
+        """Auslesen eines bestimmten Projektarbeit-Objekts anhand der Aktivitäten-ID.
+
+        Das auszulesende Objekt wird durch die ```Activity-ID``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        projektarbeitenac = adm.get_projektarbeit_by_activity_id(activity)
+        return projektarbeitenac
 
 @projectone.route('/projektarbeit/Gehen/<int:id>/<int:Ak_id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -287,7 +292,7 @@ class PausenListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            pa = adm.create_pause(proposal.start, proposal.ende, proposal.zeitdifferenz)
+            pa = adm.create_pause(proposal.bezeichnung, proposal.start, proposal.ende)
             return pa, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -894,6 +899,7 @@ class KommenListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
+
             k = adm.create_kommen(proposal.zeitpunkt, proposal.bezeichnung)
             return k, 200
         else:

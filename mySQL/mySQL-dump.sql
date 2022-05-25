@@ -152,9 +152,9 @@ DROP TABLE IF EXISTS `pause`;
 CREATE TABLE `pause` (
   `id`INT(11) NOT NULL DEFAULT '0',
   `timestamp`timestamp NOT NULL DEFAULT 0,
+  `bezeichnung` varchar(110) NOT NULL DEFAULT '',/* bezeichnung wäre "pause" */
   `start` int NOT NULL DEFAULT '0',
   `ende` int NOT NULL DEFAULT '0',
-  `bezeichnung` varchar(110) NOT NULL DEFAULT '',/* bezeichnung wäre "pause" */
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 

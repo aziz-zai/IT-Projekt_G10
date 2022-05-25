@@ -194,16 +194,15 @@ class Administration(object):
 
     """Projektarbeit-spezifische Methoden"""
 
-    def create_projektarbeit(self, start, ende, bezeichnung, activity):
+    def create_projektarbeit(self, bezeichnung, beschreibung, start, ende, activity):
         """Einen Benutzer anlegen"""
-        kommen = Administration.get_kommen_by_id(self, start)
-        gehen = Administration.get_gehen_by_id(self, ende)
 
         projektarbeit = Projektarbeit
         projektarbeit.timestamp = datetime.now()
+        projektarbeit.bezeichnung = bezeichnung
+        projektarbeit.beschreibung = beschreibung
         projektarbeit.start = start
         projektarbeit.ende = ende
-        projektarbeit.bezeichnung = bezeichnung
         projektarbeit.activity = activity
         
         with ProjektarbeitMapper() as mapper:
@@ -214,17 +213,12 @@ class Administration(object):
         with ProjektarbeitMapper() as mapper:
             return mapper.find_by_key(id)
 
+    def get_projektarbeit_by_activity_id(self, activity):
+        """Die Projektarbeit anhand der Aktivitäten ID auslesen"""
+        with ProjektarbeitMapper() as mapper:
+            return mapper.find_by_activity_id(activity)
+
     def update_projektarbeit(self, projektarbeit: Projektarbeit):
-        kommen = Administration.get_kommen_by_id(self, projektarbeit.start)
-        gehen = Administration.get_gehen_by_id(self, projektarbeit.ende)
-        zeitdifferenz = datetime.strptime(gehen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
-        zeitdiff_sec = zeitdifferenz.total_seconds()
-        offset_days = zeitdiff_sec / 86400.0    
-        offset_hours = (offset_days % 1) * 24
-        offset_minutes = (offset_hours % 1) * 60
-        offset = "{:02d}:{:02d}:{:02d}".format(int(offset_days),int(offset_hours), int(offset_minutes))
-        projektarbeit.zeitdifferenz = offset
-        projektarbeit.timestamp = datetime.now()
         with ProjektarbeitMapper() as mapper:
             return mapper.update(projektarbeit)
 
@@ -235,23 +229,13 @@ class Administration(object):
 
     """Pause-spezifische Methoden"""
 
-    def create_pause(self, start, ende):
+    def create_pause(self, bezeichnung, start, ende):
         """Einen Benutzer anlegen"""
-        kommen = Administration.get_kommen_by_id(self, start)
-        gehen = Administration.get_gehen_by_id(self, ende)
-
         pause = Pause
         pause.timestamp = datetime.now()
+        pause.bezeichnung = bezeichnung
         pause.start = start
         pause.ende = ende
-
-        zeitdifferenz = datetime.strptime(gehen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
-        zeitdiff_sec = zeitdifferenz.total_seconds()
-        offset_days = zeitdiff_sec / 86400.0    
-        offset_hours = (offset_days % 1) * 24
-        offset_minutes = (offset_hours % 1) * 60
-        offset = "{:02d}:{:02d}:{:02d}".format(int(offset_days),int(offset_hours), int(offset_minutes))
-        pause.zeitdifferenz = offset
 
         with PauseMapper() as mapper:
             return mapper.insert(pause)
@@ -261,13 +245,15 @@ class Administration(object):
         with PauseMapper() as mapper:
             return mapper.find_by_key(id)
 
-    def update_pause(self, pause):
+    def update_pause(self, pause: Pause):
         with PauseMapper() as mapper:
             return mapper.update(pause)
 
     def delete_pause(self, pause):
         with PauseMapper() as mapper:
             return mapper.delete(pause)
+            
+#Zeitintervall Administration
 
     def create_zeitintervallbuchung(self, zeitintervall, ist_buchung, erstellt_von, erstellt_für):
         zeitintervallbuchung = Zeitintervallbuchung
