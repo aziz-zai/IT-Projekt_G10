@@ -16,16 +16,17 @@ class EreignisMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT timestamp, id, zeitpunkt FROM ereignis WHERE id={}".format(key)
+        command = "SELECT timestamp, id, zeitpunkt, bezeichnung FROM ereignis WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (timestamp, id, zeitpunkt) = tuples[0]
+            (timestamp, id, zeitpunkt, bezeichnung) = tuples[0]
             ereignis = Ereignis(
             timestamp = timestamp,
             id = id,
-            zeitpunkt = zeitpunkt)
+            zeitpunkt = zeitpunkt,
+            bezeichnung = bezeichnung)
             result = ereignis
             
         except IndexError:
@@ -41,15 +42,31 @@ class EreignisMapper(Mapper):
     
    
     
+    """def update(self, ereignis: Ereignis) -> Ereignis:
+        Wiederholtes Schreiben eines Objekts in die Datenbank.
+
+        :param ereignis das Objekt, das in die DB geschrieben werden soll
+        
+        cursor = self._cnx.cursor()
+
+        command = "UPDATE ereignis SET timestamp = %s, zeitpunkt = %s, bezeichnung = %s WHERE id = %s"
+        data = (ereignis.timestamp, ereignis.zeitpunkt, ereignis.bezeichnung, ereignis.id)
+        cursor.execute(command, data)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return ereignis
+    """
     def update(self, ereignis: Ereignis) -> Ereignis:
         """Wiederholtes Schreiben eines Objekts in die Datenbank.
 
-        :param ereignis das Objekt, das in die DB geschrieben werden soll
+        :param arbeitszeitkonto das Objekt, das in die DB geschrieben werden soll
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE ereignis SET timestamp = %s, zeitpunkt = %s WHERE id = %s"
-        data = (ereignis.timestamp, ereignis.zeitpunkt, ereignis.id)
+        command = "UPDATE ereignis SET timestamp=%s, zeitpunkt=%s, bezeichnung=%s WHERE id=%s"
+        data = (ereignis.timestamp, ereignis.zeitpunkt, ereignis.bezeichnung, ereignis.id)
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -71,13 +88,14 @@ class EreignisMapper(Mapper):
                 ereignis.id = 1
         command = """
             INSERT INTO ereignis (
-                timestamp, id, zeitpunkt
-            ) VALUES (%s,%s,%s)
+                timestamp, id, zeitpunkt, bezeichnung
+            ) VALUES (%s,%s,%s,%s)
         """
         cursor.execute(command, (
             ereignis.timestamp,
             ereignis.id,
-            ereignis.zeitpunkt
+            ereignis.zeitpunkt,
+            ereignis.bezeichnung
         ))
         self._cnx.commit()
 

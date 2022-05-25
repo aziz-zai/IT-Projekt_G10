@@ -359,11 +359,12 @@ class Administration(object):
     """
     Ereignis-spezifische Methoden
     """ 
-    def create_ereignis(self, zeitpunkt):
+    def create_ereignis(self, zeitpunkt, bezeichnung):
         """Ereignis anlegen"""
         ereignis = Ereignis
         ereignis.timestamp = datetime.now()
         ereignis.zeitpunkt = zeitpunkt
+        ereignis.bezeichnung = bezeichnung
 
         with EreignisMapper() as mapper:
             return mapper.insert(ereignis)

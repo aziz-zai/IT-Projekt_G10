@@ -1045,24 +1045,13 @@ class EreignisListOperations(Resource):
     @projectone.marshal_with(ereignis, code=200)
     @projectone.expect(ereignis)  # Wir erwarten ein Ereignis-Objekt von Client-Seite.
     def post(self):
-        """Anlegen eines neuen Ereignis-Objekts.
 
-        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
-        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
-        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
-        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
-        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
-        """
         adm = Administration()
 
         proposal = Ereignis(**api.payload)
 
-        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
-            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
-            wird auch dem Client zurückgegeben. 
-            """
+        
             er = adm.create_ereignis(proposal.zeitpunkt, proposal.bezeichnung)
             return er, 200
         else:
@@ -1094,6 +1083,7 @@ class EreignisOperations(Resource):
         """
         adm = Administration()
         eri = Ereignis(**api.payload)
+    
 
 
         if eri is not None:
