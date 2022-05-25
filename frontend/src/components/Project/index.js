@@ -10,11 +10,10 @@ export class Project extends Component {
         // Init state
         this.state = {
           project: null,
-          user: null
         };
       }
       getMembershipByUser = () => {
-        OneAPI.getAPI().getMembershipByUser(1).then(project =>
+        OneAPI.getAPI().getMembershipByUser(this.props.user[0].id).then(project =>
           this.setState({
             project: project
           })
@@ -31,13 +30,13 @@ export class Project extends Component {
       getUserbygid = () => {
         OneAPI.getAPI().getUserGid(this.props.user.uid).then(user =>
           this.setState({
-            user: user,
+            user: user[0].id,
             loadingInProgress: false,
             loadingError: null
           })
           ).catch(e =>
             this.setState({ // Reset state with error from catch 
-              users: null,
+              user: null,
               loadingInProgress: false,
               loadingError: e
             })
@@ -49,22 +48,23 @@ export class Project extends Component {
         });
       }
       componentDidMount() {
-        this.getMembershipByUser();
+        this.getMembershipByUser()
       }
 
 
   render() {
-    const {project, user} = this.state;
+    const {project} = this.state;
+    const {user} = this.props;
     return (
       <div>
           {project ?
-          project[0].projektname: null}
+          project[0].projektname:null}
     </div>
       
     )
   }
 }
 Project.propTypes = {
-    user: PropTypes.object.isRequired,
+    user: PropTypes.any.isRequired,
   }
 export default Project
