@@ -27,7 +27,6 @@ export class Home extends Component {
 
   componentDidMount() {
     this.getUserbygid();
-    this.getUserbyId();
   }
 
   /** gets the balance for this account */
@@ -52,25 +51,6 @@ export class Home extends Component {
     });
   }
 
-  getUserbyId = () => {
-    OneAPI.getAPI().getUser(1).then(user =>
-      this.setState({
-        userid: user,
-        loadingInProgress: false,
-        loadingError: null
-      })).catch(e =>
-        this.setState({ // Reset state with error from catch 
-          userid: null,
-          loadingInProgress: false,
-          loadingError: e
-        })
-      );
-    // set loading to true
-    this.setState({
-      loadingInProgress: true,
-      loadingError: null
-    });
-  }
 
   handleOpenStateChange = () => {
     if(this.state.Open =='SideBarContainerOpen'){
