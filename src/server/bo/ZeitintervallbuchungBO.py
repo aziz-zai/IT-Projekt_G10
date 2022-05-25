@@ -10,5 +10,5 @@ class Zeitintervallbuchung(Buchung):
         self.erstellt_für = erstellt_für
         self.ist_buchung = ist_buchung
         
-        super().__init__(timestamp=timestamp,id=id)
+        super().__init__(timestamp=timestamp,id=id, erstellt_von = erstellt_von, erstellt_für = erstellt_für, ist_buchung = ist_buchung)
 

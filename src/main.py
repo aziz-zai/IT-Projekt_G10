@@ -146,8 +146,10 @@ abwesenheit = api.inherit('Abwesenheit', bo, {
 
 zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
     'zeitintervall': fields.Integer(attribute='zeitintervall', description='abwesenheit eines Benutzers'),
-    'zeitintervall': fields.String(attribute='zeitdifferenz', description='abwesenheit eines Benutzers'),
-})
+    'ist_buchung': fields.Boolean(attribute='ist_buchung', description='abwesenheit eines Benutzers'),
+    'erstellt_von': fields.Integer(attribute='erstellt_von', description='abwesenheit eines Benutzers'),
+    'erstellt_für': fields.Integer(attribute='erstellt_für', description='abwesenheit eines Benutzers'),
+    })
 
 ereignis = api.inherit('Ereignis', bo, {
     'zeitpunkt': fields.String(attribute = 'zeitpunkt', description = 'zeitpunkt eines Ereignisses'),
@@ -979,7 +981,7 @@ class ZeitintervallbuchungListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            a = adm.create_abwesenheit (proposal.zeitintervall, proposal.ist_buchung, proposal.erstellt_von, proposal.erstellt_für)
+            a = adm.create_zeitintervallbuchung (proposal.zeitintervall, proposal.ist_buchung, proposal.erstellt_von, proposal.erstellt_für)
             return a, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.

@@ -252,7 +252,7 @@ class Administration(object):
     def delete_pause(self, pause):
         with PauseMapper() as mapper:
             return mapper.delete(pause)
-            
+
 #Zeitintervall Administration
 
     def create_zeitintervallbuchung(self, zeitintervall, ist_buchung, erstellt_von, erstellt_für):
