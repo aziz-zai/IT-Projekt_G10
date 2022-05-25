@@ -48,7 +48,7 @@ class MembershipMapper(Mapper):
             command = """
             SELECT id, timestamp, projektname, auftraggeber, laufzeit, availablehours from projectone.project
             WHERE id IN(
-                SELECT project from projectone.membership
+                SELECT user from projectone.membership
                 WHERE project={})""".format(project)
             cursor.execute(command)
             tuples = cursor.fetchall()
@@ -77,7 +77,7 @@ class MembershipMapper(Mapper):
             command = """
             SELECT id, timestamp, projektname, auftraggeber, laufzeit, availablehours from projectone.project
             WHERE id IN(
-                SELECT user from projectone.membership
+                SELECT project from projectone.membership
                 WHERE user={})""".format(user)
             cursor.execute(command)
             tuples = cursor.fetchall()
