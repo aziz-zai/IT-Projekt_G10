@@ -346,5 +346,68 @@ export default class OneAPI {
 
 
 
+  addKommen(kommenBO) {
+    return this.#fetchAdvanced(this.#addKommenURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(kommenBO)
+    }).then((responseJSON) => {
+      // We always get an array of EreignisBOs.fromJSON, but only need one object
+      let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseKommenBO);
+        })
+    })
+  }
+
+
+  getKommen(id) {
+    return this.#fetchAdvanced(this.#getKommenURL(id)).then((responseJSON) => {
+      let kommenBOs = KommenBO.fromJSON(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(kommenBOs);
+      })
+    })
+  }
+
+
+  updateKommen(kommenBO) {
+    return this.#fetchAdvanced(this.#updateKommenURL(kommenBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(kommenBO)
+    }).then((responseJSON) => {
+      // We always get an array of EreignisBOs.fromJSON
+      let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseKommenBO);
+      })
+    })
+  }
+
+  deleteKommen(id) {
+    return this.#fetchAdvanced(this.#deleteKommenURL(id), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of EreignisBOs.fromJSON
+      let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
+      return new Promise(function (resolve) {
+        resolve(responseKommenBO);
+      })
+    })
+  }
+
+
+
+
+
 
 }
