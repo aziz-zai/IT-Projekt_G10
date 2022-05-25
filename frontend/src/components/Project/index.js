@@ -1,12 +1,7 @@
 import React, { Component } from 'react'
 import OneAPI from '../../api/OneAPI'
-import ProjectBO from '../../api/ProjectBO'
 import PropTypes from 'prop-types'
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import { SingleProject } from './SingleProject';
 
 
 export class Project extends Component {
@@ -66,33 +61,9 @@ export class Project extends Component {
         <div>
       <div>
           {project ?
-          project.map(project => (project.projektname)):null}
-    </div>
-    <div>
-        <Card>
-    <CardContent>
-      <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-        Dein Projekt
-      </Typography>
-      <Typography variant="h5" component="div">
-        projekt
-      </Typography>
-      <Typography sx={{ mb: 1.5 }} color="text.secondary">
-        ohoo
-      </Typography>
-      <Typography variant="body2">
-        well meaning and kindly.
-        <br />
-        {'"a benevolent smile"'}
-      </Typography>
-    </CardContent>
-    <CardActions>
-      <Button size="small">Learn More</Button>
-    </CardActions>
-    </Card>
+          project.map(project => <SingleProject project={project}/>):null}
     </div>
     </div>
-      
     )
   }
 }
