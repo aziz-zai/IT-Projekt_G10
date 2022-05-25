@@ -3,6 +3,7 @@ import ProjectBO from './ProjectBO';
 import MembershipBO from './MembershipBO';
 import EreignisBO from './EreignisBO';
 import KommenBO from './KommenBO';
+import EreignisbuchungBO from './EreignisbuchungBO';
 
 
 
@@ -49,6 +50,11 @@ export default class OneAPI {
   //Zeitintervallbuchung related
 
   //Ereignisbuchung related
+  #addEreignisbuchungURL = () => `${this.#OneServerBaseURL}/ereignisbuchung/`;
+  #getEreignisbuchungURL = (id) => `${this.#OneServerBaseURL}/ereignisbuchung/${id}`;
+  #updateEreignisbuchungURL = (id) => `${this.#OneServerBaseURL}/ereignisbuchung/${id}`;
+  #deleteEreignisbuchungURL = (id) => `${this.#OneServerBaseURL}/ereignisbuchung/${id}`;
+
 
   //Ereignis related
   #addEreignisURL = () => `${this.#OneServerBaseURL}/ereignis/`;
@@ -406,6 +412,64 @@ export default class OneAPI {
   }
 
 
+  addEreignisbuchung(ereignisbuchungBO) {
+    return this.#fetchAdvanced(this.#addEreignisbuchungURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(ereignisbuchungBO)
+    }).then((responseJSON) => {
+      // We always get an array of EreignisbuchungBOs.fromJSON, but only need one object
+      let responseEreignisbuchungBO = EreignisbuchungBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseEreignisbuchungBO);
+        })
+    })
+  }
+
+
+  getEreignisbuchung(id) {
+    return this.#fetchAdvanced(this.#getEreignisbuchungURL(id)).then((responseJSON) => {
+      let ereignisbuchungBOs = EreignisbuchungBO.fromJSON(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(ereignisbuchungBOs);
+      })
+    })
+  }
+
+
+  updateEreignisbuchung(ereignisbuchungBO) {
+    return this.#fetchAdvanced(this.#updateEreignisbuchungURL(ereignisbuchungBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(ereignisbuchungBO)
+    }).then((responseJSON) => {
+      // We always get an array of EreignisbuchungBOs.fromJSON
+      let responseEreignisbuchungBO = EreignisbuchungBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseEreignisbuchungBO);
+      })
+    })
+  }
+
+  deleteEreignisbuchung(id) {
+    return this.#fetchAdvanced(this.#deleteEreignisbuchungURL(id), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of EreignisbuchungBOs.fromJSON
+      let responseEreignisbuchungBO = EreignisbuchungBO.fromJSON(responseJSON)[0];
+      return new Promise(function (resolve) {
+        resolve(responseEreignisbuchungBO);
+      })
+    })
+  }
 
 
 
