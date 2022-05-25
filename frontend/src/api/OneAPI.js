@@ -3,6 +3,7 @@ import ProjectBO from './ProjectBO';
 import MembershipBO from './MembershipBO';
 import ProjektarbeitBO from './ProjektarbeitBO';
 import ZeitintervallbuchungBO from './ZeitintervallbuchungBO';
+import GehenBO from './GehenBO';
 
 
 /**
@@ -62,6 +63,11 @@ export default class OneAPI {
   //Kommen related
 
   //Gehen related
+  #getGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
+  #addGehenURL = () => `${this.#OneServerBaseURL}/gehen/`;
+  #updateGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
+  #deleteGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
+
 
   //Pause related
 
@@ -407,6 +413,69 @@ export default class OneAPI {
   }
 
 
+  getGehen(id) {
+    return this.#fetchAdvanced(this.#getGehenURL(id)).then((responseJSON) => {
+      let gehenBOs = GehenBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(gehenBOs);
+      })
+    })
+  }
+
+  addGehen(gehenBO) {
+    return this.#fetchAdvanced(this.#addGehenURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(gehenBO)
+    }).then((responseJSON) => {
+      // We always get an array of ProjectBOs.fromJSON, but only need one object
+      let responseGehenBO = GehenBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseGehenBO);
+        })
+    })
+  }
+   /**
+     * Updates a customer and returns a Promise, which resolves to a CustomerBO.
+     * 
+     * @param {GehenBO} gehenBO to be updated
+     * @public
+     */
+  updateGehen(gehenBO) {
+    return this.#fetchAdvanced(this.#updateGehenURL(gehenBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(gehenBO)
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseGehenBO = GehenBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseGehenBO);
+      })
+    })
+  }j
+
+  deleteGehen(id) {
+    return this.#fetchAdvanced(this.#deleteGehenURL(id), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseGehenBO = GehenBO.fromJSON(responseJSON)[0];
+      // console.info(accountBOs);
+      return new Promise(function (resolve) {
+        resolve(responseGehenBO);
+      })
+    })
+  }
 
 
 
