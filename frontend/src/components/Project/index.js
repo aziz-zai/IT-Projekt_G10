@@ -33,7 +33,7 @@ export class Project extends Component {
     return (
       <div>{
         project ?
-        project[0].projektname:
+        project[0].laufzeit:
         console.log('project fail',project)}</div>
       
     )
