@@ -1,6 +1,8 @@
 import UserBO from './UserBO';
 import ProjectBO from './ProjectBO';
 import MembershipBO from './MembershipBO';
+import ProjektarbeitBO from './ProjektarbeitBO';
+import ZeitintervallbuchungBO from './ZeitintervallbuchungBO';
 
 
 /**
@@ -42,8 +44,16 @@ export default class OneAPI {
   //Arbeitszeitkonto related
 
   //Projektarbeit related
+  #getProjektarbeitURL = (id) => `${this.#OneServerBaseURL}/projektarbeiten/${id}`;
+  #addProjektarbeitURL = () => `${this.#OneServerBaseURL}/projektarbeiten/`;
+  #updateProjektarbeitURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
+  #deleteProjektarbeitURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
 
   //Zeitintervallbuchung related
+  #getZeitintervallbuchungURL = (id) => `${this.#OneServerBaseURL}/zeitintervallbuchung/${id}`;
+  #addZeitintervallbuchungURL = () => `${this.#OneServerBaseURL}/zeitintervallbuchung/`;
+  #updateZeitintervallbuchungURL = (id) => `${this.#OneServerBaseURL}/zeitintervallbuchung/${id}`;
+  #deleteZeitintervallbuchungURL = (id) => `${this.#OneServerBaseURL}/zeitintervallbuchung/${id}`;
 
   //Ereignisbuchung related
 
@@ -263,6 +273,135 @@ export default class OneAPI {
       //
       return new Promise(function (resolve) {
         resolve(responseMembershipBO);
+      })
+    })
+  }
+
+  getProjektarbeit(id) {
+    return this.#fetchAdvanced(this.#getProjektarbeitURL(id)).then((responseJSON) => {
+      let projektarbeitenBOs = ProjektarbeitBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(projectsBOs);
+      })
+    })
+  }
+
+  addProjektarbeit(projektarbeitBO) {
+    return this.#fetchAdvanced(this.#addProjektarbeitURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(projektarbeitBO)
+    }).then((responseJSON) => {
+      // We always get an array of ProjektarbeitBO.fromJSON, but only need one object
+      let responseProjektarbeitBO = ProjektarbeitBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseProjektarbeitBO);
+        })
+    })
+  }
+    /**
+     * Updates a customer and returns a Promise, which resolves to a CustomerBO.
+     * 
+     * @param {ProjektarbeitBO} projektarbeitBO to be updated
+     * @public
+     */
+  updateProjektarbeit(projektarbeitBO) {
+    return this.#fetchAdvanced(this.#updateProjektarbeitURL(projektarbeitBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(projektarbeitBO)
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseProjektarbeitBO = ProjektarbeitBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseProjektarbeitBO);
+      })
+    })
+  }j
+
+  deleteProjektarbeit(id) {
+    return this.#fetchAdvanced(this.#deleteProjektarbeitURL(id), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseProjektarbeitBO = ProjektarbeitBO.fromJSON(responseJSON)[0];
+      // console.info(accountBOs);
+      return new Promise(function (resolve) {
+        resolve(responseProjektarbeitBO);
+      })
+    })
+  }
+
+
+  getZeitintervallbuchung(id) {
+    return this.#fetchAdvanced(this.#getZeitintervallbuchungURL(id)).then((responseJSON) => {
+      let zeitintervallbuchungBOs = ZeitintervallbuchungBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(zeitintervallbuchungBOs);
+      })
+    })
+  }
+
+  addZeitintervallbuchung(zeitintervallbuchungBO) {
+    return this.#fetchAdvanced(this.#addZeitintervallbuchungURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(zeitintervallbuchungBO)
+    }).then((responseJSON) => {
+      // We always get an array of ProjectBOs.fromJSON, but only need one object
+      let responseZeitintervallbuchungBO = ZeitintervallbuchungBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseZeitintervallbuchungBO);
+        })
+    })
+  }
+   /**
+     * Updates a customer and returns a Promise, which resolves to a CustomerBO.
+     * 
+     * @param {ProjectBO} projectBO to be updated
+     * @public
+     */
+  updateZeitintervallbuchung(zeitintervallbuchungBO) {
+    return this.#fetchAdvanced(this.#updateZeitintervallbuchungURL(zeitinterballbuchungBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(zeitintervallbuchungBO)
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseZeitintervallbuchungBO = ZeitintervallbuchungBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseZeitintervallbuchungBO);
+      })
+    })
+  }j
+
+  deleteZeitintervallbuchung(id) {
+    return this.#fetchAdvanced(this.#deleteZeitintervallbuchungURL(id), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseZeitintervallbuchungBO = ZeitintervallbuchungBO.fromJSON(responseJSON)[0];
+      // console.info(accountBOs);
+      return new Promise(function (resolve) {
+        resolve(responseZeitintervallbuchungBO);
       })
     })
   }
