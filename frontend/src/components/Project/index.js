@@ -11,8 +11,8 @@ export class Project extends Component {
           project: null,
         };
       }
-      getProjects = () => {
-        OneAPI.getAPI().getProject(1).then(project =>
+      getMembershipByUser = () => {
+        OneAPI.getAPI().getMembershipByUser(1).then(project =>
           this.setState({
             project: project
           })
@@ -26,14 +26,14 @@ export class Project extends Component {
         });
       }
       componentDidMount() {
-        this.getProjects();
+        this.getMembershipByUser();
       }
   render() {
     const {project} = this.state;
     return (
       <div>{
         project ?
-        project[0].laufzeit:
+        project[0]:
         console.log('project fail',project)}</div>
       
     )

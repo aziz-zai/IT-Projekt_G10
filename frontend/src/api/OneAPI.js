@@ -195,10 +195,10 @@ export default class OneAPI {
 
   getMembershipByUser(user) {
     return this.#fetchAdvanced(this.#getMembershipByUserURL(user)).then((responseJSON) => {
-      let membershipBOs = ProjectBO.fromJSON(responseJSON);
+      let projectBOs = ProjectBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {
-        resolve(membershipBOs);
+        resolve(projectBOs);
       })
     })
   }
