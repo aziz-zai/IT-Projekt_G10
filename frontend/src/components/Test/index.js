@@ -3,23 +3,23 @@ import OneAPI from '../../api/OneAPI'
 import ProjectBO from '../../api/ProjectBO'
 import PropTypes from 'prop-types'
 
-export class Project extends Component {
+export class Test extends Component {
     constructor(props) {
         super(props);
     
         // Init state
         this.state = {
-          project: null,
+          Test: null,
         };
       }
       getMembershipByUser = () => {
-        OneAPI.getAPI().getMembershipByUser(this.props.user[0].id).then(project =>
+        OneAPI.getAPI().getMembershipByUser(this.props.user[0].id).then(Test =>
           this.setState({
-            project: project
+            Test: Test
           })
           ).catch(e =>
             this.setState({ // Reset state with error from catch 
-              project: null,
+              Test: null,
             })
           );
         // set loading to true
@@ -53,18 +53,18 @@ export class Project extends Component {
 
 
   render() {
-    const {project} = this.state;
+    const {Test} = this.state;
     const {user} = this.props;
     return (
       <div>
-          {project ?
-          project.map(project => (project.projektname)):null}
+          {Test ?
+          Test.map(Test => (Test.projektname)):null}
     </div>
       
     )
   }
 }
-Project.propTypes = {
+Test.propTypes = {
     user: PropTypes.any.isRequired,
   }
-export default Project
+export default Test
