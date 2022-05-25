@@ -325,7 +325,7 @@ export default class OneAPI {
         resolve(responseAbwesenheitBO);
       })
     })
-  }j
+  }
 
   deleteAbwesenheit(id) {
     return this.#fetchAdvanced(this.#deleteAbwesenheitURL(id), {

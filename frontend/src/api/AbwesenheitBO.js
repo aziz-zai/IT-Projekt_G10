@@ -1,41 +1,17 @@
-import BusinessObject from './BusinessObject';
+import Zeitintervall from './Zeitintervall'
 
-/**
- * Represents a Project
- */
-export default class AbwesenheitBO extends BusinessObject {
+export default class AbwesenheitBO extends Zeitintervall {
 
-  constructor(aZeitintervallID, aBemerkung, aAbwesenheitsart) {
+  constructor(aAbwesenheitsart) {
     super();
-    this.zeitintervallID = aZeitintervallID;
-    this.bemerkung = aBemerkung;
     this.abwesenheitsart = aAbwesenheitsart
   }
 
   /**
    * Sets a new firstname.
    * 
-   * @param {String} aZeitintervallID - the new firstname of this CustomerBO.
+   * @param {String} aAbwesenheitsart - the new firstname of this CustomerBO.
    */
-  setZeitintervallID(aZeitintervallID) {
-    this.zeitintervallID = aZeitintervallID;
-  }
-
-  /**
-   * Gets the firstname.
-   */
-  getZeitintervallID() {
-    return this.zeitintervallID;
-  }
-
-  setBemerkung(aBemerkung) {
-    this.bemerkung = aBemerkung;
-  }
-
-  getBemerkung() {
-    return this.bemerkung;
-  }
-
   setAbwesenheitsart(aAbwesenheitsart) {
     this.abwesenheitsart = aAbwesenheitsart;
   }
@@ -48,7 +24,7 @@ export default class AbwesenheitBO extends BusinessObject {
     let result = [];
 
     if (Array.isArray(abwesenheit)) {
-      projects.forEach((a) => {
+      abwesenheit.forEach((a) => {
         Object.setPrototypeOf(a, AbwesenheitBO.prototype);
         result.push(a);
       })
