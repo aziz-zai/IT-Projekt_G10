@@ -16,16 +16,17 @@ class KommenMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, zeitpunkt FROM kommen WHERE id={}".format(key)
+        command = "SELECT id, timestamp, zeitpunkt, bezeichnung FROM kommen WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, zeitpunkt) = tuples[0]
+            (id, timestamp, zeitpunkt, bezeichnung) = tuples[0]
             kommen = Kommen(
             id = id,
             timestamp = timestamp,
-            zeitpunkt = zeitpunkt)
+            zeitpunkt = zeitpunkt,
+            bezeichnung = bezeichnung)
             result = kommen
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
@@ -46,8 +47,8 @@ class KommenMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE kommen SET timestamp = %s, zeitpunkt = %s WHERE id=%s"
-        data = (kommen.timestamp, kommen.zeitpunkt, kommen.id)
+        command = "UPDATE kommen SET timestamp = %s, zeitpunkt = %s, bezeichnung = %s WHERE id=%s"
+        data = (kommen.timestamp, kommen.zeitpunkt, kommen.bezeichnung, kommen.id)
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -69,13 +70,14 @@ class KommenMapper(Mapper):
                 kommen.id = 1
         command = """
             INSERT INTO kommen (
-                id, timestamp, zeitpunkt
-            ) VALUES (%s,%s,%s)
+                id, timestamp, zeitpunkt, bezeichnung
+            ) VALUES (%s,%s,%s,%s)
         """
         cursor.execute(command, (
             kommen.id,
             kommen.timestamp,
-            kommen.zeitpunkt
+            kommen.zeitpunkt,
+            kommen.bezeichnung
         ))
         self._cnx.commit()
 
