@@ -216,8 +216,7 @@ class MembershipByIDOperations(Resource):
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByProjectOperations(Resource):
-    @projectone.marshal_with(membership)
-
+    @projectone.marshal_with(project)
     def get(self, project):
         """Auslesen eines bestimmten Membership-Objekts nach Projektid
 
