@@ -794,12 +794,12 @@ class EreignisbuchungenOperations(Resource):
 
 
 
-@projectone.route('/gehen/<int:projektarbeit>/<int:user>')
+@projectone.route('/gehen/<int:projektarbeitid>/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class GehenListOperations(Resource):
 
     @projectone.marshal_with(gehen, code=200)
-    def post(self, projektarbeit, user):
+    def post(self, projektarbeitid, user):
         """Anlegen eines neuen Gehen-Objekts.
 
         **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
@@ -819,7 +819,7 @@ class GehenListOperations(Resource):
             wird auch dem Client zurückgegeben. 
             """
             g = adm.create_gehen(proposal.zeitpunkt, proposal.bezeichnung)
-            projektarbeit=adm.get_projektarbeit_by_id(projektarbeit)
+            projektarbeit=adm.get_projektarbeit_by_id(projektarbeitid)
             projektarbeit.ende = g.id
             proarb=adm.update_projektarbeit(projektarbeit)
             adm.create_zeitintervallbuchung(proarb.id, True, user, user)

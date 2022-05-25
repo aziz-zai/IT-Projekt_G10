@@ -262,10 +262,10 @@ class Administration(object):
         zeitintervallbuchung.ist_buchung = ist_buchung
         zeitintervallbuchung.erstellt_von = erstellt_von
         zeitintervallbuchung.erstellt_für = erstellt_für
-        adm = Administration
-        zeitintervall = adm.get_projektarbeit_by_id(zeitintervall)
-        kommen = adm.get_kommen_by_id(zeitintervall.start)
-        gehen = adm.get_gehen_by_id( zeitintervall.ende)
+        adm = Administration()
+        zeitinter = adm.get_projektarbeit_by_id(zeitintervall)
+        kommen = adm.get_kommen_by_id(zeitinter.start)
+        gehen = adm.get_gehen_by_id( zeitinter.ende)
 
         zeitdifferenz = datetime.strptime(gehen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
         zeitdiff_sec = zeitdifferenz.total_seconds()

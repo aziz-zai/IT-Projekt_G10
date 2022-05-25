@@ -56,7 +56,7 @@ class ZeitintervallbuchungMapper(Mapper):
                 zeitintervallbuchung.id = 1
         command = """
             INSERT INTO zeitintervallbuchung (
-                id, timestamp, erstellt_von, erstellt_für, ist_buchung, zeitintervall, zeitdifferenz,
+                id, timestamp, erstellt_von, erstellt_für, ist_buchung, zeitintervall, zeitdifferenz
             ) VALUES (%s,%s,%s,%s,%s,%s,%s)
         """
         cursor.execute(command, (
