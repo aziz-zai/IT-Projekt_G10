@@ -824,7 +824,7 @@ class GehenListOperations(Resource):
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
-@projectone.route('/gehen/<int:id>')
+@projectone.route('/gehen/<int:id>/<int:projektarbeit>/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Gehen-Objekts')
 class GehenOperations(Resource):
@@ -840,7 +840,7 @@ class GehenOperations(Resource):
         return gehen
 
     @projectone.marshal_with(gehen)
-    def put(self, id):
+    def put(self, id, projektarbeit, user):
         """Update eines bestimmten Gehen-Objekts.
 
         **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
@@ -857,6 +857,10 @@ class GehenOperations(Resource):
             """
             ge.id = id
             adm.update_gehen(ge)
+            projektarbeit=adm.get_projektarbeit_by_id(projektarbeit)
+            projektarbeit.ende = ge.id
+            proarb=adm.update_projektarbeit(projektarbeit)
+            adm.create_zeitintervallbuchung(proarb.id, True, user, user)
             return '', 200
         else:
             return '', 500
