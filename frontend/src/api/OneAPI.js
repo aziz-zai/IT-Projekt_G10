@@ -1,6 +1,8 @@
 import UserBO from './UserBO';
 import ProjectBO from './ProjectBO';
 import MembershipBO from './MembershipBO';
+import EreignisBO from './EreignisBO';
+
 
 
 /**
@@ -48,6 +50,12 @@ export default class OneAPI {
   //Ereignisbuchung related
 
   //Ereignis related
+  #addEreignisURL = () => `${this.#OneServerBaseURL}/ereignis/`;
+  #getEreignisURL = (id) => `${this.#OneServerBaseURL}/ereignis/${id}`;
+  #updateEreignisURL = (id) => `${this.#OneServerBaseURL}/ereignis/${id}`;
+  #deleteEreignisURL = (id) => `${this.#OneServerBaseURL}/ereignis/${id}`;
+  
+
 
   //Kommen related
 
