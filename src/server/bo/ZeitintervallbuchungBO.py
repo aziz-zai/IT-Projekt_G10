@@ -6,9 +6,6 @@ class Zeitintervallbuchung(Buchung):
     def __init__(self,zeitintervall: int, erstellt_von: int, erstellt_für: int, ist_buchung: bool, zeitdifferenz:str="", timestamp: datetime = datetime.now(), id: int= 0):
         self.zeitintervall = zeitintervall
         self.zeidifferenz = zeitdifferenz
-        self.erstellt_von = erstellt_von
-        self.erstellt_für = erstellt_für
-        self.ist_buchung = ist_buchung
         
         super().__init__(timestamp=timestamp,id=id, erstellt_von = erstellt_von, erstellt_für = erstellt_für, ist_buchung = ist_buchung)
 
