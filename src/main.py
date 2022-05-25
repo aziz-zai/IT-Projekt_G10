@@ -794,12 +794,12 @@ class EreignisbuchungenOperations(Resource):
 
 
 
-@projectone.route('/gehen')
+@projectone.route('/gehen/<int:projektarbeit>/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class GehenListOperations(Resource):
 
     @projectone.marshal_with(gehen, code=200)
-    def post(self):
+    def post(self, projektarbeit, user):
         """Anlegen eines neuen Gehen-Objekts.
 
         **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
@@ -819,6 +819,10 @@ class GehenListOperations(Resource):
             wird auch dem Client zurückgegeben. 
             """
             g = adm.create_gehen(proposal.zeitpunkt, proposal.bezeichnung)
+            projektarbeit=adm.get_projektarbeit_by_id(projektarbeit)
+            projektarbeit.ende = g.id
+            proarb=adm.update_projektarbeit(projektarbeit)
+            adm.create_zeitintervallbuchung(proarb.id, True, user, user)
             return g, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -840,7 +844,7 @@ class GehenOperations(Resource):
         return gehen
 
     @projectone.marshal_with(gehen)
-    def put(self, id, projektarbeit, user):
+    def put(self, id):
         """Update eines bestimmten Gehen-Objekts.
 
         **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
@@ -857,10 +861,6 @@ class GehenOperations(Resource):
             """
             ge.id = id
             adm.update_gehen(ge)
-            projektarbeit=adm.get_projektarbeit_by_id(projektarbeit)
-            projektarbeit.ende = ge.id
-            proarb=adm.update_projektarbeit(projektarbeit)
-            adm.create_zeitintervallbuchung(proarb.id, True, user, user)
             return '', 200
         else:
             return '', 500
@@ -907,6 +907,7 @@ class KommenListOperations(Resource):
             """
 
             k = adm.create_kommen(proposal.zeitpunkt, proposal.bezeichnung)
+            adm.create_projektarbeit(bezeichnung="Projektarbeit", beschreibung="", start=k.id, ende=0, activity=0)
             return k, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
