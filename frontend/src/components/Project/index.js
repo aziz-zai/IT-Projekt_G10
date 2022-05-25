@@ -58,7 +58,7 @@ export class Project extends Component {
     return (
       <div>
           {project ?
-          project[0].projektname:null}
+          project.map(project => (project.projektname)):null}
     </div>
       
     )
