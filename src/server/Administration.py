@@ -269,11 +269,13 @@ class Administration(object):
         with PauseMapper() as mapper:
             return mapper.delete(pause)
 
-    def create_zeitintervallbuchung(self, zeitintervall, arbeitszeitkonto):
+    def create_zeitintervallbuchung(self, zeitintervall, ist_buchung, erstellt_von, erstellt_für):
         zeitintervallbuchung = Zeitintervallbuchung
         zeitintervallbuchung.timestamp = datetime.now()
-        zeitintervallbuchung.zeitintervall = zeitintervall.id
-        zeitintervallbuchung.arbeitszeitkonto = arbeitszeitkonto
+        zeitintervallbuchung.zeitintervall = zeitintervall
+        zeitintervallbuchung.ist_buchung = ist_buchung
+        zeitintervallbuchung.erstellt_von = erstellt_von
+        zeitintervallbuchung.erstellt_für = erstellt_für
 
         kommen = Administration.get_kommen_by_id(self, zeitintervall.start)
         gehen = Administration.get_gehen_by_id(self, zeitintervall.ende)

@@ -102,12 +102,14 @@ pausen = api.inherit('Pausen', bo, {
 
 
 
-ereignisbuchungen = api.inherit('Ereignisbuchungen', bo, {
+buchung = api.inherit('Ereignisbuchungen', bo, {
     'erstellt_von': fields.Integer(attribute='erstellt_von', description='bezeichnung Ersteller'),
     'erstellt_für': fields.Integer(attribute='erstellt_für', describtion='bezeichnung Empfänger'),
     'ist_buchung': fields.Boolean(attribute='ist_buchung', describtion='bezeichnung der Ist-Buchung'),
-    'ereignis': fields.Integer(attribute='ereignis', describtion='bezeichnung vom Ereignis'),
+})
 
+ereignisbuchungen = api.inherit('Ereignisbuchungen', buchung, {
+    'ereignis': fields.Integer(attribute='ereignis', describtion='bezeichnung vom Ereignis'),
 })
 
 project = api.inherit('Project',bo, {
@@ -141,10 +143,9 @@ abwesenheit = api.inherit('Abwesenheit', bo, {
     'bemerkung': fields.String(attribute='bemerkung', description='bemerkung eines Benutzers'),
 })
 
-zeitintervallbuchung = api.inherit('Zeitintervallbuchung', bo, {
-    'arbeitszeitkonto': fields.Integer(attribute='abwesenheit', description='abwesenheit eines Benutzers'),
-    'zeitintervall': fields.String(attribute='zeitintervall', description='ZeitintervallID eines Benutzers'),
-    'bemerkung': fields.String(attribute='bemerkung', description='bemerkung eines Benutzers'),
+zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
+    'zeitintervall': fields.Integer(attribute='zeitintervall', description='abwesenheit eines Benutzers'),
+    'zeitintervall': fields.String(attribute='zeitdifferenz', description='abwesenheit eines Benutzers'),
 })
 
 ereignis = api.inherit('Ereignis', bo, {
@@ -972,7 +973,7 @@ class ZeitintervallbuchungListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            a = adm.create_abwesenheit (proposal.buchung, proposal.arbeitszeitkonto)
+            a = adm.create_abwesenheit (proposal.zeitintervall, proposal.ist_buchung, proposal.erstellt_von, proposal.erstellt_für)
             return a, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
