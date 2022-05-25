@@ -16,7 +16,7 @@ export default class OneAPI {
 
 
   // Local Python backend
-  #OneServerBaseURL = 'http://127.0.0.1:5000/projectone';
+  #OneServerBaseURL = 'http://localhost:5000/projectone';
 
   // User related
   #getUserGidURL = (id) => `${this.#OneServerBaseURL}/users-by-gid/${id}`;
@@ -75,15 +75,13 @@ export default class OneAPI {
    *  The Promise returned from fetch() won’t reject on HTTP error status even if the response is an HTTP 404 or 500. 
    *  fetchAdvanced throws an Error also an server status errors
    */
-  #fetchAdvanced = (url, init) => fetch(url, init)
-    .then(res => {
-      // The Promise returned from fetch() won’t reject on HTTP error status even if the response is an HTTP 404 or 500. 
-      if (!res.ok) {
-        throw Error(`${res.status} ${res.statusText}`);
-      }
-      return res.json();
-    }
-    )
+   #fetchAdvanced = (url,init) => fetch(url,{credentials: 'include', ...init})
+   .then(res => {
+       if (!res.ok){
+           throw Error(`${res.status} ${res.statusText}`);
+       }
+       return res.json();
+   })
 
  
   /**
@@ -197,10 +195,10 @@ export default class OneAPI {
 
   getMembershipByUser(user) {
     return this.#fetchAdvanced(this.#getMembershipByUserURL(user)).then((responseJSON) => {
-      let membershipBOs = ProjectBO.fromJSON(responseJSON);
+      let projectBOs = ProjectBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {
-        resolve(membershipBOs);
+        resolve(projectBOs);
       })
     })
   }

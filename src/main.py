@@ -227,8 +227,7 @@ class MembershipByIDOperations(Resource):
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByProjectOperations(Resource):
-    @projectone.marshal_with(membership)
-
+    @projectone.marshal_with(project)
     def get(self, project):
         """Auslesen eines bestimmten Membership-Objekts nach Projektid
 
@@ -257,8 +256,7 @@ class MembershipByUserAndProject(Resource):
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByUserOperations(Resource):
-    @projectone.marshal_with(membership)
-
+    @projectone.marshal_with(project)
     def get(self, user):
         adm = Administration()
         mu = adm.get_membership_by_user(user)
@@ -676,6 +674,7 @@ class UserListOperations(Resource):
 @projectone.param('id', 'Die ID des User-Objekts')
 class UserOperations(Resource):
     @projectone.marshal_with(user)
+    @secured
     def get(self, id):
         """Auslesen eines bestimmten Customer-Objekts.
 

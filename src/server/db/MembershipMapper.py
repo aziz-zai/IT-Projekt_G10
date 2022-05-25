@@ -45,19 +45,24 @@ class MembershipMapper(Mapper):
             result = []
 
             cursor = self._cnx.cursor()
-            command = "SELECT id, timestamp, user, project, projektleiter from projectone.membership WHERE project={}".format(project)
-            cursor.execute(command, project)
+            command = """
+            SELECT id, timestamp, projektname, auftraggeber, laufzeit, availablehours from projectone.project
+            WHERE id IN(
+                SELECT project from projectone.membership
+                WHERE project={})""".format(project)
+            cursor.execute(command)
             tuples = cursor.fetchall()
 
-            for (id, timestamp, user, project, projektleiter) in tuples:
-                membership = Membership(
+            for (id, timestamp, projektname, auftraggeber, laufzeit, availablehours ) in tuples:
+                project = Project(
                     id=id,
                     timestamp=timestamp,
-                    user=user,
-                    project=project,
-                    projektleiter=projektleiter,
+                    projektname=projektname,
+                    auftraggeber=auftraggeber,
+                    laufzeit=laufzeit,
+                    availablehours=availablehours
                 )
-                result.append(membership)
+                result.append(project)
 
             self._cnx.commit()
             cursor.close()
@@ -69,19 +74,24 @@ class MembershipMapper(Mapper):
             result = []
 
             cursor = self._cnx.cursor()
-            command = "SELECT id, timestamp, user, project, projektleiter from membership WHERE user={}".format(user)
-            cursor.execute(command, user)
+            command = """
+            SELECT id, timestamp, projektname, auftraggeber, laufzeit, availablehours from projectone.project
+            WHERE id IN(
+                SELECT user from projectone.membership
+                WHERE user={})""".format(user)
+            cursor.execute(command)
             tuples = cursor.fetchall()
 
-            for (id, timestamp, user, project, projektleiter) in tuples:
-                membership = Membership(
+            for (id, timestamp, projektname, auftraggeber, laufzeit, availablehours ) in tuples:
+                project = Project(
                     id=id,
                     timestamp=timestamp,
-                    user=user,
-                    project=project,
-                    projektleiter=projektleiter,
+                    projektname=projektname,
+                    auftraggeber=auftraggeber,
+                    laufzeit=laufzeit,
+                    availablehours=availablehours
                 )
-                result.append(membership)
+                result.append(project)
 
             self._cnx.commit()
             cursor.close()

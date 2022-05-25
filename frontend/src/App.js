@@ -112,7 +112,6 @@ componentDidMount() {
     const { currentUser, appError, authError, authLoading } = this.state;
 		return (
         <>
-		
 				<Router>
 					<Routes>
 						<Route>
@@ -128,8 +127,6 @@ componentDidMount() {
 							:
 							<LogIn  onLogIn={this.handleSignIn} />
 						}/>
-
-
                   		<Route path="/home" element={<Secured user={currentUser}><Home user={currentUser}/></Secured>} />
 				  		</Route>
 					</Routes>
