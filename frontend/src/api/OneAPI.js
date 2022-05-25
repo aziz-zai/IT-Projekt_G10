@@ -278,10 +278,65 @@ export default class OneAPI {
   }
 
 
+  
+  addEreignis(ereignisBO) {
+    return this.#fetchAdvanced(this.#addEreignisURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(ereignisBO)
+    }).then((responseJSON) => {
+      // We always get an array of EreignisBOs.fromJSON, but only need one object
+      let responseEreignisBO = EreignisBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseEreignisBO);
+        })
+    })
+  }
 
 
+  getEreignis(id) {
+    return this.#fetchAdvanced(this.#getEreignisURL(id)).then((responseJSON) => {
+      let ereignisBOs = EreignisBO.fromJSON(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(ereignisBOs);
+      })
+    })
+  }
 
 
+  updateEreignis(ereignisBO) {
+    return this.#fetchAdvanced(this.#updateEreignisURL(ereignisBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(ereignisBO)
+    }).then((responseJSON) => {
+      // We always get an array of EreignisBOs.fromJSON
+      let responseEreignisBO = EreignisBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseEreignisBO);
+      })
+    })
+  }
+
+  deleteEreignis(id) {
+    return this.#fetchAdvanced(this.#deleteEreignisURL(id), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of EreignisBOs.fromJSON
+      let responseEreignisBO = EreignisBO.fromJSON(responseJSON)[0];
+      return new Promise(function (resolve) {
+        resolve(responseEreignisBO);
+      })
+    })
+  }
 
 
 
