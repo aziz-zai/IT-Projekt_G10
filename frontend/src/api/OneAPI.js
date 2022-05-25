@@ -1,6 +1,7 @@
 import UserBO from './UserBO';
 import ProjectBO from './ProjectBO';
 import MembershipBO from './MembershipBO';
+import AbwesenheitBO from './AbwesenheitBO';
 
 
 /**
@@ -16,7 +17,7 @@ export default class OneAPI {
 
 
   // Local Python backend
-  #OneServerBaseURL = 'http://localhost:5000/projectone';
+  #OneServerBaseURL = '/projectone';
 
   // User related
   #getUserGidURL = (id) => `${this.#OneServerBaseURL}/users-by-gid/${id}`;
@@ -36,6 +37,12 @@ export default class OneAPI {
   #getMembershipByUserAndProjectURL = (id) => `${this.#OneServerBaseURL}/membership/projects/user/project/${id}`;
   #updateMembershipURL = (id) => `${this.#OneServerBaseURL}/membership/${id}`;
   #deleteMembershipURL = (id) => `${this.#OneServerBaseURL}/membership/${id}`;
+
+  //Abwesenheit related
+  #getAbwesenheitURL = (id) => `${this.#OneServerBaseURL}/abwesenheit/${id}`;
+  #addAbwesenheitURL = () => `${this.#OneServerBaseURL}/abwesenheit/`;
+  #updateAbwesenheitURL = (id) => `${this.#OneServerBaseURL}/abwesenheit/${id}`;
+  #deleteAbwesenheitURL = (id) => `${this.#OneServerBaseURL}/abwesenheit/${id}`;
 
   //Aktivitäten related
 
@@ -267,7 +274,71 @@ export default class OneAPI {
     })
   }
 
+  getAbwesenheit(id) {
+    return this.#fetchAdvanced(this.#getAbwesenheitURL(id)).then((responseJSON) => {
+      let abwesenheitBOs = ProjectBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(abwesenheitBOs);
+      })
+    })
+  }
 
+  addAbwesenheit(abwesenheitBO) {
+    return this.#fetchAdvanced(this.#addAbwesenheitURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(abwesenheitBO)
+    }).then((responseJSON) => {
+      // We always get an array of ProjectBOs.fromJSON, but only need one object
+      let responseAbwesenheitBO = AbwesenheitBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseAbwesenheitBO);
+        })
+    })
+  }
+
+   /**
+     * Updates a customer and returns a Promise, which resolves to a CustomerBO.
+     * 
+     * @param {AbwesenheitBO} abwesenheitBO to be updated
+     * @public
+     */
+
+  updateAbwesenheit(abwesenheitBO) {
+    return this.#fetchAdvanced(this.#updateAbwesenheitURL(abwesenheitBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(abwesenheitBO)
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseAbwesenheitBO = AbwesenheitBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseAbwesenheitBO);
+      })
+    })
+  }j
+
+  deleteAbwesenheit(id) {
+    return this.#fetchAdvanced(this.#deleteAbwesenheitURL(id), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseAbwesenheitBO = AbwesenheitBO.fromJSON(responseJSON)[0];
+      // console.info(accountBOs);
+      return new Promise(function (resolve) {
+        resolve(responseAbwesenheitBO);
+      })
+    })
+  }
 
 
 
