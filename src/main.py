@@ -145,10 +145,10 @@ abwesenheit = api.inherit('Abwesenheit', bo, {
 })
 
 zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
-    'zeitintervall': fields.Integer(attribute='zeitintervall', description='abwesenheit eines Benutzers'),
-    'ist_buchung': fields.Boolean(attribute='ist_buchung', description='abwesenheit eines Benutzers'),
     'erstellt_von': fields.Integer(attribute='erstellt_von', description='abwesenheit eines Benutzers'),
     'erstellt_für': fields.Integer(attribute='erstellt_für', description='abwesenheit eines Benutzers'),
+    'ist_buchung': fields.Boolean(attribute='ist_buchung', description='abwesenheit eines Benutzers'),
+    'zeitintervall': fields.Integer(attribute='zeitintervall', description='abwesenheit eines Benutzers')
     })
 
 ereignis = api.inherit('Ereignis', bo, {
@@ -1034,15 +1034,6 @@ class ZeitintervallbuchungOperations(Resource):
         return '', 200
 
 
-        if up is not None:
-            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
-            Siehe Hinweise oben.
-            """
-            up.google_user_id = google_user_id
-            adm.update_user(up)
-            return '', 200
-        else:
-            return '', 500
 
 
 
