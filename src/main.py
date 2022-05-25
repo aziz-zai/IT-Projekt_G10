@@ -997,7 +997,7 @@ class KommenListOperations(Resource):
 @projectone.route('/kommen/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Kommen-Objekts')
-class GehenOperations(Resource):
+class KommenOperations(Resource):
     @projectone.marshal_with(kommen)
 
     def get(self, id):

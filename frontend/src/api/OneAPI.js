@@ -2,6 +2,7 @@ import UserBO from './UserBO';
 import ProjectBO from './ProjectBO';
 import MembershipBO from './MembershipBO';
 import EreignisBO from './EreignisBO';
+import KommenBO from './KommenBO';
 
 
 
@@ -58,6 +59,11 @@ export default class OneAPI {
 
 
   //Kommen related
+  #addKommenURL = () => `${this.#OneServerBaseURL}/kommen/`;
+  #getKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
+  #updateKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
+  #deleteKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
+
 
   //Gehen related
 
@@ -278,7 +284,7 @@ export default class OneAPI {
   }
 
 
-  
+
   addEreignis(ereignisBO) {
     return this.#fetchAdvanced(this.#addEreignisURL(), {
       method: 'POST',
