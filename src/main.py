@@ -618,7 +618,6 @@ class AktivitätenProktleiterOperations(Resource):
             Siehe Hinweise oben.
             """
         if member.projektleiter == True:
-            ak.id = id
             adm.update_aktivitäten(ak)
             return ak, 200
         else:

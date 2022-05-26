@@ -1,6 +1,8 @@
 import UserBO from './UserBO';
 import ProjectBO from './ProjectBO';
 import MembershipBO from './MembershipBO';
+import AbwesenheitBO from './AbwesenheitBO';
+import AktivitätenBO from './AktivitätenBO';
 
 
 /**
@@ -16,7 +18,7 @@ export default class OneAPI {
 
 
   // Local Python backend
-  #OneServerBaseURL = 'http://localhost:5000/projectone';
+  #OneServerBaseURL = '/projectone';
 
   // User related
   #getUserGidURL = (id) => `${this.#OneServerBaseURL}/users-by-gid/${id}`;
@@ -37,7 +39,19 @@ export default class OneAPI {
   #updateMembershipURL = (id) => `${this.#OneServerBaseURL}/membership/${id}`;
   #deleteMembershipURL = (id) => `${this.#OneServerBaseURL}/membership/${id}`;
 
+  //Abwesenheit related
+  #getAbwesenheitURL = (id) => `${this.#OneServerBaseURL}/abwesenheit/${id}`;
+  #addAbwesenheitURL = () => `${this.#OneServerBaseURL}/abwesenheit/`;
+  #updateAbwesenheitURL = (id) => `${this.#OneServerBaseURL}/abwesenheit/${id}`;
+  #deleteAbwesenheitURL = (id) => `${this.#OneServerBaseURL}/abwesenheit/${id}`;
+
   //Aktivitäten related
+  #getAktivitätenByIdURL = (id) => `${this.#OneServerBaseURL}/aktivitäten-by-id/${id}`;
+  #getAktivitätenByProjectIdURL = (project_id) => `${this.#OneServerBaseURL}/aktivitäten-by-project/${project_id}`;
+  #addAktivitätenURL = (project_id, member) => `${this.#OneServerBaseURL}/aktivitäten-by-secured-project/${project_id}/${member}`;
+  #updateAktivitätenURL = (project_id, member) => `${this.#OneServerBaseURL}/aktivitäten-by-secured-project/${project_id}/${member}`;
+  #deleteAktivitätenURL = (project_id, member) => `${this.#OneServerBaseURL}/aktivitäten-by-secured-project/${project_id}/${member}`;
+
 
   //Arbeitszeitkonto related
 
@@ -267,9 +281,147 @@ export default class OneAPI {
     })
   }
 
+  getAbwesenheit(id) {
+    return this.#fetchAdvanced(this.#getAbwesenheitURL(id)).then((responseJSON) => {
+      let abwesenheitBOs = AktivitätenBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(abwesenheitBOs);
+      })
+    })
+  }
 
+  addAbwesenheit(abwesenheitBO) {
+    return this.#fetchAdvanced(this.#addAbwesenheitURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(abwesenheitBO)
+    }).then((responseJSON) => {
+      // We always get an array of ProjectBOs.fromJSON, but only need one object
+      let responseAbwesenheitBO = AbwesenheitBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseAbwesenheitBO);
+        })
+    })
+  }
 
+   /**
+     * Updates a customer and returns a Promise, which resolves to a CustomerBO.
+     * 
+     * @param {AbwesenheitBO} abwesenheitBO to be updated
+     * @public
+     */
 
+  updateAbwesenheit(abwesenheitBO) {
+    return this.#fetchAdvanced(this.#updateAbwesenheitURL(abwesenheitBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(abwesenheitBO)
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseAbwesenheitBO = AbwesenheitBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseAbwesenheitBO);
+      })
+    })
+  }
+
+  deleteAbwesenheit(id) {
+    return this.#fetchAdvanced(this.#deleteAbwesenheitURL(id), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseAbwesenheitBO = AbwesenheitBO.fromJSON(responseJSON)[0];
+      // console.info(accountBOs);
+      return new Promise(function (resolve) {
+        resolve(responseAbwesenheitBO);
+      })
+    })
+  }
+
+  getAktivitätenById(id) {
+    return this.#fetchAdvanced(this.#getAktivitätenURL(id)).then((responseJSON) => {
+      let aktivitätenBOs = AktivitätenBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(aktivitätenBOs);
+      })
+    })
+  }
+
+  getAktivitätenByProjectId(project_id) {
+    return this.#fetchAdvanced(this.#getAktivitätenURL(project_id)).then((responseJSON) => {
+      let aktivitätenBOs = AktivitätenBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(aktivitätenBOs);
+      })
+    })
+  }
+
+  addAktivitäten(project_id, member) {
+    return this.#fetchAdvanced(this.#addAktivitätenURL(project_id, member), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(project_id, member)
+    }).then((responseJSON) => {
+      // We always get an array of ProjectBOs.fromJSON, but only need one object
+      let responseAktivitätenBO = AktivitätenBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseAktivitätenBO);
+        })
+    })
+  }
+
+   /**
+     * Updates a customer and returns a Promise, which resolves to a CustomerBO.
+     * 
+     * @param {AktivitätenBO} aktivitätenBO to be updated
+     * @public
+     */
+
+  updateAktivitäten(project_id, member) {
+    return this.#fetchAdvanced(this.#updateAktivitätenURL(project_id, member), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(project_id, member)
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseAktivitätenBO = AktivitätenBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseAktivitätenBO);
+      })
+    })
+  }
+
+  deleteAktivitäten(project_id, member) {
+    return this.#fetchAdvanced(this.#deleteAktivitätenURL(project_id, member), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseAktivitätenBO = AktivitätenBO.fromJSON(responseJSON)[0];
+      // console.info(accountBOs);
+      return new Promise(function (resolve) {
+        resolve(responseAktivitätenBO);
+      })
+    })
+  }
 
 
 
