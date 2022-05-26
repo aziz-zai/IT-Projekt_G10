@@ -44,7 +44,7 @@ CREATE TABLE `project` (
   `projektname` varchar(100) NOT NULL DEFAULT '',
   `laufzeit` INT(11) NOT NULL DEFAULT '0',
   `auftraggeber` varchar(100) NOT NULL DEFAULT '',
-  `availableHours` float NOT NULL DEFAULT '0',
+  `availablehours` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -133,6 +133,19 @@ CREATE TABLE `ereignisbuchung` (
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 
+-- Table structure for table `Ereginis`
+DROP TABLE IF EXISTS `ereignis`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ereignis` (
+  `id`INT(11) NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT 0,
+  `zeitpunkt` datetime NOT NULL DEFAULT '0',
+  `bezeichnung` varchar(110) NOT NULL DEFAULT '',/* bezeichnung wäre "kommen" */
+  PRIMARY KEY(`id`)
+) ENGINE= InnoDB DEFAULT CHARSET=utf8;
+
+
 -- Table structure for table `pause`
 DROP TABLE IF EXISTS `pause`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -140,9 +153,9 @@ DROP TABLE IF EXISTS `pause`;
 CREATE TABLE `pause` (
   `id`INT(11) NOT NULL DEFAULT '0',
   `timestamp`timestamp NOT NULL DEFAULT 0,
+  `bezeichnung` varchar(110) NOT NULL DEFAULT '',/* bezeichnung wäre "pause" */
   `start` int NOT NULL DEFAULT '0',
   `ende` int NOT NULL DEFAULT '0',
-  `bezeichnung` varchar(110) NOT NULL DEFAULT '',/* bezeichnung wäre "pause" */
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 

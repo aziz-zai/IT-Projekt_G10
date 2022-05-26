@@ -16,18 +16,58 @@ class ArbeitszeitkontoMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, urlaubstage, user FROM arbeitszeitkonto WHERE id={}".format(key)
+        command = "SELECT id, timestamp, user, urlaubskonto, arbeitsleistung, gleitzeit FROM arbeitszeitkonto WHERE user={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, urlaubstage, user) = tuples[0]
+            (id, timestamp, user, urlaubskonto, arbeitsleistung, gleitzeit) = tuples[0]
             arbeitszeitkonto = Arbeitszeitkonto(
             id=id,
             timestamp=timestamp,
-            urlaubstage=urlaubstage,
-            user=user)
+            user=user,
+            urlaubskonto=urlaubskonto,
+            arbeitsleistung=arbeitsleistung,
+            gleitzeit=gleitzeit
+            )
             result = arbeitszeitkonto
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_arbeitszeitkonto_by_userID(self, user: int):
+        """Suchen eines Benutzers mit vorgegebener Google ID. Da diese eindeutig ist,
+        wird genau ein Objekt zurückgegeben.
+
+        :param google_user_id die Google ID des gesuchten Users.
+        :return User-Objekt, das die übergebene Google ID besitzt,
+            None bei nicht vorhandenem DB-Tupel.
+        """
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT id, timestamp, user, urlaubskonto, arbeitsleistung, gleitzeit FROM arbeitszeitkonto WHERE user={}".format(user)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (id, timestamp, user, urlaubskonto, arbeitsleistung, gleitzeit) = tuples[0]
+            arbeitszeitkonto = Arbeitszeitkonto(
+            id=id,
+            timestamp=timestamp,
+            user=user,
+            urlaubskonto=urlaubskonto,
+            arbeitsleistung=arbeitsleistung,
+            gleitzeit=gleitzeit
+            )
+            result = arbeitszeitkonto
+
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
             keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
@@ -46,8 +86,8 @@ class ArbeitszeitkontoMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE arbeitszeitkonto SET timestamp=%s, urlaubstage=%s WHERE id=%s"
-        data = (arbeitszeitkonto.timestamp, arbeitszeitkonto.urlaubstage, arbeitszeitkonto.user)
+        command = "UPDATE arbeitszeitkonto SET timestamp=%s, user=%s, urlaubskonto=%s, arbeitsleistung=%s, gleitzeit=%s WHERE user=%s"
+        data = (arbeitszeitkonto.timestamp, arbeitszeitkonto.user, arbeitszeitkonto.urlaubskonto, arbeitszeitkonto.arbeitsleistung, arbeitszeitkonto.gleitzeit, arbeitszeitkonto.user)
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -69,14 +109,16 @@ class ArbeitszeitkontoMapper(Mapper):
                 arbeitszeitkonto.id = 1
         command = """
             INSERT INTO arbeitszeitkonto (
-                id, timestamp, urlaubstage, user
-            ) VALUES (%s,%s,%s,%s)
+                id, timestamp, user, urlaubskonto, arbeitsleistung, gleitzeit
+            ) VALUES (%s,%s,%s,%s,%s,%s)
         """
         cursor.execute(command, (
             arbeitszeitkonto.id,
             arbeitszeitkonto.timestamp,
-            arbeitszeitkonto.urlaubstage,
-            arbeitszeitkonto.user
+            arbeitszeitkonto.user,
+            arbeitszeitkonto.urlaubskonto,
+            arbeitszeitkonto.arbeitsleistung,
+            arbeitszeitkonto.gleitzeit
         ))
         self._cnx.commit()
 
