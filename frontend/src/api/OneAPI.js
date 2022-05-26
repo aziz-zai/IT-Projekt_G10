@@ -625,8 +625,4 @@ export default class OneAPI {
       })
     })
   }
-
-
-
-
 }
