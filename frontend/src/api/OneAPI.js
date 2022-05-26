@@ -1,10 +1,6 @@
 import UserBO from './UserBO';
 import ProjectBO from './ProjectBO';
 import MembershipBO from './MembershipBO';
-
-import ArbeitszeitkontoBO from './ArbeitszeitkontoBO';
-import PauseBO from './PauseBO';
-
 import ProjektarbeitBO from './ProjektarbeitBO';
 import ZeitintervallbuchungBO from './ZeitintervallbuchungBO';
 import GehenBO from './GehenBO';
@@ -15,7 +11,6 @@ import EreignisbuchungBO from './EreignisbuchungBO';
 
 import AbwesenheitBO from './AbwesenheitBO';
 import AktivitätenBO from './AktivitätenBO';
-
 
 
 
@@ -68,10 +63,6 @@ export default class OneAPI {
 
 
   //Arbeitszeitkonto related
-  #getArbeitszeitkontoURL = (user) => `${this.#OneServerBaseURL}/arbeitszeitkonto-by-user/${user}`;
-  #updateArbeitszeitkontoURL = (user) => `${this.#OneServerBaseURL}/arbeitszeitkonto-by-user/${user}`;
-  #deleteArbeitszeitkontoURL = (user) => `${this.#OneServerBaseURL}/arbeitszeitkonto-by-user/${user}`;
-  #addArbeitszeitkontoURL = (user) => `${this.#OneServerBaseURL}/arbeitszeitkonto-by-user/${user}`;
 
   //Projektarbeit related
   #getProjektarbeitURL = (id) => `${this.#OneServerBaseURL}/projektarbeiten/${id}`;
@@ -115,10 +106,9 @@ export default class OneAPI {
 
 
   //Pause related
-  #addPauseURL = () => `${this.#OneServerBaseURL}/pausen/${}`;
-  #getPauseURL = (id) => `${this.#OneServerBaseURL}/pausen/${id}`;
-  #updatePauseURL = (id) => `${this.#OneServerBaseURL}/pausen/${id}`;
-  #deletePauseURL = (id) => `${this.#OneServerBaseURL}/pausen/${id}`;
+
+
+
 
   /** 
    * Get the Singelton instance 
@@ -235,44 +225,25 @@ export default class OneAPI {
     })
   }
 
-  getArbeitszeitkonto(user) {
-    return this.#fetchAdvanced(this.#getArbeitszeitkontoURL(user)).then((responseJSON) => {
-      let arbeitszeitkontoBOs = ArbeitszeitkontoBO.fromJSON(responseJSON);
+  getMembership(id) {
+    return this.#fetchAdvanced(this.#getMembershipURL(id)).then((responseJSON) => {
+      let membershipBOs = MembershipBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {
-        resolve(arbeitszeitkontoBOs);
+        resolve(membershipBOs);
       })
     })
   }
 
-  updateArbeitszeitkonto(arbeitszeitkontoBO) {
-    return this.#fetchAdvanced(this.#updateArbeitszeitkontoURL(arbeitszeitkontoBO.getID()), {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json, text/plain',
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(arbeitszeitkontoBO)
-    }).then((responseJSON) => {
-      // We always get an array of ArbeitszeitkontoBOs.fromJSON
-      let responseArbeitszeitkontoBO = arbeitszeitkontoBO.fromJSON(responseJSON)[0];
-      // 
+  getMembershipByProject(project) {
+    return this.#fetchAdvanced(this.#getMembershipByProjectURL(project)).then((responseJSON) => {
+      let membershipBOs = MembershipBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
       return new Promise(function (resolve) {
-        resolve(responseArbeitszeitkontoBO);
+        resolve(membershipBOs);
       })
     })
   }
-
-
-  deleteArbeitszeitkonto(arbeitszeitkontoBO) {
-    return this.#fetchAdvanced(this.#deleteArbeitszeitkontoURL(arbeitszeitkontoBO), {
-      method: 'DELETE'
-    }).then((responseJSON) => {
-      // We always get an array of ArbeitszeitkontoBO.fromJSON
-      let responseArbeitszeitkontoBO = arbeitszeitkontoBO.fromJSON(responseJSON)[0];
-      //
-      return new Promise(function (resolve) {
-        resolve(responseArbeitszeitkontoBO);
 
   getMembershipByUser(user) {
     return this.#fetchAdvanced(this.#getMembershipByUserURL(user)).then((responseJSON) => {
@@ -284,89 +255,66 @@ export default class OneAPI {
     })
   }
 
-  addArbeitszeitkonto(arbeitszeitkontoBO) {
-    return this.#fetchAdvanced(this.#addArbeitszeitkontoURL(), {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json, text/plain',
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(arbeitszeitkontoBO)
-    }).then((responseJSON) => {
-      // We always get an array of ArbeitszeitkontoBOs.fromJSON, but only need one object
-      let responseArbeitszeitkontoBO = arbeitszeitkontoBO.fromJSON(responseJSON)[0];
-      // 
-      return new Promise(function (resolve) {
-        resolve(responseArbeitszeitkontoBO);
-        })
-    })
-  }
- 
-
-
-
-
-
-  addPause(PauseBO) {
-    return this.#fetchAdvanced(this.#addPauseURL(), {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json, text/plain',
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(pauseBO)
-    }).then((responseJSON) => {
-      // We always get an array of ArbeitszeitkontoBOs.fromJSON, but only need one object
-      let responsePauseBO = pauseBO.fromJSON(responseJSON)[0];
-      // 
-      return new Promise(function (resolve) {
-        resolve(responsePauseBO);
-        })
-    })
-  }
-
-
-
-
-  getPause(id) {
-    return this.#fetchAdvanced(this.#getPauseURL(id)).then((responseJSON) => {
-      let pauseBOs = PauseBO.fromJSON(responseJSON);
+  getMembershipByUserAndProject(user, project) {
+    return this.#fetchAdvanced(this.#getMembershipByUserAndProjectURL(user, project)).then((responseJSON) => {
+      let membershipBOs = ProjectBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {
-        resolve(PauseBOs);
+        resolve(membershipBOs);
       })
     })
   }
-  
-  
-  updatePause(pauseBO) {
-    return this.#fetchAdvanced(this.#updatePauseURL(pauseBO.getID(id)), {
+
+  addMembership(membershipBO) {
+    return this.#fetchAdvanced(this.#addMembershipURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(membershipBO)
+    }).then((responseJSON) => {
+      // We always get an array of ProjectBOs.fromJSON, but only need one object
+      let responseMembershipBO = ProjectBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseMembershipBO);
+        })
+    })
+  }
+ /**
+     * Updates a membership and returns a Promise, which resolves to a MembershipBO.
+     * 
+     * @param {MembershipBO} membershipBO to be updated
+     * @public
+     */
+  updateMembership(membershipBO) {
+    return this.#fetchAdvanced(this.#updateMembershipURL(membershipBO.getID()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(pauseBO)
+      body: JSON.stringify(membershipBO)
     }).then((responseJSON) => {
-      // We always get an array of ArbeitszeitkontoBOs.fromJSON
-      let responsePauseBO = pauseBO.fromJSON(responseJSON)[0];
+      // We always get an array of MembershipBOs.fromJSON
+      let responseMembershipBO = MembershipBO.fromJSON(responseJSON)[0];
       // 
       return new Promise(function (resolve) {
-        resolve(responsePauseBO);
+        resolve(responseMembershipBO);
       })
     })
   }
 
-
-  deletePause(pauseBO) {
-    return this.#fetchAdvanced(this.#deletePauseURL(pauseBO), {
+  deleteMembership(membershipBO) {
+    return this.#fetchAdvanced(this.#deleteMembershipURL(membershipBO), {
       method: 'DELETE'
     }).then((responseJSON) => {
-      // We always get an array of ArbeitszeitkontoBO.fromJSON
-      let responsePauseBO = pauseBO.fromJSON(responseJSON)[0];
+      // We always get an array of MembershipBO.fromJSON
+      let responseMembershipBO = MembershipBO.fromJSON(responseJSON)[0];
       //
       return new Promise(function (resolve) {
-        resolve(responsePauseBO);
+        resolve(responseMembershipBO);
       })
     })
   }
