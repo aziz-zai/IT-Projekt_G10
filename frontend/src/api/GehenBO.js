@@ -1,9 +1,9 @@
-import BusinessObject from './BusinessObject';
+import Ereignis from './Ereignis';
 
 /**
  * Represents a Project
  */
-export default class GehenBO extends BusinessObject {
+export default class GehenBO extends Ereignis {
 
   constructor() {
     super();
