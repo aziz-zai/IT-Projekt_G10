@@ -1125,11 +1125,6 @@ class ZeitintervallbuchungOperations(Resource):
         adm.delete_zeitintervallbuchung(zetd)
         return '', 200
 
-
-
-
-
-
 @projectone.route('/ereignis')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class EreignisListOperations(Resource):

@@ -371,6 +371,19 @@ class Administration(object):
     def delete_membership(self, membership):
         with MembershipMapper() as mapper:
             return mapper.delete(membership)
+    
+    def get_membership_by_project(self, project):
+        with MembershipMapper() as mapper:
+            return mapper.find_by_project(project)
+    
+    def get_membership_by_user_and_project(self, user, project):
+        with MembershipMapper() as mapper:
+            return mapper.find_by_user_and_project(user, project)
+    
+    def get_membership_by_user(self, user):
+        with MembershipMapper() as mapper:
+            return mapper.find_by_user(user)
+       
 
     """
     Ereignis-spezifische Methoden
@@ -397,17 +410,3 @@ class Administration(object):
     def delete_ereignis(self, ereignis):
         with EreignisMapper() as mapper:
             return mapper.delete(ereignis)
-
-
-    def get_membership_by_project(self, project):
-        with MembershipMapper() as mapper:
-            return mapper.find_by_project(project)
-    
-    def get_membership_by_user_and_project(self, user, project):
-        with MembershipMapper() as mapper:
-            return mapper.find_by_user_and_project(user, project)
-    
-    def get_membership_by_user(self, user):
-        with MembershipMapper() as mapper:
-            return mapper.find_by_user(user)
-       
