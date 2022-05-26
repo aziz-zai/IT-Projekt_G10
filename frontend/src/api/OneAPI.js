@@ -34,8 +34,8 @@ export default class OneAPI {
   #addMembershipURL = () => `${this.#OneServerBaseURL}/membership/`;
   #getMembershipURL = (id) => `${this.#OneServerBaseURL}/membership/${id}`;
   #getMembershipByProjectURL = (id) => `${this.#OneServerBaseURL}/membership/projects/${id}`;
-  #getMembershipByUserURL = (id) => `${this.#OneServerBaseURL}/membership/projects/user/${id}`;
-  #getMembershipByUserAndProjectURL = (id) => `${this.#OneServerBaseURL}/membership/projects/user/project/${id}`;
+  #getMembershipByUserURL = (id) => `${this.#OneServerBaseURL}/membership-by-user/${id}`;
+  #getMembershipByUserAndProjectURL = (id) => `${this.#OneServerBaseURL}/membership-by-project/${id}`;
   #updateMembershipURL = (id) => `${this.#OneServerBaseURL}/membership/${id}`;
   #deleteMembershipURL = (id) => `${this.#OneServerBaseURL}/membership/${id}`;
 
@@ -209,10 +209,10 @@ export default class OneAPI {
 
   getMembershipByUser(user) {
     return this.#fetchAdvanced(this.#getMembershipByUserURL(user)).then((responseJSON) => {
-      let membershipBOs = ProjectBO.fromJSON(responseJSON);
+      let projectBOs = ProjectBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {
-        resolve(membershipBOs);
+        resolve(projectBOs);
       })
     })
   }

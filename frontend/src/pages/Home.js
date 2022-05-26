@@ -16,8 +16,7 @@ export class Home extends Component {
 
     // Init state
     this.state = {
-      users: null,
-      userid: null,
+      userSelf: null,
       loadingInProgress: false,
       loadingError: null,
       Open: 'SideBarContainerClosed',
@@ -27,20 +26,19 @@ export class Home extends Component {
 
   componentDidMount() {
     this.getUserbygid();
-    this.getUserbyId();
   }
 
   /** gets the balance for this account */
   getUserbygid = () => {
-    OneAPI.getAPI().getUserGid(this.props.user.uid).then(users =>
+    OneAPI.getAPI().getUserGid(this.props.user.uid).then(user =>
       this.setState({
-        users: users,
+        userSelf: user,
         loadingInProgress: false,
         loadingError: null
       })
       ).catch(e =>
         this.setState({ // Reset state with error from catch 
-          users: null,
+          userSelf: null,
           loadingInProgress: false,
           loadingError: e
         })
@@ -52,25 +50,6 @@ export class Home extends Component {
     });
   }
 
-  getUserbyId = () => {
-    OneAPI.getAPI().getUser(1).then(user =>
-      this.setState({
-        userid: user,
-        loadingInProgress: false,
-        loadingError: null
-      })).catch(e =>
-        this.setState({ // Reset state with error from catch 
-          userid: null,
-          loadingInProgress: false,
-          loadingError: e
-        })
-      );
-    // set loading to true
-    this.setState({
-      loadingInProgress: true,
-      loadingError: null
-    });
-  }
 
   handleOpenStateChange = () => {
     if(this.state.Open =='SideBarContainerOpen'){
@@ -88,18 +67,16 @@ export class Home extends Component {
 
   render() {
     const {user} = this.props;
-    const {users, userid} = this.state;
+    const {userSelf, userid} = this.state;
     return (
       <div>
          <SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={user}/>
          <NavBar toggle={this.handleOpenStateChange} user={user} nav="navBlack"/>
     <div className="test">
 
-      {users ? 
-      console.log('succes', users[0].vorname): console.log('fail', users)}
-      {userid ? 
-      console.log('succes', userid[0].vorname): console.log('fail', users)}
-      <Project/>
+      {userSelf ? 
+      <Project user={userSelf}/>
+      : console.log('fail')}
     </div>
     </div>
     )
