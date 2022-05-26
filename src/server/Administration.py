@@ -1,6 +1,7 @@
+from server.bo.EreignisBO import Ereignis
 from server.bo.MembershipBO import Membership
 from server.db.MembershipMapper import MembershipMapper
-from server.bo.EreignisBO import Ereignis
+
 from .bo.EreignisbuchungBo import Ereignisbuchung
 from .bo.UserBO import User
 from .db.AktivitätenMapper import AktivitätenMapper
@@ -18,8 +19,6 @@ from .db.GehenMapper import GehenMapper
 from .bo.KommenBO import Kommen
 from .db.KommenMapper import KommenMapper
 from .db.EreignisbuchungMapper import EreignisbuchungMapper
-from .db.MembershipMapper import MembershipMapper
-from .bo.MembershipBO import Membership
 from .db.EreignisMapper import EreignisMapper
 
 
@@ -30,6 +29,8 @@ from .db.PauseMapper import PauseMapper
 
 from .bo.ZeitintervallbuchungBO import Zeitintervallbuchung
 from .db.ZeitintervallbuchungMapper import ZeitintervallbuchungMapper
+from.bo.AbwesenheitBO import Abwesenheit
+from .db.AbwesenheitMapper import AbwesenheitMapper
 
 class Administration(object):
 
@@ -248,7 +249,7 @@ class Administration(object):
     def delete_pause(self, pause):
         with PauseMapper() as mapper:
             return mapper.delete(pause)
-            
+
 #Zeitintervall Administration
 
     def create_zeitintervallbuchung(self, zeitintervall, ist_buchung, erstellt_von, erstellt_für):
@@ -258,9 +259,10 @@ class Administration(object):
         zeitintervallbuchung.ist_buchung = ist_buchung
         zeitintervallbuchung.erstellt_von = erstellt_von
         zeitintervallbuchung.erstellt_für = erstellt_für
-
-        kommen = Administration.get_kommen_by_id(self, zeitintervall.start)
-        gehen = Administration.get_gehen_by_id(self, zeitintervall.ende)
+        adm = Administration()
+        zeitinter = adm.get_projektarbeit_by_id(zeitintervall)
+        kommen = adm.get_kommen_by_id(zeitinter.start)
+        gehen = adm.get_gehen_by_id( zeitinter.ende)
 
         zeitdifferenz = datetime.strptime(gehen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
         zeitdiff_sec = zeitdifferenz.total_seconds()
@@ -372,7 +374,7 @@ class Administration(object):
     def delete_membership(self, membership):
         with MembershipMapper() as mapper:
             return mapper.delete(membership)
-
+    
     def get_membership_by_project(self, project):
         with MembershipMapper() as mapper:
             return mapper.find_by_project(project)
@@ -385,6 +387,7 @@ class Administration(object):
         with MembershipMapper() as mapper:
             return mapper.find_by_user(user)
        
+
     """
     Ereignis-spezifische Methoden
     """ 
@@ -412,3 +415,30 @@ class Administration(object):
             return mapper.delete(ereignis)
 
 
+    def create_abwesenheit (self, start, ende, abwesenheitsart):
+        abwesenheit = Abwesenheit
+        abwesenheit.start=start
+        abwesenheit.ende=ende
+        abwesenheit.abwesenheitsart=abwesenheitsart
+        abwesenheit.timestamp = datetime.now()
+
+        with AbwesenheitMapper() as mapper:             
+            return mapper.insert(abwesenheit)
+
+    def get_all_abwesenheit(self):
+        """Alle Abwesenheiten auslesen"""
+        with AbwesenheitMapper() as mapper:
+            return mapper.find_all()
+
+    def get_abwesenheit_by_id(self, id):
+        """Den Benutzer mit der gegebenen ID auslesen."""
+        with AbwesenheitMapper() as mapper:
+            return mapper.find_by_key(id)
+
+    def update_abwesenheit(self, abwesenheit):
+        with AbwesenheitMapper() as mapper:
+            return mapper.update(abwesenheit)
+
+    def delete_abwesenheit(self, abwesenheit):
+        with AbwesenheitMapper() as mapper:
+            return mapper.delete(abwesenheit)
