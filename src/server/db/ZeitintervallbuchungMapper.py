@@ -17,17 +17,20 @@ class ZeitintervallbuchungMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, buchung, arbeitszeitkonto, timestamp FROM zeitintervallbuchung WHERE id={}".format(key)
+        command = "SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung, zeitintervall, zeitdifferenz FROM zeitintervallbuchung WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, buchung, arbeitszeitkonto, timestamp) = tuples[0]
-            zeitintervallbuchung = zeitintervallbuchung()
+            (id, timestamp, erstellt_von, erstellt_für, ist_buchung, zeitintervall, zeitdifferenz) = tuples[0]
+            zeitintervallbuchung = Zeitintervallbuchung(
             id=id,
-            buchung=buchung,
-            arbeitszeitkonto=arbeitszeitkonto,
             timestamp=timestamp,
+            erstellt_von=erstellt_von,
+            erstellt_für=erstellt_für,
+            ist_buchung=ist_buchung,
+            zeitintervall=zeitintervall,
+            zeitdifferenz=zeitdifferenz)
             result = zeitintervallbuchung
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
@@ -53,15 +56,17 @@ class ZeitintervallbuchungMapper(Mapper):
                 zeitintervallbuchung.id = 1
         command = """
             INSERT INTO zeitintervallbuchung (
-                id, arbeitszeitkonto, zeitintervall, zeitdifferenz, timestamp
-            ) VALUES (%s,%s,%s,%s,%s)
+                id, timestamp, erstellt_von, erstellt_für, ist_buchung, zeitintervall, zeitdifferenz
+            ) VALUES (%s,%s,%s,%s,%s,%s,%s)
         """
         cursor.execute(command, (
             zeitintervallbuchung.id,
-            zeitintervallbuchung.arbeitszeitkonto,
+            zeitintervallbuchung.timestamp,
+            zeitintervallbuchung.erstellt_von,
+            zeitintervallbuchung.erstellt_für,
+            zeitintervallbuchung.ist_buchung,
             zeitintervallbuchung.zeitintervall,
             zeitintervallbuchung.zeitdifferenz,
-            zeitintervallbuchung.timestamp,
         ))
         self._cnx.commit()
 
@@ -74,8 +79,8 @@ class ZeitintervallbuchungMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE zeitintervallbuchung SET buchung=%s, arbeitszeitkonto=%s, timestamp=%s WHERE id=%s"
-        data = (zeitintervallbuchung.buchung, zeitintervallbuchung.timestamp)
+        command = "UPDATE zeitintervallbuchung SET timestamp=%s, erstellt_von=%s, erstellt_für=%s, ist_buchung=%s, zeitintervall=%s, zeitdifferenz=%s WHERE id=%s"
+        data = (zeitintervallbuchung.timestamp, zeitintervallbuchung.erstellt_von, zeitintervallbuchung.erstellt_für, zeitintervallbuchung.ist_buchung, zeitintervallbuchung.zeitintervall, zeitintervallbuchung.zeitdifferenz, zeitintervallbuchung.id)
         cursor.execute(command, data)
 
         self._cnx.commit()
