@@ -145,6 +145,7 @@ CREATE TABLE `ereignis` (
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 
+
 -- Table structure for table `pause`
 DROP TABLE IF EXISTS `pause`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
