@@ -2,7 +2,7 @@ import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { Popover, IconButton, Avatar, ClickAwayListener, withStyles, Typography, Paper, Button, Grid, Divider } from '@material-ui/core';
 import firebase from 'firebase/compat/app';
-
+import firebasConfig from '../../firebaseconfig'
 export class ProfileDropDown extends Component {
     #avatarButtonRef = createRef();
     constructor(props) {
@@ -36,6 +36,7 @@ export class ProfileDropDown extends Component {
          * @see See Google [firebase.auth().signOut](https://firebase.google.com/docs/reference/js/firebase.auth.Auth#signout)
          */
       handleSignOutButtonClicked = () => {
+        firebase.initializeApp(firebasConfig)
         firebase.auth().signOut();
       }
     

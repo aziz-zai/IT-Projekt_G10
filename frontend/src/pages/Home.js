@@ -4,7 +4,10 @@ import NavBar from '../components/NavBar'
 import test from '../media/test.svg'
 import PropTypes from 'prop-types'
 import OneAPI from '../api/OneAPI'
+import UserBO from '../api/UserBO';
 import SideBar from '../components/SideBar'
+import Project from '../components/Project'
+import { getTabsUtilityClass } from '@mui/material';
 
 
 export class Home extends Component {
@@ -13,39 +16,40 @@ export class Home extends Component {
 
     // Init state
     this.state = {
-      users: [],
+      userSelf: null,
       loadingInProgress: false,
       loadingError: null,
       Open: 'SideBarContainerClosed',
+      check: true
     };
   }
 
   componentDidMount() {
-    this.getUsers();
+    this.getUserbygid();
   }
 
   /** gets the balance for this account */
-  getUsers = () => {
-    OneAPI.getAPI().getUsers(1).then(users =>
+  getUserbygid = () => {
+    OneAPI.getAPI().getUserGid(this.props.user.uid).then(user =>
       this.setState({
-        users: users,
+        userSelf: user,
         loadingInProgress: false,
         loadingError: null
-        
-      })).catch(e =>
+      })
+      ).catch(e =>
         this.setState({ // Reset state with error from catch 
-          users: null,
+          userSelf: null,
           loadingInProgress: false,
           loadingError: e
         })
       );
-
     // set loading to true
     this.setState({
       loadingInProgress: true,
       loadingError: null
     });
   }
+
 
   handleOpenStateChange = () => {
     if(this.state.Open =='SideBarContainerOpen'){
@@ -62,15 +66,17 @@ export class Home extends Component {
 
 
   render() {
-    const {user} = this.props
+    const {user} = this.props;
+    const {userSelf, userid} = this.state;
     return (
       <div>
          <SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={user}/>
          <NavBar toggle={this.handleOpenStateChange} user={user} nav="navBlack"/>
     <div className="test">
-        <img className="testimg" src={test}></img>
-        <h1>Die Seite ist noch in Bearbeitung!</h1>
-        {this.state.users.map(user =><div key={user.id_}>{user.vorname}</div> )}
+
+      {userSelf ? 
+      <Project user={userSelf}/>
+      : console.log('fail')}
     </div>
     </div>
     )

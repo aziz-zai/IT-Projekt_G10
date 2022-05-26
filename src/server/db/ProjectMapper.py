@@ -21,8 +21,8 @@ class ProjectMapper(Mapper):
                 project.id = 1
         command = """
             INSERT INTO project (
-                id, timestamp, projektname, laufzeit, auftraggeber, projektleiter, availablehours, user
-            ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+                id, timestamp, projektname, laufzeit, auftraggeber, availablehours
+            ) VALUES (%s,%s,%s,%s,%s,%s)
         """
         cursor.execute(command, (
             project.id,
@@ -30,9 +30,7 @@ class ProjectMapper(Mapper):
             project.projektname,
             project.laufzeit,
             project.auftraggeber,
-            project.projektleiter,
             project.availablehours,
-            project.user
         ))
         self._cnx.commit()
 
@@ -45,8 +43,8 @@ class ProjectMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE project SET timestamp=%s, projektname=%s, laufzeit=%s, auftraggeber=%s, projektleiter=%s, availablehours=%s, user=%s WHERE id=%s"
-        data = (project.timestamp, project.projektname, project.laufzeit, project.auftraggeber, project.projektleiter, project.availablehours, project.user, project.id)
+        command = "UPDATE project SET timestamp=%s, projektname=%s, laufzeit=%s, auftraggeber=%s, availablehours=%s WHERE id=%s"
+        data = (project.timestamp, project.projektname, project.laufzeit, project.auftraggeber, project.availablehours, project.id)
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -59,21 +57,19 @@ class ProjectMapper(Mapper):
 
         result = None
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, projektname, laufzeit, auftraggeber, projektleiter, availablehours, user FROM project WHERE id={}".format(key)
+        command = "SELECT id, timestamp, projektname, laufzeit, auftraggeber, availablehours FROM project WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, projektname, laufzeit, auftraggeber, projektleiter, availablehours, user) = tuples[0]
+            (id, timestamp, projektname, laufzeit, auftraggeber, availablehours) = tuples[0]
             project = Project(
             id=id,
             timestamp=timestamp,
             projektname=projektname,
             laufzeit=laufzeit,
             auftraggeber=auftraggeber,
-            projektleiter=projektleiter,
-            availablehours=availablehours,
-            user=user)
+            availablehours=availablehours)
             result = project
         except IndexError:
             result = None
@@ -82,3 +78,13 @@ class ProjectMapper(Mapper):
         cursor.close()
 
         return result
+
+    def delete(self, project):
+
+        cursor = self._cnx.cursor()
+
+        command = "DELETE FROM project WHERE id={}".format(project.id)
+        cursor.execute(command)
+
+        self._cnx.commit()
+        cursor.close()

@@ -9,12 +9,20 @@ export default class UserBO extends BusinessObject {
    * Constructs a CustomerBO object with a given firstname and lastname.
    * 
    * @param {String} aVorname - the Vorname of this CustomerBO.
-   * @param {String} aVorname - the Vorname of this CustomerBO.
+   * @param {String} aNachname - the Vorname of this CustomerBO.
+   * @param {String} aBenutzername - the Vorname of this CustomerBO.
+   * @param {String} aEmail - the Vorname of this CustomerBO.
+   * @param {String} aGoogleUserId - the Vorname of this CustomerBO.
+   * @param {String} aUrlaubstage - the Vorname of this CustomerBO.
    */
-  constructor(aVorname, aNachname) {
+  constructor(aVorname, aNachname, aBenutzername, aEmail, aGoogleUserId, aUrlaubstage) {
     super();
     this.vorname = aVorname;
     this.nachname = aNachname;
+    this.benutzername = aBenutzername;
+    this.email = aEmail;
+    this.google_user_id = aGoogleUserId;
+    this.urlaubstage = aUrlaubstage;
   }
 
   /**
@@ -48,6 +56,51 @@ export default class UserBO extends BusinessObject {
   getNachname() {
     return this.nachname;
   }
+
+  setBenutzername(aBenutzername) {
+    this.benutzername = aBenutzername;
+  }
+
+  /**
+   * Gets the firstname.
+   */
+  getBenutzername() {
+    return this.benutzername;
+  }
+
+  setEmail(aEmail) {
+    this.email = aEmail;
+  }
+
+  /**
+   * Gets the firstname.
+   */
+  getEmail() {
+    return this.email;
+  }
+
+  setUrlaubstage(aUrlaubstage) {
+    this.urlaubstage = aUrlaubstage;
+  }
+
+  /**
+   * Gets the firstname.
+   */
+  getUrlaubstage() {
+    return this.urlaubstage;
+  }
+
+  setGoogleUserId(aGoogleUserId) {
+    this.google_user_id = aGoogleUserId;
+  }
+
+  /**
+   * Gets the firstname.
+   */
+  getGoogleUserId() {
+    return this.google_user_id;
+  }
+
 
   /** 
    * Returns an Array of CustomerBOs from a given JSON structure.
