@@ -1,7 +1,7 @@
 import BusinessObject from './BusinessObject';
 
 /**
- * Represents a Project
+ * Represents a Arbeitszeitkonto
  */
 export default class ArbeitszeitkontoBO extends BusinessObject {
 
