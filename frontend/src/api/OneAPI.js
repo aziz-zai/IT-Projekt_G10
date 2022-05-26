@@ -837,3 +837,128 @@ export default class OneAPI {
     })
   }
 }
+
+getArbeitszeitkonto(user) {
+  return this.#fetchAdvanced(this.#getArbeitszeitkontoURL(user)).then((responseJSON) => {
+    let arbeitszeitkontoBOs = ArbeitszeitkontoBO.fromJSON(responseJSON);
+    // console.info(customerBOs);
+    return new Promise(function (resolve) {
+      resolve(arbeitszeitkontoBOs);
+    })
+  })
+}
+
+updateArbeitszeitkonto(arbeitszeitkontoBO) {
+  return this.#fetchAdvanced(this.#updateArbeitszeitkontoURL(arbeitszeitkontoBO.getID()), {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/json, text/plain',
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify(arbeitszeitkontoBO)
+  }).then((responseJSON) => {
+    // We always get an array of ArbeitszeitkontoBOs.fromJSON
+    let responseArbeitszeitkontoBO = arbeitszeitkontoBO.fromJSON(responseJSON)[0];
+    // 
+    return new Promise(function (resolve) {
+      resolve(responseArbeitszeitkontoBO);
+    })
+  })
+}
+
+deleteArbeitszeitkonto(arbeitszeitkontoBO) {
+  return this.#fetchAdvanced(this.#deleteArbeitszeitkontoURL(arbeitszeitkontoBO), {
+    method: 'DELETE'
+  }).then((responseJSON) => {
+    // We always get an array of ArbeitszeitkontoBO.fromJSON
+    let responseArbeitszeitkontoBO = arbeitszeitkontoBO.fromJSON(responseJSON)[0];
+    //
+    return new Promise(function (resolve) {
+      resolve(responseArbeitszeitkontoBO);
+    })
+  })
+}
+
+addArbeitszeitkonto(arbeitszeitkontoBO) {
+  return this.#fetchAdvanced(this.#addArbeitszeitkontoURL(), {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json, text/plain',
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify(arbeitszeitkontoBO)
+  }).then((responseJSON) => {
+    // We always get an array of ArbeitszeitkontoBOs.fromJSON, but only need one object
+    let responseArbeitszeitkontoBO = arbeitszeitkontoBO.fromJSON(responseJSON)[0];
+    // 
+    return new Promise(function (resolve) {
+      resolve(responseArbeitszeitkontoBO);
+      })
+  })
+}
+
+
+addPause(PauseBO) {
+  return this.#fetchAdvanced(this.#addPauseURL(), {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json, text/plain',
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify(pauseBO)
+  }).then((responseJSON) => {
+    // We always get an array of ArbeitszeitkontoBOs.fromJSON, but only need one object
+    let responsePauseBO = pauseBO.fromJSON(responseJSON)[0];
+    // 
+    return new Promise(function (resolve) {
+      resolve(responsePauseBO);
+      })
+  })
+}
+
+
+
+
+getPause(id) {
+  return this.#fetchAdvanced(this.#getPauseURL(id)).then((responseJSON) => {
+    let pauseBOs = PauseBO.fromJSON(responseJSON);
+    // console.info(customerBOs);
+    return new Promise(function (resolve) {
+      resolve(PauseBOs);
+    })
+  })
+}
+
+
+updatePause(pauseBO) {
+  return this.#fetchAdvanced(this.#updatePauseURL(pauseBO.getID(id)), {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/json, text/plain',
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify(pauseBO)
+  }).then((responseJSON) => {
+    // We always get an array of ArbeitszeitkontoBOs.fromJSON
+    let responsePauseBO = pauseBO.fromJSON(responseJSON)[0];
+    // 
+    return new Promise(function (resolve) {
+      resolve(responsePauseBO);
+    })
+  })
+}
+
+
+deletePause(pauseBO) {
+  return this.#fetchAdvanced(this.#deletePauseURL(pauseBO), {
+    method: 'DELETE'
+  }).then((responseJSON) => {
+    // We always get an array of ArbeitszeitkontoBO.fromJSON
+    let responsePauseBO = pauseBO.fromJSON(responseJSON)[0];
+    //
+    return new Promise(function (resolve) {
+      resolve(responsePauseBO);
+    })
+  })
+}
+}
