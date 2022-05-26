@@ -1,4 +1,6 @@
 from server.bo.EreignisBO import Ereignis
+from server.bo.MembershipBO import Membership
+from server.db.MembershipMapper import MembershipMapper
 from .bo.EreignisbuchungBo import Ereignisbuchung
 from .bo.UserBO import User
 from .db.AktivitätenMapper import AktivitätenMapper
@@ -54,13 +56,9 @@ class Administration(object):
         with AktivitätenMapper() as mapper:
             return mapper.find_by_key(id)
 
-    def get_aktivitäten_by_bezeichnung(self, bezeichnung):
+    def get_activities_by_project(self, project):
         with AktivitätenMapper() as mapper:
-            return mapper.find_by_bezeichnung(bezeichnung)
-
-    def get_aktivitäten_by_dauer(self, dauer):
-        with AktivitätenMapper() as mapper:
-            return mapper.find_by_dauer(dauer)
+            return mapper.find_all_activties_by_project(project)
 
     def update_aktivitäten(self, aktivitäten):
         with AktivitätenMapper() as mapper:
@@ -75,13 +73,13 @@ class Administration(object):
     """
     def create_user(self, vorname, nachname, benutzername, email, google_user_id):
         """Einen Benutzer anlegen"""
-        user = User
-        user.timestamp = datetime.now()
-        user.vorname = vorname
-        user.nachname = nachname
-        user.benutzername = benutzername
-        user.email = email
-        user.google_user_id = google_user_id
+        user = User(
+        timestamp = datetime.now(),
+        vorname = vorname,
+        nachname = nachname,
+        benutzername = benutzername,
+        email = email,
+        google_user_id = google_user_id)
 
         with UserMapper() as mapper:
             return mapper.insert(user)
@@ -94,10 +92,6 @@ class Administration(object):
     def get_user_by_google_user_id(self, google_user_id):
         with UserMapper() as mapper:
             return mapper.find_by_google_user_id(google_user_id)
-
-    def update_user(self, user):
-        with UserMapper() as mapper:
-            return mapper.update(user)
 
     def save_user(self, user):
         with UserMapper() as mapper:
@@ -295,16 +289,14 @@ class Administration(object):
     """
     Projekt-spezifische Methoden
     """
-    def create_project(self, projektname, laufzeit, auftraggeber, projektleiter, availablehours, user):
+    def create_project(self, projektname, laufzeit, auftraggeber, availablehours):
         """Ein Projekt anlegen"""
         project = Project
         project.timestamp = datetime.now()
         project.projektname = projektname
         project.laufzeit = laufzeit
         project.auftraggeber = auftraggeber
-        project.projektleiter = projektleiter
         project.availablehours = availablehours
-        project.user = user
 
         with ProjectMapper() as mapper:
             return mapper.insert(project)
@@ -316,16 +308,22 @@ class Administration(object):
     def update_project(self, project):
         with ProjectMapper() as mapper:
             return mapper.update(project)
+    
+    def delete_project(self, project):
+        with ProjectMapper() as mapper:
+            return mapper.delete(project)
 
     """
-    Arbeitszeitkonto-spezifische Methoden
+    Arbeitszeitkonto-spezifische Methoden 
     """
-    def create_arbeitszeitkonto(self, urlaubstage, user):
+    def create_arbeitszeitkonto(self, urlaubskonto, user, arbeitsleistung, gleitzeit):
         """Einen Benutzer anlegen"""
         arbeitszeitkonto = Arbeitszeitkonto
         arbeitszeitkonto.timestamp = datetime.now()
-        arbeitszeitkonto.urlaubstage = urlaubstage
+        arbeitszeitkonto.urlaubskonto = urlaubskonto
         arbeitszeitkonto.user = user
+        arbeitszeitkonto.arbeitsleistung = arbeitsleistung
+        arbeitszeitkonto.gleitzeit = gleitzeit
 
         with ArbeitszeitkontoMapper() as mapper:
             return mapper.insert(arbeitszeitkonto)
@@ -334,6 +332,11 @@ class Administration(object):
         """Den Benutzer mit der gegebenen ID auslesen."""
         with ArbeitszeitkontoMapper() as mapper:
             return mapper.find_by_key(user)
+
+    def get_arbeitszeitkonto_by_userID(self, userID):
+        """Den Ereignisbuchung Eintrag mit der gegebenen ID auslesen."""
+        with ArbeitszeitkontoMapper() as mapper:
+            return mapper.find_arbeitszeitkonto_by_userID(userID)
 
     def update_arbeitszeitkonto(self, arbeitszeitkonto):
         with ArbeitszeitkontoMapper() as mapper:
@@ -344,6 +347,30 @@ class Administration(object):
             return mapper.delete(arbeitszeitkonto)
 
 
+    """
+    Membership-spezifische Methoden
+    """
+    def create_membership(self, user, project, projektleiter):
+        membership = Membership
+        membership.timestamp = datetime.now()
+        membership.user = user
+        membership.project = project
+        membership.projektleiter = projektleiter
+
+        with MembershipMapper() as mapper:
+            return mapper.insert(membership)
+
+    def get_membership_by_id(self, id):
+        with MembershipMapper() as mapper:
+            return mapper.find_by_key(id)
+    
+    def update_membership(self, membership):
+        with MembershipMapper() as mapper:
+            return mapper.update(membership)
+    
+    def delete_membership(self, membership):
+        with MembershipMapper() as mapper:
+            return mapper.delete(membership)
 
     """
     Ereignis-spezifische Methoden
@@ -372,3 +399,15 @@ class Administration(object):
             return mapper.delete(ereignis)
 
 
+    def get_membership_by_project(self, project):
+        with MembershipMapper() as mapper:
+            return mapper.find_by_project(project)
+    
+    def get_membership_by_user_and_project(self, user, project):
+        with MembershipMapper() as mapper:
+            return mapper.find_by_user_and_project(user, project)
+    
+    def get_membership_by_user(self, user):
+        with MembershipMapper() as mapper:
+            return mapper.find_by_user(user)
+       
