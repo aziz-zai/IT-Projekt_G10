@@ -1,6 +1,7 @@
 from server.bo.EreignisBO import Ereignis
 from server.bo.MembershipBO import Membership
 from server.db.MembershipMapper import MembershipMapper
+
 from .bo.EreignisbuchungBo import Ereignisbuchung
 from .bo.UserBO import User
 from .db.AktivitätenMapper import AktivitätenMapper
@@ -28,6 +29,8 @@ from .db.PauseMapper import PauseMapper
 
 from .bo.ZeitintervallbuchungBO import Zeitintervallbuchung
 from .db.ZeitintervallbuchungMapper import ZeitintervallbuchungMapper
+from.bo.AbwesenheitBO import Abwesenheit
+from .db.AbwesenheitMapper import AbwesenheitMapper
 
 class Administration(object):
 
@@ -410,3 +413,32 @@ class Administration(object):
     def delete_ereignis(self, ereignis):
         with EreignisMapper() as mapper:
             return mapper.delete(ereignis)
+
+
+    def create_abwesenheit (self, start, ende, abwesenheitsart):
+        abwesenheit = Abwesenheit
+        abwesenheit.start=start
+        abwesenheit.ende=ende
+        abwesenheit.abwesenheitsart=abwesenheitsart
+        abwesenheit.timestamp = datetime.now()
+
+        with AbwesenheitMapper() as mapper:             
+            return mapper.insert(abwesenheit)
+
+    def get_all_abwesenheit(self):
+        """Alle Abwesenheiten auslesen"""
+        with AbwesenheitMapper() as mapper:
+            return mapper.find_all()
+
+    def get_abwesenheit_by_id(self, id):
+        """Den Benutzer mit der gegebenen ID auslesen."""
+        with AbwesenheitMapper() as mapper:
+            return mapper.find_by_key(id)
+
+    def update_abwesenheit(self, abwesenheit):
+        with AbwesenheitMapper() as mapper:
+            return mapper.update(abwesenheit)
+
+    def delete_abwesenheit(self, abwesenheit):
+        with AbwesenheitMapper() as mapper:
+            return mapper.delete(abwesenheit)
