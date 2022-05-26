@@ -31,6 +31,7 @@ from SecurityDecorator import secured
 from datetime import datetime
 
 from server.bo.ZeitintervallbuchungBO import Zeitintervallbuchung
+from server.bo.AbwesenheitBO import Abwesenheit
 """
 Instanzieren von Flask. Am Ende dieser Datei erfolgt dann erst der 'Start' von Flask.
 """
@@ -147,20 +148,24 @@ kommen = api.inherit('Kommen', bo, {
 })
 
 abwesenheit = api.inherit('Abwesenheit', bo, {
-    'abwesenheitsart': fields.String(attribute='abwesenheit', description='abwesenheit eines Benutzers'),
-    'zeitintervallID': fields.String(attribute='zeitintervallID', description='ZeitintervallID eines Benutzers'),
-    'bemerkung': fields.String(attribute='bemerkung', description='bemerkung eines Benutzers'),
+    'abwesenheitsart': fields.String(attribute='abwesenheitsart', description='abwesenheit eines Benutzers'),
+    'start': fields.Integer(attribute='start', description='ZeitintervallID eines Benutzers'),
+    'ende': fields.Integer(attribute='ende', description='bemerkung eines Benutzers'),
 })
 
 zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
+    'erstellt_von': fields.Integer(attribute='erstellt_von', description='abwesenheit eines Benutzers'),
+    'erstellt_für': fields.Integer(attribute='erstellt_für', description='abwesenheit eines Benutzers'),
+    'ist_buchung': fields.Boolean(attribute='ist_buchung', description='abwesenheit eines Benutzers'),
     'zeitintervall': fields.Integer(attribute='zeitintervall', description='abwesenheit eines Benutzers'),
-    'zeitintervall': fields.String(attribute='zeitdifferenz', description='abwesenheit eines Benutzers'),
-})
+    'zeitdifferenz': fields.String(attribute='zeitdifferenz', description='abwesenheit eines Benutzers'),
+    })
 
 ereignis = api.inherit('Ereignis', bo, {
     'zeitpunkt': fields.String(attribute = 'zeitpunkt', description = 'zeitpunkt eines Ereignisses'),
     'bezeichnung': fields.String(attribute = 'bezeichnung', description = 'bezeichnung eines Ereignis-Eintrags'),
 })
+
 @projectone.route('/membership')
 @projectone.response(500, 'Falls es zu einem Server-seitigem Fehler kommt.')
 class MembershipOperations(Resource):
@@ -227,8 +232,7 @@ class MembershipByIDOperations(Resource):
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByProjectOperations(Resource):
-    @projectone.marshal_with(membership)
-
+    @projectone.marshal_with(project)
     def get(self, project):
         """Auslesen eines bestimmten Membership-Objekts nach Projektid
 
@@ -257,8 +261,7 @@ class MembershipByUserAndProject(Resource):
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByUserOperations(Resource):
-    @projectone.marshal_with(membership)
-
+    @projectone.marshal_with(project)
     def get(self, user):
         adm = Administration()
         mu = adm.get_membership_by_user(user)
@@ -615,7 +618,6 @@ class AktivitätenProktleiterOperations(Resource):
             Siehe Hinweise oben.
             """
         if member.projektleiter == True:
-            ak.id = id
             adm.update_aktivitäten(ak)
             return ak, 200
         else:
@@ -676,6 +678,7 @@ class UserListOperations(Resource):
 @projectone.param('id', 'Die ID des User-Objekts')
 class UserOperations(Resource):
     @projectone.marshal_with(user)
+    @secured
     def get(self, id):
         """Auslesen eines bestimmten Customer-Objekts.
 
@@ -880,12 +883,12 @@ class EreignisbuchungenOperations(Resource):
 
 
 
-@projectone.route('/gehen')
+@projectone.route('/gehen/<int:projektarbeitid>/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class GehenListOperations(Resource):
 
     @projectone.marshal_with(gehen, code=200)
-    def post(self):
+    def post(self, projektarbeitid, user):
         """Anlegen eines neuen Gehen-Objekts.
 
         **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
@@ -905,12 +908,16 @@ class GehenListOperations(Resource):
             wird auch dem Client zurückgegeben. 
             """
             g = adm.create_gehen(proposal.zeitpunkt, proposal.bezeichnung)
+            projektarbeit=adm.get_projektarbeit_by_id(projektarbeitid)
+            projektarbeit.ende = g.id
+            proarb=adm.update_projektarbeit(projektarbeit)
+            adm.create_zeitintervallbuchung(proarb.id, True, user, user)
             return g, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
-@projectone.route('/gehen/<int:id>')
+@projectone.route('/gehen/<int:id>/<int:projektarbeit>/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Gehen-Objekts')
 class GehenOperations(Resource):
@@ -989,6 +996,7 @@ class KommenListOperations(Resource):
             """
 
             k = adm.create_kommen(proposal.zeitpunkt, proposal.bezeichnung)
+            adm.create_projektarbeit(bezeichnung="Projektarbeit", beschreibung="", start=k.id, ende=0, activity=0)
             return k, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -1067,7 +1075,7 @@ class ZeitintervallbuchungListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            a = adm.create_abwesenheit (proposal.zeitintervall, proposal.ist_buchung, proposal.erstellt_von, proposal.erstellt_für)
+            a = adm.create_zeitintervallbuchung (proposal.zeitintervall, proposal.ist_buchung, proposal.erstellt_von, proposal.erstellt_für)
             return a, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -1164,8 +1172,6 @@ class EreignisOperations(Resource):
         """
         adm = Administration()
         eri = Ereignis(**api.payload)
-    
-
 
         if eri is not None:
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
@@ -1176,17 +1182,93 @@ class EreignisOperations(Resource):
             return '', 200
         else:
             return '', 500
-
+    
     @projectone.marshal_with(ereignis)
     def delete(self, id):
         """Löschen eines bestimmten Ereignis-Objekts.
-
-        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt."""
+        
         adm = Administration()
 
         erid = adm.get_ereignis_by_id(id)
         adm.delete_ereignis(erid)
+        return '', 200
+
+@projectone.route('/abwesenheit')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class AbwesenheitListOperations(Resource):
+
+    @projectone.marshal_with(abwesenheit, code=200)
+    @projectone.expect(abwesenheit)  # Wir erwarten ein User-Objekt von Client-Seite.
+    def post(self):
+        """Anlegen eines neuen Zeitintervallbuchung-Objekts.
+        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
+        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
+        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
+        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
+        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
+        """
+        adm = Administration()
+
+        proposal = Abwesenheit (**api.payload)
+
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+        if proposal is not None:
+            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
+            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben. 
+            """
+            a = adm.create_abwesenheit(proposal.start, proposal.ende, proposal.abwesenheitsart)
+            return a, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+
+
+@projectone.route('/abwesenheit/<int:id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des User-Objekts')
+class AbwesenheitOperations(Resource):
+    @projectone.marshal_with(abwesenheit)
+
+    def get(self, id):
+        """Auslesen eines bestimmten Abwesenheit-Objekts.
+
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        abwesenheit = adm.get_abwesenheit_by_id(id)
+        return abwesenheit
+
+    @projectone.marshal_with(abwesenheit)
+    def put(self, id):
+        """Update eines bestimmten Abwesenheit-Objekts.
+
+        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
+        Customer-Objekts.
+        """
+        adm = Administration()
+        ab = Abwesenheit(**api.payload)
+
+
+        if ab is not None:
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
+            Siehe Hinweise oben.
+            """
+            ab.id = id
+            adm.update_abwesenheit(ab)
+            return '', 200
+        else:
+            return '', 500
+
+    @projectone.marshal_with(abwesenheit)
+    def delete(self, id):
+        """Löschen eines bestimmten Abwesenheit-Objekts."""
+        adm = Administration()
+
+        abtd = adm.get_abwesenheit_by_id(id)
+        adm.delete_abwesenheit(abtd)
         return '', 200
 
 
