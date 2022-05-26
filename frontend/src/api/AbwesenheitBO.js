@@ -1,4 +1,4 @@
-import Zeitintervall from './Zeitintervall'
+import Zeitintervall from './ZeitintervallBO'
 
 export default class AbwesenheitBO extends Zeitintervall {
 

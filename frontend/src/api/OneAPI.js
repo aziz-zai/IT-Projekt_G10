@@ -463,7 +463,7 @@ export default class OneAPI {
         resolve(responseZeitintervallbuchungBO);
       })
     })
-  }j
+  }
 
   deleteZeitintervallbuchung(id) {
     return this.#fetchAdvanced(this.#deleteZeitintervallbuchungURL(id), {
