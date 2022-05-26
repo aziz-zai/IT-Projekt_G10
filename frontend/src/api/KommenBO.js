@@ -1,4 +1,4 @@
-import KommenBO from './KommenBO';
+import EreignisBO from './EreignisBO';
 
 /**
  * Represents a Kommen Ereignis

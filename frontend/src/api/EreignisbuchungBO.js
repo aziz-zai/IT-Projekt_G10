@@ -68,7 +68,7 @@ export default class EreignisbuchungBO extends BuchungBO {
     } else {
       // Es handelt sich offenbar um ein singuläres Objekt
       let er = ereignisbuchung;
-      Object.setPrototypeOf(e, EreignisbuchungBO.prototype);
+      Object.setPrototypeOf(er, EreignisbuchungBO.prototype);
       result.push(er);
     }
 
