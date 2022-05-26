@@ -703,7 +703,7 @@ export default class OneAPI {
   }
 
   getAktivitätenById(id) {
-    return this.#fetchAdvanced(this.#getAktivitätenURL(id)).then((responseJSON) => {
+    return this.#fetchAdvanced(this.#getAktivitätenByIdURL(id)).then((responseJSON) => {
       let aktivitätenBOs = AktivitätenBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {
@@ -713,7 +713,7 @@ export default class OneAPI {
   }
 
   getAktivitätenByProjectId(project_id) {
-    return this.#fetchAdvanced(this.#getAktivitätenURL(project_id)).then((responseJSON) => {
+    return this.#fetchAdvanced(this.#getAktivitätenByProjectIdURL(project_id)).then((responseJSON) => {
       let aktivitätenBOs = AktivitätenBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {
