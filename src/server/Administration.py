@@ -1,5 +1,7 @@
+from server.bo.EreignisBO import Ereignis
 from server.bo.MembershipBO import Membership
 from server.db.MembershipMapper import MembershipMapper
+
 from .bo.EreignisbuchungBo import Ereignisbuchung
 from .bo.UserBO import User
 from .db.AktivitätenMapper import AktivitätenMapper
@@ -17,8 +19,8 @@ from .db.GehenMapper import GehenMapper
 from .bo.KommenBO import Kommen
 from .db.KommenMapper import KommenMapper
 from .db.EreignisbuchungMapper import EreignisbuchungMapper
-from .db.MembershipMapper import MembershipMapper
-from .bo.MembershipBO import Membership
+from .db.EreignisMapper import EreignisMapper
+
 
 from .bo.ProjektarbeitBO import Projektarbeit
 from .db.ProjektarbeitMapper import ProjektarbeitMapper
@@ -27,6 +29,8 @@ from .db.PauseMapper import PauseMapper
 
 from .bo.ZeitintervallbuchungBO import Zeitintervallbuchung
 from .db.ZeitintervallbuchungMapper import ZeitintervallbuchungMapper
+from.bo.AbwesenheitBO import Abwesenheit
+from .db.AbwesenheitMapper import AbwesenheitMapper
 
 class Administration(object):
 
@@ -104,11 +108,12 @@ class Administration(object):
     """
     Gehen-spezifische Methoden
     """ 
-    def create_gehen(self,zeitpunkt):
+    def create_gehen(self,zeitpunkt, bezeichnung):
         """Gehen Eintrag anlegen"""
         gehen = Gehen
         gehen.timestamp = datetime.now()
         gehen.zeitpunkt = zeitpunkt
+        gehen.bezeichnung = bezeichnung
 
         with GehenMapper() as mapper:
             return mapper.insert(gehen)
@@ -130,11 +135,13 @@ class Administration(object):
     """
     Kommen-spezifische Methoden
     """ 
-    def create_kommen(self, zeitpunkt):
+    def create_kommen(self, zeitpunkt, bezeichnung):
         """Kommen Eintrag anlegen"""
         kommen = Kommen
         kommen.timestamp = datetime.now()
         kommen.zeitpunkt = zeitpunkt
+        kommen.bezeichnung = bezeichnung
+        
 
         with KommenMapper() as mapper:
             return mapper.insert(kommen)
@@ -156,13 +163,14 @@ class Administration(object):
     """
     Ereignisbuchung-spezifische Methoden
     """ 
-    def create_ereignisbuchung(self, arbeitszeitkonto, ereignis):
+    def create_ereignisbuchung(self, erstellt_von, erstellt_für, ist_buchung, ereignis):
         """Ereignisbuchung anlegen"""
-        ereignisbuchung = Ereignisbuchung
-        ereignisbuchung.id = id
-        ereignisbuchung.timestamp = datetime.now()
-        ereignisbuchung.ereignis = ereignis
-        ereignisbuchung.arbeitszeitkonto = arbeitszeitkonto
+        ereignisbuchung = Ereignisbuchung(
+        timestamp = datetime.now(),
+        erstellt_von = erstellt_von,
+        erstellt_für = erstellt_für,
+        ist_buchung = ist_buchung,
+        ereignis = ereignis)
 
         with EreignisbuchungMapper() as mapper:
             return mapper.insert(ereignisbuchung)
@@ -183,16 +191,15 @@ class Administration(object):
 
     """Projektarbeit-spezifische Methoden"""
 
-    def create_projektarbeit(self, start, ende, bezeichnung, activity):
+    def create_projektarbeit(self, bezeichnung, beschreibung, start, ende, activity):
         """Einen Benutzer anlegen"""
-        kommen = Administration.get_kommen_by_id(self, start)
-        gehen = Administration.get_gehen_by_id(self, ende)
 
         projektarbeit = Projektarbeit
         projektarbeit.timestamp = datetime.now()
+        projektarbeit.bezeichnung = bezeichnung
+        projektarbeit.beschreibung = beschreibung
         projektarbeit.start = start
         projektarbeit.ende = ende
-        projektarbeit.bezeichnung = bezeichnung
         projektarbeit.activity = activity
         
         with ProjektarbeitMapper() as mapper:
@@ -203,17 +210,12 @@ class Administration(object):
         with ProjektarbeitMapper() as mapper:
             return mapper.find_by_key(id)
 
+    def get_projektarbeit_by_activity_id(self, activity):
+        """Die Projektarbeit anhand der Aktivitäten ID auslesen"""
+        with ProjektarbeitMapper() as mapper:
+            return mapper.find_by_activity_id(activity)
+
     def update_projektarbeit(self, projektarbeit: Projektarbeit):
-        kommen = Administration.get_kommen_by_id(self, projektarbeit.start)
-        gehen = Administration.get_gehen_by_id(self, projektarbeit.ende)
-        zeitdifferenz = datetime.strptime(gehen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
-        zeitdiff_sec = zeitdifferenz.total_seconds()
-        offset_days = zeitdiff_sec / 86400.0    
-        offset_hours = (offset_days % 1) * 24
-        offset_minutes = (offset_hours % 1) * 60
-        offset = "{:02d}:{:02d}:{:02d}".format(int(offset_days),int(offset_hours), int(offset_minutes))
-        projektarbeit.zeitdifferenz = offset
-        projektarbeit.timestamp = datetime.now()
         with ProjektarbeitMapper() as mapper:
             return mapper.update(projektarbeit)
 
@@ -224,23 +226,13 @@ class Administration(object):
 
     """Pause-spezifische Methoden"""
 
-    def create_pause(self, start, ende):
+    def create_pause(self, bezeichnung, start, ende):
         """Einen Benutzer anlegen"""
-        kommen = Administration.get_kommen_by_id(self, start)
-        gehen = Administration.get_gehen_by_id(self, ende)
-
         pause = Pause
         pause.timestamp = datetime.now()
+        pause.bezeichnung = bezeichnung
         pause.start = start
         pause.ende = ende
-
-        zeitdifferenz = datetime.strptime(gehen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
-        zeitdiff_sec = zeitdifferenz.total_seconds()
-        offset_days = zeitdiff_sec / 86400.0    
-        offset_hours = (offset_days % 1) * 24
-        offset_minutes = (offset_hours % 1) * 60
-        offset = "{:02d}:{:02d}:{:02d}".format(int(offset_days),int(offset_hours), int(offset_minutes))
-        pause.zeitdifferenz = offset
 
         with PauseMapper() as mapper:
             return mapper.insert(pause)
@@ -250,7 +242,7 @@ class Administration(object):
         with PauseMapper() as mapper:
             return mapper.find_by_key(id)
 
-    def update_pause(self, pause):
+    def update_pause(self, pause: Pause):
         with PauseMapper() as mapper:
             return mapper.update(pause)
 
@@ -258,14 +250,19 @@ class Administration(object):
         with PauseMapper() as mapper:
             return mapper.delete(pause)
 
-    def create_zeitintervallbuchung(self, zeitintervall, arbeitszeitkonto):
+#Zeitintervall Administration
+
+    def create_zeitintervallbuchung(self, zeitintervall, ist_buchung, erstellt_von, erstellt_für):
         zeitintervallbuchung = Zeitintervallbuchung
         zeitintervallbuchung.timestamp = datetime.now()
-        zeitintervallbuchung.zeitintervall = zeitintervall.id
-        zeitintervallbuchung.arbeitszeitkonto = arbeitszeitkonto
-
-        kommen = Administration.get_kommen_by_id(self, zeitintervall.start)
-        gehen = Administration.get_gehen_by_id(self, zeitintervall.ende)
+        zeitintervallbuchung.zeitintervall = zeitintervall
+        zeitintervallbuchung.ist_buchung = ist_buchung
+        zeitintervallbuchung.erstellt_von = erstellt_von
+        zeitintervallbuchung.erstellt_für = erstellt_für
+        adm = Administration()
+        zeitinter = adm.get_projektarbeit_by_id(zeitintervall)
+        kommen = adm.get_kommen_by_id(zeitinter.start)
+        gehen = adm.get_gehen_by_id( zeitinter.ende)
 
         zeitdifferenz = datetime.strptime(gehen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
         zeitdiff_sec = zeitdifferenz.total_seconds()
@@ -377,7 +374,7 @@ class Administration(object):
     def delete_membership(self, membership):
         with MembershipMapper() as mapper:
             return mapper.delete(membership)
-
+    
     def get_membership_by_project(self, project):
         with MembershipMapper() as mapper:
             return mapper.find_by_project(project)
@@ -390,3 +387,58 @@ class Administration(object):
         with MembershipMapper() as mapper:
             return mapper.find_by_user(user)
        
+
+    """
+    Ereignis-spezifische Methoden
+    """ 
+    def create_ereignis(self, zeitpunkt, bezeichnung):
+        """Ereignis anlegen"""
+        ereignis = Ereignis
+        ereignis.timestamp = datetime.now()
+        ereignis.zeitpunkt = zeitpunkt
+        ereignis.bezeichnung = bezeichnung
+
+        with EreignisMapper() as mapper:
+            return mapper.insert(ereignis)
+
+    def get_ereignis_by_id(self, id):
+        """Den Ereignis Eintrag mit der gegebenen ID auslesen."""
+        with EreignisMapper() as mapper:
+            return mapper.find_by_key(id)
+
+    def update_ereignis(self, ereignis):
+        with EreignisMapper() as mapper:
+            return mapper.update(ereignis)
+
+    def delete_ereignis(self, ereignis):
+        with EreignisMapper() as mapper:
+            return mapper.delete(ereignis)
+
+
+    def create_abwesenheit (self, start, ende, abwesenheitsart):
+        abwesenheit = Abwesenheit
+        abwesenheit.start=start
+        abwesenheit.ende=ende
+        abwesenheit.abwesenheitsart=abwesenheitsart
+        abwesenheit.timestamp = datetime.now()
+
+        with AbwesenheitMapper() as mapper:             
+            return mapper.insert(abwesenheit)
+
+    def get_all_abwesenheit(self):
+        """Alle Abwesenheiten auslesen"""
+        with AbwesenheitMapper() as mapper:
+            return mapper.find_all()
+
+    def get_abwesenheit_by_id(self, id):
+        """Den Benutzer mit der gegebenen ID auslesen."""
+        with AbwesenheitMapper() as mapper:
+            return mapper.find_by_key(id)
+
+    def update_abwesenheit(self, abwesenheit):
+        with AbwesenheitMapper() as mapper:
+            return mapper.update(abwesenheit)
+
+    def delete_abwesenheit(self, abwesenheit):
+        with AbwesenheitMapper() as mapper:
+            return mapper.delete(abwesenheit)

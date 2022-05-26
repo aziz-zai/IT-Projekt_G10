@@ -5,6 +5,14 @@ import ProjektarbeitBO from './ProjektarbeitBO';
 import ZeitintervallbuchungBO from './ZeitintervallbuchungBO';
 import GehenBO from './GehenBO';
 
+import EreignisBO from './EreignisBO';
+import KommenBO from './KommenBO';
+import EreignisbuchungBO from './EreignisbuchungBO';
+
+import AbwesenheitBO from './AbwesenheitBO';
+import AktivitätenBO from './AktivitätenBO';
+
+
 
 /**
  * Abstracts the REST interface of the Python backend with convenient access methods.
@@ -19,7 +27,7 @@ export default class OneAPI {
 
 
   // Local Python backend
-  #OneServerBaseURL = 'http://localhost:5000/projectone';
+  #OneServerBaseURL = '/projectone';
 
   // User related
   #getUserGidURL = (id) => `${this.#OneServerBaseURL}/users-by-gid/${id}`;
@@ -35,12 +43,24 @@ export default class OneAPI {
   #addMembershipURL = () => `${this.#OneServerBaseURL}/membership/`;
   #getMembershipURL = (id) => `${this.#OneServerBaseURL}/membership/${id}`;
   #getMembershipByProjectURL = (id) => `${this.#OneServerBaseURL}/membership/projects/${id}`;
-  #getMembershipByUserURL = (id) => `${this.#OneServerBaseURL}/membership/projects/user/${id}`;
-  #getMembershipByUserAndProjectURL = (id) => `${this.#OneServerBaseURL}/membership/projects/user/project/${id}`;
+  #getMembershipByUserURL = (id) => `${this.#OneServerBaseURL}/membership-by-user/${id}`;
+  #getMembershipByUserAndProjectURL = (id) => `${this.#OneServerBaseURL}/membership-by-project/${id}`;
   #updateMembershipURL = (id) => `${this.#OneServerBaseURL}/membership/${id}`;
   #deleteMembershipURL = (id) => `${this.#OneServerBaseURL}/membership/${id}`;
 
+  //Abwesenheit related
+  #getAbwesenheitURL = (id) => `${this.#OneServerBaseURL}/abwesenheit/${id}`;
+  #addAbwesenheitURL = () => `${this.#OneServerBaseURL}/abwesenheit/`;
+  #updateAbwesenheitURL = (id) => `${this.#OneServerBaseURL}/abwesenheit/${id}`;
+  #deleteAbwesenheitURL = (id) => `${this.#OneServerBaseURL}/abwesenheit/${id}`;
+
   //Aktivitäten related
+  #getAktivitätenByIdURL = (id) => `${this.#OneServerBaseURL}/aktivitäten-by-id/${id}`;
+  #getAktivitätenByProjectIdURL = (project_id) => `${this.#OneServerBaseURL}/aktivitäten-by-project/${project_id}`;
+  #addAktivitätenURL = (project_id, member) => `${this.#OneServerBaseURL}/aktivitäten-by-secured-project/${project_id}/${member}`;
+  #updateAktivitätenURL = (project_id, member) => `${this.#OneServerBaseURL}/aktivitäten-by-secured-project/${project_id}/${member}`;
+  #deleteAktivitätenURL = (project_id, member) => `${this.#OneServerBaseURL}/aktivitäten-by-secured-project/${project_id}/${member}`;
+
 
   //Arbeitszeitkonto related
 
@@ -57,10 +77,26 @@ export default class OneAPI {
   #deleteZeitintervallbuchungURL = (id) => `${this.#OneServerBaseURL}/zeitintervallbuchung/${id}`;
 
   //Ereignisbuchung related
+  #addEreignisbuchungURL = () => `${this.#OneServerBaseURL}/ereignisbuchung/`;
+  #getEreignisbuchungURL = (id) => `${this.#OneServerBaseURL}/ereignisbuchung/${id}`;
+  #updateEreignisbuchungURL = (id) => `${this.#OneServerBaseURL}/ereignisbuchung/${id}`;
+  #deleteEreignisbuchungURL = (id) => `${this.#OneServerBaseURL}/ereignisbuchung/${id}`;
+
 
   //Ereignis related
+  #addEreignisURL = () => `${this.#OneServerBaseURL}/ereignis/`;
+  #getEreignisURL = (id) => `${this.#OneServerBaseURL}/ereignis/${id}`;
+  #updateEreignisURL = (id) => `${this.#OneServerBaseURL}/ereignis/${id}`;
+  #deleteEreignisURL = (id) => `${this.#OneServerBaseURL}/ereignis/${id}`;
+  
+
 
   //Kommen related
+  #addKommenURL = () => `${this.#OneServerBaseURL}/kommen/`;
+  #getKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
+  #updateKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
+  #deleteKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
+
 
   //Gehen related
   #getGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
@@ -211,10 +247,10 @@ export default class OneAPI {
 
   getMembershipByUser(user) {
     return this.#fetchAdvanced(this.#getMembershipByUserURL(user)).then((responseJSON) => {
-      let membershipBOs = ProjectBO.fromJSON(responseJSON);
+      let projectBOs = ProjectBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {
-        resolve(membershipBOs);
+        resolve(projectBOs);
       })
     })
   }
@@ -283,15 +319,43 @@ export default class OneAPI {
     })
   }
 
+
+  getAbwesenheit(id) {
+      return this.#fetchAdvanced(this.#getAbwesenheitURL(id)).then((responseJSON) => {
+        let abwesenheitBOs = AktivitätenBO.fromJSON(responseJSON);
+        // console.info(customerBOs);
+        return new Promise(function (resolve) {
+          resolve(abwesenheitBOs);
+        })
+      })
+    }
+
+  addAbwesenheit(abwesenheitBO) {
+    return this.#fetchAdvanced(this.#addAbwesenheitURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },body: JSON.stringify(abwesenheitBO)
+    }).then((responseJSON) => {
+      // We always get an array of ProjectBOs.fromJSON, but only need one object
+      let responseAbwesenheitBO = AbwesenheitBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseAbwesenheitBO);
+        })
+    })
+  }
   getProjektarbeit(id) {
     return this.#fetchAdvanced(this.#getProjektarbeitURL(id)).then((responseJSON) => {
       let projektarbeitenBOs = ProjektarbeitBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {
-        resolve(projectsBOs);
+        resolve(projektarbeitenBOs);
       })
     })
   }
+
 
   addProjektarbeit(projektarbeitBO) {
     return this.#fetchAdvanced(this.#addProjektarbeitURL(), {
@@ -332,7 +396,7 @@ export default class OneAPI {
         resolve(responseProjektarbeitBO);
       })
     })
-  }j
+  }
 
   deleteProjektarbeit(id) {
     return this.#fetchAdvanced(this.#deleteProjektarbeitURL(id), {
@@ -380,7 +444,9 @@ export default class OneAPI {
      * 
      * @param {ProjectBO} projectBO to be updated
      * @public
-     */
+     */  
+
+
   updateZeitintervallbuchung(zeitintervallbuchungBO) {
     return this.#fetchAdvanced(this.#updateZeitintervallbuchungURL(zeitinterballbuchungBO.getID()), {
       method: 'PUT',
@@ -413,6 +479,65 @@ export default class OneAPI {
   }
 
 
+    addEreignis(ereignisBO) {
+      return this.#fetchAdvanced(this.#addEreignisURL(), {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json, text/plain',
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(ereignisBO)
+      }).then((responseJSON) => {
+        // We always get an array of EreignisBOs.fromJSON, but only need one object
+        let responseEreignisBO = EreignisBO.fromJSON(responseJSON)[0];
+        // 
+        return new Promise(function (resolve) {
+          resolve(responseEreignisBO);
+          })
+      })
+    }
+      
+  
+  
+    getEreignis(id) {
+      return this.#fetchAdvanced(this.#getEreignisURL(id)).then((responseJSON) => {
+        let ereignisBOs = EreignisBO.fromJSON(responseJSON);
+        return new Promise(function (resolve) {
+          resolve(ereignisBOs);
+        })
+      })
+    }
+  
+  updateEreignis(ereignisBO) {
+    return this.#fetchAdvanced(this.#updateEreignisURL(ereignisBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(ereignisBO)
+    }).then((responseJSON) => {
+      // We always get an array of EreignisBOs.fromJSON
+      let responseEreignisBO = EreignisBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseEreignisBO);
+      })
+    })
+  }
+
+  deleteEreignis(id) {
+    return this.#fetchAdvanced(this.#deleteEreignisURL(id), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of EreignisBOs.fromJSON
+      let responseEreignisBO = EreignisBO.fromJSON(responseJSON)[0];
+      return new Promise(function (resolve) {
+        resolve(responseEreignisBO);
+      })
+    })
+  }
+
   getGehen(id) {
     return this.#fetchAdvanced(this.#getGehenURL(id)).then((responseJSON) => {
       let gehenBOs = GehenBO.fromJSON(responseJSON);
@@ -422,6 +547,7 @@ export default class OneAPI {
       })
     })
   }
+
 
   addGehen(gehenBO) {
     return this.#fetchAdvanced(this.#addGehenURL(), {
@@ -462,7 +588,7 @@ export default class OneAPI {
         resolve(responseGehenBO);
       })
     })
-  }j
+  }
 
   deleteGehen(id) {
     return this.#fetchAdvanced(this.#deleteGehenURL(id), {
@@ -478,10 +604,236 @@ export default class OneAPI {
   }
 
 
+  addKommen(kommenBO) {
+    return this.#fetchAdvanced(this.#addKommenURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(kommenBO)
+    }).then((responseJSON) => {
+      // We always get an array of EreignisBOs.fromJSON, but only need one object
+      let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseKommenBO);
+        })
+    })
+  }
 
 
+  getKommen(id) {
+    return this.#fetchAdvanced(this.#getKommenURL(id)).then((responseJSON) => {
+      let kommenBOs = KommenBO.fromJSON(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(kommenBOs);
+      })
+    })
+  }
 
 
+  updateKommen(kommenBO) {
+    return this.#fetchAdvanced(this.#updateKommenURL(kommenBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(kommenBO)
+    }).then((responseJSON) => {
+      // We always get an array of EreignisBOs.fromJSON
+      let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseKommenBO);
+      })
+    })
+  }
+
+  deleteKommen(id) {
+    return this.#fetchAdvanced(this.#deleteKommenURL(id), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of EreignisBOs.fromJSON
+      let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
+      return new Promise(function (resolve) {
+        resolve(responseKommenBO);
+      })
+    })
+  }
+
+   /**
+     * Updates a customer and returns a Promise, which resolves to a CustomerBO.
+     * 
+     * @param {AbwesenheitBO} abwesenheitBO to be updated
+     * @public
+     */
 
 
+  updateAbwesenheit(abwesenheitBO) {
+    return this.#fetchAdvanced(this.#updateAbwesenheitURL(abwesenheitBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(abwesenheitBO)
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseAbwesenheitBO = AbwesenheitBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseAbwesenheitBO);
+      })
+    })
+  }
+
+  deleteAbwesenheit(id) {
+    return this.#fetchAdvanced(this.#deleteAbwesenheitURL(id), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseAbwesenheitBO = AbwesenheitBO.fromJSON(responseJSON)[0];
+      // console.info(accountBOs);
+      return new Promise(function (resolve) {
+        resolve(responseAbwesenheitBO);
+      })
+    })
+  }
+
+  getAktivitätenById(id) {
+    return this.#fetchAdvanced(this.#getAktivitätenURL(id)).then((responseJSON) => {
+      let aktivitätenBOs = AktivitätenBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(aktivitätenBOs);
+      })
+    })
+  }
+
+  getAktivitätenByProjectId(project_id) {
+    return this.#fetchAdvanced(this.#getAktivitätenURL(project_id)).then((responseJSON) => {
+      let aktivitätenBOs = AktivitätenBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(aktivitätenBOs);
+      })
+    })
+  }
+
+  addAktivitäten(project_id, member) {
+    return this.#fetchAdvanced(this.#addAktivitätenURL(project_id, member), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(project_id, member)
+    }).then((responseJSON) => {
+      // We always get an array of ProjectBOs.fromJSON, but only need one object
+      let responseAktivitätenBO = AktivitätenBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseAktivitätenBO);
+        })
+    })
+  }
+
+   /**
+     * Updates a customer and returns a Promise, which resolves to a CustomerBO.
+     * 
+     * @param {AktivitätenBO} aktivitätenBO to be updated
+     * @public
+     */
+
+  updateAktivitäten(project_id, member) {
+    return this.#fetchAdvanced(this.#updateAktivitätenURL(project_id, member), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(project_id, member)
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseAktivitätenBO = AktivitätenBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseAktivitätenBO);
+      })
+    })
+  }
+
+  deleteAktivitäten(project_id, member) {
+    return this.#fetchAdvanced(this.#deleteAktivitätenURL(project_id, member), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseAktivitätenBO = AktivitätenBO.fromJSON(responseJSON)[0];
+      // console.info(accountBOs);
+      return new Promise(function (resolve) {
+        resolve(responseAktivitätenBO);
+      })
+    })
+  }
+
+  addEreignisbuchung(ereignisbuchungBO) {
+    return this.#fetchAdvanced(this.#addEreignisbuchungURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(ereignisbuchungBO)
+    }).then((responseJSON) => {
+      // We always get an array of EreignisbuchungBOs.fromJSON, but only need one object
+      let responseEreignisbuchungBO = EreignisbuchungBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseEreignisbuchungBO);
+        })
+    })
+  }
+
+
+  getEreignisbuchung(id) {
+    return this.#fetchAdvanced(this.#getEreignisbuchungURL(id)).then((responseJSON) => {
+      let ereignisbuchungBOs = EreignisbuchungBO.fromJSON(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(ereignisbuchungBOs);
+      })
+    })
+  }
+
+
+  updateEreignisbuchung(ereignisbuchungBO) {
+    return this.#fetchAdvanced(this.#updateEreignisbuchungURL(ereignisbuchungBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(ereignisbuchungBO)
+    }).then((responseJSON) => {
+      // We always get an array of EreignisbuchungBOs.fromJSON
+      let responseEreignisbuchungBO = EreignisbuchungBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseEreignisbuchungBO);
+      })
+    })
+  }
+
+  deleteEreignisbuchung(id) {
+    return this.#fetchAdvanced(this.#deleteEreignisbuchungURL(id), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of EreignisbuchungBOs.fromJSON
+      let responseEreignisbuchungBO = EreignisbuchungBO.fromJSON(responseJSON)[0];
+      return new Promise(function (resolve) {
+        resolve(responseEreignisbuchungBO);
+      })
+    })
+  }
 }

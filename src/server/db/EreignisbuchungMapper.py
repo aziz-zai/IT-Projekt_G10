@@ -16,17 +16,21 @@ class EreignisbuchungMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, arbeitszeitkonto, ereignis FROM ereignisbuchung WHERE id={}".format(key)
+        command = "SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis FROM ereignisbuchung WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, arbeitszeitkonto, ereignis) = tuples[0]
+            (id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis) = tuples[0]
             ereignisbuchung = Ereignisbuchung(
+
             id = id,
             timestamp = timestamp,
-            arbeitszeitkonto = arbeitszeitkonto,
-            ereignis=ereignis)
+            erstellt_von = erstellt_von,
+            erstellt_für = erstellt_für,
+            ist_buchung = ist_buchung,
+            ereignis = ereignis)
+
             result = ereignisbuchung
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
@@ -48,8 +52,8 @@ class EreignisbuchungMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE ereignisbuchung SET timestamp = %s, arbeitszeitkonto = %s, ereignis = %s WHERE id = %s"
-        data = (ereignisbuchung.timestamp, ereignisbuchung.arbeitszeitkonto, ereignisbuchung.ereignis, ereignisbuchung.id)
+        command = "UPDATE ereignisbuchung SET timestamp = %s, erstellt_von = %s, erstellt_für = %s, ist_buchung = %s, ereignis = %s WHERE id = %s"
+        data = (ereignisbuchung.timestamp, ereignisbuchung.erstellt_von, ereignisbuchung.erstellt_für, ereignisbuchung.ist_buchung, ereignisbuchung.ereignis, ereignisbuchung.id)
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -71,13 +75,15 @@ class EreignisbuchungMapper(Mapper):
                 ereignisbuchung.id = 1
         command = """
             INSERT INTO ereignisbuchung (
-                id, timestamp, arbeitszeitkonto, ereignis
-            ) VALUES (%s,%s,%s,%s)
+                id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis
+            ) VALUES (%s,%s,%s,%s,%s,%s)
         """
         cursor.execute(command, (
             ereignisbuchung.id,
             ereignisbuchung.timestamp,
-            ereignisbuchung.arbeitszeitkonto,
+            ereignisbuchung.erstellt_von,
+            ereignisbuchung.erstellt_für,
+            ereignisbuchung.ist_buchung,
             ereignisbuchung.ereignis,
         ))
         self._cnx.commit()
