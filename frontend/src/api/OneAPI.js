@@ -2,6 +2,7 @@ import UserBO from './UserBO';
 import ProjectBO from './ProjectBO';
 import MembershipBO from './MembershipBO';
 import ArbeitszeitkontoBO from './ArbeitszeitkontoBO';
+import PauseBO from './PauseBO';
 
 
 
@@ -60,9 +61,10 @@ export default class OneAPI {
   //Gehen related
 
   //Pause related
-
-
-
+  #addPauseURL = () => `${this.#OneServerBaseURL}/pausen/${}`;
+  #getPauseURL = (id) => `${this.#OneServerBaseURL}/pausen/${id}`;
+  #updatePauseURL = (id) => `${this.#OneServerBaseURL}/pausen/${id}`;
+  #deletePauseURL = (id) => `${this.#OneServerBaseURL}/pausen/${id}`;
 
   /** 
    * Get the Singelton instance 
@@ -240,6 +242,77 @@ export default class OneAPI {
     })
   }
  
+
+
+
+
+
+  addPause(PauseBO) {
+    return this.#fetchAdvanced(this.#addPauseURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(pauseBO)
+    }).then((responseJSON) => {
+      // We always get an array of ArbeitszeitkontoBOs.fromJSON, but only need one object
+      let responsePauseBO = pauseBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responsePauseBO);
+        })
+    })
+  }
+
+
+
+
+  getPause(id) {
+    return this.#fetchAdvanced(this.#getPauseURL(id)).then((responseJSON) => {
+      let pauseBOs = PauseBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(PauseBOs);
+      })
+    })
+  }
+  
+  
+  updatePause(pauseBO) {
+    return this.#fetchAdvanced(this.#updatePauseURL(pauseBO.getID(id)), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(pauseBO)
+    }).then((responseJSON) => {
+      // We always get an array of ArbeitszeitkontoBOs.fromJSON
+      let responsePauseBO = pauseBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responsePauseBO);
+      })
+    })
+  }
+
+
+  deletePause(pauseBO) {
+    return this.#fetchAdvanced(this.#deletePauseURL(pauseBO), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of ArbeitszeitkontoBO.fromJSON
+      let responsePauseBO = pauseBO.fromJSON(responseJSON)[0];
+      //
+      return new Promise(function (resolve) {
+        resolve(responsePauseBO);
+      })
+    })
+  }
+
+
+
 
 
 
