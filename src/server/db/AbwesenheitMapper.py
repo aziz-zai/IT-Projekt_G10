@@ -14,7 +14,7 @@ class AbwesenheitMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, start, ende, abwesenheitsart FROM abwesenheit WHERE id={}".format(key)
+        command = "SELECT id, timestamp, start, ende, abwesenheitsart bezeichnung FROM abwesenheit WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -53,7 +53,7 @@ class AbwesenheitMapper(Mapper):
         command = """
             INSERT INTO abwesenheit (
             id, timestamp, start, ende, abwesenheitsart, bezeichnung 
-            ) VALUES (%s,%s,%s,%s,%s, %s)
+            ) VALUES (%s,%s,%s,%s,%s,%s)
         """
         data = (abwesenheit.get_id(), abwesenheit.get_timestamp(), abwesenheit.get_start(), abwesenheit.get_ende(), abwesenheit.get_abwesenheitsart(), abwesenheit.get_bezeichnung())
         cursor.execute(command, data)
@@ -70,8 +70,8 @@ class AbwesenheitMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE abwesenheit SET start=%s, ende=%s, abwesenheitsart=%s, timestamp=%s WHERE id=%s"
-        data = (abwesenheit.start, abwesenheit.ende, abwesenheit.abwesenheitsart, abwesenheit.timestamp, abwesenheit.id)
+        command = "UPDATE abwesenheit SET timestamp=%s, start=%s, ende=%s, abwesenheitsart=%s, bezeichnung=%s  WHERE id=%s"
+        data = (abwesenheit.get_timestamp(), abwesenheit.get_id(), abwesenheit.get_start(), abwesenheit.get_ende(), abwesenheit.get_ende(), abwesenheit.get_abwesenheitsart())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -83,7 +83,7 @@ class AbwesenheitMapper(Mapper):
 
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM abwesenheit WHERE id={}".format(abwesenheit.id)
+        command = "DELETE FROM abwesenheit WHERE id={}".format(abwesenheit.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

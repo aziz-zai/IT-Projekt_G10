@@ -69,8 +69,8 @@ projectone = api.namespace('projectone', description='Funktionen des Projectone'
 
 BusinessObject dient als Basisklasse, auf der die weiteren Strukturen Customer, Account und Transaction aufsetzen."""
 bo = api.model('BusinessObject', {
-    'id': fields.Integer(attribute='id', description='Der Unique Identifier eines Business Object'),
-    'timestamp': fields.String(attribute='timestamp', description='Der Unique Identifier eines Business Object'),
+    'id': fields.Integer(attribute='_id', description='Der Unique Identifier eines Business Object'),
+    'timestamp': fields.String(attribute='_timestamp', description='Der Unique Identifier eines Business Object'),
 })
 
 """User ist ein BusinessObject"""
@@ -148,10 +148,10 @@ kommen = api.inherit('Kommen', bo, {
 })
 
 abwesenheit = api.inherit('Abwesenheit', bo, {
-    'abwesenheitsart': fields.Integer(attribute='abwesenheitsart', description='abwesenheit eines Benutzers'),
-    'start': fields.Integer(attribute='start', description='ZeitintervallID eines Benutzers'),
-    'ende': fields.Integer(attribute='ende', description='bemerkung eines Benutzers'),
-    'bezeichnung': fields.String(attribute = 'bezeichnung', description = 'bezeichnung eines Ereignis-Eintrags')
+    'abwesenheitsart': fields.Integer(attribute='_abwesenheitsart', description='abwesenheit eines Benutzers'),
+    'start': fields.Integer(attribute='_start', description='ZeitintervallID eines Benutzers'),
+    'ende': fields.Integer(attribute='_ende', description='bemerkung eines Benutzers'),
+    'bezeichnung': fields.String(attribute = '_bezeichnung', description = 'bezeichnung eines Ereignis-Eintrags')
 })
 
 zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
@@ -1244,14 +1244,14 @@ class AbwesenheitOperations(Resource):
         Customer-Objekts.
         """
         adm = Administration()
-        ab = Abwesenheit(**api.payload)
+        ab = Abwesenheit.from_dict(api.payload)
 
 
         if ab is not None:
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
             Siehe Hinweise oben.
             """
-            ab.id = id
+            ab.set_id(id)
             adm.update_abwesenheit(ab)
             return '', 200
         else:
