@@ -151,6 +151,8 @@ abwesenheit = api.inherit('Abwesenheit', bo, {
     'abwesenheitsart': fields.String(attribute='abwesenheitsart', description='abwesenheit eines Benutzers'),
     'start': fields.Integer(attribute='start', description='ZeitintervallID eines Benutzers'),
     'ende': fields.Integer(attribute='ende', description='bemerkung eines Benutzers'),
+    'bezeichnung': fields.String(attribute = 'bezeichnung', description = 'bezeichnung eines Ereignis-Eintrags')
+
 })
 
 zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
@@ -158,12 +160,12 @@ zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
     'erstellt_für': fields.Integer(attribute='erstellt_für', description='abwesenheit eines Benutzers'),
     'ist_buchung': fields.Boolean(attribute='ist_buchung', description='abwesenheit eines Benutzers'),
     'zeitintervall': fields.Integer(attribute='zeitintervall', description='abwesenheit eines Benutzers'),
-    'zeitdifferenz': fields.String(attribute='zeitdifferenz', description='abwesenheit eines Benutzers'),
+    'zeitdifferenz': fields.String(attribute='zeitdifferenz', description='abwesenheit eines Benutzers')
     })
 
 ereignis = api.inherit('Ereignis', bo, {
     'zeitpunkt': fields.String(attribute = 'zeitpunkt', description = 'zeitpunkt eines Ereignisses'),
-    'bezeichnung': fields.String(attribute = 'bezeichnung', description = 'bezeichnung eines Ereignis-Eintrags'),
+    'bezeichnung': fields.String(attribute = 'bezeichnung', description = 'bezeichnung eines Ereignis-Eintrags')
 })
 
 @projectone.route('/membership')
@@ -1201,16 +1203,10 @@ class AbwesenheitListOperations(Resource):
     @projectone.marshal_with(abwesenheit, code=200)
     @projectone.expect(abwesenheit)  # Wir erwarten ein User-Objekt von Client-Seite.
     def post(self):
-        """Anlegen eines neuen Zeitintervallbuchung-Objekts.
-        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
-        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
-        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
-        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
-        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
-        """
+  
         adm = Administration()
 
-        proposal = Abwesenheit (**api.payload)
+        proposal = Abwesenheit.from_dict(**api.payload)
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
@@ -1218,7 +1214,7 @@ class AbwesenheitListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            a = adm.create_abwesenheit(proposal.start, proposal.ende, proposal.abwesenheitsart)
+            a = adm.create_abwesenheit(proposal.get_start, proposal.get_ende, proposal.get_abwesenheitsart, proposal.get_bezeichnung)
             return a, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.

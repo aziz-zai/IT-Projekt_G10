@@ -116,6 +116,7 @@ CREATE TABLE `zeitintervallbuchung` (
   `ist_buchung` boolean, 
   `zeitintervall` int(11) NOT NULL DEFAULT '0',
   `zeitdifferenz` varchar(100) NOT NULL DEFAULT '',
+  `bezeichnung`varchar(100) NOT NULL DEFAULT '',
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
 

@@ -3,11 +3,21 @@ from datetime import datetime
 
 
 class BusinessObject(ABC):
-    """Gemeinsame Basisklasse aller in diesem Projekt für die Umsetzung des Fachkonzepts relevanten Klassen.
+    def __init__(self):
+        self._id = 0
+        self._timestamp = datetime.now()
 
-    Zentrales Merkmal ist, dass jedes BusinessObject eine Nummer besitzt, die man in
-    einer relationalen Datenbank auch als Primärschlüssel bezeichnen würde.
-    """
-    def __init__(self, timestamp: datetime = datetime.now() ,id: int = 0):
-        self.timestamp = timestamp
-        self.id = id
+    def get_id(self):
+        """Auslesen der ID."""
+        return self._id
+
+    def set_id(self, id):
+        """Setzen der ID."""
+        self._id = id
+
+    def get_timestamp(self):
+        self._timestamp
+
+    def set_timestamp(self, timestamp):
+        self._timestamp = timestamp
+

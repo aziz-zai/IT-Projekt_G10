@@ -415,12 +415,12 @@ class Administration(object):
             return mapper.delete(ereignis)
 
 
-    def create_abwesenheit (self, start, ende, abwesenheitsart):
-        abwesenheit = Abwesenheit
-        abwesenheit.start=start
-        abwesenheit.ende=ende
-        abwesenheit.abwesenheitsart=abwesenheitsart
-        abwesenheit.timestamp = datetime.now()
+    def create_abwesenheit (self, start, ende, abwesenheitsart, bezeichnung):
+        abwesenheit = Abwesenheit()
+        abwesenheit.set_start(start)
+        abwesenheit.set_ende(ende)
+        abwesenheit.set_abwesenheitsart(abwesenheitsart)
+        abwesenheit.set_bezeichnung(bezeichnung)
 
         with AbwesenheitMapper() as mapper:             
             return mapper.insert(abwesenheit)
