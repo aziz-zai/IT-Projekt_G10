@@ -649,17 +649,10 @@ class UserListOperations(Resource):
     @projectone.expect(user)  # Wir erwarten ein User-Objekt von Client-Seite.
 
     def post(self):
-        """Anlegen eines neuen Customer-Objekts.
-
-        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
-        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
-        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
-        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
-        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
-        """
+        
         adm = Administration()
 
-        proposal = User(**api.payload)
+        proposal = User.from_dict(api.payload)
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
@@ -667,8 +660,9 @@ class UserListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            u = adm.create_user(proposal.vorname, proposal.nachname, proposal.benutzername, proposal.email, proposal.google_user_id)
-            adm.create_arbeitszeitkonto( urlaubskonto=20, user=u.id, arbeitsleistung=0, gleitzeit=0)
+            u = adm.create_user(proposal.get_vorname, proposal.get_nachname, proposal.get_benutzername, 
+                proposal.get_email, proposal.get_google_user_id, proposal.get_urlaubstage)
+            adm.create_arbeitszeitkonto( urlaubskonto=20, user=u.get_id, arbeitsleistung=0, gleitzeit=0)
             return u, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.

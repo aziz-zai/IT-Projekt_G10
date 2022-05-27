@@ -1,4 +1,5 @@
 
+from server.bo.AbwesenheitBO import Abwesenheit
 from server.bo.UserBO import User
 from server.db.Mapper import Mapper
 
@@ -23,15 +24,16 @@ class UserMapper(Mapper):
 
         try:
             (id, timestamp, vorname, nachname, benutzername, email, google_user_id, urlaubstage) = tuples[0]
-            user = User(
-            id=id,
-            timestamp=timestamp,
-            vorname=vorname,
-            nachname=nachname,
-            benutzername=benutzername,
-            email=email,
-            google_user_id=google_user_id,
-            urlaubstage=urlaubstage)
+            user = User()
+            user.set_id(id),
+            user.set_timestamp(timestamp),
+            user.set_vorname(vorname),
+            user.set_nachname(nachname),
+            user.set_benutzername(benutzername),
+            user.set_email(email),
+            user.set_google_user_id(google_user_id),
+            user.set_urlaubstage(urlaubstage)
+
             result = user
 
         except IndexError:
@@ -46,13 +48,7 @@ class UserMapper(Mapper):
 
 
     def find_by_google_user_id(self, google_user_id):
-        """Suchen eines Benutzers mit vorgegebener Google ID. Da diese eindeutig ist,
-        wird genau ein Objekt zurückgegeben.
 
-        :param google_user_id die Google ID des gesuchten Users.
-        :return User-Objekt, das die übergebene Google ID besitzt,
-            None bei nicht vorhandenem DB-Tupel.
-        """
         result = None
 
         cursor = self._cnx.cursor()
@@ -62,15 +58,15 @@ class UserMapper(Mapper):
 
         try:
             (id, timestamp, vorname, nachname, benutzername, email, google_user_id, urlaubstage) = tuples[0]
-            user = User(
-            id=id,
-            timestamp=timestamp,
-            vorname=vorname,
-            nachname=nachname,
-            benutzername=benutzername,
-            email=email,
-            google_user_id=google_user_id,
-            urlaubstage=urlaubstage)
+            user = User()
+            user.set_id(id),
+            user.set_timestamp(timestamp),
+            user.set_vorname(vorname),
+            user.set_nachname(nachname),
+            user.set_benutzername(benutzername),
+            user.set_email(email),
+            user.set_google_user_id(google_user_id),
+            user.set_urlaubstage(urlaubstage)
             result = user
 
         except IndexError:
@@ -91,7 +87,7 @@ class UserMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE user SET timestamp=%s, vorname=%s, nachname=%s, benutzername=%s, email=%s, google_user_id=%s, urlaubstage=%s WHERE id=%s"
-        data = (user.timestamp, user.vorname, user.nachname, user.benutzername, user.email, user.google_user_id, user.urlaubstage, user.id)
+        data = (user.get_id, user.get_timestamp, user.get_vorname, user.get_nachname, user.get_benutzername, user.get_email, user.get_google_user_id, user.get_urlaubstage)
         cursor.execute(command, data)
         self._cnx.commit()
         cursor.close()
@@ -105,32 +101,26 @@ class UserMapper(Mapper):
 
         for (maxid) in tuples:
             if maxid[0] is not None:
-                user.id = maxid[0] + 1
+                user.set_id(maxid[0] + 1)
             else:
-                user.id = 1
+                user.set_id(1)
         command = """
             INSERT INTO user (
                 id, timestamp, vorname, nachname, benutzername, email, google_user_id, urlaubstage
             ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
         """
-        cursor.execute(command, (
-            user.id,
-            user.timestamp,
-            user.vorname,
-            user.nachname,
-            user.benutzername,
-            user.email,
-            user.google_user_id,
-            user.urlaubstage
-        ))
+        data = (user.get_id(), user.get_timestamp(),user.get_vorname(), user.get_nachname(), 
+                user.get_benutzername(), user.get_email(), user.get_google_user_id(), user.get_urlaubstage())
+        cursor.execute(command, data)
+
         self._cnx.commit()
         return user
 
-    def delete(self, id):
+    def delete(self, user):
 
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM user WHERE id={}".format(id)
+        command = "DELETE FROM user WHERE id={}".format(user.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

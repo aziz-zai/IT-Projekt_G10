@@ -74,15 +74,15 @@ class Administration(object):
     """
     User-spezifische Methoden
     """
-    def create_user(self, vorname, nachname, benutzername, email, google_user_id):
+    def create_user(self, vorname, nachname, benutzername, email, google_user_id, urlaubstage):
         """Einen Benutzer anlegen"""
-        user = User(
-        timestamp = datetime.now(),
-        vorname = vorname,
-        nachname = nachname,
-        benutzername = benutzername,
-        email = email,
-        google_user_id = google_user_id)
+        user = User()
+        user.set_vorname(vorname)
+        user.set_nachname(nachname)
+        user.set_benutzername(benutzername)
+        user.set_email(email)
+        user.set_google_user_id(google_user_id)
+        user.set_urlaubstage(urlaubstage)
 
         with UserMapper() as mapper:
             return mapper.insert(user)
@@ -415,19 +415,15 @@ class Administration(object):
             return mapper.delete(ereignis)
 
 
-    def create_abwesenheit (self, start, ende, abwesenheitsart, bezeichnung):
+    def create_abwesenheit(self, start, ende, abwesenheitsart, bezeichnung):
         abwesenheit = Abwesenheit()
         abwesenheit.set_start(start)
         abwesenheit.set_ende(ende)
         abwesenheit.set_abwesenheitsart(abwesenheitsart)
         abwesenheit.set_bezeichnung(bezeichnung)
+
         with AbwesenheitMapper() as mapper:             
             return mapper.insert(abwesenheit)
-
-    def get_all_abwesenheit(self):
-        """Alle Abwesenheiten auslesen"""
-        with AbwesenheitMapper() as mapper:
-            return mapper.find_all()
 
     def get_abwesenheit_by_id(self, id):
         """Den Benutzer mit der gegebenen ID auslesen."""
