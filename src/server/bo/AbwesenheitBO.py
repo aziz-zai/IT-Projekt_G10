@@ -1,11 +1,12 @@
+from datetime import datetime
 from .ZeitintervallBO import Zeitintervall
 
 
 class Abwesenheit(Zeitintervall):
-    def __init__(self, abwesenheitsart: str, bezeichnung: str):
+    def __init__(self):
         super().__init__()
-        self._abwesenheitsart = abwesenheitsart
-        self._bezeichnung = bezeichnung
+        self._abwesenheitsart = None
+        self._bezeichnung = None
 
     def get_abwesenheitsart(self):
         return self._abwesenheitsart
@@ -28,8 +29,6 @@ class Abwesenheit(Zeitintervall):
     def from_dict(dictionary=dict()):
         """Umwandeln eines Python dict() in Abweseneheit()."""
         obj = Abwesenheit()
-        obj.set_id(dictionary["id"])
-        obj.set_timestamp(dictionary["timestamp"])
         obj.set_abwesenheitsart(dictionary["abwesenheitsart"])
         obj.set_start(dictionary["start"])  
         obj.set_ende(dictionary["ende"])

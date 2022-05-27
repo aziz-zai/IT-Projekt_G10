@@ -16,7 +16,7 @@ class BusinessObject(ABC):
         self._id = id
 
     def get_timestamp(self):
-        self._timestamp
+        return self._timestamp
 
     def set_timestamp(self, timestamp):
         self._timestamp = timestamp

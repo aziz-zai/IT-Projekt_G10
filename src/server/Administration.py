@@ -421,7 +421,6 @@ class Administration(object):
         abwesenheit.set_ende(ende)
         abwesenheit.set_abwesenheitsart(abwesenheitsart)
         abwesenheit.set_bezeichnung(bezeichnung)
-
         with AbwesenheitMapper() as mapper:             
             return mapper.insert(abwesenheit)
 

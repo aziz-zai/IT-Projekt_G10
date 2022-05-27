@@ -1,10 +1,10 @@
 from .BusinessObject import BusinessObject
 
 class Zeitintervall(BusinessObject):
-    def __init__(self,  start: int, ende: int):
+    def __init__(self):
         super().__init__()
-        self._start = start
-        self._ende = ende
+        self._start = None
+        self._ende = None
     
     def get_bezeichnung(self):
         return self._bezeichnung

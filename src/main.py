@@ -148,11 +148,10 @@ kommen = api.inherit('Kommen', bo, {
 })
 
 abwesenheit = api.inherit('Abwesenheit', bo, {
-    'abwesenheitsart': fields.String(attribute='abwesenheitsart', description='abwesenheit eines Benutzers'),
+    'abwesenheitsart': fields.Integer(attribute='abwesenheitsart', description='abwesenheit eines Benutzers'),
     'start': fields.Integer(attribute='start', description='ZeitintervallID eines Benutzers'),
     'ende': fields.Integer(attribute='ende', description='bemerkung eines Benutzers'),
     'bezeichnung': fields.String(attribute = 'bezeichnung', description = 'bezeichnung eines Ereignis-Eintrags')
-
 })
 
 zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
@@ -1206,7 +1205,7 @@ class AbwesenheitListOperations(Resource):
   
         adm = Administration()
 
-        proposal = Abwesenheit.from_dict(**api.payload)
+        proposal = Abwesenheit.from_dict(api.payload)
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
@@ -1214,7 +1213,7 @@ class AbwesenheitListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            a = adm.create_abwesenheit(proposal.get_start, proposal.get_ende, proposal.get_abwesenheitsart, proposal.get_bezeichnung)
+            a = adm.create_abwesenheit(proposal.get_start(), proposal.get_ende(), proposal.get_abwesenheitsart(), proposal.get_bezeichnung())
             return a, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
