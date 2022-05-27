@@ -106,7 +106,16 @@ export default class OneAPI {
 
 
   //Pause related
+  #addPauseURL = () => `${this.#OneServerBaseURL}/pausen`;
+  #getPauseURL = () => `${this.#OneServerBaseURL}/pausen/${id}`;
+  #updatePauseURL = (id) => `${this.#OneServerBaseURL}/pausen/${id}`;
+  #deletePauseURL = (id) => `${this.#OneServerBaseURL}/pausen/${id}`;
 
+  //Arbeitszeitkonto related
+  #getGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
+  #addGehenURL = () => `${this.#OneServerBaseURL}/gehen/`;
+  #updateGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
+  #deleteGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
 
 
 
@@ -836,7 +845,7 @@ export default class OneAPI {
       })
     })
   }
-}
+
 
 getArbeitszeitkonto(user) {
   return this.#fetchAdvanced(this.#getArbeitszeitkontoURL(user)).then((responseJSON) => {
@@ -879,26 +888,8 @@ deleteArbeitszeitkonto(arbeitszeitkontoBO) {
   })
 }
 
-addArbeitszeitkonto(arbeitszeitkontoBO) {
-  return this.#fetchAdvanced(this.#addArbeitszeitkontoURL(), {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json, text/plain',
-      'Content-type': 'application/json',
-    },
-    body: JSON.stringify(arbeitszeitkontoBO)
-  }).then((responseJSON) => {
-    // We always get an array of ArbeitszeitkontoBOs.fromJSON, but only need one object
-    let responseArbeitszeitkontoBO = arbeitszeitkontoBO.fromJSON(responseJSON)[0];
-    // 
-    return new Promise(function (resolve) {
-      resolve(responseArbeitszeitkontoBO);
-      })
-  })
-}
 
-
-addPause(PauseBO) {
+addPause(pauseBO) {
   return this.#fetchAdvanced(this.#addPauseURL(), {
     method: 'POST',
     headers: {
@@ -924,7 +915,7 @@ getPause(id) {
     let pauseBOs = PauseBO.fromJSON(responseJSON);
     // console.info(customerBOs);
     return new Promise(function (resolve) {
-      resolve(PauseBOs);
+      resolve(pauseBOs);
     })
   })
 }

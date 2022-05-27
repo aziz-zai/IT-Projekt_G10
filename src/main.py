@@ -1,5 +1,4 @@
 # Unser Service basiert auf Flask
-from xmlrpc.client import Boolean
 from flask import Flask
 # Auf Flask aufbauend nutzen wir RestX
 from flask_restx import Api, Resource, fields
@@ -462,7 +461,6 @@ class PausenOperations(Resource):
         return '', 200
 
 
-
 @projectone.route('/projects/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
@@ -737,7 +735,6 @@ class UserByGoogleUserIdOperations(Resource):
 @projectone.param('user', 'Die ID des User-Objekts')
 class ArbeitszeitkontoOperations(Resource):
     @projectone.marshal_with(arbeitszeitkonto)
-
     def get(self, user):
         """Auslesen eines bestimmten Arbeitszeit-Objekts.
 
@@ -746,26 +743,7 @@ class ArbeitszeitkontoOperations(Resource):
         adm = Administration()
         arb = adm.get_arbeitszeitkonto_by_userID(user)
         return arb
-    
-    @projectone.marshal_with(arbeitszeitkonto, code=200)
-    @projectone.expect(arbeitszeitkonto)  # Wir erwarten ein User-Objekt von Client-Seite.
-    def post(self, user):
 
-        adm = Administration()
-
-        proposal = Arbeitszeitkonto(**api.payload)
-
-        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
-        if proposal is not None:
-            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
-            wird auch dem Client zurückgegeben. 
-            """
-            ab = adm.create_arbeitszeitkonto(proposal.urlaubskonto, proposal.user, proposal.arbeitsleistung, proposal.gleitzeit)
-            return ab, 200  
-        else:
-            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
-            return '', 500
 
     @projectone.marshal_with(arbeitszeitkonto)
     def put(self, user):
