@@ -4,13 +4,13 @@ import MembershipBO from './MembershipBO';
 import ProjektarbeitBO from './ProjektarbeitBO';
 import ZeitintervallbuchungBO from './ZeitintervallbuchungBO';
 import GehenBO from './GehenBO';
-
 import EreignisBO from './EreignisBO';
 import KommenBO from './KommenBO';
 import EreignisbuchungBO from './EreignisbuchungBO';
-
 import AbwesenheitBO from './AbwesenheitBO';
 import AktivitätenBO from './AktivitätenBO';
+import PauseBO from './PauseBO';
+import ArbeitszeitkontoBO from './ArbeitszeitkontoBO'
 
 
 
@@ -107,15 +107,15 @@ export default class OneAPI {
 
   //Pause related
   #addPauseURL = () => `${this.#OneServerBaseURL}/pausen`;
-  #getPauseURL = () => `${this.#OneServerBaseURL}/pausen/${id}`;
+  #getPauseURL = (id) => `${this.#OneServerBaseURL}/pausen/${id}`;
   #updatePauseURL = (id) => `${this.#OneServerBaseURL}/pausen/${id}`;
   #deletePauseURL = (id) => `${this.#OneServerBaseURL}/pausen/${id}`;
 
   //Arbeitszeitkonto related
-  #getGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
-  #addGehenURL = () => `${this.#OneServerBaseURL}/gehen/`;
-  #updateGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
-  #deleteGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
+  #getArbeitszeitkontoURL	 = (id) => `${this.#OneServerBaseURL}/arbeitszeitkonto-by-user/${id}`;
+  #updateArbeitszeitkontoURL = (id) => `${this.#OneServerBaseURL}/arbeitszeitkonto-by-user/${id}`;
+  #deleteArbeitszeitkontoURL = (id) => `${this.#OneServerBaseURL}/arbeitszeitkonto-by-user/${id}`;
+  
 
 
 
@@ -457,7 +457,7 @@ export default class OneAPI {
 
 
   updateZeitintervallbuchung(zeitintervallbuchungBO) {
-    return this.#fetchAdvanced(this.#updateZeitintervallbuchungURL(zeitinterballbuchungBO.getID()), {
+    return this.#fetchAdvanced(this.#updateZeitintervallbuchungURL(zeitintervallbuchungBO.getID()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -922,7 +922,7 @@ getPause(id) {
 
 
 updatePause(pauseBO) {
-  return this.#fetchAdvanced(this.#updatePauseURL(pauseBO.getID(id)), {
+  return this.#fetchAdvanced(this.#updatePauseURL(pauseBO.getID()), {
     method: 'PUT',
     headers: {
       'Accept': 'application/json, text/plain',
