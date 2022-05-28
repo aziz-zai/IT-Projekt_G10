@@ -2,6 +2,13 @@ import React, { Component } from 'react'
 import OneAPI from '../../api/OneAPI'
 import PropTypes from 'prop-types'
 import { SingleProject } from './SingleProject';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import add from '../../media/add.svg'
 
 
 export class Project extends Component {
@@ -59,10 +66,25 @@ export class Project extends Component {
     
     return (
         <div>
-      <div>
-          {project ?
-          project.map(project => <SingleProject project={project}/>):null}
-    </div>
+          <Box sx={{ flexGrow: 1 }}>
+      <Grid container spacing={{ xs: 2, md: 4 }} columns={{ xs: 2, sm: 4, md: 12}}>
+        
+       { project ?
+        project.map((project, index) => (
+          <Grid item xs={2} sm={2} md={2.5} key={index}>
+            <SingleProject project={project}/>
+          </Grid>)):
+          null
+  }
+  <Grid item xs={2} sm={2} md={2.5}>
+  <Card class="ProjectCard">
+      <CardContent class="addImgWrapper">
+        <img class="addImg" src={add}></img>
+      </CardContent>
+      </Card>
+          </Grid>
+      </Grid>
+    </Box>
     </div>
     )
   }

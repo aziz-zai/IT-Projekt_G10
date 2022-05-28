@@ -1,0 +1,49 @@
+.ProjectCard{
+    box-shadow: #5e2e94 0px 3px 8px;
+    border-radius: 10px;
+    padding-bottom: 1rem;
+    background-color: rgba(172, 132, 217);
+    color: white;
+}
+
+.ProjectCard:hover{
+    transform: scale(1.2);
+    transition: all 0.2s ease-in-out;
+    cursor:pointer;
+}
+
+.ProjektTitel{
+
+}
+
+.learnBtn{
+    border-radius: 50px;
+    background: #5e2e94;
+    white-space: nowrap;
+    padding: 0.5rem 1rem;
+    color:#fff;
+    font-size: 0.8em;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+}
+
+.learnBtnWrapper{
+    display: flex;
+    justify-content: center;
+}
+
+.addImgWrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.addImg{
+    width: 9.2rem;
+    margin: 0.8rem; 
+}
