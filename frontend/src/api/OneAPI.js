@@ -180,8 +180,8 @@ export default class OneAPI {
     })
   }
 
-  addProject(projectBO) {
-    return this.#fetchAdvanced(this.#addProjectsURL(), {
+  addProject(projectBO, user) {
+    return this.#fetchAdvanced(this.#addProjectsURL(user), {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain',
