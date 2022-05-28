@@ -2,13 +2,8 @@ import React, { Component } from 'react'
 import OneAPI from '../../api/OneAPI'
 import PropTypes from 'prop-types'
 import { SingleProject } from './SingleProject';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import add from '../../media/add.svg'
+import AddCard from './AddCard';
 
 
 export class Project extends Component {
@@ -65,30 +60,23 @@ export class Project extends Component {
     const {user} = this.props;
     
     return (
-        <div>
-          <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={{ xs: 2, md: 4 }} columns={{ xs: 2, sm: 4, md: 12}}>
-        
-       { project ?
+<div class="ProjectCardWrapper">
+    <Grid container spacing={{ xs: 2, md: 4}} columns={{ xs: 1, sm: 6, md: 8}}>
+       {project ?
         project.map((project, index) => (
-          <Grid item xs={2} sm={2} md={2.5} key={index}>
+          <Grid item xs={1} sm={2} md={2} key={index}>
             <SingleProject project={project}/>
           </Grid>)):
-          null
-  }
-  <Grid item xs={2} sm={2} md={2.5}>
-  <Card class="ProjectCard">
-      <CardContent class="addImgWrapper">
-        <img class="addImg" src={add}></img>
-      </CardContent>
-      </Card>
-          </Grid>
-      </Grid>
-    </Box>
-    </div>
+          null}
+  <Grid item xs={1} sm={2} md={2}>
+      <AddCard/>
+  </Grid> 
+  </Grid>
+  </div>
     )
   }
 }
+
 Project.propTypes = {
     user: PropTypes.any.isRequired,
   }

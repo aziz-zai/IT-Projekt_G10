@@ -4,6 +4,9 @@
     padding-bottom: 1rem;
     background-color: rgba(172, 132, 217);
     color: white;
+    width: 14rem;
+    height: 12rem;
+    justify-content: center;
 }
 
 .ProjectCard:hover{
@@ -12,8 +15,19 @@
     cursor:pointer;
 }
 
-.ProjektTitel{
+.ProjectCardWrapper{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+.ProjektTitel{
+font-weight: bold;
+display: flex;
+justify-content: center;
+border-bottom: 1.5px solid white;
+margin-bottom: 1rem;  
 }
 
 .learnBtn{
