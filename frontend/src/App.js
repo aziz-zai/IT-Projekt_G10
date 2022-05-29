@@ -10,6 +10,7 @@ import 'firebase/compat/auth';
 import firebaseConfig from './firebaseconfig';
 import { getAuth, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
 import { initializeApp } from 'firebase/app';
+import MyProfile from './pages/MyProfile';
 
 class App extends React.Component {
 	/** Constructor of the app, which initializes firebase  */
@@ -127,7 +128,7 @@ componentDidMount() {
 							:
 							<LogIn  onLogIn={this.handleSignIn} />
 						}/>
-                  		<Route path="/home" element={<Secured user={currentUser}><Home user={currentUser}/></Secured>} />
+                  		<Route path="/MyProfile" element={<MyProfile userid={currentUser}/>} />
 				  		</Route>
 					</Routes>
 				</Router>

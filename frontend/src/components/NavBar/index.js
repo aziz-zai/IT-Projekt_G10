@@ -29,7 +29,7 @@ export class NavBar extends Component {
             </div>
             <ul className="navMenu">
                 <li className="navItem">
-                    <Link to='/' className="navLink">Projekte</Link>
+                    <Link to='/MyProfile' className="navLink">Projekte</Link>
                 </li>
                 <li className="navItem">
                     <Link to='/' className="navLink">Zeiterfassung</Link>

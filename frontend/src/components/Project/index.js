@@ -61,14 +61,14 @@ export class Project extends Component {
     
     return (
 <div class="ProjectCardWrapper">
-    <Grid container spacing={{ xs: 2, md: 4}} columns={{ xs: 1, sm: 6, md: 8}}>
+    <Grid container spacing={{ xs: 4, md: 8, xl: 10}} columns={{ xs: 1, sm: 6, md: 8, xl: 10}}>
        {project ?
         project.map((project, index) => (
-          <Grid item xs={1} sm={2} md={1.7} key={index}>
+          <Grid item xs={1} sm={2} md={1.7} xl={1.5} key={index}>
             <SingleProject project={project}/>
           </Grid>)):
           null}
-  <Grid item xs={1} sm={2} md={1.7}>
+  <Grid item xs={1} sm={2} md={1.7} xl={1.5}>
       <AddCard/>
   </Grid> 
   </Grid>

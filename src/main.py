@@ -232,6 +232,7 @@ class MembershipByIDOperations(Resource):
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByProjectOperations(Resource):
     @projectone.marshal_with(project)
+    @secured
     def get(self, project):
         """Auslesen eines bestimmten Membership-Objekts nach Projektid
 
@@ -261,6 +262,7 @@ class MembershipByUserAndProject(Resource):
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByUserOperations(Resource):
     @projectone.marshal_with(project)
+    @secured
     def get(self, user):
         adm = Administration()
         mu = adm.get_membership_by_user(user)
@@ -720,6 +722,7 @@ class UserOperations(Resource):
 class UserByGoogleUserIdOperations(Resource):
 
     @projectone.marshal_with(user)
+    @secured
     def get(self, google_user_id):
         """Auslesen eines bestimmten Customer-Objekts.
 
