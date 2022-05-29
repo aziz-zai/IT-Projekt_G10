@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Popover, IconButton, Avatar, ClickAwayListener, withStyles, Typography, Paper, Button, Grid, Divider } from '@material-ui/core';
 import firebase from 'firebase/compat/app';
 import firebasConfig from '../../firebaseconfig'
+import {Link} from 'react-router-dom'
 export class ProfileDropDown extends Component {
     #avatarButtonRef = createRef();
     constructor(props) {
@@ -70,6 +71,9 @@ export class ProfileDropDown extends Component {
                     <Grid container justifyContent='center'>
                       <Grid item>
                         <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button>
+                      </Grid>
+                      <Grid item>
+                        <Link color='primary' to='/MyProfile'>Mein Profil</Link>
                       </Grid>
                     </Grid>
                   </Paper>

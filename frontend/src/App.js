@@ -4,13 +4,13 @@ import Home from './pages/Home'
 import LogIn from './pages/LogIn'
 import {BrowserRouter as Router, Routes, Route, useLocation} from 'react-router-dom'
 import { Navigate } from 'react-router'
-import NavBar from './components/NavBar'
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import firebaseConfig from './firebaseconfig';
 import { getAuth, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
 import { initializeApp } from 'firebase/app';
 import MyProfile from './pages/MyProfile';
+import OneAPI from './api/OneAPI';
 
 class App extends React.Component {
 	/** Constructor of the app, which initializes firebase  */
@@ -22,7 +22,8 @@ class App extends React.Component {
 			currentUser: null,
 			appError: null,
 			authError: null,
-			authLoading: false
+			authLoading: false,
+			user:null
 		};
 	}
 
@@ -55,7 +56,26 @@ handleSignIn = () => {
    signInWithRedirect(auth, provider);
 }
 
-
+getUserbygid = (currentUser) => {
+    OneAPI.getAPI().getUserGid(currentUser.uid).then(user =>
+      this.setState({
+        user: user,
+        loadingInProgress: false,
+        loadingError: null
+      })
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+          user: null,
+          loadingInProgress: false,
+          loadingError: e
+        })
+      );
+    // set loading to true
+    this.setState({
+      loadingInProgress: true,
+      loadingError: null
+    });
+  }
 /**
 * Lifecycle method, which is called when the component gets inserted into the browsers DOM.
 * Initializes the firebase SDK.
@@ -81,13 +101,13 @@ componentDidMount() {
 			   // user information.
 			   document.cookie = `token=${token};path=/`;
 			   // console.log("Token is: " + document.cookie);
-
+			  
 			   // Set the user not before the token arrived 
 			   this.setState({
 				   currentUser: user,
 				   authError: null,
 				   authLoading: false
-			   });
+			   });   this.getUserbygid(user)
 		   }).catch(e => {
 			   this.setState({
 				   authError: e,
@@ -105,14 +125,16 @@ componentDidMount() {
 		   });
 	   }
    });
+   
 }
 
 
 	/** Renders the whole app */
 	render() {
-    const { currentUser, appError, authError, authLoading } = this.state;
+    const { currentUser, user } = this.state;
 		return (
         <>
+		{console.log('user', user)}
 				<Router>
 					<Routes>
 						<Route>
@@ -128,7 +150,8 @@ componentDidMount() {
 							:
 							<LogIn  onLogIn={this.handleSignIn} />
 						}/>
-                  		<Route path="/MyProfile" element={<MyProfile userid={currentUser}/>} />
+                  		<Route path="/home" element={<Secured user={currentUser}><Home Cuser={currentUser} user={user}/></Secured>} />
+                  		<Route path="/MyProfile" element={<Secured user={currentUser}><MyProfile user={user}/></Secured>} />
 				  		</Route>
 					</Routes>
 				</Router>

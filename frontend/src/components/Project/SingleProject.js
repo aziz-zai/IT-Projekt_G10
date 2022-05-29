@@ -19,10 +19,10 @@ export class SingleProject extends Component {
       <div class="ProjectCardWrapper">
         <Card class="ProjectCard">
       <CardContent>
-        <Typography variant="h5" class="ProjektTitel"component="div">
+        <Typography variant="h5" class="ProjektTitel" component="div">
           {this.props.project.projektname}
         </Typography>
-        <Typography variant="body2" sx={{ mb: 1.5 }} >
+        <Typography variant="body2"class="ProjektContent" >
           Verfügbare Stunden: {this.props.project.availablehours}h<br/>
           Deadline: 0{this.props.project.laufzeit}.04.2022<br/>
           Projektleiter: Miray Sidal Yer

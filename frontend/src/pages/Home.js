@@ -8,6 +8,7 @@ import UserBO from '../api/UserBO';
 import SideBar from '../components/SideBar'
 import Project from '../components/Project'
 import { getTabsUtilityClass } from '@mui/material';
+import MyProfile from './MyProfile';
 
 
 export class Home extends Component {
@@ -16,7 +17,6 @@ export class Home extends Component {
 
     // Init state
     this.state = {
-      userSelf: null,
       loadingInProgress: false,
       loadingError: null,
       Open: 'SideBarContainerClosed',
@@ -25,30 +25,10 @@ export class Home extends Component {
   }
 
   componentDidMount() {
-    this.getUserbygid();
+ 
   }
 
   /** gets the balance for this account */
-  getUserbygid = () => {
-    OneAPI.getAPI().getUserGid(this.props.user.uid).then(user =>
-      this.setState({
-        userSelf: user,
-        loadingInProgress: false,
-        loadingError: null
-      })
-      ).catch(e =>
-        this.setState({ // Reset state with error from catch 
-          userSelf: null,
-          loadingInProgress: false,
-          loadingError: e
-        })
-      );
-    // set loading to true
-    this.setState({
-      loadingInProgress: true,
-      loadingError: null
-    });
-  }
 
 
   handleOpenStateChange = () => {
@@ -66,17 +46,19 @@ export class Home extends Component {
 
 
   render() {
-    const {user} = this.props;
-    const {userSelf, userid} = this.state;
+    const {Cuser, user} = this.props;
     return (
       <div>
-         <SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={user}/>
-         <NavBar toggle={this.handleOpenStateChange} user={user} nav="navBlack"/>
+         <SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={Cuser}/>
+         <NavBar toggle={this.handleOpenStateChange} user={Cuser} nav="navBlack"/>
+         <div class="TestComp">
+           <MyProfile user={user}></MyProfile>
+         </div>
     <div class="ProjectListWrapper">
     <div className="ProjectList">
-      {userSelf ? 
-      <Project user={userSelf}/>
-      : console.log('fail')}
+      {user ?
+      <Project user={user}/>
+      : null}
     </div>
     </div>
     </div>
@@ -85,7 +67,8 @@ export class Home extends Component {
 }
 
 Home.propTypes = {
-  user: PropTypes.object.isRequired,
+  Cuser: PropTypes.any.isRequired,
+  user: PropTypes.any.isRequired,
 }
 
 export default Home
