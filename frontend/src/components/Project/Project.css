@@ -6,7 +6,20 @@
     color: white;
     width: 15rem;
     height: 14rem;
+    display: flex;
     justify-content: center;
+}
+.AddProjectCard{
+    box-shadow: #5e2e94 0px 3px 8px;
+    border-radius: 10px;
+    padding-bottom: 1rem;
+    background-color: rgba(172, 132, 217);
+    color: white;
+    width: 15rem;
+    height: 14rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .ProjectCard:hover{
@@ -20,7 +33,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
 }
+
+
 
 .ProjektTitel{
 font-weight: bold;
@@ -65,5 +82,4 @@ margin-bottom: 1rem;
 
 .addImg{
     width: 9.2rem;
-    margin: 0.8rem; 
 }

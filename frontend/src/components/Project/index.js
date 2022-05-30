@@ -39,7 +39,7 @@ export class Project extends Component {
     const {project} = this.state;
     return (
 <div class="ProjectCardWrapper">
-    <Grid container spacing={{ xs: 4, md: 8, xl: 8}} columns={{ xs: 1, sm: 6, md: 8, xl: 12}}>
+    <Grid container spacing={{ xs: 4, md: 6, xl: 8}} columns={{ xs: 1, sm: 6, md: 8, xl: 12}}>
        {project ?
         project.map((project, index) => (
           <Grid item xs={1} sm={2} md={1.7} xl={1.5} key={index}>

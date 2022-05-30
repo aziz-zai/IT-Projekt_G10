@@ -151,7 +151,7 @@ componentDidMount() {
 							<LogIn  onLogIn={this.handleSignIn} />
 						}/>
                   		<Route path="/home" element={<Secured user={currentUser}><Home Cuser={currentUser} user={user}/></Secured>} />
-                  		<Route path="/MyProfile" element={<Secured user={currentUser}><MyProfile user={user}/></Secured>} />
+                  		<Route path="/MyProfile" element={<Secured user={currentUser}><MyProfile Cuser={currentUser} user={user} /></Secured>} />
 				  		</Route>
 					</Routes>
 				</Router>

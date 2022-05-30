@@ -1,7 +1,5 @@
-.ProjectList{
-    width:100%;
+.ProfileWrapper{
     margin-top: 8rem;
     display: flex;
     justify-content: center;
 }
-

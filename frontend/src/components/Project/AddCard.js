@@ -30,7 +30,7 @@ export class AddCard extends Component {
   render() {
     return (
       <div class="ProjectCardWrapper">
-        <Card  class="ProjectCard">
+        <Card  class="AddProjectCard">
         <CardContent class="addImgWrapper">
         <img class="addImg" src={add}></img>
       </CardContent>

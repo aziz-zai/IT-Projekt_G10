@@ -23,7 +23,7 @@ export class NavBar extends Component {
     return (
         <div className={this.state.nav}>
         <div className="navContainer">
-            <div className="navLogo">project.one</div>
+        <Link to='/home' className="navLink"><div className="navLogo">project.one</div></Link>
             <div className="navMobile" onClick={this.handleOpenStateChange}>
                     <MenuIcon/>
             </div>

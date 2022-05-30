@@ -51,15 +51,10 @@ export class Home extends Component {
       <div>
          <SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={Cuser}/>
          <NavBar toggle={this.handleOpenStateChange} user={Cuser} nav="navBlack"/>
-         <div class="TestComp">
-           <MyProfile user={user}></MyProfile>
-         </div>
-    <div class="ProjectListWrapper">
-    <div className="ProjectList">
+    <div class="ProjectList">
       {user ?
       <Project user={user}/>
       : null}
-    </div>
     </div>
     </div>
     )

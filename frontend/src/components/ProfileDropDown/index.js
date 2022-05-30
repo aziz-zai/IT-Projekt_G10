@@ -4,6 +4,9 @@ import { Popover, IconButton, Avatar, ClickAwayListener, withStyles, Typography,
 import firebase from 'firebase/compat/app';
 import firebasConfig from '../../firebaseconfig'
 import {Link} from 'react-router-dom'
+import './ProfileDropDown.css'
+import LogoutIcon from '@mui/icons-material/Logout';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 export class ProfileDropDown extends Component {
     #avatarButtonRef = createRef();
     constructor(props) {
@@ -70,12 +73,17 @@ export class ProfileDropDown extends Component {
                     <Divider  />
                     <Grid container justifyContent='center'>
                       <Grid item>
-                        <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button>
-                      </Grid>
-                      <Grid item>
-                        <Link color='primary' to='/MyProfile'>Mein Profil</Link>
+                      <Link class="ProfileBtn" to='/MyProfile'>
+                          <Button color='primary' startIcon={<AccountCircleIcon/>}>Profile</Button>
+                      </Link>
                       </Grid>
                     </Grid>
+                    <Divider  />
+                    <Grid container justifyContent='center'>
+                      <Grid item>
+                      <Button color='error' startIcon={<LogoutIcon/>}onClick={this.handleSignOutButtonClicked}>Logout</Button>
+                      </Grid>
+                    </Grid>                  
                   </Paper>
                 </ClickAwayListener>
               </Popover>
