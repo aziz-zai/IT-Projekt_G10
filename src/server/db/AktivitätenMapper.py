@@ -1,11 +1,8 @@
-from time import time
-from server.bo.AbwesenheitBO import Abwesenheit
 from server.bo.AktivitätenBO import Aktivitäten
 from server.db.Mapper import Mapper
 
 
 class AktivitätenMapper(Mapper):
-
 
     def __init__(self):
         super().__init__()
@@ -30,7 +27,7 @@ class AktivitätenMapper(Mapper):
             aktivitäten.set_dauer(dauer),
             aktivitäten.set_capacity(capacity),
             aktivitäten.set_project(project)
-            q
+            
             result = aktivitäten
 
         except IndexError:
@@ -75,7 +72,6 @@ class AktivitätenMapper(Mapper):
 
         return result
 
-        
 
     def insert(self, aktivitäten: Aktivitäten) -> Aktivitäten:
         """Create activity Object."""

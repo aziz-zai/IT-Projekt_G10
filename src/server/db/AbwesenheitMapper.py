@@ -14,18 +14,20 @@ class AbwesenheitMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, start, ende, abwesenheitsart bezeichnung FROM abwesenheit WHERE id={}".format(key)
+        command = "SELECT id, timestamp, start, ende, abwesenheitsart, bezeichnung FROM abwesenheit WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, start, ende, abwesenheitsart) = tuples[0]
+            (id, timestamp, start, ende, abwesenheitsart, bezeichnung) = tuples[0]
             abwesenheit= Abwesenheit()
-            abwesenheit.set_id(id),
-            abwesenheit.set_timestamp(timestamp),
-            abwesenheit.set_start(start),
-            abwesenheit.set_ende(ende),
+            abwesenheit.set_id(id)
+            abwesenheit.set_timestamp(timestamp)
+            abwesenheit.set_start(start)
+            abwesenheit.set_ende(ende)
             abwesenheit.set_abwesenheitsart(abwesenheitsart)
+            abwesenheit.set_bezeichnung(bezeichnung)
+
             result = abwesenheit
 
         except IndexError:

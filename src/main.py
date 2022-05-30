@@ -1,5 +1,6 @@
 # Unser Service basiert auf Flask
 from xmlrpc.client import Boolean
+from attr import attributes
 from flask import Flask
 # Auf Flask aufbauend nutzen wir RestX
 from flask_restx import Api, Resource, fields
@@ -75,76 +76,85 @@ bo = api.model('BusinessObject', {
 
 """User ist ein BusinessObject"""
 user = api.inherit('User', bo, {
-    'vorname': fields.String(attribute='vorname', description='vorname eines Benutzers'),
-    'nachname': fields.String(attribute='nachname', description='nachname eines Benutzers'),
-    'benutzername': fields.String(attribute='benutzername', description='nachname eines Benutzers'),
-    'email': fields.String(attribute='email', description='nachname eines Benutzers'),
-    'google_user_id': fields.String(attribute='google_user_id', description='nachname eines Benutzers'),
-    'urlaubstage': fields.Integer(attribute='urlaubstage', description='nachname eines Benutzers')
+    'vorname': fields.String(attribute='_vorname', description='vorname eines Benutzers'),
+    'nachname': fields.String(attribute='_nachname', description='nachname eines Benutzers'),
+    'benutzername': fields.String(attribute='_benutzername', description='nachname eines Benutzers'),
+    'email': fields.String(attribute='_email', description='nachname eines Benutzers'),
+    'google_user_id': fields.String(attribute='_google_user_id', description='nachname eines Benutzers'),
+    'urlaubstage': fields.Integer(attribute='_urlaubstage', description='nachname eines Benutzers')
 
 })
 
 aktivitäten = api.inherit('Aktivitäten',bo, {
-    'bezeichnung': fields.String(attribute='bezeichnung', description='bezeichnung einer Aktivität'),
-    'dauer': fields.Float(attribute='dauer', description='bezeichnung der Dauer einer Aktivität'),
-    'capacity': fields.Float(attribute='capacity', description='bezeichnung der Kapazität einer Aktivität'),
-    'project': fields.Integer(attribute='project', description='Project ID'),
+    'bezeichnung': fields.String(attribute='_bezeichnung', description='bezeichnung einer Aktivität'),
+    'dauer': fields.Float(attribute='_dauer', description='bezeichnung der Dauer einer Aktivität'),
+    'capacity': fields.Float(attribute='_capacity', description='bezeichnung der Kapazität einer Aktivität'),
+    'project': fields.Integer(attribute='_project', description='Project ID'),
+})
+zeitintervall = api.inherit('Zeitintervall', bo, {
+    'bezeichnung': fields.String(attribute='_bezeichnung', description='Bezeichnung eines Projektes'),
+    'start': fields.Integer(attribute='_start', description='Start einer Projektarbeit'),
+    'ende': fields.Integer(attribute='_ende', description='Ende einer Projektarbeit'),
 })
 
-projektarbeiten = api.inherit('Projektarbeiten', bo, {
-    'bezeichnung': fields.String(attribute='bezeichnung', description='Bezeichnung eines Projektes'),
-    'beschreibung': fields.String(attribute='beschreibung', description='Beschreibung eines Projektes'),
-    'start': fields.Integer(attribute='start', description='Start einer Projektarbeit'),
-    'ende': fields.Integer(attribute='ende', description='Ende einer Projektarbeit'),
-    'activity': fields.Integer(attribute='activity', description='Aktivitäten ID eines Projektes')
+projektarbeiten = api.inherit('Projektarbeiten', zeitintervall, {
+    'bezeichnung': fields.String(attribute='_bezeichnung', description='Bezeichnung eines Projektes'),
+    'beschreibung': fields.String(attribute='_beschreibung', description='Beschreibung eines Projektes'),
+    'start': fields.Integer(attribute='_start', description='Start einer Projektarbeit'),
+    'ende': fields.Integer(attribute='_ende', description='Ende einer Projektarbeit'),
+    'activity': fields.Integer(attribute='_activity', description='Aktivitäten ID eines Projektes')
 })
 
 pausen = api.inherit('Pausen', bo, {
-    'bezeichnung': fields.String(attribute='bezeichnung', description='Bezeichnung einer Pause'),
-    'start': fields.Integer(attribute='start', description='Start einer Pause'),
-    'ende': fields.Integer(attribute='ende', description='Ende einer Pause')
+    'bezeichnung': fields.String(attribute='_bezeichnung', description='Bezeichnung einer Pause'),
+    'start': fields.Integer(attribute='_start', description='Start einer Pause'),
+    'ende': fields.Integer(attribute='_ende', description='Ende einer Pause')
 })
 
 membership = api.inherit('Membership', bo, {
-    'user': fields.Integer(attribute='user', description='User_id des Memberships'),
-    'project': fields.Integer(attribute='project', description='project_id des Memberships'),
-    'projektleiter': fields.Boolean(attribute='projektleiter', description='Projektleiter eines Memberships')
-
+    'user': fields.Integer(attribute='_user', description='User_id des Memberships'),
+    'project': fields.Integer(attribute='_project', description='project_id des Memberships'),
+    'projektleiter': fields.Boolean(attribute='_projektleiter', description='Projektleiter eines Memberships')
 })
 
-buchung = api.inherit('Ereignisbuchungen', bo, {
-    'erstellt_von': fields.Integer(attribute='erstellt_von', description='bezeichnung Ersteller'),
-    'erstellt_für': fields.Integer(attribute='erstellt_für', describtion='bezeichnung Empfänger'),
-    'ist_buchung': fields.Boolean(attribute='ist_buchung', describtion='bezeichnung der Ist-Buchung'),
+buchung = api.inherit('Buchung', bo, {
+    'erstellt_von': fields.Integer(attribute='_erstellt_von', description='bezeichnung Ersteller'),
+    'erstellt_für': fields.Integer(attribute='_erstellt_für', describtion='bezeichnung Empfänger'),
+    'ist_buchung': fields.Boolean(attribute='_ist_buchung', describtion='bezeichnung der Ist-Buchung'),
+    'bezeichnung': fields.String(attribute='_bezeichnung', description='Bezeichnung der Ereignisbuchung')
 })
 
 ereignisbuchungen = api.inherit('Ereignisbuchungen', buchung, {
-    'ereignis': fields.Integer(attribute='ereignis', describtion='bezeichnung vom Ereignis'),
+    'ereignis': fields.Integer(attribute='_ereignis', describtion='bezeichnung vom Ereignis'),
 })
 
 project = api.inherit('Project',bo, {
-    'projektname': fields.String(attribute='projektname', description='projektname'),
-    'laufzeit': fields.Integer(attribute='laufzeit', description='laufzeit'),
-    'auftraggeber': fields.String(attribute='auftraggeber', description='auftraggeber'),
-    'availablehours': fields.Float(attribute='availablehours', description='availablehours'),
+    'projektname': fields.String(attribute='_projektname', description='projektname'),
+    'laufzeit': fields.Integer(attribute='_laufzeit', description='laufzeit'),
+    'auftraggeber': fields.String(attribute='_auftraggeber', description='auftraggeber'),
+    'availablehours': fields.Float(attribute='_availablehours', description='availablehours'),
+})
+
+ereignis = api.inherit('Ereignis', bo, {
+    'zeitpunkt': fields.String(attribute = '_zeitpunkt', description = 'zeitpunkt eines Ereignisses'),
+    'bezeichnung': fields.String(attribute = '_bezeichnung', description = 'bezeichnung eines Ereignis-Eintrags')
 })
 
 arbeitszeitkonto = api.inherit('Arbeitszeitkonto',bo, {
-    'urlaubskonto': fields.Float(attribute='urlaubskonto', description='urlaubskonto eines Arbeitszeitkontos'),
-    'user': fields.Integer(attribute='user', description='user eines Arbeitszeitkontos'),
-    'gleitzeit': fields.Float(attribute='gleitzeit', description='gleitzeit eines Arbeitszeitkontos'),
-    'arbeitsleistung': fields.Float(attribute='arbeitsleistung', description='arbeitsleistung eines Arbeitszeitkontos'),
+    'urlaubskonto': fields.Float(attribute='_urlaubskonto', description='urlaubskonto eines Arbeitszeitkontos'),
+    'user': fields.Integer(attribute='_user', description='user eines Arbeitszeitkontos'),
+    'gleitzeit': fields.Float(attribute='_gleitzeit', description='gleitzeit eines Arbeitszeitkontos'),
+    'arbeitsleistung': fields.Float(attribute='_arbeitsleistung', description='arbeitsleistung eines Arbeitszeitkontos'),
 })
 
-gehen = api.inherit('Gehen', bo, {
-    'zeitpunkt': fields.String(attribute='zeitpunkt', description='zeitpunkt eines Gehen-Eintrags'),
-    'bezeichnung': fields.String(attribute='bezeichnung', description='bezeichnung eines Gehen-Eintrags'),
+gehen = api.inherit('Gehen', ereignis, {
+    'zeitpunkt': fields.String(attribute='_zeitpunkt', description='zeitpunkt eines Gehen-Eintrags'),
+    'bezeichnung': fields.String(attribute='_bezeichnung', description='bezeichnung eines Gehen-Eintrags'),
 })
 
-
-kommen = api.inherit('Kommen', bo, {
-    'zeitpunkt': fields.String(attribute='zeitpunkt', description='zeitpunkt eines Kommen-Eintrags'),
-    'bezeichnung': fields.String(attribute='bezeichnung', description='bezeichnung eines Kommen-Eintrags'),
+kommen = api.inherit('Kommen', ereignis, {
+    'zeitpunkt': fields.String(attribute='_zeitpunkt', description='zeitpunkt eines Kommen-Eintrags'),
+    'bezeichnung': fields.String(attribute='_bezeichnung', description='bezeichnung eines Kommen-Eintrags'),
 })
 
 abwesenheit = api.inherit('Abwesenheit', bo, {
@@ -155,16 +165,11 @@ abwesenheit = api.inherit('Abwesenheit', bo, {
 })
 
 zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
-    'erstellt_von': fields.Integer(attribute='erstellt_von', description='abwesenheit eines Benutzers'),
-    'erstellt_für': fields.Integer(attribute='erstellt_für', description='abwesenheit eines Benutzers'),
-    'ist_buchung': fields.Boolean(attribute='ist_buchung', description='abwesenheit eines Benutzers'),
-    'zeitintervall': fields.Integer(attribute='zeitintervall', description='abwesenheit eines Benutzers'),
-    'zeitdifferenz': fields.String(attribute='zeitdifferenz', description='abwesenheit eines Benutzers')
-    })
-
-ereignis = api.inherit('Ereignis', bo, {
-    'zeitpunkt': fields.String(attribute = 'zeitpunkt', description = 'zeitpunkt eines Ereignisses'),
-    'bezeichnung': fields.String(attribute = 'bezeichnung', description = 'bezeichnung eines Ereignis-Eintrags')
+    'erstellt_von': fields.Integer(attribute='_erstellt_von', description='abwesenheit eines Benutzers'),
+    'erstellt_für': fields.Integer(attribute='_erstellt_für', description='abwesenheit eines Benutzers'),
+    'ist_buchung': fields.Boolean(attribute='_ist_buchung', description='abwesenheit eines Benutzers'),
+    'zeitintervall': fields.Integer(attribute='_zeitintervall', description='abwesenheit eines Benutzers'),
+    'zeitdifferenz': fields.String(attribute='_zeitdifferenz', description='abwesenheit eines Benutzers')
 })
 
 @projectone.route('/membership')
@@ -176,9 +181,9 @@ class MembershipOperations(Resource):
         """Anlegen eines neuen Membership-Objekts.
         """
         adm = Administration()
-        proposal = Membership(**api.payload, projektleiter=False)
+        proposal = Membership.from_dict(api.payload)
         if proposal is not None:
-            m = adm.create_membership(proposal.user, proposal.project, proposal.projektleiter)
+            m = adm.create_membership(proposal.get_user(), proposal.get_project(), proposal.get_projektleiter())
             return m, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -203,17 +208,15 @@ class MembershipByIDOperations(Resource):
     def put(self, id):
 
         adm = Administration()
-        ms = Membership(**api.payload)
-
+        ms = Membership.from_dict(api.payload)
 
         if ms is not None:
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Membership-Objekts gesetzt.
             Siehe Hinweise oben.
             """
-            ms.id = id
-            ms.timestamp = datetime.now()
-            adm.update_membership(ms)
-            return '', 200
+            ms.set_id(id)
+            me = adm.update_membership(ms)
+            return me, 200
         else:
             return '', 500
 
@@ -251,7 +254,6 @@ class MembershipByUserAndProject(Resource):
 
     def get(self, user, project):
         """Auslesen eines bestimmten Membership-Objekts nach Projektid
-
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
@@ -278,11 +280,11 @@ class ProjektarbeitListOperations(Resource):
         """Anlegen eines neuen Projektarbeit-Objekts.
         """
         adm = Administration()
-        proposal = Projektarbeit(**api.payload)
+        proposal = Projektarbeit.from_dict(api.payload)
 
         if proposal is not None:
            
-            pr = adm.create_projektarbeit(proposal.bezeichnung, proposal.beschreibung, proposal.start, proposal.ende, proposal.activity)
+            pr = adm.create_projektarbeit(proposal.get_bezeichnung(), proposal.get_beschreibung(), proposal.get_start(), proposal.get_ende(), proposal.get_activity())
             return pr, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -305,23 +307,15 @@ class ProjektarbeitenOperations(Resource):
 
     @projectone.marshal_with(projektarbeiten)
     def put(self, id):
-        """Update eines bestimmten Projektarbeit-Objekts.
-
-        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
-        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
-        Projektarbeit-Objekts.
-        """
+        
         adm = Administration()
-        pa = Projektarbeit(**api.payload)
+        pa = Projektarbeit.from_dict(api.payload)
 
 
         if pa is not None:
-            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Projektarbeit-Objekts gesetzt.
-            Siehe Hinweise oben.
-            """
-            pa.id = id
-            adm.update_projektarbeit(pa)
-            return '', 200
+            pa.set_id(id)
+            proja = adm.update_projektarbeit(pa)
+            return proja, 200
         else:
             return '', 500
 
@@ -358,15 +352,9 @@ class ProjektarbeitenByActivityIdOperations(Resource):
 class ProjektarbeitenDetailOperations(Resource):
     @projectone.marshal_with(projektarbeiten)
     def put(self, id, Ak_id):
-        """Update eines bestimmten Projektarbeit-Objekts.
-
-        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
-        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
-        Projektarbeit-Objekts.
-        """
+    
         adm = Administration()
-        pa = Projektarbeit(**api.payload)
-
+        pa = Projektarbeit.from_dict(api.payload)
 
         if pa is not None:
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Projektarbeit-Objekts gesetzt.
@@ -380,7 +368,6 @@ class ProjektarbeitenDetailOperations(Resource):
             return '', 500
 
 
-
 @projectone.route('/pausen')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class PausenListOperations(Resource):
@@ -388,25 +375,14 @@ class PausenListOperations(Resource):
     @projectone.marshal_with(pausen, code=200)
     @projectone.expect(pausen)  # Wir erwarten ein Pausen-Objekt von der Client-Seite.
     def post(self):
-        """Anlegen eines neuen Pausen-Objekts.
-
-        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
-        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
-        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
-        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
-        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
-        """
         adm = Administration()
 
-        proposal = Pause(**api.payload)
+        proposal = Pause.from_dict(api.payload)
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
-            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
-            wird auch dem Client zurückgegeben. 
-            """
-            pa = adm.create_pause(proposal.bezeichnung, proposal.start, proposal.ende)
+           
+            pa = adm.create_pause(proposal.get_bezeichnung(), proposal.get_start(), proposal.get_ende())
             return pa, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -420,33 +396,25 @@ class PausenOperations(Resource):
     @projectone.marshal_with(pausen)
 
     def get(self, id):
-        """Auslesen eines bestimmten Pausen-Objekts.
-
-        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
+       
         adm = Administration()
         pausen = adm.get_pause_by_id(id)
         return pausen
 
     @projectone.marshal_with(pausen)
     def put(self, id):
-        """Update eines bestimmten Pausen-Objekts.
-
-        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
-        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
-        Projektarbeit-Objekts.
-        """
+       
         adm = Administration()
-        pau = Pause(**api.payload)
+        pau = Pause.from_dict(api.payload)
 
 
         if pau is not None:
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Pausen-Objekts gesetzt.
             Siehe Hinweise oben.
             """
-            pau.id = id
-            adm.update_pause(pau)
-            return '', 200
+            pau.set_id(id)
+            p = adm.update_pause(pau)
+            return p, 200
         else:
             return '', 500
 
@@ -462,8 +430,6 @@ class PausenOperations(Resource):
         adm.delete_pause(pu)
         return '', 200
 
-
-
 @projectone.route('/projects/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
@@ -471,26 +437,15 @@ class ProjectListOperations(Resource):
     @projectone.marshal_with(project, code=200)
     @projectone.expect(project)  # Wir erwarten ein User-Objekt von Client-Seite.
     def post(self, user):
-        """Anlegen eines neuen Project-Objekts.
-
-        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
-        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
-        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
-        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
-        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
-        """
+        
         adm = Administration()
 
-        proposal = Project(**api.payload)
+        proposal = Project.from_dict(api.payload)
 
-        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
-            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
-            wird auch dem Client zurückgegeben. 
-            """
-            a = adm.create_project(proposal.projektname, proposal.laufzeit, proposal.auftraggeber, proposal.availablehours)
-            adm.create_membership(user=user, project=a.id, projektleiter=True)
+            
+            a = adm.create_project(proposal.get_projektname(), proposal.get_laufzeit(), proposal.get_auftraggeber(), proposal.get_availablehours())
+            adm.create_membership(user=user, project=a.get_id(), projektleiter=True)
             return a, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -510,20 +465,18 @@ class ProjectListOperations(Resource):
     def put(self, id):
         """Update eines bestimmten Project-Objekts."""
         adm = Administration()
-        pr = Project(**api.payload)
+        pr = Project.from_dict(api.payload)
 
 
         if pr is not None:
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
             Siehe Hinweise oben.
             """
-            pr.id = id
-            pr.timestamp = datetime.now()
-            adm.update_project(pr)
-            return pr, 200
+            pr.set_id(id)
+            proj = adm.update_project(pr)
+            return proj, 200
         else:
             return pr, 500
-
     
     @projectone.marshal_with(project)
     def delete(self, id):
@@ -534,12 +487,10 @@ class ProjectListOperations(Resource):
         adm.delete_project(project)
         return '', 200
 
-
-
 @projectone.route('/aktivitäten-by-id/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des User-Objekts')
-class AktivitätenOperations(Resource):
+class AktivitätenOperations(Resource):  
     @projectone.marshal_with(aktivitäten)
 
     def get(self, id):
@@ -550,7 +501,6 @@ class AktivitätenOperations(Resource):
         akt = Administration()
         aktivitäten = akt.get_aktivitäten_by_id(id)
         return aktivitäten
-
 
 @projectone.route('/aktivitäten-by-project/<int:project>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -581,19 +531,20 @@ class AktivitätenProktleiterOperations(Resource):
         adm = Administration()
         member = adm.get_membership_by_user_and_project(member, project)
 
-        proposal = Aktivitäten.from_dict(api.payload, project=project)
+        proposal = Aktivitäten.from_dict(api.payload)
 
         if proposal is not None:
             """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-        if member.projektleiter == True:
+        if member.get_projektleiter() == True:
             a = adm.create_aktivitäten(proposal.get_bezeichnung(), proposal.get_dauer(), proposal.get_capacity(), proposal.get_project())
             return a, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return print("Projektleiter Falsch")
+
     @projectone.marshal_with(aktivitäten)
     def put(self, project, member):
         """Update eines bestimmten AKtivitäten-Objekts.
@@ -604,36 +555,37 @@ class AktivitätenProktleiterOperations(Resource):
         """
         adm = Administration()
         member = adm.get_membership_by_user_and_project(member, project)
-        ak = Aktivitäten(**api.payload, project=project)
+        ak = Aktivitäten.from_dict(api.payload)
 
 
         if ak is not None:
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
             Siehe Hinweise oben.
             """
-        if member.projektleiter == True:
+        if member.get_projektleiter() == True:
             adm.update_aktivitäten(ak)
             return ak, 200
         else:
-            return '', 500
-
+            return print('Kein Projektleiter'), 500
+@projectone.route('/aktivitäten-by-secured-project/<int:project>/<int:member>/<int:id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des User-Objekts')
+class AktivitätenDeleteOperation(Resource):
 
     @projectone.marshal_with(aktivitäten)
-    def delete(self, id):
+    def delete(self, project, member, id):
         """Löschen eines bestimmten Aktivitäten-Objekts.
 
         Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
         member = adm.get_membership_by_user_and_project(member, project)
-        if member.projektleiter == True:
+        if member.get_projektleiter()==True:
             aktd = adm.get_aktivitäten_by_id(id)
             adm.delete_aktivitäten(aktd)
             return '', 200
         else:
-            return '', 200
-
-
+            return print('Kein Projektleiter', 200)
 
 @projectone.route('/users')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
@@ -653,9 +605,9 @@ class UserListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            u = adm.create_user(proposal.get_vorname, proposal.get_nachname, proposal.get_benutzername, 
-                proposal.get_email, proposal.get_google_user_id, proposal.get_urlaubstage)
-            adm.create_arbeitszeitkonto( urlaubskonto=20, user=u.get_id, arbeitsleistung=0, gleitzeit=0)
+            u = adm.create_user(proposal.get_vorname(), proposal.get_nachname(), proposal.get_benutzername(), 
+                proposal.get_email(), proposal.get_google_user_id(), proposal.get_urlaubstage())
+            adm.create_arbeitszeitkonto(urlaubskonto=20, user=u.get_id(), arbeitsleistung=0, gleitzeit=0)
             return u, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -666,7 +618,7 @@ class UserListOperations(Resource):
 @projectone.param('id', 'Die ID des User-Objekts')
 class UserOperations(Resource):
     @projectone.marshal_with(user)
-    @secured
+
     def get(self, id):
         """Auslesen eines bestimmten Customer-Objekts.
 
@@ -699,8 +651,8 @@ class UserOperations(Resource):
         Customer-Objekts.
         """
         adm = Administration()
-        up = User(**api.payload)    
-        up.id = id
+        up = User.from_dict(api.payload)    
+        up.set_id(id)
         adm.save_user(up)
         return up
 
@@ -734,26 +686,6 @@ class ArbeitszeitkontoOperations(Resource):
         adm = Administration()
         arb = adm.get_arbeitszeitkonto_by_userID(user)
         return arb
-    
-    @projectone.marshal_with(arbeitszeitkonto, code=200)
-    @projectone.expect(arbeitszeitkonto)  # Wir erwarten ein User-Objekt von Client-Seite.
-    def post(self, user):
-
-        adm = Administration()
-
-        proposal = Arbeitszeitkonto(**api.payload)
-
-        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
-        if proposal is not None:
-            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
-            wird auch dem Client zurückgegeben. 
-            """
-            ab = adm.create_arbeitszeitkonto(proposal.urlaubskonto, proposal.user, proposal.arbeitsleistung, proposal.gleitzeit)
-            return ab, 200  
-        else:
-            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
-            return '', 500
 
     @projectone.marshal_with(arbeitszeitkonto)
     def put(self, user):
@@ -764,16 +696,16 @@ class ArbeitszeitkontoOperations(Resource):
         Customer-Objekts.
         """
         adm = Administration()
-        up = Arbeitszeitkonto(**api.payload)
+        up = Arbeitszeitkonto.from_dict(api.payload)
 
 
         if up is not None:
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
             Siehe Hinweise oben.
             """
-            up.user = user
-            adm.update_arbeitszeitkonto(up)
-            return '', 200
+            up.set_user(user)
+            ar = adm.update_arbeitszeitkonto(up)
+            return ar, 200
         else:
             return '', 500
 
@@ -796,25 +728,14 @@ class EreignisbuchungenListOperations(Resource):
     @projectone.marshal_with(ereignisbuchungen, code=200)
     @projectone.expect(ereignisbuchungen)  # Wir erwarten ein Ereignisbuchungen-Objekt von Client-Seite.
     def post(self):
-        """Anlegen eines neuen Ereignisbuchung-Objekts.
-
-        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
-        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
-        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
-        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
-        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
-        """
+       
         adm = Administration()
 
-        proposal = Ereignisbuchung(**api.payload)
+        proposal = Ereignisbuchung.from_dict(api.payload)
 
-        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
-            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
-            wird auch dem Client zurückgegeben. 
-            """
-            e = adm.create_ereignisbuchung(proposal.erstellt_von, proposal.erstellt_für, proposal.ist_buchung, proposal.ereignis)
+            
+            e = adm.create_ereignisbuchung(proposal.get_erstellt_von(), proposal.get_erstellt_für(), proposal.get_ist_buchung(), proposal.get_ereignis(), proposal.get_bezeichnung())
             return e, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -844,16 +765,16 @@ class EreignisbuchungenOperations(Resource):
         Customer-Objekts.
         """
         adm = Administration()
-        er = Ereignisbuchung(**api.payload)
+        er = Ereignisbuchung.from_dict(api.payload)
 
 
         if er is not None:
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
             Siehe Hinweise oben.
             """
-            er.id = id
-            adm.update_ereignisbuchung(er)
-            return '', 200
+            er.set_id(id)
+            era = adm.update_ereignisbuchung(er)
+            return era, 200
         else:
             return '', 500
 
@@ -877,17 +798,13 @@ class GehenListOperations(Resource):
 
     @projectone.marshal_with(gehen, code=200)
     def post(self, projektarbeitid, user):
-        """Anlegen eines neuen Gehen-Objekts.
-
-        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
-        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
-        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
-        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
-        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
-        """
+      
         adm = Administration()
 
-        proposal = Gehen(zeitpunkt=datetime.now(), bezeichnung="gehen")
+        proposal = Gehen()
+        now = datetime.now()
+        proposal.set_zeitpunkt(now)
+        proposal.set_bezeichnung("gehen")
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
@@ -895,11 +812,11 @@ class GehenListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            g = adm.create_gehen(proposal.zeitpunkt, proposal.bezeichnung)
+            g = adm.create_gehen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
             projektarbeit=adm.get_projektarbeit_by_id(projektarbeitid)
-            projektarbeit.ende = g.id
+            projektarbeit.set_ende(g.get_id())
             proarb=adm.update_projektarbeit(projektarbeit)
-            adm.create_zeitintervallbuchung(proarb.id, True, user, user)
+            adm.create_zeitintervallbuchung(proarb.get_id(), True, user, user)
             return g, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -929,7 +846,7 @@ class GehenOperations(Resource):
         Customer-Objekts.
         """
         adm = Administration()
-        ge = Gehen(**api.payload)
+        ge = Gehen.from_dict(api.payload)
 
 
         if ge is not None:
@@ -937,8 +854,8 @@ class GehenOperations(Resource):
             Siehe Hinweise oben.
             """
             ge.id = id
-            adm.update_gehen(ge)
-            return '', 200
+            geh = adm.update_gehen(ge)
+            return geh, 200
         else:
             return '', 500
 
@@ -955,8 +872,6 @@ class GehenOperations(Resource):
         return '', 200
 
 
-
-
 @projectone.route('/kommen')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class KommenListOperations(Resource):
@@ -964,17 +879,10 @@ class KommenListOperations(Resource):
     @projectone.marshal_with(kommen, code=200)
     @projectone.expect(kommen)  # Wir erwarten ein Kommen-Objekt von Client-Seite.
     def post(self):
-        """Anlegen eines neuen Kommen-Objekts.
-
-        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
-        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
-        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
-        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
-        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
-        """
+        
         adm = Administration()
 
-        proposal = Kommen(zeitpunkt=datetime.now(), bezeichnung="kommen")
+        proposal = Kommen.from_dict(zeitpunkt=datetime.now(), bezeichnung="kommen")
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
@@ -983,7 +891,7 @@ class KommenListOperations(Resource):
             wird auch dem Client zurückgegeben. 
             """
 
-            k = adm.create_kommen(proposal.zeitpunkt, proposal.bezeichnung)
+            k = adm.create_kommen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
             adm.create_projektarbeit(bezeichnung="Projektarbeit", beschreibung="", start=k.id, ende=0, activity=0)
             return k, 200
         else:
@@ -1125,11 +1033,11 @@ class EreignisListOperations(Resource):
 
         adm = Administration()
 
-        proposal = Ereignis(**api.payload)
+        proposal = Ereignis.from_dict(api.payload)
 
         if proposal is not None:
         
-            er = adm.create_ereignis(proposal.zeitpunkt, proposal.bezeichnung)
+            er = adm.create_ereignis(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
             return er, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -1159,15 +1067,15 @@ class EreignisOperations(Resource):
         Customer-Objekts.
         """
         adm = Administration()
-        eri = Ereignis(**api.payload)
+        eri = Ereignis.from_dict(api.payload)
 
         if eri is not None:
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
             Siehe Hinweise oben.
             """
-            eri.id = id
-            adm.update_ereignis(eri)
-            return '', 200
+            eri.set_id(id)
+            er = adm.update_ereignis(eri)
+            return er, 200
         else:
             return '', 500
     

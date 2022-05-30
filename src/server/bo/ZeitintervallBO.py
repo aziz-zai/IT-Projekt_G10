@@ -5,11 +5,12 @@ class Zeitintervall(BusinessObject):
         super().__init__()
         self._start = None
         self._ende = None
+        self._bezeichnung = ""
     
     def get_bezeichnung(self):
         return self._bezeichnung
 
-    def set_bezeichnung(self, bezeichnung):
+    def set_bezeichnung(self,bezeichnung):
         self._bezeichnung = bezeichnung
 
     def get_start(self):
@@ -32,11 +33,10 @@ class Zeitintervall(BusinessObject):
     def from_dict(dictionary=dict()):
         """Umwandeln eines Python dict() in Abweseneheit()."""
         obj = Zeitintervall()
-        obj.set_id(dictionary["id"])
-        obj.set_timestamp(dictionary["timestamp"])
         obj.set_bezeichnung(dictionary)["bezeichnung"]
         obj.set_start(dictionary["start"])  
         obj.set_ende(dictionary["ende"])
+
         return obj    
 
     

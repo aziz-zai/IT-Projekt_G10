@@ -16,22 +16,22 @@ class ProjectMapper(Mapper):
 
         for (maxid) in tuples:
             if maxid[0] is not None:
-                project.id = maxid[0] + 1
+                project.set_id(maxid[0] + 1)
             else:
-                project.id = 1
+                project.set_id(1)
         command = """
             INSERT INTO project (
                 id, timestamp, projektname, laufzeit, auftraggeber, availablehours
             ) VALUES (%s,%s,%s,%s,%s,%s)
         """
-        cursor.execute(command, (
-            project.id,
-            project.timestamp,
-            project.projektname,
-            project.laufzeit,
-            project.auftraggeber,
-            project.availablehours,
-        ))
+        data = (project.get_id(),
+            project.get_timestamp(),
+            project.get_projektname(),
+            project.get_laufzeit(),
+            project.get_auftraggeber(),
+            project.get_availablehours())
+        cursor.execute(command, data)
+
         self._cnx.commit()
 
         return project     
@@ -44,7 +44,7 @@ class ProjectMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE project SET timestamp=%s, projektname=%s, laufzeit=%s, auftraggeber=%s, availablehours=%s WHERE id=%s"
-        data = (project.timestamp, project.projektname, project.laufzeit, project.auftraggeber, project.availablehours, project.id)
+        data = (project.get_timestamp(), project.get_projektname(), project.get_laufzeit(), project.get_auftraggeber(), project.get_availablehours(), project.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -63,13 +63,13 @@ class ProjectMapper(Mapper):
 
         try:
             (id, timestamp, projektname, laufzeit, auftraggeber, availablehours) = tuples[0]
-            project = Project(
-            id=id,
-            timestamp=timestamp,
-            projektname=projektname,
-            laufzeit=laufzeit,
-            auftraggeber=auftraggeber,
-            availablehours=availablehours)
+            project = Project()
+            project.set_id(id)
+            project.set_timestamp(timestamp)
+            project.set_projektname(projektname)
+            project.set_laufzeit(laufzeit)
+            project.set_auftraggeber(auftraggeber)
+            project.set_availablehours(availablehours)
             result = project
         except IndexError:
             result = None
@@ -83,7 +83,7 @@ class ProjectMapper(Mapper):
 
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM project WHERE id={}".format(project.id)
+        command = "DELETE FROM project WHERE id={}".format(project.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

@@ -1,11 +1,8 @@
-from time import time
 from server.bo.PauseBO import Pause
 from server.db.Mapper import Mapper
 
 
 class PauseMapper(Mapper):
-
-
     def __init__(self):
         super().__init__()
     
@@ -21,12 +18,12 @@ class PauseMapper(Mapper):
 
         try:
             (id, timestamp, bezeichnung, start, ende) = tuples[0]
-            pause = Pause(
-            id=id,
-            timestamp=timestamp,
-            bezeichnung=bezeichnung,
-            start=start,
-            ende=ende)
+            pause = Pause()
+            pause.set_id(id)
+            pause.set_timestamp(timestamp)
+            pause.set_bezeichnung(bezeichnung)
+            pause.set_start(start)
+            pause.set_ende(ende)
 
             result = pause
 
@@ -49,20 +46,20 @@ class PauseMapper(Mapper):
 
         for (maxid) in tuples:
             if maxid[0] is not None:
-                pause.id = maxid[0] + 1
+                pause.set_id(maxid[0] + 1)
             else:
-                pause.id = 1
+                pause.set_id(1)
         command = """
             INSERT INTO pause (
                 id, timestamp, bezeichnung, start, ende
             ) VALUES (%s,%s,%s,%s,%s)
         """
         cursor.execute(command, (
-            pause.id,
-            pause.timestamp,
-            pause.bezeichnung,
-            pause.start,
-            pause.ende
+            pause.get_id(),
+            pause.get_timestamp(),
+            pause.get_bezeichnung(),
+            pause.get_start(),
+            pause.get_ende()
         ))
         self._cnx.commit()
 
@@ -76,7 +73,7 @@ class PauseMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE pause SET timestamp=%s, bezeichnung=%s, start=%s, ende=%s WHERE id=%s"
-        data = (pause.timestamp, pause.bezeichnung, pause.start, pause.ende, pause.id)
+        data = (pause.get_timestamp(), pause.get_bezeichnung(), pause.get_start(), pause.get_ende(), pause.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -88,7 +85,7 @@ class PauseMapper(Mapper):
 
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM pause WHERE id={}".format(pause.id)
+        command = "DELETE FROM pause WHERE id={}".format(pause.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

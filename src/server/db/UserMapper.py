@@ -25,13 +25,13 @@ class UserMapper(Mapper):
         try:
             (id, timestamp, vorname, nachname, benutzername, email, google_user_id, urlaubstage) = tuples[0]
             user = User()
-            user.set_id(id),
-            user.set_timestamp(timestamp),
-            user.set_vorname(vorname),
-            user.set_nachname(nachname),
-            user.set_benutzername(benutzername),
-            user.set_email(email),
-            user.set_google_user_id(google_user_id),
+            user.set_id(id)
+            user.set_timestamp(timestamp)
+            user.set_vorname(vorname)
+            user.set_nachname(nachname)
+            user.set_benutzername(benutzername)
+            user.set_email(email)
+            user.set_google_user_id(google_user_id)
             user.set_urlaubstage(urlaubstage)
 
             result = user
@@ -87,7 +87,7 @@ class UserMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE user SET timestamp=%s, vorname=%s, nachname=%s, benutzername=%s, email=%s, google_user_id=%s, urlaubstage=%s WHERE id=%s"
-        data = (user.get_id, user.get_timestamp, user.get_vorname, user.get_nachname, user.get_benutzername, user.get_email, user.get_google_user_id, user.get_urlaubstage)
+        data = (user.get_timestamp(), user.get_vorname(), user.get_nachname(), user.get_benutzername(), user.get_email(), user.get_google_user_id(), user.get_urlaubstage(), user.get_id())
         cursor.execute(command, data)
         self._cnx.commit()
         cursor.close()

@@ -43,7 +43,7 @@ class Administration(object):
     Aktivitäten-spezifische Methoden
     """
     def create_aktivitäten(self, bezeichnung, dauer, capacity, project):
-        aktivitäten = Aktivitäten
+        aktivitäten = Aktivitäten()
         aktivitäten.set_bezeichnung(bezeichnung)
         aktivitäten.set_dauer(dauer)
         aktivitäten.set_capacity(capacity)
@@ -108,10 +108,9 @@ class Administration(object):
     """ 
     def create_gehen(self,zeitpunkt, bezeichnung):
         """Gehen Eintrag anlegen"""
-        gehen = Gehen
-        gehen.timestamp = datetime.now()
-        gehen.zeitpunkt = zeitpunkt
-        gehen.bezeichnung = bezeichnung
+        gehen = Gehen()
+        gehen.set_zeitpunkt(zeitpunkt)
+        gehen.set_bezeichnung(bezeichnung)
 
         with GehenMapper() as mapper:
             return mapper.insert(gehen)
@@ -129,18 +128,15 @@ class Administration(object):
         with GehenMapper() as mapper:
             return mapper.delete(gehen)
 
-
     """
     Kommen-spezifische Methoden
     """ 
     def create_kommen(self, zeitpunkt, bezeichnung):
         """Kommen Eintrag anlegen"""
-        kommen = Kommen
-        kommen.timestamp = datetime.now()
-        kommen.zeitpunkt = zeitpunkt
-        kommen.bezeichnung = bezeichnung
+        kommen = Kommen()
+        kommen.set_zeitpunkt(zeitpunkt)
+        kommen.set_bezeichnung(bezeichnung)
         
-
         with KommenMapper() as mapper:
             return mapper.insert(kommen)
 
@@ -157,18 +153,17 @@ class Administration(object):
         with KommenMapper() as mapper:
             return mapper.delete(kommen)
 
-
     """
     Ereignisbuchung-spezifische Methoden
     """ 
-    def create_ereignisbuchung(self, erstellt_von, erstellt_für, ist_buchung, ereignis):
+    def create_ereignisbuchung(self, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung):
         """Ereignisbuchung anlegen"""
-        ereignisbuchung = Ereignisbuchung(
-        timestamp = datetime.now(),
-        erstellt_von = erstellt_von,
-        erstellt_für = erstellt_für,
-        ist_buchung = ist_buchung,
-        ereignis = ereignis)
+        ereignisbuchung = Ereignisbuchung()
+        ereignisbuchung.set_erstellt_von(erstellt_von)
+        ereignisbuchung.set_erstellt_für(erstellt_für)
+        ereignisbuchung.set_ist_buchung(ist_buchung)
+        ereignisbuchung.set_ereignis(ereignis)
+        ereignisbuchung.set_bezeichnung(bezeichnung)
 
         with EreignisbuchungMapper() as mapper:
             return mapper.insert(ereignisbuchung)
@@ -192,12 +187,12 @@ class Administration(object):
     def create_projektarbeit(self, bezeichnung, beschreibung, start, ende, activity):
         """Einen Benutzer anlegen"""
 
-        projektarbeit = Projektarbeit
-        projektarbeit.bezeichnung = bezeichnung
-        projektarbeit.beschreibung = beschreibung
-        projektarbeit.start = start
-        projektarbeit.ende = ende
-        projektarbeit.activity = activity
+        projektarbeit = Projektarbeit()
+        projektarbeit.set_bezeichnung(bezeichnung)
+        projektarbeit.set_start(start)
+        projektarbeit.set_ende(ende)
+        projektarbeit.set_beschreibung(beschreibung)
+        projektarbeit.set_activity(activity)
         
         with ProjektarbeitMapper() as mapper:
             return mapper.insert(projektarbeit)
@@ -225,11 +220,10 @@ class Administration(object):
 
     def create_pause(self, bezeichnung, start, ende):
         """Einen Benutzer anlegen"""
-        pause = Pause
-        pause.timestamp = datetime.now()
-        pause.bezeichnung = bezeichnung
-        pause.start = start
-        pause.ende = ende
+        pause = Pause()
+        pause.set_bezeichnung(bezeichnung)
+        pause.set_start(start)
+        pause.set_ende(ende)
 
         with PauseMapper() as mapper:
             return mapper.insert(pause)
@@ -249,13 +243,13 @@ class Administration(object):
 
 #Zeitintervall Administration
 
-    def create_zeitintervallbuchung(self, zeitintervall, ist_buchung, erstellt_von, erstellt_für):
+    def create_zeitintervallbuchung(self, zeitintervall, ist_buchung, erstellt_von, erstellt_für, bezeichnung):
         zeitintervallbuchung = Zeitintervallbuchung
-        zeitintervallbuchung.timestamp = datetime.now()
-        zeitintervallbuchung.zeitintervall = zeitintervall
-        zeitintervallbuchung.ist_buchung = ist_buchung
-        zeitintervallbuchung.erstellt_von = erstellt_von
-        zeitintervallbuchung.erstellt_für = erstellt_für
+        zeitintervallbuchung.set_zeitintervall(zeitintervall)
+        zeitintervallbuchung.set_ist_buchung(ist_buchung)
+        zeitintervallbuchung.set_erstellt_von(erstellt_von)
+        zeitintervallbuchung.set_erstellt_für(erstellt_für)
+        zeitintervallbuchung.set_bezeichnung(bezeichnung)
         adm = Administration()
         zeitinter = adm.get_projektarbeit_by_id(zeitintervall)
         kommen = adm.get_kommen_by_id(zeitinter.start)
@@ -280,7 +274,7 @@ class Administration(object):
 
     def update_zeitintervallbuchung(self, zeitintervallbuchung):
         with ZeitintervallbuchungMapper() as mapper:
-            return mapper.update(Zeitintervallbuchung)
+            return mapper.update(zeitintervallbuchung)
 
     def delete_zeitintervallbuchung(self, Zeitintervallbuchung):
         with ZeitintervallbuchungMapper() as mapper:
@@ -291,12 +285,11 @@ class Administration(object):
     """
     def create_project(self, projektname, laufzeit, auftraggeber, availablehours):
         """Ein Projekt anlegen"""
-        project = Project
-        project.timestamp = datetime.now()
-        project.projektname = projektname
-        project.laufzeit = laufzeit
-        project.auftraggeber = auftraggeber
-        project.availablehours = availablehours
+        project = Project()
+        project.set_projektname(projektname)
+        project.set_laufzeit(laufzeit)
+        project.set_auftraggeber(auftraggeber)
+        project.set_availablehours(availablehours)
 
         with ProjectMapper() as mapper:
             return mapper.insert(project)
@@ -318,12 +311,11 @@ class Administration(object):
     """
     def create_arbeitszeitkonto(self, urlaubskonto, user, arbeitsleistung, gleitzeit):
         """Einen Benutzer anlegen"""
-        arbeitszeitkonto = Arbeitszeitkonto
-        arbeitszeitkonto.timestamp = datetime.now()
-        arbeitszeitkonto.urlaubskonto = urlaubskonto
-        arbeitszeitkonto.user = user
-        arbeitszeitkonto.arbeitsleistung = arbeitsleistung
-        arbeitszeitkonto.gleitzeit = gleitzeit
+        arbeitszeitkonto = Arbeitszeitkonto()
+        arbeitszeitkonto.set_urlaubskonto(urlaubskonto)
+        arbeitszeitkonto.set_user(user)
+        arbeitszeitkonto.set_arbeitsleistung(arbeitsleistung)
+        arbeitszeitkonto.set_gleitzeit(gleitzeit)
 
         with ArbeitszeitkontoMapper() as mapper:
             return mapper.insert(arbeitszeitkonto)
@@ -351,11 +343,10 @@ class Administration(object):
     Membership-spezifische Methoden
     """
     def create_membership(self, user, project, projektleiter):
-        membership = Membership
-        membership.timestamp = datetime.now()
-        membership.user = user
-        membership.project = project
-        membership.projektleiter = projektleiter
+        membership = Membership()
+        membership.set_user(user)
+        membership.set_project(project)
+        membership.set_projektleiter(projektleiter)
 
         with MembershipMapper() as mapper:
             return mapper.insert(membership)
@@ -390,10 +381,9 @@ class Administration(object):
     """ 
     def create_ereignis(self, zeitpunkt, bezeichnung):
         """Ereignis anlegen"""
-        ereignis = Ereignis
-        ereignis.timestamp = datetime.now()
-        ereignis.zeitpunkt = zeitpunkt
-        ereignis.bezeichnung = bezeichnung
+        ereignis = Ereignis()
+        ereignis.set_zeitpunkt(zeitpunkt)
+        ereignis.set_bezeichnung(bezeichnung)
 
         with EreignisMapper() as mapper:
             return mapper.insert(ereignis)

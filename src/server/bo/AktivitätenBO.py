@@ -1,12 +1,10 @@
 from .BusinessObject import BusinessObject
-from datetime import datetime
-
 
 class Aktivitäten(BusinessObject):
          
     def __init__(self):
         super().__init__()
-        self._bezeichnung = None
+        self._bezeichnung = ""
         self._dauer = None
         self._capacity = None
         self._project = None

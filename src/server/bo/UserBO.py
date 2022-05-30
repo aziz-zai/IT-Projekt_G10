@@ -1,17 +1,15 @@
-from os import urandom
 from .BusinessObject import BusinessObject
 
 class User(BusinessObject):
 
     def __init__(self):
         super().__init__()
-        self._vorname = None
-        self._nachname = None
-        self._benutzername = None
-        self._email = None
+        self._vorname = ""
+        self._nachname = ""
+        self._benutzername = ""
+        self._email = ""
         self._google_user_id = None
         self._urlaubstage = None
-
 
     def get_vorname(self):
         return self._vorname
@@ -56,7 +54,7 @@ class User(BusinessObject):
 
     @staticmethod
     def from_dict(dictionary=dict()):
-        """Umwandeln eines Python dict() in Abweseneheit()."""
+        """Umwandeln eines Python dict() in User()."""
         obj = User()
         obj.set_vorname(dictionary["vorname"])
         obj.set_nachname(dictionary["nachname"])  

@@ -1,4 +1,3 @@
-from datetime import datetime
 from .ZeitintervallBO import Zeitintervall
 
 
@@ -10,7 +9,7 @@ class Abwesenheit(Zeitintervall):
 
     def get_abwesenheitsart(self):
         return self._abwesenheitsart
-
+    
     def set_abwesenheitsart(self, abwesenheitsart):
         self._abwesenheitsart = abwesenheitsart
 

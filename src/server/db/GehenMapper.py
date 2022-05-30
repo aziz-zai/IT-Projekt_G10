@@ -1,14 +1,11 @@
-from time import time
 from server.bo.GehenBO import Gehen
 from server.db.Mapper import Mapper
 
 
 class GehenMapper(Mapper):
 
-
     def __init__(self):
         super().__init__()
-
     
     def find_by_key(self, key):
         """Suchen eines Gehen-Eintrags mit vorgegebener Gehen ID. Da diese eindeutig ist,
@@ -23,12 +20,13 @@ class GehenMapper(Mapper):
 
         try:
             (id, timestamp, zeitpunkt, bezeichnung) = tuples[0]
-            gehen = Gehen(
-            id = id,
-            timestamp = timestamp,
-            zeitpunkt = zeitpunkt,
-            bezeichnung = bezeichnung)
+            gehen = Gehen()
+            gehen.set_id(id)
+            gehen.set_timestamp(timestamp)
+            gehen.set_zeitpunkt(zeitpunkt)
+            gehen.set_bezeichnung(bezeichnung)
             result = gehen
+
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
             keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
@@ -39,7 +37,6 @@ class GehenMapper(Mapper):
 
         return result
 
-
     
     def update(self, gehen: Gehen) -> Gehen:
         """Wiederholtes Schreiben eines Objekts in die Datenbank.
@@ -49,7 +46,7 @@ class GehenMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE gehen SET timestamp = %s, zeitpunkt = %s, bezeichnung = %s WHERE id=%s"
-        data = (gehen.timestamp, gehen.zeitpunkt, gehen.bezeichnung, gehen.id)
+        data = (gehen.get_timestamp(), gehen.get_zeitpunkt(), gehen.get_bezeichnung(), gehen.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -66,29 +63,28 @@ class GehenMapper(Mapper):
 
         for (maxid) in tuples:
             if maxid[0] is not None:
-                gehen.id = maxid[0] + 1
+                gehen.set_id(maxid[0] + 1)
             else:
-                gehen.id = 1
+                gehen.set_id(1)
         command = """
             INSERT INTO gehen (
                 id, timestamp, zeitpunkt, bezeichnung
             ) VALUES (%s,%s,%s,%s)
         """
         cursor.execute(command, (
-            gehen.id,
-            gehen.timestamp,
-            gehen.zeitpunkt,
-            gehen.bezeichnung
+            gehen.get_id(),
+            gehen.get_timestamp(),
+            gehen.get_zeitpunkt(),
+            gehen.get_bezeichnung()
         ))
         self._cnx.commit()
 
         return gehen
 
     def delete(self, gehen):
-
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM gehen WHERE id={}".format(gehen.id)
+        command = "DELETE FROM gehen WHERE id={}".format(gehen.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
