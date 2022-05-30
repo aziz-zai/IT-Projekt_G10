@@ -27,6 +27,11 @@
     transition: all 0.2s ease-in-out;
     cursor:pointer;
 }
+.AddProjectCard:hover{
+    transform: scale(1.2);
+    transition: all 0.2s ease-in-out;
+    cursor:pointer;
+}
 
 .ProjectCardWrapper{
     width: 100%;

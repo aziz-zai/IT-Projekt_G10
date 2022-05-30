@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import {Link} from 'react-router-dom'
 import OneAPI from '../api/OneAPI'
 import PropTypes from 'prop-types'
 import SideBar from '../components/SideBar'
 import NavBar from '../components/NavBar'
 import './MyProfile.css'
+import {Avatar} from '@material-ui/core'
 export class MyProfile extends Component {
     constructor(props) {
         super(props);
@@ -39,7 +39,10 @@ export class MyProfile extends Component {
 
         {user?
         <div class="ProfileWrapper">
-          {user[0].benutzername}
+          <div class="ProfileContainer">
+            <div><img class="ProfileAvatar" src={Cuser.photoURL}/></div> 
+          <div>{user[0].benutzername}</div>
+          </div>
         </div>
         :null}
       </div>

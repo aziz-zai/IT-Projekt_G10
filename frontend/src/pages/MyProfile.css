@@ -1,5 +1,25 @@
 .ProfileWrapper{
-    margin-top: 8rem;
+    margin-top: 15rem;
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.ProfileAvatar{
+    width: 12rem;
+    border-radius: 50%;
+    position: relative;
+    top: -6rem
+}
+
+.ProfileContainer{
+    width: 35rem;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    flex-direction: column;
+    border: 2px solid #ccc;
+    border-radius: 1rem;
+    box-shadow: #5e2e94 0px 3px 8px;
 }

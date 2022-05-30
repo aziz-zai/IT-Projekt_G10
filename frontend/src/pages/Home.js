@@ -9,6 +9,7 @@ import SideBar from '../components/SideBar'
 import Project from '../components/Project'
 import { getTabsUtilityClass } from '@mui/material';
 import MyProfile from './MyProfile';
+import Test from '../components/Test';
 
 
 export class Home extends Component {
@@ -51,6 +52,7 @@ export class Home extends Component {
       <div>
          <SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={Cuser}/>
          <NavBar toggle={this.handleOpenStateChange} user={Cuser} nav="navBlack"/>
+         <div class='Test'><Test/></div>
     <div class="ProjectList">
       {user ?
       <Project user={user}/>
