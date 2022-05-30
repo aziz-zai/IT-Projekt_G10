@@ -81,6 +81,7 @@ class Administration(object):
         user.set_email(email)
         user.set_google_user_id(google_user_id)
         user.set_urlaubstage(urlaubstage)
+        self.create_arbeitszeitkonto() #To be checked
 
         with UserMapper() as mapper:
             return mapper.insert(user)
@@ -244,24 +245,24 @@ class Administration(object):
 #Zeitintervall Administration
 
     def create_zeitintervallbuchung(self, zeitintervall, ist_buchung, erstellt_von, erstellt_für, bezeichnung):
-        zeitintervallbuchung = Zeitintervallbuchung
-        zeitintervallbuchung.set_zeitintervall(zeitintervall)
+        zeitintervallbuchung = Zeitintervallbuchung()
+        zeitintervallbuchung.set_zeitintervall(zeitintervall) 
         zeitintervallbuchung.set_ist_buchung(ist_buchung)
         zeitintervallbuchung.set_erstellt_von(erstellt_von)
         zeitintervallbuchung.set_erstellt_für(erstellt_für)
-        zeitintervallbuchung.set_bezeichnung(bezeichnung)
+        zeitintervallbuchung.set_bezeichnung(bezeichnung) 
         adm = Administration()
         zeitinter = adm.get_projektarbeit_by_id(zeitintervall)
-        kommen = adm.get_kommen_by_id(zeitinter.start)
-        gehen = adm.get_gehen_by_id( zeitinter.ende)
+        kommen = adm.get_kommen_by_id(zeitinter.get_start())
+        gehen = adm.get_gehen_by_id( zeitinter.get_ende())
 
-        zeitdifferenz = datetime.strptime(gehen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.zeitpunkt.strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
+        zeitdifferenz = datetime.strptime(gehen.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
         zeitdiff_sec = zeitdifferenz.total_seconds()
         offset_days = zeitdiff_sec / 86400.0    
         offset_hours = (offset_days % 1) * 24
         offset_minutes = (offset_hours % 1) * 60
         offset = "{:02d}:{:02d}:{:02d}".format(int(offset_days),int(offset_hours), int(offset_minutes))
-        zeitintervallbuchung.zeitdifferenz = offset
+        zeitintervallbuchung.set_zeitdifferenz(offset)
         
         with ZeitintervallbuchungMapper() as mapper:
             return mapper.insert(zeitintervallbuchung)

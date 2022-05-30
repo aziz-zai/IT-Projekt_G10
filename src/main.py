@@ -346,12 +346,12 @@ class ProjektarbeitenByActivityIdOperations(Resource):
         projektarbeitenac = adm.get_projektarbeit_by_activity_id(activity)
         return projektarbeitenac
 
-@projectone.route('/projektarbeit/Gehen/<int:id>/<int:Ak_id>')
+@projectone.route('/projektarbeit/Gehen/<int:id>/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Projektarbeit-Objekts')
 class ProjektarbeitenDetailOperations(Resource):
     @projectone.marshal_with(projektarbeiten)
-    def put(self, id, Ak_id):
+    def put(self, id, user):
     
         adm = Administration()
         pa = Projektarbeit.from_dict(api.payload)
@@ -360,9 +360,9 @@ class ProjektarbeitenDetailOperations(Resource):
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Projektarbeit-Objekts gesetzt.
             Siehe Hinweise oben.
             """
-            pa.id = id
+            pa.set_id(id)
             adm.update_projektarbeit(pa)
-            adm.create_zeitintervallbuchung(pa, Ak_id)
+            adm.create_zeitintervallbuchung(pa.get_id(), True, user, user, bezeichnung="Projektarbeit")
             return '', 200
         else:
             return '', 500
@@ -882,7 +882,10 @@ class KommenListOperations(Resource):
         
         adm = Administration()
 
-        proposal = Kommen.from_dict(zeitpunkt=datetime.now(), bezeichnung="kommen")
+        proposal = Kommen.from_dict()
+        now = datetime.now()
+        proposal.set_zeitpunkt(now)
+        proposal.set_bezeichnung("kommen")
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
@@ -892,7 +895,7 @@ class KommenListOperations(Resource):
             """
 
             k = adm.create_kommen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
-            adm.create_projektarbeit(bezeichnung="Projektarbeit", beschreibung="", start=k.id, ende=0, activity=0)
+            adm.create_projektarbeit(bezeichnung="Projektarbeit", beschreibung="", start=k.set_id(), ende=0, activity=0)
             return k, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -922,7 +925,7 @@ class KommenOperations(Resource):
         Customer-Objekts.
         """
         adm = Administration()
-        ko = Kommen(**api.payload)
+        ko = Kommen.from_dict(api.payload)
 
 
         if ko is not None:
@@ -930,8 +933,8 @@ class KommenOperations(Resource):
             Siehe Hinweise oben.
             """
             ko.id = id
-            adm.update_kommen(ko)
-            return '', 200
+            komm = adm.update_kommen(ko)
+            return komm, 200
         else:
             return '', 500
 
@@ -963,7 +966,7 @@ class ZeitintervallbuchungListOperations(Resource):
         """
         adm = Administration()
 
-        proposal = Zeitintervallbuchung (**api.payload)
+        proposal = Zeitintervallbuchung.from_dict(api.payload)
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
@@ -971,7 +974,7 @@ class ZeitintervallbuchungListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            a = adm.create_zeitintervallbuchung (proposal.zeitintervall, proposal.ist_buchung, proposal.erstellt_von, proposal.erstellt_für)
+            a = adm.create_zeitintervallbuchung (proposal.get_zeitintervall(), proposal.get_ist_buchung(), proposal.get_erstellt_von(), proposal.get_erstellt_für(), proposal.get_bezeichnung())
             return a, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -999,15 +1002,15 @@ class ZeitintervallbuchungOperations(Resource):
         Customer-Objekts.
         """
         adm = Administration()
-        ze = Zeitintervallbuchung(**api.payload)
+        ze = Zeitintervallbuchung.from_dict(api.payload)
 
 
         if ze is not None:
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
             Siehe Hinweise oben.
             """
-            ze.id = id
-            adm.update_zeitinterballbuchung(ze)
+            ze.set_id(id)
+            adm.update_zeitintervallbuchung(ze)
             return '', 200
         else:
             return '', 500

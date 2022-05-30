@@ -12,7 +12,6 @@ class KommenMapper(Mapper):
     def find_by_key(self, key):
         """Suchen eines Kommen-Eintrags mit vorgegebener Kommen ID. Da diese eindeutig ist,
         """
-
         result = None
 
         cursor = self._cnx.cursor()
@@ -22,11 +21,11 @@ class KommenMapper(Mapper):
 
         try:
             (id, timestamp, zeitpunkt, bezeichnung) = tuples[0]
-            kommen = Kommen(
-            id = id,
-            timestamp = timestamp,
-            zeitpunkt = zeitpunkt,
-            bezeichnung = bezeichnung)
+            kommen = Kommen()
+            kommen.set_id(id)
+            kommen.set_timestamp(timestamp)
+            kommen.set_zeitpunkt(zeitpunkt)
+            kommen.set_bezeichnung(bezeichnung)
             result = kommen
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
@@ -38,7 +37,6 @@ class KommenMapper(Mapper):
 
         return result
 
-
     
     def update(self, kommen: Kommen) -> Kommen:
         """Wiederholtes Schreiben eines Objekts in die Datenbank.
@@ -48,7 +46,7 @@ class KommenMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE kommen SET timestamp = %s, zeitpunkt = %s, bezeichnung = %s WHERE id=%s"
-        data = (kommen.timestamp, kommen.zeitpunkt, kommen.bezeichnung, kommen.id)
+        data = (kommen.get_timestamp(), kommen.get_zeitpunkt(), kommen.get_bezeichnung(), kommen.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -65,19 +63,19 @@ class KommenMapper(Mapper):
 
         for (maxid) in tuples:
             if maxid[0] is not None:
-                kommen.id = maxid[0] + 1
+                kommen.set_id(maxid[0] + 1)
             else:
-                kommen.id = 1
+                kommen.set_id(1)
         command = """
             INSERT INTO kommen (
                 id, timestamp, zeitpunkt, bezeichnung
             ) VALUES (%s,%s,%s,%s)
         """
         cursor.execute(command, (
-            kommen.id,
-            kommen.timestamp,
-            kommen.zeitpunkt,
-            kommen.bezeichnung
+            kommen.get_id(),
+            kommen.get_timestamp(),
+            kommen.get_zeitpunkt(),
+            kommen.get_bezeichnung()
         ))
         self._cnx.commit()
 
@@ -87,7 +85,7 @@ class KommenMapper(Mapper):
 
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM kommen WHERE id={}".format(kommen.id)
+        command = "DELETE FROM kommen WHERE id={}".format(kommen.get_id())
         cursor.execute(command)
 
         self._cnx.commit()
