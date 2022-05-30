@@ -23,3 +23,8 @@
     border-radius: 1rem;
     box-shadow: #5e2e94 0px 3px 8px;
 }
+
+.ProfileContent{
+    position: relative;
+    top: -6rem
+}

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import SideBar from '../components/SideBar'
 import NavBar from '../components/NavBar'
 import './MyProfile.css'
-import {Avatar} from '@material-ui/core'
+import TextField from '@mui/material/TextField';
 export class MyProfile extends Component {
     constructor(props) {
         super(props);
@@ -41,7 +41,19 @@ export class MyProfile extends Component {
         <div class="ProfileWrapper">
           <div class="ProfileContainer">
             <div><img class="ProfileAvatar" src={Cuser.photoURL}/></div> 
-          <div>{user[0].benutzername}</div>
+          <div class="ProfileContent">
+            <div><TextField
+          id="standard-helperText"
+          label="Vorname"
+          defaultValue="Default Value"
+          variant="standard"
+        /> &nbsp; <TextField
+        id="standard-helperText"
+        label="Nachname"
+        defaultValue="Default Value"
+        variant="standard"
+      /></div>
+            </div>
           </div>
         </div>
         :null}
