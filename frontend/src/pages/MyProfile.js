@@ -29,6 +29,29 @@ export class MyProfile extends Component {
         })
       }
       }
+      updateUser = () => {
+        // clone the original cutomer, in case the backend call fails
+        let updatedUser = Object.assign(new UserBO(), this.props.user[0]);
+        // set the new attributes from our dialog
+        updatedUser.setVorname(this.state.firstName);
+        updatedUser.setNachname(this.state.lastName);
+        OneAPI.getAPI().updateUser(updatedUser).then(user => {
+          this.setState({
+                // no error message
+          });
+          // keep the new state as base state
+          this.baseState.firstName = this.state.firstName;
+          this.baseState.lastName = this.state.lastName;  // call the parent with the new User
+        }).catch(e =>
+          this.setState({
+                    // show error message
+          })
+        );
+        // set loading to true
+        this.setState({
+                 // disable error message
+        });
+      }
 
     render() {  
       const {user, Cuser} = this.props;
