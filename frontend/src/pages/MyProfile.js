@@ -11,6 +11,8 @@ export class MyProfile extends Component {
         // Init state
         this.state = {
           Open: 'SideBarContainerClosed', 
+          firstName: "",
+          lastName:"",
         };
       }
 
@@ -26,9 +28,10 @@ export class MyProfile extends Component {
         })
       }
       }
-    
+
     render() {  
       const {user, Cuser} = this.props;
+      const {firstName, lastName} = this.state;
     return (
       <div>
         {Cuser ?
@@ -41,19 +44,28 @@ export class MyProfile extends Component {
         <div class="ProfileWrapper">
           <div class="ProfileContainer">
             <div><img class="ProfileAvatar" src={Cuser.photoURL}/></div> 
-          <div class="ProfileContent">
-            <div><TextField
-          id="standard-helperText"
-          label="Vorname"
-          defaultValue="Default Value"
-          variant="standard"
-        /> &nbsp; <TextField
-        id="standard-helperText"
-        label="Nachname"
-        defaultValue="Default Value"
-        variant="standard"
-      /></div>
-            </div>
+            <div class="ProfileContent">
+              <div><TextField
+                    autoFocus type='text' required
+                    id="firstName"
+                    label="Vorname"
+                    defaultValue={user.vorname}
+                    value={firstName}
+                    variant="standard"
+                    /> &nbsp; <TextField
+                    autoFocus type='text' required
+                    id="lastName"
+                    label="Nachname"
+                    defaultValue={user.nachname}
+                    value={lastName}
+                    variant="standard"
+                    />
+                </div>
+                
+              </div>
+              <div class="saveBtnWrapper">
+                  <button class="saveBtn">Speichern</button>
+              </div>
           </div>
         </div>
         :null}

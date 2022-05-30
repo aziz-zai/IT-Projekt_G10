@@ -1,5 +1,5 @@
 .ProfileWrapper{
-    margin-top: 15rem;
+    margin-top: 13rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,7 +10,7 @@
     width: 12rem;
     border-radius: 50%;
     position: relative;
-    top: -6rem
+    top: -5rem
 }
 
 .ProfileContainer{
@@ -26,5 +26,28 @@
 
 .ProfileContent{
     position: relative;
-    top: -6rem
+    top: -5rem
+}
+
+.saveBtn{
+    border-radius: 50px;
+    background: #5e2e94;
+    white-space: nowrap;
+    padding: 10px 40px;
+    color:#fff;
+    font-size: 20px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+}
+
+.saveBtnWrapper{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    padding: 0.5rem;
 }
