@@ -32,6 +32,7 @@ export default class OneAPI {
   // User related
   #getUserGidURL = (id) => `${this.#OneServerBaseURL}/users-by-gid/${id}`;
   #getUserURL = (id) => `${this.#OneServerBaseURL}/users/${id}`;
+  #updateUserURL = (id) => `${this.#OneServerBaseURL}/users/${id}`;
 
   // Project related
   #getProjectsURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
@@ -169,6 +170,23 @@ export default class OneAPI {
       })
     })
   }
+  updateUser(UserBO) {
+    return this.#fetchAdvanced(this.#updateUserURL(UserBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(UserBO)
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseUserBO = UserBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseUserBO);
+      })
+    })
+  }
 
   getProject(id) {
     return this.#fetchAdvanced(this.#getProjectsURL(id)).then((responseJSON) => {
@@ -219,7 +237,7 @@ export default class OneAPI {
         resolve(responseProjectBO);
       })
     })
-  }j
+  }
 
   deleteProject(id) {
     return this.#fetchAdvanced(this.#deleteProjectURL(id), {

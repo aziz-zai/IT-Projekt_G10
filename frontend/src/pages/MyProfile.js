@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import OneAPI from '../api/OneAPI'
+import UserBO from '../api/UserBO'
 import PropTypes from 'prop-types'
 import SideBar from '../components/SideBar'
 import NavBar from '../components/NavBar'
