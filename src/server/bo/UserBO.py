@@ -9,7 +9,7 @@ class User(BusinessObject):
         self._benutzername = ""
         self._email = ""
         self._google_user_id = None
-        self._urlaubstage = None
+        self._urlaubstage = 20
 
     def get_vorname(self):
         return self._vorname
@@ -44,8 +44,6 @@ class User(BusinessObject):
     def get_urlaubstage(self):
         return self._urlaubstage
 
-    def set_urlaubstage(self, urlaubstage):
-        self._urlaubstage = urlaubstage
 
     def __str__(self):
         """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""
@@ -61,6 +59,5 @@ class User(BusinessObject):
         obj.set_benutzername(dictionary["benutzername"])
         obj.set_email(dictionary["email"])
         obj.set_google_user_id(dictionary["google_user_id"])
-        obj.set_urlaubstage(dictionary["urlaubstage"])
 
         return obj

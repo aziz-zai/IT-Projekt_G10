@@ -70,19 +70,17 @@ class Administration(object):
             return mapper.delete(aktivitäten)
 
     """
+    ANCHOR User Admin
     User-spezifische Methoden
     """
-    def create_user(self, vorname, nachname, benutzername, email, google_user_id, urlaubstage):
+    def create_user(self, vorname, nachname, benutzername, email, google_user_id):
         """Einen Benutzer anlegen"""
         user = User()
         user.set_vorname(vorname)
         user.set_nachname(nachname)
         user.set_benutzername(benutzername)
         user.set_email(email)
-        user.set_google_user_id(google_user_id)
-        user.set_urlaubstage(urlaubstage)
-        self.create_arbeitszeitkonto() #To be checked
-
+        user.set_google_user_id(google_user_id) 
         with UserMapper() as mapper:
             return mapper.insert(user)
 

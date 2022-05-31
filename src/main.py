@@ -172,11 +172,14 @@ zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
     'zeitdifferenz': fields.String(attribute='_zeitdifferenz', description='abwesenheit eines Benutzers')
 })
 
+
+"""ANCHOR Membership Views"""
 @projectone.route('/membership')
 @projectone.response(500, 'Falls es zu einem Server-seitigem Fehler kommt.')
 class MembershipOperations(Resource):
     @projectone.marshal_with(membership, code=200)
-    @projectone.expect(membership)  # Wir erwarten ein Membership-Objekt von der Client-Seite.
+    @projectone.expect(membership) # Wir erwarten ein Membership-Objekt von der Client-Seite.
+    @secured 
     def post(self):
         """Anlegen eines neuen Membership-Objekts.
         """
@@ -236,7 +239,7 @@ class MembershipByIDOperations(Resource):
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByProjectOperations(Resource):
-    @projectone.marshal_with(project)
+    @projectone.marshal_with(user)
     def get(self, project):
         """Auslesen eines bestimmten Membership-Objekts nach Projektid
 
@@ -487,6 +490,8 @@ class ProjectListOperations(Resource):
         adm.delete_project(project)
         return '', 200
 
+
+"""ANCHOR Aktivitäten Views"""
 @projectone.route('/aktivitäten-by-id/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des User-Objekts')
@@ -587,32 +592,7 @@ class AktivitätenDeleteOperation(Resource):
         else:
             return print('Kein Projektleiter', 200)
 
-@projectone.route('/users')
-@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-class UserListOperations(Resource):
-    @projectone.marshal_with(user, code=200)
-    @projectone.expect(user)  # Wir erwarten ein User-Objekt von Client-Seite.
-
-    def post(self):
-        
-        adm = Administration()
-
-        proposal = User.from_dict(api.payload)
-
-        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
-        if proposal is not None:
-            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
-            wird auch dem Client zurückgegeben. 
-            """
-            u = adm.create_user(proposal.get_vorname(), proposal.get_nachname(), proposal.get_benutzername(), 
-                proposal.get_email(), proposal.get_google_user_id(), proposal.get_urlaubstage())
-            adm.create_arbeitszeitkonto(urlaubskonto=20, user=u.get_id(), arbeitsleistung=0, gleitzeit=0)
-            return u, 200
-        else:
-            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
-            return '', 500
-
+"""ANCHOR User Views"""
 @projectone.route('/users/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des User-Objekts')
@@ -872,17 +852,17 @@ class GehenOperations(Resource):
         return '', 200
 
 
-@projectone.route('/kommen')
+@projectone.route('/kommen/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class KommenListOperations(Resource):
 
     @projectone.marshal_with(kommen, code=200)
     @projectone.expect(kommen)  # Wir erwarten ein Kommen-Objekt von Client-Seite.
-    def post(self):
+    def post(self, user):
         
         adm = Administration()
 
-        proposal = Kommen.from_dict()
+        proposal = Kommen()
         now = datetime.now()
         proposal.set_zeitpunkt(now)
         proposal.set_bezeichnung("kommen")
@@ -895,7 +875,8 @@ class KommenListOperations(Resource):
             """
 
             k = adm.create_kommen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
-            adm.create_projektarbeit(bezeichnung="Projektarbeit", beschreibung="", start=k.set_id(), ende=0, activity=0)
+            adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=True, ereignis=k.get_id() ,bezeichnung="Arbeitsbeginn")
+            adm.create_projektarbeit(bezeichnung="Projektarbeit", beschreibung="", start=k.get_id(), ende=0, activity=0)
             return k, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.

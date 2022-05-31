@@ -1,6 +1,7 @@
 from time import time
 from server.bo.MembershipBO import Membership
 from server.bo.ProjectBO import Project
+from server.bo.UserBO import User
 from server.db.Mapper import Mapper
 
 
@@ -46,23 +47,23 @@ class MembershipMapper(Mapper):
 
             cursor = self._cnx.cursor()
             command = """
-            SELECT id, timestamp, projektname, auftraggeber, laufzeit, availablehours from projectone.project
+            SELECT id, timestamp, vorname, nachname, email, benutzername, google_user_id from projectone.user
             WHERE id IN(
                 SELECT user from projectone.membership
                 WHERE project={})""".format(project)
             cursor.execute(command)
             tuples = cursor.fetchall()
 
-            for (id, timestamp, projektname, auftraggeber, laufzeit, availablehours ) in tuples:
-                project = Project()
-                project.set_id(id)
-                project.set_timestamp(timestamp)
-                project.set_projektname(projektname)
-                project.set_laufzeit(laufzeit)
-                project.set_auftraggeber(auftraggeber)
-                project.set_availablehours(availablehours)
-
-                result.append(project)
+            for (id, timestamp, vorname, nachname, email, benutzername, google_user_id) in tuples:
+                user = User()
+                user.set_id(id)
+                user.set_timestamp(timestamp)
+                user.set_vorname(vorname)
+                user.set_nachname(nachname)
+                user.set_email(email)
+                user.set_benutzername(benutzername)
+                user.set_google_user_id(google_user_id)
+                result.append(user)
 
             self._cnx.commit()
             cursor.close()

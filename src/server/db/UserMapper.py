@@ -52,12 +52,12 @@ class UserMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id, urlaubstage FROM user WHERE google_user_id LIKE '{}'".format(google_user_id)
+        command = "SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id FROM user WHERE google_user_id LIKE '{}'".format(google_user_id)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, vorname, nachname, benutzername, email, google_user_id, urlaubstage) = tuples[0]
+            (id, timestamp, vorname, nachname, benutzername, email, google_user_id) = tuples[0]
             user = User()
             user.set_id(id),
             user.set_timestamp(timestamp),
@@ -66,7 +66,6 @@ class UserMapper(Mapper):
             user.set_benutzername(benutzername),
             user.set_email(email),
             user.set_google_user_id(google_user_id),
-            user.set_urlaubstage(urlaubstage)
             result = user
 
         except IndexError:

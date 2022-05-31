@@ -4,7 +4,7 @@ from datetime import datetime
 
 class Kommen(Ereignis):
 
-    def __init__():
+    def __init__(self):
         super().__init__()
 
     

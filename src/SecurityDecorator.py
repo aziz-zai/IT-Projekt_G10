@@ -63,8 +63,8 @@ def secured(function):
                         Wir legen daher ein neues User-Objekt an, um dieses ggf. später
                         nutzen zu können.
                         """
-                        adm.create_user("", "", benutzername, email, google_user_id)
-
+                        createdUser=adm.create_user("", "", benutzername, email, google_user_id)
+                        adm.create_arbeitszeitkonto(urlaubskonto=20, user=createdUser.get_id(), arbeitsleistung=0, gleitzeit=0)
                     print(request.method, request.path, "angefragt durch:", email)
 
                     objects = function(*args, **kwargs)

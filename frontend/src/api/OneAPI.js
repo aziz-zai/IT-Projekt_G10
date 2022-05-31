@@ -27,7 +27,7 @@ export default class OneAPI {
 
 
   // Local Python backend
-  #OneServerBaseURL = '/projectone';
+  #OneServerBaseURL = 'http://localhost:5000/projectone';
 
   // User related
   #getUserGidURL = (id) => `${this.#OneServerBaseURL}/users-by-gid/${id}`;
@@ -448,7 +448,7 @@ export default class OneAPI {
 
 
   updateZeitintervallbuchung(zeitintervallbuchungBO) {
-    return this.#fetchAdvanced(this.#updateZeitintervallbuchungURL(zeitinterballbuchungBO.getID()), {
+    return this.#fetchAdvanced(this.#updateZeitintervallbuchungURL(zeitintervallbuchungBO.getID()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -703,7 +703,7 @@ export default class OneAPI {
   }
 
   getAktivitätenById(id) {
-    return this.#fetchAdvanced(this.#getAktivitätenURL(id)).then((responseJSON) => {
+    return this.#fetchAdvanced(this.#getAktivitätenByIdURL(id)).then((responseJSON) => {
       let aktivitätenBOs = AktivitätenBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {
@@ -713,7 +713,7 @@ export default class OneAPI {
   }
 
   getAktivitätenByProjectId(project_id) {
-    return this.#fetchAdvanced(this.#getAktivitätenURL(project_id)).then((responseJSON) => {
+    return this.#fetchAdvanced(this.#getAktivitätenByProjectIdURL(project_id)).then((responseJSON) => {
       let aktivitätenBOs = AktivitätenBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {
