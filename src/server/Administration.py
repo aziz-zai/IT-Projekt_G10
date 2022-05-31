@@ -255,11 +255,10 @@ class Administration(object):
         gehen = adm.get_gehen_by_id( zeitinter.get_ende())
 
         zeitdifferenz = datetime.strptime(gehen.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
-        zeitdiff_sec = zeitdifferenz.total_seconds()
-        offset_days = zeitdiff_sec / 86400.0    
-        offset_hours = (offset_days % 1) * 24
+        zeitdiff_sec = zeitdifferenz.total_seconds()   
+        offset_hours = zeitdiff_sec / 3600
         offset_minutes = (offset_hours % 1) * 60
-        offset = "{:02d}:{:02d}:{:02d}".format(int(offset_days),int(offset_hours), int(offset_minutes))
+        offset = "{:02d}.{:02d}".format(int(offset_hours), int(offset_minutes))
         zeitintervallbuchung.set_zeitdifferenz(offset)
         
         with ZeitintervallbuchungMapper() as mapper:

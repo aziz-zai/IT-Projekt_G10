@@ -56,8 +56,8 @@ class ZeitintervallbuchungMapper(Mapper):
                 zeitintervallbuchung.set_id(1)
         command = """
             INSERT INTO zeitintervallbuchung (
-                id, timestamp, erstellt_von, erstellt_für, ist_buchung, zeitintervall, zeitdifferenz
-            ) VALUES (%s,%s,%s,%s,%s,%s,%s)
+                id, timestamp, erstellt_von, erstellt_für, ist_buchung, zeitintervall, zeitdifferenz, bezeichnung
+            ) VALUES (%s,%s,%s,%s,%s,%s,%s, %s)
         """
         cursor.execute(command, (
             zeitintervallbuchung.get_id(),
@@ -66,7 +66,8 @@ class ZeitintervallbuchungMapper(Mapper):
             zeitintervallbuchung.get_erstellt_für(),
             zeitintervallbuchung.get_ist_buchung(),
             zeitintervallbuchung.get_zeitintervall(),
-            zeitintervallbuchung.get_zeitdifferenz()
+            zeitintervallbuchung.get_zeitdifferenz(),
+            zeitintervallbuchung.get_bezeichnung()
         ))
         self._cnx.commit()
 

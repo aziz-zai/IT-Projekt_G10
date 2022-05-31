@@ -5,7 +5,8 @@ class Zeitintervallbuchung(Buchung):
     def __init__(self):
         super().__init__()
         self._zeitintervall = None
-        self._zeitdifferenz = None
+        self._zeitdifferenz = ""
+        self._bezeichnung = ""
 
     def get_zeitintervall(self):
         return self._zeitintervall
@@ -14,10 +15,16 @@ class Zeitintervallbuchung(Buchung):
         self._zeitintervall = zeitintervall
         
     def get_zeitdifferenz(self):
-        return self._zeitintervall
+        return self._zeitdifferenz
 
     def set_zeitdifferenz(self, zeitdifferenz):
         self._zeitdifferenz = zeitdifferenz
+    
+    def get_bezeichnung(self):
+        return self._bezeichnung
+
+    def set_bezeichnung(self, bezeichnung):
+        self._bezeichnung = bezeichnung
 
 
     @staticmethod

@@ -173,7 +173,8 @@ zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
 })
 
 
-"""ANCHOR Membership Views"""
+"""ANCHOR Membership Views
+"""
 @projectone.route('/membership')
 @projectone.response(500, 'Falls es zu einem Server-seitigem Fehler kommt.')
 class MembershipOperations(Resource):
@@ -491,7 +492,8 @@ class ProjectListOperations(Resource):
         return '', 200
 
 
-"""ANCHOR Aktivitäten Views"""
+"""ANCHOR Aktivitäten Views
+"""
 @projectone.route('/aktivitäten-by-id/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des User-Objekts')
@@ -592,7 +594,8 @@ class AktivitätenDeleteOperation(Resource):
         else:
             return print('Kein Projektleiter', 200)
 
-"""ANCHOR User Views"""
+"""ANCHOR User Views
+"""
 @projectone.route('/users/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des User-Objekts')
@@ -771,13 +774,14 @@ class EreignisbuchungenOperations(Resource):
         return '', 200
 
 
-
-@projectone.route('/gehen/<int:projektarbeitid>/<int:user>')
+"""ANCHOR Gehen Views
+"""
+@projectone.route('/gehen/<int:projektarbeitid>/<int:user>/<int:activity>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class GehenListOperations(Resource):
 
     @projectone.marshal_with(gehen, code=200)
-    def post(self, projektarbeitid, user):
+    def post(self, projektarbeitid, user, activity):
       
         adm = Administration()
 
@@ -790,13 +794,27 @@ class GehenListOperations(Resource):
         if proposal is not None:
             """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
-            wird auch dem Client zurückgegeben. 
+            wird auch dem Client zurückgegeben.     
             """
             g = adm.create_gehen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
             projektarbeit=adm.get_projektarbeit_by_id(projektarbeitid)
             projektarbeit.set_ende(g.get_id())
+            projektarbeit.set_activity(activity)
             proarb=adm.update_projektarbeit(projektarbeit)
-            adm.create_zeitintervallbuchung(proarb.get_id(), True, user, user)
+            zeitintervallbuchung = adm.create_zeitintervallbuchung(proarb.get_id(), True, user, user,"Projektarbeit")
+
+            arbeitszeitkonto = adm.get_arbeitszeitkonto_by_userID(user)
+            aktuelle_arbeitsleistung = arbeitszeitkonto.get_arbeitsleistung()
+            gebuchte_arbeitsleistung = zeitintervallbuchung.get_zeitdifferenz()
+            arbeitsstunde = aktuelle_arbeitsleistung + float(gebuchte_arbeitsleistung)
+            azk = Arbeitszeitkonto()
+            azk.set_arbeitsleistung(arbeitsstunde)
+            azk.set_gleitzeit(arbeitszeitkonto.get_gleitzeit())
+            azk.set_user(arbeitszeitkonto.get_user())
+            azk.set_urlaubskonto(arbeitszeitkonto.get_urlaubskonto())
+            azk.set_id(arbeitszeitkonto.get_id())
+            azk.set_timestamp(datetime.now())
+            adm.update_arbeitszeitkonto(azk)
             return g, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -852,6 +870,8 @@ class GehenOperations(Resource):
         return '', 200
 
 
+"""ANCHOR Kommen Views
+"""
 @projectone.route('/kommen/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class KommenListOperations(Resource):
@@ -877,6 +897,9 @@ class KommenListOperations(Resource):
             k = adm.create_kommen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
             adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=True, ereignis=k.get_id() ,bezeichnung="Arbeitsbeginn")
             adm.create_projektarbeit(bezeichnung="Projektarbeit", beschreibung="", start=k.get_id(), ende=0, activity=0)
+            arbeitszeitkonto = adm.get_arbeitszeitkonto_by_userID(user)
+   
+            adm.update_arbeitszeitkonto(arbeitszeitkonto)
             return k, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -913,7 +936,7 @@ class KommenOperations(Resource):
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
             Siehe Hinweise oben.
             """
-            ko.id = id
+            ko.set_id(id)
             komm = adm.update_kommen(ko)
             return komm, 200
         else:
