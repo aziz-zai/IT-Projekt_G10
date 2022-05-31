@@ -657,7 +657,8 @@ class UserByGoogleUserIdOperations(Resource):
         userg = adm.get_user_by_google_user_id(google_user_id)
         return userg
 
-
+"""ANCHOR Arbeitszeitkonto
+"""
 @projectone.route('/arbeitszeitkonto-by-user/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('user', 'Die ID des User-Objekts')
