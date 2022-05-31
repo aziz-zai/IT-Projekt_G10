@@ -434,6 +434,9 @@ class PausenOperations(Resource):
         adm.delete_pause(pu)
         return '', 200
 
+"""ANCHOR Projekt Views
+"""        
+
 @projectone.route('/projects/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
@@ -820,7 +823,7 @@ class GehenListOperations(Resource):
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
-@projectone.route('/gehen/<int:id>/<int:projektarbeit>/<int:user>')
+@projectone.route('/gehen/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Gehen-Objekts')
 class GehenOperations(Resource):
@@ -851,7 +854,7 @@ class GehenOperations(Resource):
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
             Siehe Hinweise oben.
             """
-            ge.id = id
+            ge.set_id(id)
             geh = adm.update_gehen(ge)
             return geh, 200
         else:
