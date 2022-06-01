@@ -319,9 +319,27 @@ class Administration(object):
         with ProjectMapper() as mapper:
             return mapper.find_by_key(id)
 
+    def get_project_by_activity(self, activity):
+        with ProjectMapper() as mapper:
+            return mapper.find_by_activity(activity)
+
     def update_project(self, project):
         with ProjectMapper() as mapper:
             return mapper.update(project)
+    
+    def update_project_availablehours(self, activity, zeitintervallbuchung):
+        project = self.get_project_by_activity(activity)
+
+        aktuelle_availablehours = project.get_availablehours()
+        arbeitsstunden = float(zeitintervallbuchung.get_zeitdifferenz())
+        updated_availablehours = aktuelle_availablehours - arbeitsstunden
+
+        pro = Project()
+        pro.set_projektname(project.get_projektname())
+        pro.get_auftraggeber(project.get_auftraggeber())
+        pro.get_availablehours(updated_availablehours)
+        pro.get_laufzeit(project.get_laufzeit())
+        self.update_project(pro)
     
     def delete_project(self, project):
         with ProjectMapper() as mapper:

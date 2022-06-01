@@ -847,6 +847,8 @@ class GehenListOperations(Resource):
             adm.update_arbeitsleistung(user, zeitintervallbuchung)
 
             adm.update_aktivitäten_capacity(activity, zeitintervallbuchung)
+
+            adm.update_project_availablehours(activity, zeitintervallbuchung)
             return g, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.

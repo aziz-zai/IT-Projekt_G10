@@ -78,6 +78,34 @@ class ProjectMapper(Mapper):
         cursor.close()
 
         return result
+    
+    def find_by_activity(self, activity):
+
+        result = None
+        cursor = self._cnx.cursor()
+        command = """SELECT id, timestamp, projektname, laufzeit, auftraggeber, availablehours 
+        FROM project 
+        WHERE id in(SELECT project FROM activity WHERE id=%s)"""
+        cursor.execute(command, activity)
+        tuples = cursor.fetchall()
+
+        try:
+            (id, timestamp, projektname, laufzeit, auftraggeber, availablehours) = tuples[0]
+            project = Project()
+            project.set_id(id)
+            project.set_timestamp(timestamp)
+            project.set_projektname(projektname)
+            project.set_laufzeit(laufzeit)
+            project.set_auftraggeber(auftraggeber)
+            project.set_availablehours(availablehours)
+            result = project
+        except IndexError:
+            result = None
+        
+        self._cnx.commit()
+        cursor.close()
+
+        return result
 
     def delete(self, project):
 
