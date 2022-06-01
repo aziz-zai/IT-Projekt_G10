@@ -838,6 +838,7 @@ class GehenListOperations(Resource):
             wird auch dem Client zurückgegeben.     
             """
             g = adm.create_gehen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
+            adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=True, ereignis=g.get_id() ,bezeichnung="Arbeitsende")
             projektarbeit=adm.get_projektarbeit_by_id(projektarbeitid)
             projektarbeit.set_ende(g.get_id())
             projektarbeit.set_activity(activity)
