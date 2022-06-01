@@ -89,7 +89,6 @@ export class MyProfile extends Component {
             <div><img class="ProfileAvatar" src={Cuser.photoURL}/></div> 
             <div class="ProfileContent">
               <div>
-              {console.log('firstName', firstName)}
               <form sx={{width: '100%'}} noValidate autoComplete='off'>
                 <TextField
                     autoFocus type='text' required

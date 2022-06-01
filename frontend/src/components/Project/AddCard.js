@@ -11,7 +11,7 @@ export class AddCard extends Component {
         super(props);
         // Init state
         this.state = {
-          isOpen: null,
+          isOpen: false,
         };
     }
 
@@ -30,12 +30,12 @@ export class AddCard extends Component {
   render() {
     return (
       <div class="ProjectCardWrapper">
-        <Card  class="AddProjectCard">
+        <Card onClick={this.handleClickOpen} class="AddProjectCard">
         <CardContent class="addImgWrapper">
         <img class="addImg" src={add}></img>
       </CardContent>
       </Card>
-      <CreateProject isOpen={this.state.isOpen} />
+      <CreateProject isOpen={this.state.isOpen} handleClose={this.handleClose}/>
       </div>
     )
   }

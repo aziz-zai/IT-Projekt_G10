@@ -41,16 +41,16 @@ export class CreateProject extends Component {
             <IconButton
               edge="start"
               color="inherit"
-              
+              onClick={this.props.handleClose}
               aria-label="close"
             >
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Sound
+              Projekt anlegen
             </Typography>
-            <Button autoFocus color="inherit" >
-              save
+            <Button onClick={this.props.handleClose} autoFocus color="inherit" >
+              speichern
             </Button>
           </Toolbar>
         </AppBar>
