@@ -817,7 +817,7 @@ class EreignisbuchungenOperations(Resource):
 
 """ANCHOR Gehen Views
 """
-@projectone.route('/gehen/<int:projektarbeitid>/<int:user>/<int:activity>')
+@projectone.route('/gehen-ist/<int:projektarbeitid>/<int:user>/<int:activity>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class GehenListOperations(Resource):
 
@@ -845,11 +845,43 @@ class GehenListOperations(Resource):
             proarb=adm.update_projektarbeit(projektarbeit)
             zeitintervallbuchung = adm.create_zeitintervallbuchung(proarb.get_id(), True, user, user,"Projektarbeit")
             
-            adm.update_arbeitszeitkonto_arbeitsleistung(user, zeitintervallbuchung)
+            adm.update_arbeitszeitkonto_ist_arbeitsleistung(user, zeitintervallbuchung)
 
             adm.update_aktivitäten_capacity(activity, zeitintervallbuchung)
 
             adm.update_project_availablehours(activity, zeitintervallbuchung)
+            return g, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+@projectone.route('/gehen-soll/<int:projektarbeitid>/<int:erstellt_von>/<int:erstellt_fuer>/<int:activity>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class GehenSollListOperations(Resource):
+    @projectone.marshal_with(gehen, code=200)
+    def post(self, projektarbeitid, erstellt_von, erstellt_fuer, activity):
+      
+        adm = Administration()
+
+        proposal = Gehen()
+        now = datetime.now()
+        proposal.set_zeitpunkt(now)
+        proposal.set_bezeichnung("gehen")
+
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+        if proposal is not None:
+            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
+            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben.     
+            """
+            g = adm.create_gehen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
+            adm.create_ereignisbuchung(erstellt_von=erstellt_von, erstellt_für=erstellt_fuer, ist_buchung=False, ereignis=g.get_id() ,bezeichnung="Arbeitsende")
+            projektarbeit=adm.get_projektarbeit_by_id(projektarbeitid)
+            projektarbeit.set_ende(g.get_id())
+            projektarbeit.set_activity(activity)
+            proarb=adm.update_projektarbeit(projektarbeit)
+            zeitintervallbuchung = adm.create_zeitintervallbuchung(proarb.get_id(), False, erstellt_von, erstellt_fuer,"Projektarbeit")
+            
+            adm.update_arbeitszeitkonto_soll_arbeitsleistung(erstellt_fuer, zeitintervallbuchung)
             return g, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -907,7 +939,7 @@ class GehenOperations(Resource):
 
 """ANCHOR Kommen Views
 """
-@projectone.route('/kommen/<int:user>/<string:projektarbeit>')
+@projectone.route('/kommen-ist/<int:user>/<string:projektarbeit>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class KommenListOperations(Resource):
 
@@ -932,9 +964,37 @@ class KommenListOperations(Resource):
             k = adm.create_kommen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
             adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=True, ereignis=k.get_id() ,bezeichnung="Arbeitsbeginn")
             adm.create_projektarbeit(bezeichnung=projektarbeit, beschreibung="", start=k.get_id(), ende=0, activity=0)
-            arbeitszeitkonto = adm.get_arbeitszeitkonto_by_userID(user)
-   
-            adm.update_arbeitszeitkonto(arbeitszeitkonto)
+
+            return k, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+@projectone.route('/kommen-soll/<int:erstellt_von>/<int:erstellt_fuer>/<string:projektarbeit>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class KommenListOperations(Resource):
+
+    @projectone.marshal_with(kommen, code=200)
+    @projectone.expect(kommen)  # Wir erwarten ein Kommen-Objekt von Client-Seite.
+    def post(self, erstellt_von, erstellt_fuer, projektarbeit):
+        
+        adm = Administration()
+
+        proposal = Kommen()
+        now = datetime.now()
+        proposal.set_zeitpunkt(now)
+        proposal.set_bezeichnung("kommen")
+
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+        if proposal is not None:
+            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
+            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben. 
+            """
+
+            k = adm.create_kommen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
+            adm.create_ereignisbuchung(erstellt_von=erstellt_von, erstellt_für=erstellt_fuer, ist_buchung=False, ereignis=k.get_id() ,bezeichnung="Arbeitsbeginn")
+            adm.create_projektarbeit(bezeichnung=projektarbeit, beschreibung="", start=k.get_id(), ende=0, activity=0)
+
             return k, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -1064,7 +1124,19 @@ class ZeitintervallbuchungOperations(Resource):
         zetd = adm.get_zeitintervallbuchung_by_id(id)
         adm.delete_zeitintervallbuchung(zetd)
         return '', 200
+@projectone.route('/zeitintervallbuchung-soll/<int:erstell_fuer>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des User-Objekts')
+class ZeitintervallbuchungOperations(Resource):
+    @projectone.marshal_with(zeitintervallbuchung)
 
+    def get(self, erstellt_fuer):
+        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts.
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        zeitintervallbuchung = adm.get_soll_buchungen_by_user(erstellt_fuer)
+        return zeitintervallbuchung
 @projectone.route('/ereignis')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class EreignisListOperations(Resource):

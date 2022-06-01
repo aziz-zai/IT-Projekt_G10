@@ -292,6 +292,9 @@ class Administration(object):
         
         with ZeitintervallbuchungMapper() as mapper:
             return mapper.find_by_key(id)
+    def get_soll_buchungen_by_user(self, erstellt_für):
+        with ZeitintervallbuchungMapper() as mapper:
+            return mapper.find_soll_buchungen_by_user(id)
 
     def update_zeitintervallbuchung(self, zeitintervallbuchung):
         with ZeitintervallbuchungMapper() as mapper:
@@ -375,13 +378,31 @@ class Administration(object):
         with ArbeitszeitkontoMapper() as mapper:
             return mapper.update(arbeitszeitkonto)
     
-    def update_arbeitszeitkonto_arbeitsleistung(self, user, zeitintervallbuchung):
+    def update_arbeitszeitkonto_ist_arbeitsleistung(self, user, zeitintervallbuchung):
         arbeitszeitkonto = self.get_arbeitszeitkonto_by_userID(user)
         aktuelle_arbeitsleistung = arbeitszeitkonto.get_arbeitsleistung()
         gebuchte_arbeitsleistung = zeitintervallbuchung.get_zeitdifferenz()
         arbeitsstunden = aktuelle_arbeitsleistung + float(gebuchte_arbeitsleistung)
         azk = Arbeitszeitkonto()
         azk.set_arbeitsleistung(arbeitsstunden)
+        azk.set_gleitzeit(arbeitszeitkonto.get_gleitzeit())
+        azk.set_user(arbeitszeitkonto.get_user())
+        azk.set_urlaubskonto(arbeitszeitkonto.get_urlaubskonto())
+        azk.set_id(arbeitszeitkonto.get_id())
+        azk.set_timestamp(datetime.now())
+        self.update_arbeitszeitkonto(azk)
+    
+    def update_arbeitszeitkonto_soll_arbeitsleistung(self, user, zeitintervallbuchung):
+        arbeitszeitkonto = self.get_arbeitszeitkonto_by_userID(user)
+        aktuelle_arbeitsleistung = arbeitszeitkonto.get_arbeitsleistung() 
+        soll_zeitintervallbuchungen = self.get_soll_buchungen_by_user(user)
+
+        soll_stunden=0
+        for buchung in soll_zeitintervallbuchungen:
+            soll_stunden += float(buchung.get_zeitdifferenz())
+        print(f"Sum of list -> {soll_stunden}")
+        azk = Arbeitszeitkonto()
+        azk.set_arbeitsleistung(3)
         azk.set_gleitzeit(arbeitszeitkonto.get_gleitzeit())
         azk.set_user(arbeitszeitkonto.get_user())
         azk.set_urlaubskonto(arbeitszeitkonto.get_urlaubskonto())

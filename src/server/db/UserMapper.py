@@ -79,7 +79,7 @@ class UserMapper(Mapper):
     
     def find_potential_users(self, user_, project):
 
-        result = None
+        result = []
 
         cursor = self._cnx.cursor()
         command = """
@@ -92,8 +92,7 @@ class UserMapper(Mapper):
         cursor.execute(command,(user_, project))
         tuples = cursor.fetchall()
 
-        try:
-            (id, timestamp, vorname, nachname, benutzername, email, google_user_id) = tuples[0]
+        for (id, timestamp, vorname, nachname, benutzername, email, google_user_id) in tuples:
             user = User()
             user.set_id(id),
             user.set_timestamp(timestamp),
@@ -102,12 +101,7 @@ class UserMapper(Mapper):
             user.set_benutzername(benutzername),
             user.set_email(email),
             user.set_google_user_id(google_user_id),
-            result = user
-
-        except IndexError:
-            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
-            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
-            result = None
+            result.append(user)
 
         self._cnx.commit()
         cursor.close()
