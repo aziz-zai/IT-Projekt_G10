@@ -335,10 +335,12 @@ class Administration(object):
         updated_availablehours = aktuelle_availablehours - arbeitsstunden
 
         pro = Project()
+        pro.set_id(project.get_id())
+        pro.set_timestamp(datetime.now())
         pro.set_projektname(project.get_projektname())
-        pro.get_auftraggeber(project.get_auftraggeber())
-        pro.get_availablehours(updated_availablehours)
-        pro.get_laufzeit(project.get_laufzeit())
+        pro.set_auftraggeber(project.get_auftraggeber())
+        pro.set_availablehours(updated_availablehours)
+        pro.set_laufzeit(project.get_laufzeit())
         self.update_project(pro)
     
     def delete_project(self, project):
@@ -373,7 +375,7 @@ class Administration(object):
         with ArbeitszeitkontoMapper() as mapper:
             return mapper.update(arbeitszeitkonto)
     
-    def update_arbeitsleistung(self, user, zeitintervallbuchung):
+    def update_arbeitszeitkonto_arbeitsleistung(self, user, zeitintervallbuchung):
         arbeitszeitkonto = self.get_arbeitszeitkonto_by_userID(user)
         aktuelle_arbeitsleistung = arbeitszeitkonto.get_arbeitsleistung()
         gebuchte_arbeitsleistung = zeitintervallbuchung.get_zeitdifferenz()

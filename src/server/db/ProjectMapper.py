@@ -84,9 +84,9 @@ class ProjectMapper(Mapper):
         result = None
         cursor = self._cnx.cursor()
         command = """SELECT id, timestamp, projektname, laufzeit, auftraggeber, availablehours 
-        FROM project 
-        WHERE id in(SELECT project FROM activity WHERE id=%s)"""
-        cursor.execute(command, activity)
+        FROM projectone.project 
+        WHERE id in(SELECT project FROM projectone.activity WHERE id={})""".format(activity)
+        cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
