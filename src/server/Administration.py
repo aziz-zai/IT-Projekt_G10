@@ -395,7 +395,6 @@ class Administration(object):
     def update_arbeitszeitkonto_gleitzeit(self, user):
         arbeitszeitkonto = self.get_arbeitszeitkonto_by_userID(user)
         aktuelle_arbeitsleistung = arbeitszeitkonto.get_arbeitsleistung() 
-        aktuelle_gleitzeit = arbeitszeitkonto.get_gleitzeit()
         soll_zeitintervallbuchungen = self.get_soll_buchungen_by_user(user)
 
         soll_stunden=0
@@ -405,13 +404,12 @@ class Administration(object):
         if soll_ist_diff > 0:
             gleitzeit = soll_ist_diff
             arbeitszeitkonto.set_gleitzeit(gleitzeit)
+            print(f"soll_stunden -> {soll_stunden}")
+            print(f"soll_ist -> {soll_ist_diff}")
+            arbeitszeitkonto.set_timestamp(datetime.now())
+            self.update_arbeitszeitkonto(arbeitszeitkonto)
         else:
             None
-        print(f"soll_stunden -> {soll_stunden}")
-        print(f"soll_ist -> {soll_ist_diff}")
-        arbeitszeitkonto.set_timestamp(datetime.now())
-        self.update_arbeitszeitkonto(arbeitszeitkonto)
-        
 
     def delete_arbeitszeitkonto(self, arbeitszeitkonto):
         with ArbeitszeitkontoMapper() as mapper:
