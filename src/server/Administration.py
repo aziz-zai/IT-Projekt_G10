@@ -337,6 +337,21 @@ class Administration(object):
     def update_arbeitszeitkonto(self, arbeitszeitkonto):
         with ArbeitszeitkontoMapper() as mapper:
             return mapper.update(arbeitszeitkonto)
+    
+    def update_arbeitsleistung(self, user, zeitintervallbuchung):
+        arbeitszeitkonto = self.get_arbeitszeitkonto_by_userID(user)
+        aktuelle_arbeitsleistung = arbeitszeitkonto.get_arbeitsleistung()
+        gebuchte_arbeitsleistung = zeitintervallbuchung.get_zeitdifferenz()
+        arbeitsstunden = aktuelle_arbeitsleistung + float(gebuchte_arbeitsleistung)
+        azk = Arbeitszeitkonto()
+        azk.set_arbeitsleistung(arbeitsstunden)
+        azk.set_gleitzeit(arbeitszeitkonto.get_gleitzeit())
+        azk.set_user(arbeitszeitkonto.get_user())
+        azk.set_urlaubskonto(arbeitszeitkonto.get_urlaubskonto())
+        azk.set_id(arbeitszeitkonto.get_id())
+        azk.set_timestamp(datetime.now())
+        self.update_arbeitszeitkonto(azk)
+        
 
     def delete_arbeitszeitkonto(self, arbeitszeitkonto):
         with ArbeitszeitkontoMapper() as mapper:

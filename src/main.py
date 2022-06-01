@@ -843,19 +843,8 @@ class GehenListOperations(Resource):
             projektarbeit.set_activity(activity)
             proarb=adm.update_projektarbeit(projektarbeit)
             zeitintervallbuchung = adm.create_zeitintervallbuchung(proarb.get_id(), True, user, user,"Projektarbeit")
-
-            arbeitszeitkonto = adm.get_arbeitszeitkonto_by_userID(user)
-            aktuelle_arbeitsleistung = arbeitszeitkonto.get_arbeitsleistung()
-            gebuchte_arbeitsleistung = zeitintervallbuchung.get_zeitdifferenz()
-            arbeitsstunde = aktuelle_arbeitsleistung + float(gebuchte_arbeitsleistung)
-            azk = Arbeitszeitkonto()
-            azk.set_arbeitsleistung(arbeitsstunde)
-            azk.set_gleitzeit(arbeitszeitkonto.get_gleitzeit())
-            azk.set_user(arbeitszeitkonto.get_user())
-            azk.set_urlaubskonto(arbeitszeitkonto.get_urlaubskonto())
-            azk.set_id(arbeitszeitkonto.get_id())
-            azk.set_timestamp(datetime.now())
-            adm.update_arbeitszeitkonto(azk)
+            
+            adm.update_arbeitsleistung(user, zeitintervallbuchung)
             return g, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
