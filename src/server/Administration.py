@@ -75,7 +75,7 @@ class Administration(object):
 
         up_akt = Aktivitäten()
         up_akt.set_id(akt.get_id())
-        up_akt.set_timestamp(datetime.now)
+        up_akt.set_timestamp(datetime.now())
         up_akt.set_bezeichnung(akt.get_bezeichnung())
         up_akt.set_dauer(akt.get_dauer())
         up_akt.set_capacity(updated_capacity)
