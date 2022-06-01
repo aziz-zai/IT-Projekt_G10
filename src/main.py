@@ -74,7 +74,10 @@ bo = api.model('BusinessObject', {
     'timestamp': fields.String(attribute='_timestamp', description='Der Unique Identifier eines Business Object'),
 })
 
-"""User ist ein BusinessObject"""
+""" SECTION Marshalling
+"""
+"""ANCHOR User Marshalling
+"""
 user = api.inherit('User', bo, {
     'vorname': fields.String(attribute='_vorname', description='vorname eines Benutzers'),
     'nachname': fields.String(attribute='_nachname', description='nachname eines Benutzers'),
@@ -84,19 +87,23 @@ user = api.inherit('User', bo, {
     'urlaubstage': fields.Integer(attribute='_urlaubstage', description='nachname eines Benutzers')
 
 })
-
+"""ANCHOR Aktivitäten Marshalling
+"""
 aktivitäten = api.inherit('Aktivitäten',bo, {
     'bezeichnung': fields.String(attribute='_bezeichnung', description='bezeichnung einer Aktivität'),
     'dauer': fields.Float(attribute='_dauer', description='bezeichnung der Dauer einer Aktivität'),
     'capacity': fields.Float(attribute='_capacity', description='bezeichnung der Kapazität einer Aktivität'),
     'project': fields.Integer(attribute='_project', description='Project ID'),
 })
+"""ANCHOR Zeitintervall Marshalling
+"""
 zeitintervall = api.inherit('Zeitintervall', bo, {
     'bezeichnung': fields.String(attribute='_bezeichnung', description='Bezeichnung eines Projektes'),
     'start': fields.Integer(attribute='_start', description='Start einer Projektarbeit'),
     'ende': fields.Integer(attribute='_ende', description='Ende einer Projektarbeit'),
 })
-
+"""ANCHOR Projektarbeiten Marshalling
+"""
 projektarbeiten = api.inherit('Projektarbeiten', zeitintervall, {
     'bezeichnung': fields.String(attribute='_bezeichnung', description='Bezeichnung eines Projektes'),
     'beschreibung': fields.String(attribute='_beschreibung', description='Beschreibung eines Projektes'),
@@ -104,66 +111,77 @@ projektarbeiten = api.inherit('Projektarbeiten', zeitintervall, {
     'ende': fields.Integer(attribute='_ende', description='Ende einer Projektarbeit'),
     'activity': fields.Integer(attribute='_activity', description='Aktivitäten ID eines Projektes')
 })
-
+"""ANCHOR Pausen Marshalling
+"""
 pausen = api.inherit('Pausen', bo, {
     'bezeichnung': fields.String(attribute='_bezeichnung', description='Bezeichnung einer Pause'),
     'start': fields.Integer(attribute='_start', description='Start einer Pause'),
     'ende': fields.Integer(attribute='_ende', description='Ende einer Pause')
 })
-
+"""ANCHOR Membership Marshalling
+"""
 membership = api.inherit('Membership', bo, {
     'user': fields.Integer(attribute='_user', description='User_id des Memberships'),
     'project': fields.Integer(attribute='_project', description='project_id des Memberships'),
     'projektleiter': fields.Boolean(attribute='_projektleiter', description='Projektleiter eines Memberships')
 })
-
+"""ANCHOR Buchung Marshalling
+"""
 buchung = api.inherit('Buchung', bo, {
     'erstellt_von': fields.Integer(attribute='_erstellt_von', description='bezeichnung Ersteller'),
     'erstellt_für': fields.Integer(attribute='_erstellt_für', describtion='bezeichnung Empfänger'),
     'ist_buchung': fields.Boolean(attribute='_ist_buchung', describtion='bezeichnung der Ist-Buchung'),
     'bezeichnung': fields.String(attribute='_bezeichnung', description='Bezeichnung der Ereignisbuchung')
 })
-
+"""ANCHOR Ereignisbuchung Marshalling
+"""
 ereignisbuchungen = api.inherit('Ereignisbuchungen', buchung, {
     'ereignis': fields.Integer(attribute='_ereignis', describtion='bezeichnung vom Ereignis'),
 })
-
+"""ANCHOR Project Marshalling
+"""
 project = api.inherit('Project',bo, {
     'projektname': fields.String(attribute='_projektname', description='projektname'),
     'laufzeit': fields.Integer(attribute='_laufzeit', description='laufzeit'),
     'auftraggeber': fields.String(attribute='_auftraggeber', description='auftraggeber'),
     'availablehours': fields.Float(attribute='_availablehours', description='availablehours'),
 })
-
+"""ANCHOR Ereignis Marshalling
+"""
 ereignis = api.inherit('Ereignis', bo, {
     'zeitpunkt': fields.String(attribute = '_zeitpunkt', description = 'zeitpunkt eines Ereignisses'),
     'bezeichnung': fields.String(attribute = '_bezeichnung', description = 'bezeichnung eines Ereignis-Eintrags')
 })
-
+"""ANCHOR Arbeitszeitkonto Marshalling
+"""
 arbeitszeitkonto = api.inherit('Arbeitszeitkonto',bo, {
     'urlaubskonto': fields.Float(attribute='_urlaubskonto', description='urlaubskonto eines Arbeitszeitkontos'),
     'user': fields.Integer(attribute='_user', description='user eines Arbeitszeitkontos'),
     'gleitzeit': fields.Float(attribute='_gleitzeit', description='gleitzeit eines Arbeitszeitkontos'),
     'arbeitsleistung': fields.Float(attribute='_arbeitsleistung', description='arbeitsleistung eines Arbeitszeitkontos'),
 })
-
+"""ANCHOR Gehen Marshalling
+"""
 gehen = api.inherit('Gehen', ereignis, {
     'zeitpunkt': fields.String(attribute='_zeitpunkt', description='zeitpunkt eines Gehen-Eintrags'),
     'bezeichnung': fields.String(attribute='_bezeichnung', description='bezeichnung eines Gehen-Eintrags'),
 })
-
+"""ANCHOR Kommen Marshalling
+"""
 kommen = api.inherit('Kommen', ereignis, {
     'zeitpunkt': fields.String(attribute='_zeitpunkt', description='zeitpunkt eines Kommen-Eintrags'),
     'bezeichnung': fields.String(attribute='_bezeichnung', description='bezeichnung eines Kommen-Eintrags'),
 })
-
+"""ANCHOR Abwesenheit Marshalling
+"""
 abwesenheit = api.inherit('Abwesenheit', bo, {
     'abwesenheitsart': fields.Integer(attribute='_abwesenheitsart', description='abwesenheit eines Benutzers'),
     'start': fields.Integer(attribute='_start', description='ZeitintervallID eines Benutzers'),
     'ende': fields.Integer(attribute='_ende', description='bemerkung eines Benutzers'),
     'bezeichnung': fields.String(attribute = '_bezeichnung', description = 'bezeichnung eines Ereignis-Eintrags')
 })
-
+"""ANCHOR Zeitintervallbuchung Marshalling
+"""
 zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
     'erstellt_von': fields.Integer(attribute='_erstellt_von', description='abwesenheit eines Benutzers'),
     'erstellt_für': fields.Integer(attribute='_erstellt_für', description='abwesenheit eines Benutzers'),
@@ -171,8 +189,10 @@ zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
     'zeitintervall': fields.Integer(attribute='_zeitintervall', description='abwesenheit eines Benutzers'),
     'zeitdifferenz': fields.String(attribute='_zeitdifferenz', description='abwesenheit eines Benutzers')
 })
-
-
+""" !SECTION 
+"""
+""" SECTION Views 
+"""
 """ANCHOR Membership Views
 """
 @projectone.route('/membership')
@@ -273,7 +293,9 @@ class MembershipByUserOperations(Resource):
         adm = Administration()
         mu = adm.get_membership_by_user(user)
         return mu
-    
+
+"""ANCHOR Projektarbeit Views
+"""
 @projectone.route('/projektarbeiten')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjektarbeitListOperations(Resource):
@@ -1186,7 +1208,8 @@ class AbwesenheitOperations(Resource):
         abtd = adm.get_abwesenheit_by_id(id)
         adm.delete_abwesenheit(abtd)
         return '', 200
-
+""" !SECTION 
+"""
 
 
 if __name__ == '__main__':
