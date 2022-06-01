@@ -91,6 +91,10 @@ class Administration(object):
     def get_user_by_google_user_id(self, google_user_id):
         with UserMapper() as mapper:
             return mapper.find_by_google_user_id(google_user_id)
+    
+    def get_potential_users_for_project(self, user, project):
+        with UserMapper() as mapper:
+            return mapper.find_potential_users(user, project)
 
     def save_user(self, user):
         with UserMapper() as mapper:

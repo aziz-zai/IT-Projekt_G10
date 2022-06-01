@@ -64,7 +64,7 @@ def secured(function):
                         nutzen zu können.
                         """
                         createdUser=adm.create_user("", "", benutzername, email, google_user_id)
-                        adm.create_arbeitszeitkonto(urlaubskonto=20, user=createdUser.get_id(), arbeitsleistung=0, gleitzeit=0)
+                        adm.create_arbeitszeitkonto(urlaubskonto=createdUser.get_urlaubstage(), user=createdUser.get_id(), arbeitsleistung=0, gleitzeit=0)
                     print(request.method, request.path, "angefragt durch:", email)
 
                     objects = function(*args, **kwargs)

@@ -77,6 +77,43 @@ class UserMapper(Mapper):
 
         return result
     
+    def find_potential_users(self, user_, project):
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = """
+        SELECT id, timestamp, vorname, nachname, benutzername, email, google_user_id
+        FROM projectone.user
+        WHERE id!=%s AND id NOT IN 
+        (SELECT user FROM projectone.membership
+        WHERE project = %s)
+        """
+        cursor.execute(command,(user_, project))
+        tuples = cursor.fetchall()
+
+        try:
+            (id, timestamp, vorname, nachname, benutzername, email, google_user_id) = tuples[0]
+            user = User()
+            user.set_id(id),
+            user.set_timestamp(timestamp),
+            user.set_vorname(vorname),
+            user.set_nachname(nachname),
+            user.set_benutzername(benutzername),
+            user.set_email(email),
+            user.set_google_user_id(google_user_id),
+            result = user
+
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+    
     def update(self, user: User) -> User:
         """Wiederholtes Schreiben eines Objekts in die Datenbank.
 
