@@ -846,10 +846,9 @@ class GehenListOperations(Resource):
             zeitintervallbuchung = adm.create_zeitintervallbuchung(proarb.get_id(), True, user, user,"Projektarbeit")
             
             adm.update_arbeitszeitkonto_ist_arbeitsleistung(user, zeitintervallbuchung)
-
             adm.update_aktivitäten_capacity(activity, zeitintervallbuchung)
-
             adm.update_project_availablehours(activity, zeitintervallbuchung)
+            adm.update_arbeitszeitkonto_gleitzeit(user)
             return g, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -879,9 +878,9 @@ class GehenSollListOperations(Resource):
             projektarbeit.set_ende(g.get_id())
             projektarbeit.set_activity(activity)
             proarb=adm.update_projektarbeit(projektarbeit)
-            zeitintervallbuchung = adm.create_zeitintervallbuchung(proarb.get_id(), False, erstellt_von, erstellt_fuer,"Projektarbeit")
+            adm.create_zeitintervallbuchung(proarb.get_id(), False, erstellt_von, erstellt_fuer,"Projektarbeit")
             
-            adm.update_arbeitszeitkonto_soll_arbeitsleistung(erstellt_fuer)
+            adm.update_arbeitszeitkonto_gleitzeit(erstellt_fuer)
             return g, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.

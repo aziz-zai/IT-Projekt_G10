@@ -392,7 +392,7 @@ class Administration(object):
         azk.set_timestamp(datetime.now())
         self.update_arbeitszeitkonto(azk)
     
-    def update_arbeitszeitkonto_soll_arbeitsleistung(self, user):
+    def update_arbeitszeitkonto_gleitzeit(self, user):
         arbeitszeitkonto = self.get_arbeitszeitkonto_by_userID(user)
         aktuelle_arbeitsleistung = arbeitszeitkonto.get_arbeitsleistung() 
         aktuelle_gleitzeit = arbeitszeitkonto.get_gleitzeit()
@@ -403,9 +403,12 @@ class Administration(object):
             soll_stunden += float(buchung.get_zeitdifferenz())
         soll_ist_diff = soll_stunden - aktuelle_arbeitsleistung
         if soll_ist_diff > 0:
-            gleitzeit = aktuelle_gleitzeit + soll_ist_diff
+            gleitzeit = soll_ist_diff
+            arbeitszeitkonto.set_gleitzeit(gleitzeit)
+        else:
+            None
         print(f"soll_stunden -> {soll_stunden}")
-        arbeitszeitkonto.set_gleitzeit(gleitzeit)
+        print(f"soll_ist -> {soll_ist_diff}")
         arbeitszeitkonto.set_timestamp(datetime.now())
         self.update_arbeitszeitkonto(arbeitszeitkonto)
         
