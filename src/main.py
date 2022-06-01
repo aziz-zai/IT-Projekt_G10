@@ -180,7 +180,7 @@ zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
 class MembershipOperations(Resource):
     @projectone.marshal_with(membership, code=200)
     @projectone.expect(membership) # Wir erwarten ein Membership-Objekt von der Client-Seite.
-    @secured 
+    #@secured 
     def post(self):
         """Anlegen eines neuen Membership-Objekts.
         """
@@ -655,6 +655,21 @@ class UserByGoogleUserIdOperations(Resource):
         """
         adm = Administration()
         userg = adm.get_user_by_google_user_id(google_user_id)
+        return userg
+
+@projectone.route('/potential-members/<int:user>/<int:project>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('google_user_id', 'Die G-ID des User-Objekts')
+class UserByGoogleUserIdOperations(Resource):
+
+    @projectone.marshal_with(user)
+    def get(self, user, project):
+        """Auslesen eines bestimmten Customer-Objekts.
+
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        userg = adm.get_potential_users_for_project(user, project)
         return userg
 
 """ANCHOR Arbeitszeitkonto

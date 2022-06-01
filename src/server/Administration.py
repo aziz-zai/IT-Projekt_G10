@@ -40,7 +40,7 @@ class Administration(object):
         pass
 
     """
-    Aktivitäten-spezifische Methoden
+    ANCHOR Aktivitäten-spezifische Methoden
     """
     def create_aktivitäten(self, bezeichnung, dauer, capacity, project):
         aktivitäten = Aktivitäten()
@@ -70,8 +70,7 @@ class Administration(object):
             return mapper.delete(aktivitäten)
 
     """
-    ANCHOR User Admin
-    User-spezifische Methoden
+    ANCHOR User-spezifische Methoden
     """
     def create_user(self, vorname, nachname, benutzername, email, google_user_id):
         """Einen Benutzer anlegen"""
@@ -103,7 +102,7 @@ class Administration(object):
 
 
     """
-    Gehen-spezifische Methoden
+    ANCHOR Gehen-spezifische Methoden
     """ 
     def create_gehen(self,zeitpunkt, bezeichnung):
         """Gehen Eintrag anlegen"""
@@ -128,7 +127,7 @@ class Administration(object):
             return mapper.delete(gehen)
 
     """
-    Kommen-spezifische Methoden
+    ANCHOR Kommen-spezifische Methoden
     """ 
     def create_kommen(self, zeitpunkt, bezeichnung):
         """Kommen Eintrag anlegen"""
@@ -153,7 +152,7 @@ class Administration(object):
             return mapper.delete(kommen)
 
     """
-    Ereignisbuchung-spezifische Methoden
+    ANCHOR Ereignisbuchung-spezifische Methoden
     """ 
     def create_ereignisbuchung(self, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung):
         """Ereignisbuchung anlegen"""
@@ -181,7 +180,8 @@ class Administration(object):
             return mapper.delete(ereignisbuchung)
 
 
-    """Projektarbeit-spezifische Methoden"""
+    """ANCHOR Projektarbeit-spezifische Methoden
+    """
 
     def create_projektarbeit(self, bezeichnung, beschreibung, start, ende, activity):
         """Einen Benutzer anlegen"""
@@ -215,7 +215,8 @@ class Administration(object):
             return mapper.delete(projektarbeit)
 
 
-    """Pause-spezifische Methoden"""
+    """ ANCHOR Pause-spezifische Methoden
+    """
 
     def create_pause(self, bezeichnung, start, ende):
         """Einen Benutzer anlegen"""
@@ -240,7 +241,8 @@ class Administration(object):
         with PauseMapper() as mapper:
             return mapper.delete(pause)
 
-#Zeitintervall Administration
+    """ ANCHOR Zeitintervallbuchung-spezifische Methoden
+    """
 
     def create_zeitintervallbuchung(self, zeitintervall, ist_buchung, erstellt_von, erstellt_für, bezeichnung):
         zeitintervallbuchung = Zeitintervallbuchung()
@@ -279,7 +281,7 @@ class Administration(object):
             return mapper.delete(Zeitintervallbuchung)
     
     """
-    Projekt-spezifische Methoden
+    ANCHOR Projekt-spezifische Methoden
     """
     def create_project(self, projektname, laufzeit, auftraggeber, availablehours):
         """Ein Projekt anlegen"""
@@ -305,7 +307,7 @@ class Administration(object):
             return mapper.delete(project)
 
     """
-    Arbeitszeitkonto-spezifische Methoden 
+    ANCHOR Arbeitszeitkonto-spezifische Methoden 
     """
     def create_arbeitszeitkonto(self, urlaubskonto, user, arbeitsleistung, gleitzeit):
         """Einen Benutzer anlegen"""
@@ -338,7 +340,7 @@ class Administration(object):
 
 
     """
-    Membership-spezifische Methoden
+    ANCHOR Membership-spezifische Methoden
     """
     def create_membership(self, user, project, projektleiter):
         membership = Membership()
@@ -375,7 +377,7 @@ class Administration(object):
        
 
     """
-    Ereignis-spezifische Methoden
+    ANCHOR Ereignis-spezifische Methoden
     """ 
     def create_ereignis(self, zeitpunkt, bezeichnung):
         """Ereignis anlegen"""
@@ -399,6 +401,9 @@ class Administration(object):
         with EreignisMapper() as mapper:
             return mapper.delete(ereignis)
 
+    """
+    ANCHOR Abwesenheit-spezifische Methoden
+    """ 
 
     def create_abwesenheit(self, start, ende, abwesenheitsart, bezeichnung):
         abwesenheit = Abwesenheit()
