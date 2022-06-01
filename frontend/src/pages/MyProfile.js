@@ -10,10 +10,15 @@ export class MyProfile extends Component {
     constructor(props) {
         super(props);
         // Init state
+        let fn = '', ln = '';
+        if (props.user) {
+          fn = props.user[0].vorname;
+          ln = props.user[0].nachname;
+        }
         this.state = {
           Open: 'SideBarContainerClosed', 
-          firstName: "",
-          lastName:"",
+          firstName: fn,
+          lastName: ln,
         };
       }
 
@@ -53,6 +58,19 @@ export class MyProfile extends Component {
         });
       }
 
+      textFieldValueChange = (event) => {
+        const value = event.target.value;
+    
+        let error = false;
+        if (value.trim().length === 0) {
+          error = true;
+        }
+    
+        this.setState({
+          [event.target.id]: event.target.value,
+        });
+      }
+
     render() {  
       const {user, Cuser} = this.props;
       const {firstName, lastName} = this.state;
@@ -65,30 +83,33 @@ export class MyProfile extends Component {
       :null}
 
         {user?
+        
         <div class="ProfileWrapper">
           <div class="ProfileContainer">
             <div><img class="ProfileAvatar" src={Cuser.photoURL}/></div> 
             <div class="ProfileContent">
-              <div><TextField
+              <div>
+              {console.log('firstName', firstName)}
+              <form sx={{width: '100%'}} noValidate autoComplete='off'>
+                <TextField
                     autoFocus type='text' required
                     id="firstName"
                     label="Vorname"
-                    defaultValue={user.vorname}
                     value={firstName}
-                    variant="standard"
+                    onChange={this.textFieldValueChange}
                     /> &nbsp; <TextField
                     autoFocus type='text' required
                     id="lastName"
                     label="Nachname"
-                    defaultValue={user.nachname}
                     value={lastName}
-                    variant="standard"
+                    onChange={this.textFieldValueChange}
                     />
+                </form>
                 </div>
                 
               </div>
               <div class="saveBtnWrapper">
-                  <button class="saveBtn">Speichern</button>
+                  <button onClick={this.updateUser}class="saveBtn">Speichern</button>
               </div>
           </div>
         </div>
