@@ -902,13 +902,13 @@ class GehenOperations(Resource):
 
 """ANCHOR Kommen Views
 """
-@projectone.route('/kommen/<int:user>')
+@projectone.route('/kommen/<int:user>/<string:projektarbeit>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class KommenListOperations(Resource):
 
     @projectone.marshal_with(kommen, code=200)
     @projectone.expect(kommen)  # Wir erwarten ein Kommen-Objekt von Client-Seite.
-    def post(self, user):
+    def post(self, user, projektarbeit):
         
         adm = Administration()
 
@@ -926,7 +926,7 @@ class KommenListOperations(Resource):
 
             k = adm.create_kommen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
             adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=True, ereignis=k.get_id() ,bezeichnung="Arbeitsbeginn")
-            adm.create_projektarbeit(bezeichnung="Projektarbeit", beschreibung="", start=k.get_id(), ende=0, activity=0)
+            adm.create_projektarbeit(bezeichnung=projektarbeit, beschreibung="", start=k.get_id(), ende=0, activity=0)
             arbeitszeitkonto = adm.get_arbeitszeitkonto_by_userID(user)
    
             adm.update_arbeitszeitkonto(arbeitszeitkonto)
