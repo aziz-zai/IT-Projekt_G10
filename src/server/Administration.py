@@ -294,7 +294,7 @@ class Administration(object):
             return mapper.find_by_key(id)
     def get_soll_buchungen_by_user(self, erstellt_für):
         with ZeitintervallbuchungMapper() as mapper:
-            return mapper.find_soll_buchungen_by_user(id)
+            return mapper.find_soll_buchungen_by_user(erstellt_für)
 
     def update_zeitintervallbuchung(self, zeitintervallbuchung):
         with ZeitintervallbuchungMapper() as mapper:
@@ -392,23 +392,22 @@ class Administration(object):
         azk.set_timestamp(datetime.now())
         self.update_arbeitszeitkonto(azk)
     
-    def update_arbeitszeitkonto_soll_arbeitsleistung(self, user, zeitintervallbuchung):
+    def update_arbeitszeitkonto_soll_arbeitsleistung(self, user):
         arbeitszeitkonto = self.get_arbeitszeitkonto_by_userID(user)
         aktuelle_arbeitsleistung = arbeitszeitkonto.get_arbeitsleistung() 
+        aktuelle_gleitzeit = arbeitszeitkonto.get_gleitzeit()
         soll_zeitintervallbuchungen = self.get_soll_buchungen_by_user(user)
 
         soll_stunden=0
         for buchung in soll_zeitintervallbuchungen:
             soll_stunden += float(buchung.get_zeitdifferenz())
-        print(f"Sum of list -> {soll_stunden}")
-        azk = Arbeitszeitkonto()
-        azk.set_arbeitsleistung(3)
-        azk.set_gleitzeit(arbeitszeitkonto.get_gleitzeit())
-        azk.set_user(arbeitszeitkonto.get_user())
-        azk.set_urlaubskonto(arbeitszeitkonto.get_urlaubskonto())
-        azk.set_id(arbeitszeitkonto.get_id())
-        azk.set_timestamp(datetime.now())
-        self.update_arbeitszeitkonto(azk)
+        soll_ist_diff = soll_stunden - aktuelle_arbeitsleistung
+        if soll_ist_diff > 0:
+            gleitzeit = aktuelle_gleitzeit + soll_ist_diff
+        print(f"soll_stunden -> {soll_stunden}")
+        arbeitszeitkonto.set_gleitzeit(gleitzeit)
+        arbeitszeitkonto.set_timestamp(datetime.now())
+        self.update_arbeitszeitkonto(arbeitszeitkonto)
         
 
     def delete_arbeitszeitkonto(self, arbeitszeitkonto):
