@@ -1,3 +1,4 @@
+from server.bo import AktivitätenBO
 from server.bo.EreignisBO import Ereignis
 from server.bo.MembershipBO import Membership
 from server.db.MembershipMapper import MembershipMapper
@@ -64,6 +65,22 @@ class Administration(object):
     def update_aktivitäten(self, aktivitäten):
         with AktivitätenMapper() as mapper:
             return mapper.update(aktivitäten)
+    
+    def update_aktivitäten_capacity(self, aktivität, zeitintervallbuchung):
+
+        arbeitsstunden = float(zeitintervallbuchung.get_zeitdifferenz())
+        akt = self.get_aktivitäten_by_id(aktivität)
+        aktuelle_capacity = akt.get_capacity()
+        updated_capacity = aktuelle_capacity - arbeitsstunden
+
+        up_akt = Aktivitäten()
+        up_akt.set_id(akt.get_id())
+        up_akt.set_timestamp(datetime.now)
+        up_akt.set_bezeichnung(akt.get_bezeichnung())
+        up_akt.set_dauer(akt.get_dauer())
+        up_akt.set_capacity(updated_capacity)
+        up_akt.set_project(akt.get_project())
+        self.update_aktivitäten(up_akt)
 
     def delete_aktivitäten(self, aktivitäten):
         with AktivitätenMapper() as mapper:
