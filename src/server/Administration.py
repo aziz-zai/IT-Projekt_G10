@@ -296,6 +296,10 @@ class Administration(object):
         with ZeitintervallbuchungMapper() as mapper:
             return mapper.find_soll_buchungen_by_user(erstellt_für)
 
+    def get_ist_buchungen_by_user(self, user):
+        with ZeitintervallbuchungMapper() as mapper:
+            return mapper.find_ist_buchungen_by_user(user)
+
     def update_zeitintervallbuchung(self, zeitintervallbuchung):
         with ZeitintervallbuchungMapper() as mapper:
             return mapper.update(zeitintervallbuchung)
@@ -378,19 +382,16 @@ class Administration(object):
         with ArbeitszeitkontoMapper() as mapper:
             return mapper.update(arbeitszeitkonto)
     
-    def update_arbeitszeitkonto_ist_arbeitsleistung(self, user, zeitintervallbuchung):
+    def update_arbeitszeitkonto_ist_arbeitsleistung(self, user):
         arbeitszeitkonto = self.get_arbeitszeitkonto_by_userID(user)
-        aktuelle_arbeitsleistung = arbeitszeitkonto.get_arbeitsleistung()
-        gebuchte_arbeitsleistung = zeitintervallbuchung.get_zeitdifferenz()
-        arbeitsstunden = aktuelle_arbeitsleistung + float(gebuchte_arbeitsleistung)
-        azk = Arbeitszeitkonto()
-        azk.set_arbeitsleistung(arbeitsstunden)
-        azk.set_gleitzeit(arbeitszeitkonto.get_gleitzeit())
-        azk.set_user(arbeitszeitkonto.get_user())
-        azk.set_urlaubskonto(arbeitszeitkonto.get_urlaubskonto())
-        azk.set_id(arbeitszeitkonto.get_id())
-        azk.set_timestamp(datetime.now())
-        self.update_arbeitszeitkonto(azk)
+        ist_zeitintervallbuchungen = self.get_ist_buchungen_by_user(user)
+        ist_stunden=0
+        for buchung in ist_zeitintervallbuchungen:
+            ist_stunden += float(buchung.get_zeitdifferenz())
+        print(f"ist_stunden -> {ist_stunden}")
+        arbeitszeitkonto.set_timestamp(datetime.now())
+        arbeitszeitkonto.set_arbeitsleistung(ist_stunden)
+        self.update_arbeitszeitkonto(arbeitszeitkonto)
     
     def update_arbeitszeitkonto_gleitzeit(self, user):
         arbeitszeitkonto = self.get_arbeitszeitkonto_by_userID(user)
@@ -401,15 +402,12 @@ class Administration(object):
         for buchung in soll_zeitintervallbuchungen:
             soll_stunden += float(buchung.get_zeitdifferenz())
         soll_ist_diff = soll_stunden - aktuelle_arbeitsleistung
-        if soll_ist_diff > 0:
-            gleitzeit = soll_ist_diff
-            arbeitszeitkonto.set_gleitzeit(gleitzeit)
-            print(f"soll_stunden -> {soll_stunden}")
-            print(f"soll_ist -> {soll_ist_diff}")
-            arbeitszeitkonto.set_timestamp(datetime.now())
-            self.update_arbeitszeitkonto(arbeitszeitkonto)
-        else:
-            None
+        gleitzeit = soll_ist_diff
+        arbeitszeitkonto.set_gleitzeit(gleitzeit)
+        print(f"soll_ist -> {soll_ist_diff}")
+        print(f"soll_stunden -> {soll_stunden}")
+        arbeitszeitkonto.set_timestamp(datetime.now())
+        self.update_arbeitszeitkonto(arbeitszeitkonto)
 
     def delete_arbeitszeitkonto(self, arbeitszeitkonto):
         with ArbeitszeitkontoMapper() as mapper:

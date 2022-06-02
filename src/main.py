@@ -845,7 +845,7 @@ class GehenListOperations(Resource):
             proarb=adm.update_projektarbeit(projektarbeit)
             zeitintervallbuchung = adm.create_zeitintervallbuchung(proarb.get_id(), True, user, user,"Projektarbeit")
             
-            adm.update_arbeitszeitkonto_ist_arbeitsleistung(user, zeitintervallbuchung)
+            adm.update_arbeitszeitkonto_ist_arbeitsleistung(user)
             adm.update_aktivitäten_capacity(activity, zeitintervallbuchung)
             adm.update_project_availablehours(activity, zeitintervallbuchung)
             adm.update_arbeitszeitkonto_gleitzeit(user)
