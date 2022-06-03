@@ -709,10 +709,6 @@ class ArbeitszeitkontoOperations(Resource):
         adm = Administration()
         arb = adm.get_arbeitszeitkonto_by_userID(user)
         return arb
-<<<<<<< HEAD
-=======
-
->>>>>>> 79ae0ec569e4f97035e619bc19d37d744463c4d8
 
     @projectone.marshal_with(arbeitszeitkonto)
     def put(self, user):

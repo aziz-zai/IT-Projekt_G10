@@ -36,7 +36,7 @@ export class CreateProject extends Component {
         open={isOpen}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: 'relative' }}>
+        <AppBar class="AppBar" sx={{ position: 'relative' }}>
           <Toolbar>
             <IconButton
               edge="start"

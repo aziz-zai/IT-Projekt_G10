@@ -88,3 +88,8 @@ margin-bottom: 1rem;
 .addImg{
     width: 9.2rem;
 }
+
+.AppBar{
+    background-color:#5e2e94;
+    color: white
+}
