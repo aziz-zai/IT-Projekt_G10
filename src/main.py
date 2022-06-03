@@ -254,7 +254,7 @@ class MembershipByIDOperations(Resource):
         adm.delete_membership(mbs)
         return '', 200
 
-@projectone.route('/membership-by-project/<int:project>')
+@projectone.route('/members-by-project/<int:project>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByProjectOperations(Resource):
@@ -265,7 +265,20 @@ class MembershipByProjectOperations(Resource):
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
-        membership = adm.get_membership_by_project(project)
+        membership = adm.get_members_by_project(project)
+        return membership
+@projectone.route('/projektleiter-by-project/<int:project>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des Membership-Objekts')
+class MembershipByProjectOperations(Resource):
+    @projectone.marshal_with(user)
+    def get(self, project):
+        """Auslesen eines bestimmten Membership-Objekts nach Projektid
+
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        membership = adm.get_projektleiter_by_project(project)
         return membership
 
 @projectone.route('/membership-by-user-and-project/<int:user>/<int:project>')

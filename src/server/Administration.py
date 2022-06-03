@@ -438,9 +438,13 @@ class Administration(object):
         with MembershipMapper() as mapper:
             return mapper.delete(membership)
     
-    def get_membership_by_project(self, project):
+    def get_members_by_project(self, project):
         with MembershipMapper() as mapper:
-            return mapper.find_by_project(project)
+            return mapper.find_members_by_project(project)
+
+    def get_projektleiter_by_project(self, project):
+        with MembershipMapper() as mapper:
+            return mapper.find_projektleiter_by_project(project)
     
     def get_membership_by_user_and_project(self, user, project):
         with MembershipMapper() as mapper:

@@ -9,6 +9,18 @@
     display: flex;
     justify-content: center;
 }
+
+.ProjectCard-PL{
+    box-shadow: #5e2e94 0px 3px 8px;
+    border-radius: 10px;
+    padding-bottom: 1rem;
+    background-color: rgba(172, 132, 217, 0.395);
+    color: #5e2e94;
+    width: 15rem;
+    height: 14rem;
+    display: flex;
+    justify-content: center;
+}
 .AddProjectCard{
     box-shadow: #5e2e94 0px 3px 8px;
     border-radius: 10px;

@@ -43,9 +43,10 @@ export default class OneAPI {
   //Membership related
   #addMembershipURL = () => `${this.#OneServerBaseURL}/membership/`;
   #getMembershipURL = (id) => `${this.#OneServerBaseURL}/membership/${id}`;
-  #getMembershipByProjectURL = (id) => `${this.#OneServerBaseURL}/membership/projects/${id}`;
+  #getMembersByProjectURL = (project) => `${this.#OneServerBaseURL}/members-by-project/${project}`;
+  #getProjektleiterByProjectURL = (project) => `${this.#OneServerBaseURL}/projektleiter-by-project/${project}`;
   #getMembershipByUserURL = (id) => `${this.#OneServerBaseURL}/membership-by-user/${id}`;
-  #getMembershipByUserAndProjectURL = (id) => `${this.#OneServerBaseURL}/membership-by-project/${id}`;
+  #getMembershipByUserAndProjectURL = (id) => `${this.#OneServerBaseURL}/membership-by-user-and-project/${id}`;
   #updateMembershipURL = (id) => `${this.#OneServerBaseURL}/membership/${id}`;
   #deleteMembershipURL = (id) => `${this.#OneServerBaseURL}/membership/${id}`;
 
@@ -262,9 +263,19 @@ export default class OneAPI {
     })
   }
 
-  getMembershipByProject(project) {
-    return this.#fetchAdvanced(this.#getMembershipByProjectURL(project)).then((responseJSON) => {
-      let membershipBOs = MembershipBO.fromJSON(responseJSON);
+  getMembersByProject(project) {
+    return this.#fetchAdvanced(this.#getMembersByProjectURL(project)).then((responseJSON) => {
+      let membershipBOs = UserBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(membershipBOs);
+      })
+    })
+  }
+
+  getProjektleiterByProject(project) {
+    return this.#fetchAdvanced(this.#getProjektleiterByProjectURL(project)).then((responseJSON) => {
+      let membershipBOs = UserBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {
         resolve(membershipBOs);

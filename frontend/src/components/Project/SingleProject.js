@@ -5,27 +5,61 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import './Project.css'
+import OneAPI from '../../api/OneAPI';
 
 export class SingleProject extends Component {
     constructor(props) {
         super(props);
         // Init state
         this.state = {
-          project: null,
+          projektleiter: [],
+          projektfarbe: "ProjectCard"
         };
     }
+
+    getProjektleiterByProject = () => {
+      OneAPI.getAPI().getProjektleiterByProject(this.props.project.id).then(projektleiter =>
+        this.handleProjektfarbe(projektleiter)
+        ).catch(e =>
+          this.setState({ // Reset state with error from catch 
+            projektleiter: null,
+          })
+        );
+      // set loading to true
+      this.setState({
+      });
+    }
+
+    handleProjektfarbe = (projektleiter) => {
+      if(projektleiter[0].id == this.props.user){
+        this.setState({
+          projektfarbe:"ProjectCard-PL"
+        })
+      }
+      this.setState({
+        projektleiter: projektleiter
+      })
+    }
+
+    componentDidMount() {
+    this.getProjektleiterByProject();
+    }
+
   render() {
+    const {project, user} = this.props;
+    const {projektleiter, projektfarbe} = this.state
     return (
       <div class="ProjectCardWrapper">
-        <Card class="ProjectCard">
+        <Card class={projektfarbe}>
       <CardContent>
         <Typography variant="h5" class="ProjektTitel" component="div">
-          {this.props.project.projektname}
+          {project.projektname}
         </Typography>
         <Typography variant="body2"class="ProjektContent" >
-          Verfügbare Stunden: {this.props.project.availablehours}h<br/>
-          Deadline: 0{this.props.project.laufzeit}.04.2022<br/>
-          Projektleiter: Miray Sidal Yer
+          Verfügbare Stunden: {project.availablehours}h<br/>
+          Deadline: 0{project.laufzeit}.04.2022<br/>
+          Projektleiter: {projektleiter[0] ?
+           projektleiter[0].vorname : null}
         </Typography>
         <CardActions disableSpacing class="learnBtnWrapper">
         <button class="learnBtn">Mehr Infos</button>
@@ -38,6 +72,7 @@ export class SingleProject extends Component {
 }
 
 SingleProject.propTypes = {
-    project: PropTypes.any.isRequired,
+    project: PropTypes.any,
+    user: PropTypes.any,
   }
 export default SingleProject

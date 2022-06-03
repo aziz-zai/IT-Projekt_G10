@@ -41,7 +41,7 @@ class MembershipMapper(Mapper):
 
         return result
 
-    def find_by_project(self, project: int):
+    def find_members_by_project(self, project: int):
             """Gets Membership by id 'project'."""
             result = []
 
@@ -50,7 +50,7 @@ class MembershipMapper(Mapper):
             SELECT id, timestamp, vorname, nachname, email, benutzername, google_user_id from projectone.user
             WHERE id IN(
                 SELECT user from projectone.membership
-                WHERE project={})""".format(project)
+                WHERE project={} AND projektleiter=FALSE)""".format(project)
             cursor.execute(command)
             tuples = cursor.fetchall()
 
@@ -65,6 +65,39 @@ class MembershipMapper(Mapper):
                 user.set_google_user_id(google_user_id)
                 result.append(user)
 
+            self._cnx.commit()
+            cursor.close()
+
+            return result
+
+    def find_projektleiter_by_project(self, project: int):
+            """Gets Membership by id 'project'."""
+            result = None
+
+            cursor = self._cnx.cursor()
+            command = """
+            SELECT id, timestamp, vorname, nachname, email, benutzername, google_user_id from projectone.user
+            WHERE id IN(
+                SELECT user from projectone.membership
+                WHERE project={} AND projektleiter=TRUE)""".format(project)
+            cursor.execute(command)
+            tuples = cursor.fetchall()
+
+            try:
+                (id, timestamp, vorname, nachname, email, benutzername, google_user_id) = tuples[0]
+                user = User()
+                user.set_id(id)
+                user.set_timestamp(timestamp)
+                user.set_vorname(vorname)
+                user.set_nachname(nachname)
+                user.set_email(email)
+                user.set_benutzername(benutzername)
+                user.set_google_user_id(google_user_id)
+                result = user
+            except IndexError:
+                """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+                keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+                result = None
             self._cnx.commit()
             cursor.close()
 
@@ -102,25 +135,30 @@ class MembershipMapper(Mapper):
     def find_by_user_and_project(self, user: int, project: int):
             """Gets Membership by id 'user' and 'project'."""
         
-
+            result=None
             cursor = self._cnx.cursor()
             command = "SELECT id, timestamp, user, project, projektleiter from membership WHERE user=%s AND project=%s"
             cursor.execute(command, (user, project))
             tuples = cursor.fetchall()
 
-            for (id, timestamp, user, project, projektleiter) in tuples:
+            try: 
+                (id, timestamp, user, project, projektleiter) = tuples[0]
                 membership = Membership()
-                membership.set_id(id)
-                membership.set_timestamp(timestamp)
-                membership.set_user(user)
-                membership.set_project(project)
-                membership.set_projektleiter(projektleiter)
-            
+                membership.set_id(id),
+                membership.set_timestamp(timestamp),
+                membership.set_user(user),
+                membership.set_project(project),
+                membership.set_projektleiter(projektleiter),
+                result=membership   
+            except IndexError:
+                """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+                keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+                result = None
 
             self._cnx.commit()
             cursor.close()
 
-            return membership
+            return result
 
     def update(self, membership: Membership) -> Membership:
         """Wiederholtes Schreiben eines Objekts in die Datenbank.
