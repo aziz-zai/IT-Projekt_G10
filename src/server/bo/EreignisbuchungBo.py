@@ -1,12 +1,30 @@
-from xmlrpc.client import boolean
 from .BuchungBO import Buchung
-from datetime import datetime
-
 
 class Ereignisbuchung(Buchung):
-    def __init__(self, erstellt_von: int, erstellt_für: int, ist_buchung: bool, ereignis: int, id: int = 0, timestamp: datetime = datetime.now(), ):
+    def __init__(self):
+        super().__init__()
+        self._ereignis = None
         
-        self.ereignis = ereignis
+    def get_ereignis(self):
+        return self._ereignis 
+    
+    def set_ereignis(self, ereignis ):
+        self._ereignis  = ereignis 
 
-        super().__init__(erstellt_von=erstellt_von, erstellt_für=erstellt_für, ist_buchung=ist_buchung, timestamp = timestamp, id = id)
+    def __str__(self):
+        """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""
+        return "Ereignisbuchung: {}, {}, {}, {}, {}, {}, {}".format(self.get_id(), self.get_timestamp(), 
+        self.get_erstellt_von(), self.get_erstellt_für(), self.get_ist_buchung(), self.get_ereignis(), self.get_bezeichnung())     
+    
+    @staticmethod
+    def from_dict(dictionary=dict()):
+        """Umwandeln eines Python dict() in Ereignisbuchung()."""
+        obj = Ereignisbuchung()
+        obj.set_erstellt_von(dictionary["erstellt_von"])
+        obj.set_erstellt_für(dictionary["erstellt_für"])  
+        obj.set_ist_buchung(dictionary["ist_buchung"])
+        obj.set_ereignis(dictionary["ereignis"])
+        obj.set_bezeichnung(dictionary["bezeichnung"])
+        return obj
+
         

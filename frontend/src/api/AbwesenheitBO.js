@@ -1,6 +1,6 @@
-import Zeitintervall from './ZeitintervallBO'
+import ZeitintervallBO from './ZeitintervallBO'
 
-export default class AbwesenheitBO extends Zeitintervall {
+export default class AbwesenheitBO extends ZeitintervallBO {
 
   constructor(aAbwesenheitsart) {
     super();

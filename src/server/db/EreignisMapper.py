@@ -22,11 +22,11 @@ class EreignisMapper(Mapper):
 
         try:
             (timestamp, id, zeitpunkt, bezeichnung) = tuples[0]
-            ereignis = Ereignis(
-            timestamp = timestamp,
-            id = id,
-            zeitpunkt = zeitpunkt,
-            bezeichnung = bezeichnung)
+            ereignis = Ereignis()
+            ereignis.set_id(id)
+            ereignis.set_timestamp(timestamp)
+            ereignis.set_zeitpunkt(zeitpunkt)
+            ereignis.set_bezeichnung(bezeichnung)
             result = ereignis
             
         except IndexError:
@@ -66,7 +66,7 @@ class EreignisMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE ereignis SET timestamp=%s, zeitpunkt=%s, bezeichnung=%s WHERE id=%s"
-        data = (ereignis.timestamp, ereignis.zeitpunkt, ereignis.bezeichnung, ereignis.id)
+        data = (ereignis.get_timestamp(), ereignis.get_zeitpunkt(), ereignis.get_bezeichnung(), ereignis.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -83,22 +83,18 @@ class EreignisMapper(Mapper):
 
         for (maxid) in tuples:
             if maxid[0] is not None:
-                ereignis.id = maxid[0] + 1
+                ereignis.set_id(maxid[0] + 1)
             else:
-                ereignis.id = 1
+                ereignis.set_id(1)
         command = """
             INSERT INTO ereignis (
                 timestamp, id, zeitpunkt, bezeichnung
             ) VALUES (%s,%s,%s,%s)
         """
-        cursor.execute(command, (
-            ereignis.timestamp,
-            ereignis.id,
-            ereignis.zeitpunkt,
-            ereignis.bezeichnung
-        ))
-        self._cnx.commit()
+        data = (ereignis.get_timestamp(), ereignis.get_id(), ereignis.get_zeitpunkt(), ereignis.get_bezeichnung())
+        cursor.execute(command, data)
 
+        self._cnx.commit()
         return ereignis
 
 
@@ -106,7 +102,7 @@ class EreignisMapper(Mapper):
 
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM ereignis WHERE id={}".format(ereignis.id)
+        command = "DELETE FROM ereignis WHERE id={}".format(ereignis.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

@@ -1,9 +1,19 @@
 from .EreignisBO import Ereignis
-from datetime import datetime
 
 
 class Gehen(Ereignis):
-    def __init__(self, zeitpunkt:datetime, bezeichnung: str, timestamp: datetime = datetime.now(), id: int= 0):
-        
+    def __init__(self):
+        super().__init__()
 
-        super().__init__(timestamp = timestamp, id = id, zeitpunkt = zeitpunkt, bezeichnung = bezeichnung)
+
+    @staticmethod
+    def from_dict(dictionary=dict()):
+        """Umwandeln eines Python dict() in Gehen()."""
+        obj = Gehen()
+        obj.set_zeitpunkt(dictionary["zeitpunkt"])
+        obj.set_bezeichnung(dictionary["bezeichnung"])
+        
+        return obj
+  
+
+        
