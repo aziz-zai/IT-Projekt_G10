@@ -2,8 +2,8 @@
     box-shadow: #5e2e94 0px 3px 8px;
     border-radius: 10px;
     padding-bottom: 1rem;
-    background-color: rgba(172, 132, 217);
-    color: white;
+    background-color: rgba(172, 132, 217, 0.276);
+    color: #5e2e94;
     width: 15rem;
     height: 14rem;
     display: flex;
@@ -14,8 +14,8 @@
     box-shadow: #5e2e94 0px 3px 8px;
     border-radius: 10px;
     padding-bottom: 1rem;
-    background-color: rgba(172, 132, 217, 0.395);
-    color: #5e2e94;
+    background-color: rgba(172, 132, 217, 0.772);
+    color: white;
     width: 15rem;
     height: 14rem;
     display: flex;
@@ -25,7 +25,7 @@
     box-shadow: #5e2e94 0px 3px 8px;
     border-radius: 10px;
     padding-bottom: 1rem;
-    background-color: rgba(172, 132, 217);
+    background-color: rgba(172, 132, 217, 0.772);
     color: white;
     width: 15rem;
     height: 14rem;
@@ -35,6 +35,11 @@
 }
 
 .ProjectCard:hover{
+    transform: scale(1.2);
+    transition: all 0.2s ease-in-out;
+    cursor:pointer;
+}
+.ProjectCard-PL:hover{
     transform: scale(1.2);
     transition: all 0.2s ease-in-out;
     cursor:pointer;
@@ -61,9 +66,18 @@ font-weight: bold;
 font-size: 1.5rem;
 display: flex;
 justify-content: center;
-border-bottom: 1.5px solid white;
+border-bottom: 1.5px solid #5e2e94;
 margin-bottom: 1rem;  
 }
+
+.ProjektTitel-PL{
+    font-weight: bold;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    border-bottom: 1.5px solid white;
+    margin-bottom: 1rem;  
+    }
 
 .ProjektContent{
     font-size: 1rem;

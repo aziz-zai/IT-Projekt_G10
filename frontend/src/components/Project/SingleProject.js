@@ -13,7 +13,8 @@ export class SingleProject extends Component {
         // Init state
         this.state = {
           projektleiter: [],
-          projektfarbe: "ProjectCard"
+          projektfarbe: "ProjectCard",
+          projekttitel: "ProjektTitel"
         };
     }
 
@@ -33,7 +34,8 @@ export class SingleProject extends Component {
     handleProjektfarbe = (projektleiter) => {
       if(projektleiter[0].id == this.props.user){
         this.setState({
-          projektfarbe:"ProjectCard-PL"
+          projektfarbe:"ProjectCard-PL",
+          projekttitel:"ProjektTitel-PL"
         })
       }
       this.setState({
@@ -46,13 +48,13 @@ export class SingleProject extends Component {
     }
 
   render() {
-    const {project, user} = this.props;
-    const {projektleiter, projektfarbe} = this.state
+    const {project} = this.props;
+    const {projektleiter, projektfarbe, projekttitel} = this.state
     return (
       <div class="ProjectCardWrapper">
         <Card class={projektfarbe}>
       <CardContent>
-        <Typography variant="h5" class="ProjektTitel" component="div">
+        <Typography variant="h5" class={projekttitel} component="div">
           {project.projektname}
         </Typography>
         <Typography variant="body2"class="ProjektContent" >
