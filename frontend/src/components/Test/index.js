@@ -27,28 +27,9 @@ export class Test extends Component {
         });
       }
 
-      getUserbygid = () => {
-        OneAPI.getAPI().getUserGid(this.props.user.uid).then(user =>
-          this.setState({
-            user: user[0].id,
-            loadingInProgress: false,
-            loadingError: null
-          })
-          ).catch(e =>
-            this.setState({ // Reset state with error from catch 
-              user: null,
-              loadingInProgress: false,
-              loadingError: e
-            })
-          );
-        // set loading to true
-        this.setState({
-          loadingInProgress: true,
-          loadingError: null
-        });
-      }
+     
       componentDidMount() {
-        this.getMembershipByUser()
+       
       }
 
 

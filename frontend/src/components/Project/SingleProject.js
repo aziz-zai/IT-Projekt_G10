@@ -3,13 +3,12 @@ import React, { Component } from 'react'
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import './Project.css'
 
 export class SingleProject extends Component {
     constructor(props) {
         super(props);
-    
         // Init state
         this.state = {
           project: null,
@@ -17,27 +16,23 @@ export class SingleProject extends Component {
     }
   render() {
     return (
-      <div><Card>
+      <div class="ProjectCardWrapper">
+        <Card class="ProjectCard">
       <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          Dein Projekt
-        </Typography>
-        <Typography variant="h5" component="div">
+        <Typography variant="h5" class="ProjektTitel" component="div">
           {this.props.project.projektname}
         </Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          ohoo
+        <Typography variant="body2"class="ProjektContent" >
+          Verfügbare Stunden: {this.props.project.availablehours}h<br/>
+          Deadline: 0{this.props.project.laufzeit}.04.2022<br/>
+          Projektleiter: Miray Sidal Yer
         </Typography>
-        <Typography variant="body2">
-          well meaning and kindly.
-          <br />
-          {'"a benevolent smile"'}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small">Learn More</Button>
+        <CardActions disableSpacing class="learnBtnWrapper">
+        <button class="learnBtn">Mehr Infos</button>
       </CardActions>
-      </Card></div>
+      </CardContent>
+      </Card>
+      </div>
     )
   }
 }

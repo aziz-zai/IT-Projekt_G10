@@ -55,8 +55,6 @@ def secured(function):
                         user.email= email
                         user.benutzername = benutzername
                         user.google_user_id = google_user_id
-                        user.vorname = ""
-                        user.nachname = ""
                         adm.save_user(user=user)
                     else:
                         """Fall: Der Benutzer war bislang noch nicht eingelogged. 

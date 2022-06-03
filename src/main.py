@@ -1,6 +1,4 @@
 # Unser Service basiert auf Flask
-from xmlrpc.client import Boolean
-from attr import attributes
 from flask import Flask
 # Auf Flask aufbauend nutzen wir RestX
 from flask_restx import Api, Resource, fields
@@ -289,6 +287,7 @@ class MembershipByUserAndProject(Resource):
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByUserOperations(Resource):
     @projectone.marshal_with(project)
+    @secured
     def get(self, user):
         adm = Administration()
         mu = adm.get_membership_by_user(user)
@@ -670,6 +669,7 @@ class UserOperations(Resource):
 class UserByGoogleUserIdOperations(Resource):
 
     @projectone.marshal_with(user)
+    @secured
     def get(self, google_user_id):
         """Auslesen eines bestimmten Customer-Objekts.
 
@@ -701,7 +701,6 @@ class UserByGoogleUserIdOperations(Resource):
 @projectone.param('user', 'Die ID des User-Objekts')
 class ArbeitszeitkontoOperations(Resource):
     @projectone.marshal_with(arbeitszeitkonto)
-
     def get(self, user):
         """Auslesen eines bestimmten Arbeitszeit-Objekts.
 
@@ -710,6 +709,10 @@ class ArbeitszeitkontoOperations(Resource):
         adm = Administration()
         arb = adm.get_arbeitszeitkonto_by_userID(user)
         return arb
+<<<<<<< HEAD
+=======
+
+>>>>>>> 79ae0ec569e4f97035e619bc19d37d744463c4d8
 
     @projectone.marshal_with(arbeitszeitkonto)
     def put(self, user):
