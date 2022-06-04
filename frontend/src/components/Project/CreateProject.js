@@ -153,7 +153,7 @@ textFieldValueChange = (event) => {
 }
 
 CreateProject.propTypes = {
-  isOpen: PropTypes.any.isRequired,
+  isOpen: PropTypes.any,
   handleClose: PropTypes.any,
 }
 export default CreateProject

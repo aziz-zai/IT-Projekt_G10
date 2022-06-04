@@ -52,7 +52,7 @@ NavBar.propTypes = {
 	/** 
 	 * Handler function, which is called if the user wants to sign in.
 	 */
-	nav: PropTypes.string.isRequired,
+	nav: PropTypes.string,
     user: PropTypes.object,
     toggle: PropTypes.any,
 }

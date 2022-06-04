@@ -64,8 +64,8 @@ export class Home extends Component {
 }
 
 Home.propTypes = {
-  Cuser: PropTypes.any.isRequired,
-  user: PropTypes.any.isRequired,
+  Cuser: PropTypes.any,
+  user: PropTypes.any,
 }
 
 export default Home

@@ -42,6 +42,6 @@ export class AddCard extends Component {
 }
 
 AddCard.propTypes = {
-    project: PropTypes.any.isRequired,
+    project: PropTypes.any,
   }
 export default AddCard

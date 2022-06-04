@@ -57,6 +57,6 @@ export class Project extends Component {
 }
 
 Project.propTypes = {
-    user: PropTypes.any.isRequired,
+    user: PropTypes.any,
   }
 export default Project

@@ -119,8 +119,8 @@ export class MyProfile extends Component {
 }
 
 MyProfile.propTypes = {
-    user: PropTypes.any.isRequired,
-    Cuser: PropTypes.any.isRequired,
+    user: PropTypes.any,
+    Cuser: PropTypes.any,
   }
 
 export default MyProfile
