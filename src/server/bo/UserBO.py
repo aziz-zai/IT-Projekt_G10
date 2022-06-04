@@ -1,16 +1,63 @@
 from .BusinessObject import BusinessObject
-from datetime import datetime
-
-
 
 class User(BusinessObject):
-    def __init__(self, vorname: str, nachname: str, benutzername: str, email: str, google_user_id: str,
-            urlaubstage:int=20, timestamp: datetime = datetime.now(), id: int= 0):
 
-        self.vorname = vorname
-        self.nachname = nachname
-        self.benutzername = benutzername
-        self.email = email
-        self.google_user_id = google_user_id
-        self.urlaubstage = urlaubstage
-        super().__init__(timestamp=timestamp,id=id)
+    def __init__(self):
+        super().__init__()
+        self._vorname = ""
+        self._nachname = ""
+        self._benutzername = ""
+        self._email = ""
+        self._google_user_id = None
+        self._urlaubstage = 20
+
+    def get_vorname(self):
+        return self._vorname
+
+    def set_vorname(self, vorname):
+        self._vorname = vorname
+
+    def get_nachname(self):
+        return self._nachname
+
+    def set_nachname(self, nachname):
+        self._nachname = nachname
+
+    def get_benutzername(self):
+        return self._benutzername
+
+    def set_benutzername(self, benutzername):
+        self._benutzername = benutzername
+
+    def get_email(self):
+        return self._email
+    
+    def set_email(self, email):
+        self._email = email
+
+    def get_google_user_id(self):
+        return self._google_user_id
+
+    def set_google_user_id(self, google_user_id):
+        self._google_user_id = google_user_id
+
+    def get_urlaubstage(self):
+        return self._urlaubstage
+
+
+    def __str__(self):
+        """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""
+        return "User: {}, {}, {}, {}, {}, {}, {}, {}, {}".format(self.get_id(), self.get_timestamp(), 
+        self.get_vorname(), self.get_nachname(), self.get_benutzername(), self.get_email(), self.get_google_user_id(), self.get_urlaubstage())
+
+    @staticmethod
+    def from_dict(dictionary=dict()):
+        """Umwandeln eines Python dict() in User()."""
+        obj = User()
+        obj.set_vorname(dictionary["vorname"])
+        obj.set_nachname(dictionary["nachname"])  
+        obj.set_benutzername(dictionary["benutzername"])
+        obj.set_email(dictionary["email"])
+        obj.set_google_user_id(dictionary["google_user_id"])
+
+        return obj

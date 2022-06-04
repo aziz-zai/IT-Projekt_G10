@@ -6,7 +6,6 @@ from server.db.Mapper import Mapper
 
 class ZeitintervallbuchungMapper(Mapper):
 
-
     def __init__(self):
         super().__init__()
     
@@ -17,20 +16,22 @@ class ZeitintervallbuchungMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung, zeitintervall, zeitdifferenz FROM zeitintervallbuchung WHERE id={}".format(key)
+        command = "SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung, zeitintervall, bezeichnung, zeitdifferenz FROM zeitintervallbuchung WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, erstellt_von, erstellt_für, ist_buchung, zeitintervall, zeitdifferenz) = tuples[0]
-            zeitintervallbuchung = Zeitintervallbuchung(
-            id=id,
-            timestamp=timestamp,
-            erstellt_von=erstellt_von,
-            erstellt_für=erstellt_für,
-            ist_buchung=ist_buchung,
-            zeitintervall=zeitintervall,
-            zeitdifferenz=zeitdifferenz)
+            (id, timestamp, erstellt_von, erstellt_für, ist_buchung, zeitintervall, bezeichnung,zeitdifferenz) = tuples[0]
+            zeitintervallbuchung = Zeitintervallbuchung()
+            zeitintervallbuchung.set_id(id)
+            zeitintervallbuchung.set_timestamp(timestamp)
+            zeitintervallbuchung.set_erstellt_von(erstellt_von)
+            zeitintervallbuchung.set_erstellt_für(erstellt_für)
+            zeitintervallbuchung.set_ist_buchung(ist_buchung)
+            zeitintervallbuchung.set_zeitintervall(zeitintervall)
+            zeitintervallbuchung.set_bezeichnung(bezeichnung)
+            zeitintervallbuchung.set_zeitdifferenz(zeitdifferenz)
+    
             result = zeitintervallbuchung
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
@@ -42,6 +43,65 @@ class ZeitintervallbuchungMapper(Mapper):
 
         return result
         
+    def find_soll_buchungen_by_user(self, erstellt_für):
+        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
+        """
+        cursor = self._cnx.cursor()
+        command = """SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung,zeitintervall, bezeichnung, zeitdifferenz 
+        FROM projectone.zeitintervallbuchung
+        WHERE erstellt_für={} AND ist_buchung=FALSE AND bezeichnung='Projektarbeit'
+        """.format(erstellt_für)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+        result= []
+
+        
+        for (id, timestamp, erstellt_von, erstellt_für, ist_buchung, zeitintervall, bezeichnung, zeitdifferenz) in tuples:
+            zeitintervallbuchung = Zeitintervallbuchung()
+            zeitintervallbuchung.set_id(id)
+            zeitintervallbuchung.set_timestamp(timestamp)
+            zeitintervallbuchung.set_erstellt_von(erstellt_von)
+            zeitintervallbuchung.set_erstellt_für(erstellt_für)
+            zeitintervallbuchung.set_ist_buchung(ist_buchung)
+            zeitintervallbuchung.set_zeitintervall(zeitintervall)
+            zeitintervallbuchung.set_bezeichnung(bezeichnung)
+            zeitintervallbuchung.set_zeitdifferenz(zeitdifferenz)
+            result.append(zeitintervallbuchung)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+    
+    def find_ist_buchungen_by_user(self, user):
+        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
+        """
+        cursor = self._cnx.cursor()
+        command = """SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung,zeitintervall, bezeichnung, zeitdifferenz 
+        FROM projectone.zeitintervallbuchung
+        WHERE erstellt_für={} AND ist_buchung=TRUE AND bezeichnung='Projektarbeit'
+        """.format(user)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+        result= []  
+
+        
+        for (id, timestamp, erstellt_von, erstellt_für, ist_buchung, zeitintervall, bezeichnung, zeitdifferenz) in tuples:
+            zeitintervallbuchung = Zeitintervallbuchung()
+            zeitintervallbuchung.set_id(id)
+            zeitintervallbuchung.set_timestamp(timestamp)
+            zeitintervallbuchung.set_erstellt_von(erstellt_von)
+            zeitintervallbuchung.set_erstellt_für(erstellt_für)
+            zeitintervallbuchung.set_ist_buchung(ist_buchung)
+            zeitintervallbuchung.set_zeitintervall(zeitintervall)
+            zeitintervallbuchung.set_bezeichnung(bezeichnung)
+            zeitintervallbuchung.set_zeitdifferenz(zeitdifferenz)
+            result.append(zeitintervallbuchung)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
 
     def insert(self, zeitintervallbuchung: Zeitintervallbuchung) -> Zeitintervallbuchung:
         """Create activity Object."""
@@ -51,22 +111,23 @@ class ZeitintervallbuchungMapper(Mapper):
 
         for (maxid) in tuples:
             if maxid[0] is not None:
-                zeitintervallbuchung.id = maxid[0] + 1
+                zeitintervallbuchung.set_id(maxid[0] + 1)
             else:
-                zeitintervallbuchung.id = 1
+                zeitintervallbuchung.set_id(1)
         command = """
             INSERT INTO zeitintervallbuchung (
-                id, timestamp, erstellt_von, erstellt_für, ist_buchung, zeitintervall, zeitdifferenz
-            ) VALUES (%s,%s,%s,%s,%s,%s,%s)
+                id, timestamp, erstellt_von, erstellt_für, ist_buchung, zeitintervall, zeitdifferenz, bezeichnung
+            ) VALUES (%s,%s,%s,%s,%s,%s,%s, %s)
         """
         cursor.execute(command, (
-            zeitintervallbuchung.id,
-            zeitintervallbuchung.timestamp,
-            zeitintervallbuchung.erstellt_von,
-            zeitintervallbuchung.erstellt_für,
-            zeitintervallbuchung.ist_buchung,
-            zeitintervallbuchung.zeitintervall,
-            zeitintervallbuchung.zeitdifferenz,
+            zeitintervallbuchung.get_id(),
+            zeitintervallbuchung.get_timestamp(),
+            zeitintervallbuchung.get_erstellt_von(),
+            zeitintervallbuchung.get_erstellt_für(),
+            zeitintervallbuchung.get_ist_buchung(),
+            zeitintervallbuchung.get_zeitintervall(),
+            zeitintervallbuchung.get_zeitdifferenz(),
+            zeitintervallbuchung.get_bezeichnung()
         ))
         self._cnx.commit()
 
@@ -79,8 +140,22 @@ class ZeitintervallbuchungMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE zeitintervallbuchung SET timestamp=%s, erstellt_von=%s, erstellt_für=%s, ist_buchung=%s, zeitintervall=%s, zeitdifferenz=%s WHERE id=%s"
-        data = (zeitintervallbuchung.timestamp, zeitintervallbuchung.erstellt_von, zeitintervallbuchung.erstellt_für, zeitintervallbuchung.ist_buchung, zeitintervallbuchung.zeitintervall, zeitintervallbuchung.zeitdifferenz, zeitintervallbuchung.id)
+        command = """UPDATE zeitintervallbuchung SET 
+        timestamp=%s, 
+        erstellt_von=%s, 
+        erstellt_für=%s, 
+        ist_buchung=%s, 
+        zeitintervall=%s, 
+        bezeichnung=%s, 
+        zeitdifferenz=%s WHERE id=%s"""
+        data = (zeitintervallbuchung.get_timestamp(), 
+        zeitintervallbuchung.get_erstellt_von(), 
+        zeitintervallbuchung.get_erstellt_für(), 
+        zeitintervallbuchung.get_ist_buchung(), 
+        zeitintervallbuchung.get_zeitintervall(), 
+        zeitintervallbuchung.get_zeitdifferenz(), 
+        zeitintervallbuchung.get_bezeichnung(),
+        zeitintervallbuchung.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -92,7 +167,7 @@ class ZeitintervallbuchungMapper(Mapper):
 
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM zeitintervallbuchung WHERE id={}".format(zeitintervallbuchung.id)
+        command = "DELETE FROM zeitintervallbuchung WHERE id={}".format(zeitintervallbuchung.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

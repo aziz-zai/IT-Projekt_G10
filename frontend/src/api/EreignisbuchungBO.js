@@ -1,16 +1,17 @@
-import BuchungBO from './BuchungBO';
+import BusinessObject from "./BusinessObject";
+
 
 /**
  * Represents a Ereignis
  */
-export default class EreignisbuchungBO extends BuchungBO {
+export default class EreignisbuchungBO extends BusinessObject {
 
   constructor(aErstellt_von, aErstellt_für, aIst_buchung, aEreignis) {
     super();
-    this.erstellt_von = aErstellt_von,
-    this.erstellt_für = aErstellt_für,
-    this.ist_buchung = aIst_buchung,
-    this.ereignis = aEreignis
+    this.erstellt_von = aErstellt_von;
+    this.erstellt_für = aErstellt_für;
+    this.ist_buchung = aIst_buchung;
+    this.ereignis = aEreignis;
   }
 
   /**

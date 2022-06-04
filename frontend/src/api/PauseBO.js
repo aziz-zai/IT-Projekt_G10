@@ -1,9 +1,9 @@
-import Zeitintervall from './Zeitintervall';
+import ZeitintervallBO from './ZeitintervallBO';
 
 /**
  * Represents a Pause
  */
-export default class PauseBO extends Zeitintervall {
+export default class PauseBO extends ZeitintervallBO {
 
   constructor() {
     super();
@@ -20,7 +20,7 @@ export default class PauseBO extends Zeitintervall {
     } else {
       // Es handelt sich offenbar um ein singuläres Objekt
       let n = pause;
-      Object.setPrototypeOf(p, PauseBO.prototype);
+      Object.setPrototypeOf(n, PauseBO.prototype);
       result.push(n);
     }
 

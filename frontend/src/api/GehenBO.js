@@ -1,16 +1,16 @@
-import Ereignis from './Ereignis';
+import EreignisBO from './EreignisBO';
 
 /**
  * Represents a Project
  */
-export default class GehenBO extends Ereignis {
+export default class GehenBO extends EreignisBO {
 
   constructor() {
     super();
   }
 
   
-  static fromJSON(projects) {
+  static fromJSON(gehen) {
     let result = [];
 
     if (Array.isArray(gehen)) {

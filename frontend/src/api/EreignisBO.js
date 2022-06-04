@@ -7,8 +7,8 @@ export default class EreignisBO extends BusinessObject {
 
   constructor(aZeitpunkt, aBezeichnung) {
     super();
-    this.zeitpunkt = aZeitpunkt,
-    this.bezeichnung = aBezeichnung
+    this.zeitpunkt = aZeitpunkt;
+    this.bezeichnung = aBezeichnung;
   }
 
   /**

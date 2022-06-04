@@ -45,7 +45,7 @@ export default class ArbeitszeitkontoBO extends BusinessObject {
     return this.arbeitsleistung;
   }
  
-  setGleitzeit(aGleitszeit) {
+  setGleitzeit(aGleitzeit) {
     this.gleitzeit = aGleitzeit;
   }
 
@@ -63,7 +63,7 @@ export default class ArbeitszeitkontoBO extends BusinessObject {
       })
     } else {
       // Es handelt sich offenbar um ein singuläres Objekt
-      let p = arbeitszeitkonto;
+      let m = arbeitszeitkonto;
       Object.setPrototypeOf(m, ArbeitszeitkontoBO.prototype);
       result.push(m);
     }

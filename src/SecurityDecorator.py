@@ -55,16 +55,14 @@ def secured(function):
                         user.email= email
                         user.benutzername = benutzername
                         user.google_user_id = google_user_id
-                        user.vorname = ""
-                        user.nachname = ""
                         adm.save_user(user=user)
                     else:
                         """Fall: Der Benutzer war bislang noch nicht eingelogged. 
                         Wir legen daher ein neues User-Objekt an, um dieses ggf. später
                         nutzen zu können.
                         """
-                        adm.create_user("", "", benutzername, email, google_user_id)
-
+                        createdUser=adm.create_user("", "", benutzername, email, google_user_id)
+                        adm.create_arbeitszeitkonto(urlaubskonto=createdUser.get_urlaubstage(), user=createdUser.get_id(), arbeitsleistung=0, gleitzeit=0)
                     print(request.method, request.path, "angefragt durch:", email)
 
                     objects = function(*args, **kwargs)
