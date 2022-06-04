@@ -12,7 +12,7 @@ export class Project extends Component {
     
         // Init state
         this.state = {
-          project: null,
+          project: [],
         };
       }
       getMembershipByUser = () => {
@@ -29,7 +29,18 @@ export class Project extends Component {
         this.setState({
         });
       }
-
+      projectFormClosed = project => {
+        // project is not null and therefore created
+        if (project) {
+          const newProjectList = [...this.state.project, project];
+          this.setState({
+            project: newProjectList,
+          });
+        } else {
+          this.setState({
+          });
+        }
+      }
       componentDidMount() {
         this.getMembershipByUser()
       }
@@ -48,7 +59,7 @@ export class Project extends Component {
           </Grid>)):
           null}
   <Grid item xs={1} sm={2} md={1.7} xl={1.5}>
-      <AddCard/>
+      <AddCard onClose={this.projectFormClosed}user={user}/>
   </Grid> 
   </Grid>
   </div>

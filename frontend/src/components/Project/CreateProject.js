@@ -6,9 +6,6 @@ import { TextField, Dialog, ListItem, List, Divider, AppBar,
 Toolbar, IconButton, Typography, Slide} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 export class CreateProject extends Component {
     constructor(props) {
@@ -46,11 +43,11 @@ export class CreateProject extends Component {
 
     addProject = () => {
       let newProject = new ProjectBO(this.state.projektName, this.state.laufZeit, this.state.auftragGeber, this.state.availableHours);
-      OneAPI.getAPI().addProject(newProject).then(project => {
+      OneAPI.getAPI().addProject(newProject, this.props.user[0].id).then(project => {
         // Backend call sucessfull
         // reinit the dialogs state for a new empty project
         this.setState(this.baseState);
-        this.props.onClose(project); // call the parent with the project object from backend
+        this.props.handleClose(project); // call the parent with the project object from backend
       }).catch(e =>
         this.setState({
           updatingInProgress: false,    // disable loading indicator 
@@ -80,7 +77,7 @@ textFieldValueChange = (event) => {
 }
 
   render() {
-      const {isOpen, project} = this.props;
+      const {isOpen, project, user} = this.props;
       const {projektName, projektNameEdited, projektNameValidationFailed, laufZeit, laufZeitEdited, laufZeitValidationFailed,
       auftragGeber, auftragGeberEdited, auftragGeberValidationFailed, availableHours, availableHoursEdited, availableHoursValidationFailed} = this.state;
 
@@ -89,7 +86,6 @@ textFieldValueChange = (event) => {
       <Dialog
         fullScreen
         open={isOpen}
-        TransitionComponent={Transition}
       >
         <AppBar class="AppBar" sx={{ position: 'relative' }}>
           <Toolbar>
@@ -104,7 +100,7 @@ textFieldValueChange = (event) => {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Projekt anlegen
             </Typography>
-            <button onClick={this.props.handleClose} class="saveBtn">Speichern</button>
+            <button onClick={this.addProject} class="saveBtn">Speichern</button>
           </Toolbar>
         </AppBar>
         <List>
@@ -155,5 +151,6 @@ textFieldValueChange = (event) => {
 CreateProject.propTypes = {
   isOpen: PropTypes.any,
   handleClose: PropTypes.any,
+  user: PropTypes.any,
 }
 export default CreateProject
