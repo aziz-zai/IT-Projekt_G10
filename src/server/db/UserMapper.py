@@ -138,7 +138,7 @@ class UserMapper(Mapper):
                 id, timestamp, vorname, nachname, benutzername, email, google_user_id, urlaubstage
             ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
         """
-        data = (user.get_id(), user.get_timestamp(),user.get_vorname(), user.get_nachname(), 
+        data = (user.get_id(), user.get_timestamp(), user.get_vorname(), user.get_nachname(), 
                 user.get_benutzername(), user.get_email(), user.get_google_user_id(), user.get_urlaubstage())
         cursor.execute(command, data)
 

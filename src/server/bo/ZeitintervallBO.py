@@ -33,7 +33,7 @@ class Zeitintervall(BusinessObject):
     def from_dict(dictionary=dict()):
         """Umwandeln eines Python dict() in Abweseneheit()."""
         obj = Zeitintervall()
-        obj.set_bezeichnung(dictionary)["bezeichnung"]
+        obj.set_bezeichnung(dictionary["bezeichnung"])
         obj.set_start(dictionary["start"])  
         obj.set_ende(dictionary["ende"])
 

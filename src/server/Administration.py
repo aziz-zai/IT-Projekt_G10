@@ -1,4 +1,5 @@
-from server.bo import AktivitätenBO
+from server.bo.ZeitintervallBO import Zeitintervall
+from server.db.ZeitintervallMapper import ZeitintervallMapper
 from server.bo.EreignisBO import Ereignis
 from server.bo.MembershipBO import Membership
 from server.db.MembershipMapper import MembershipMapper
@@ -272,12 +273,19 @@ class Administration(object):
         zeitintervallbuchung.set_erstellt_von(erstellt_von)
         zeitintervallbuchung.set_erstellt_für(erstellt_für)
         zeitintervallbuchung.set_bezeichnung(bezeichnung) 
+        zeitintervall_bez = zeitintervallbuchung.get_bezeichnung()
         adm = Administration()
-        zeitinter = adm.get_projektarbeit_by_id(zeitintervall)
-        kommen = adm.get_kommen_by_id(zeitinter.get_start())
-        gehen = adm.get_gehen_by_id( zeitinter.get_ende())
-
-        zeitdifferenz = datetime.strptime(gehen.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
+        zeitinter = None
+        if zeitintervall_bez == "Projektarbeit":
+            zeitinter = adm.get_projektarbeit_by_id(zeitintervall)
+            kommen = adm.get_kommen_by_id(zeitinter.get_start())
+            gehen = adm.get_gehen_by_id(zeitinter.get_ende())
+            zeitdifferenz = datetime.strptime(gehen.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
+        elif zeitintervall_bez == "Projektlaufzeit":
+            zeitinter = adm.get_zeitintervall_by_id(zeitintervall)
+            start_ereignis = adm.get_ereignis_by_id(zeitinter.get_start())
+            end_ereignis = adm.get_ereignis_by_id(zeitinter.get_ende())
+            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(start_ereignis.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
         zeitdiff_sec = zeitdifferenz.total_seconds()   
         offset_hours = zeitdiff_sec / 3600
         offset_minutes = (offset_hours % 1) * 60
@@ -506,3 +514,29 @@ class Administration(object):
     def delete_abwesenheit(self, abwesenheit):
         with AbwesenheitMapper() as mapper:
             return mapper.delete(abwesenheit)
+
+    """
+    ANCHOR Zeitintervall-spezifische Methoden
+    """ 
+
+    def create_zeitintervall(self, bezeichnung, start, ende):
+        zeitintervall = Zeitintervall()
+        zeitintervall.set_start(start)
+        zeitintervall.set_ende(ende)
+        zeitintervall.set_bezeichnung(bezeichnung)
+
+        with ZeitintervallMapper() as mapper:             
+            return mapper.insert(zeitintervall)
+
+    def get_zeitintervall_by_id(self, id):
+        """Den Benutzer mit der gegebenen ID auslesen."""
+        with ZeitintervallMapper() as mapper:
+            return mapper.find_by_key(id)
+
+    def update_zeitintervall(self, zeitintervall):
+        with ZeitintervallMapper() as mapper:
+            return mapper.update(zeitintervall)
+
+    def delete_zeitintervall(self, zeitintervall):
+        with ZeitintervallMapper() as mapper:
+            return mapper.delete(zeitintervall)
