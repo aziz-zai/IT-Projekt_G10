@@ -494,7 +494,6 @@ class ProjectListOperations(Resource):
 class ProjectListOperations(Resource):
     @projectone.marshal_with(project)
     def get(self, id):
-
         adm = Administration()
         project = adm.get_project_by_id(id)
         return project
@@ -520,7 +519,6 @@ class ProjectListOperations(Resource):
     def delete(self, id):
         """Löschen eines bestimmten User-Objekts."""
         adm = Administration()
-
         project = adm.get_project_by_id(id)
         adm.delete_project(project)
         return '', 200
@@ -529,7 +527,6 @@ class ProjectListOperations(Resource):
 class ProjectListOperations(Resource):
     @projectone.marshal_with(zeitintervall)
     def get(self, id):
-
         adm = Administration()
         project = adm.get_projectlaufzeit_by_id(id)
         return project
@@ -1068,7 +1065,6 @@ class KommenOperations(Resource):
 @projectone.route('/zeitintervallbuchung')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ZeitintervallbuchungListOperations(Resource):
-
     @projectone.marshal_with(zeitintervallbuchung, code=200)
     @projectone.expect(zeitintervallbuchung)  # Wir erwarten ein User-Objekt von Client-Seite.
     def post(self):
@@ -1080,7 +1076,6 @@ class ZeitintervallbuchungListOperations(Resource):
         zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
         """
         adm = Administration()
-
         proposal = Zeitintervallbuchung.from_dict(api.payload)
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
@@ -1090,6 +1085,7 @@ class ZeitintervallbuchungListOperations(Resource):
             wird auch dem Client zurückgegeben. 
             """
             a = adm.create_zeitintervallbuchung(proposal.get_zeitintervall(), proposal.get_ist_buchung(), proposal.get_erstellt_von(), proposal.get_erstellt_für(), proposal.get_bezeichnung())
+            adm.update_arbeitszeitkonto_ist_arbeitsleistung(a.get_erstellt_von())
             return a, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.

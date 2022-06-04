@@ -286,6 +286,11 @@ class Administration(object):
             start_ereignis = adm.get_ereignis_by_id(zeitinter.get_start())
             end_ereignis = adm.get_ereignis_by_id(zeitinter.get_ende())
             zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(start_ereignis.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
+        elif zeitintervall_bez == "Pause":
+            zeitinter = adm.get_pause_by_id(zeitintervall)
+            start_ereignis = adm.get_ereignis_by_id(zeitinter.get_start())
+            end_ereignis = adm.get_ereignis_by_id(zeitinter.get_ende())
+            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(start_ereignis.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
         zeitdiff_sec = zeitdifferenz.total_seconds()   
         offset_hours = zeitdiff_sec / 3600
         offset_minutes = (offset_hours % 1) * 60
@@ -307,6 +312,10 @@ class Administration(object):
     def get_ist_buchungen_by_user(self, user):
         with ZeitintervallbuchungMapper() as mapper:
             return mapper.find_ist_buchungen_by_user(user)
+    
+    def get_pause_buchungen_by_user(self, user):
+        with ZeitintervallbuchungMapper() as mapper:
+            return mapper.find_pause_buchungen_by_user(user)
 
     def update_zeitintervallbuchung(self, zeitintervallbuchung):
         with ZeitintervallbuchungMapper() as mapper:
@@ -398,12 +407,19 @@ class Administration(object):
     def update_arbeitszeitkonto_ist_arbeitsleistung(self, user):
         arbeitszeitkonto = self.get_arbeitszeitkonto_by_userID(user)
         ist_zeitintervallbuchungen = self.get_ist_buchungen_by_user(user)
+        pause_zeitintervallbuchungen = self.get_pause_buchungen_by_user(user)
         ist_stunden=0
         for buchung in ist_zeitintervallbuchungen:
             ist_stunden += float(buchung.get_zeitdifferenz())
+        pause_stunden=0
+        for buchung in pause_zeitintervallbuchungen:
+            pause_stunden += float(buchung.get_zeitdifferenz())
+        arbeitsleistung = ist_stunden - pause_stunden
         print(f"ist_stunden -> {ist_stunden}")
+        print(f"pause_stunden -> {pause_stunden}")
+        print(f"arbeitsleistung -> {arbeitsleistung}")
         arbeitszeitkonto.set_timestamp(datetime.now())
-        arbeitszeitkonto.set_arbeitsleistung(ist_stunden)
+        arbeitszeitkonto.set_arbeitsleistung(arbeitsleistung)
         self.update_arbeitszeitkonto(arbeitszeitkonto)
     
     def update_arbeitszeitkonto_gleitzeit(self, user):
