@@ -1086,6 +1086,7 @@ class ZeitintervallbuchungListOperations(Resource):
             """
             a = adm.create_zeitintervallbuchung(proposal.get_zeitintervall(), proposal.get_ist_buchung(), proposal.get_erstellt_von(), proposal.get_erstellt_für(), proposal.get_bezeichnung())
             adm.update_arbeitszeitkonto_ist_arbeitsleistung(a.get_erstellt_von())
+            adm.update_arbeitszeitkonto_gleitzeit(a.get_erstellt_von())
             return a, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
