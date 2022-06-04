@@ -1,6 +1,7 @@
 
 from re import U
 from server.bo.ProjectBO import Project
+from server.bo.ZeitintervallBO import Zeitintervall
 from server.db.Mapper import Mapper
 
 class ProjectMapper(Mapper):
@@ -107,6 +108,36 @@ class ProjectMapper(Mapper):
 
         return result
 
+    def find_laufzeit_by_key(self, project):
+
+        result = None
+        projektlaufzeit = project.get_laufzeit()
+        cursor = self._cnx.cursor()
+        command = """SELECT id, timestamp, bezeichnung, start, ende 
+        FROM projectone.zeitintervall
+        WHERE id in (SELECT id FROM projectone.project
+        WHERE laufzeit={})
+        """.format(projektlaufzeit)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (id, timestamp,bezeichnung, start, ende) = tuples[0]
+            zeitintervall = Zeitintervall()
+            zeitintervall.set_id(id)
+            zeitintervall.set_timestamp(timestamp)
+            zeitintervall.set_start(start)
+            zeitintervall.set_ende(ende)
+            zeitintervall.set_bezeichnung(bezeichnung)
+            result = zeitintervall
+        except IndexError:
+            result = None
+        
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+    
     def delete(self, project):
 
         cursor = self._cnx.cursor()

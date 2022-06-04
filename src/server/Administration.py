@@ -334,6 +334,11 @@ class Administration(object):
         with ProjectMapper() as mapper:
             return mapper.find_by_key(id)
 
+    def get_projectlaufzeit_by_id(self, id):
+        project=self.get_project_by_id(id)
+        with ProjectMapper() as mapper:
+            return mapper.find_laufzeit_by_key(project)
+
     def get_project_by_activity(self, activity):
         with ProjectMapper() as mapper:
             return mapper.find_by_activity(activity)

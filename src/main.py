@@ -524,7 +524,15 @@ class ProjectListOperations(Resource):
         project = adm.get_project_by_id(id)
         adm.delete_project(project)
         return '', 200
+@projectone.route('/projectlaufzeit/<int:id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectListOperations(Resource):
+    @projectone.marshal_with(zeitintervall)
+    def get(self, id):
 
+        adm = Administration()
+        project = adm.get_projectlaufzeit_by_id(id)
+        return project
 
 """ANCHOR Aktivitäten Views
 """
