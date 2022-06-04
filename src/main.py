@@ -181,12 +181,9 @@ abwesenheit = api.inherit('Abwesenheit', bo, {
 """ANCHOR Zeitintervallbuchung Marshalling
 """
 zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
-    'erstellt_von': fields.Integer(attribute='_erstellt_von', description='abwesenheit eines Benutzers'),
-    'erstellt_für': fields.Integer(attribute='_erstellt_für', description='abwesenheit eines Benutzers'),
-    'ist_buchung': fields.Boolean(attribute='_ist_buchung', description='abwesenheit eines Benutzers'),
-    'zeitintervall': fields.Integer(attribute='_zeitintervall', description='abwesenheit eines Benutzers'),
     'zeitdifferenz': fields.String(attribute='_zeitdifferenz', description='abwesenheit eines Benutzers')
 })
+
 """ !SECTION 
 """
 """ SECTION Views 
@@ -272,7 +269,7 @@ class MembershipByProjectOperations(Resource):
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByProjectOperations(Resource):
     @projectone.marshal_with(user)
-    def get(self, project):
+    def get(self, project):                                                                                                                                                                                                                                             
         """Auslesen eines bestimmten Membership-Objekts nach Projektid
 
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
