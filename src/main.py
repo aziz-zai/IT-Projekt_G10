@@ -199,6 +199,7 @@ class MembershipOperations(Resource):
     @projectone.marshal_with(membership, code=200)
     @projectone.expect(membership) # Wir erwarten ein Membership-Objekt von der Client-Seite.
     #@secured 
+    @secured
     def post(self):
         """Anlegen eines neuen Membership-Objekts.
         """
@@ -477,6 +478,7 @@ class ProjectListOperations(Resource):
 
     @projectone.marshal_with(project, code=200)
     @projectone.expect(project)  # Wir erwarten ein User-Objekt von Client-Seite.
+    @secured
     def post(self, user):
         
         adm = Administration()
@@ -496,6 +498,7 @@ class ProjectListOperations(Resource):
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
     @projectone.marshal_with(project)
+    @secured
     def get(self, id):
 
         adm = Administration()
@@ -503,6 +506,7 @@ class ProjectListOperations(Resource):
         return project
 
     @projectone.marshal_with(project)
+    @secured
     def put(self, id):
         """Update eines bestimmten Project-Objekts."""
         adm = Administration()
