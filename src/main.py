@@ -766,7 +766,6 @@ class EreignisbuchungenListOperations(Resource):
     @projectone.marshal_with(ereignisbuchungen, code=200)
     @projectone.expect(ereignisbuchungen)  # Wir erwarten ein Ereignisbuchungen-Objekt von Client-Seite.
     def post(self):
-       
         adm = Administration()
 
         proposal = Ereignisbuchung.from_dict(api.payload)

@@ -79,10 +79,7 @@ class ZeitintervallbuchungMapper(Mapper):
         cursor = self._cnx.cursor()
         command = """SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung,zeitintervall, bezeichnung, zeitdifferenz 
         FROM projectone.zeitintervallbuchung
-        WHERE erstellt_für={} AND ist_buchung=TRUE AND (bezeichnung='Projektarbeit' OR (bezeichnung='Abwesenheit' AND zeitintervall in (
-        SELECT id FROM projectone.abwesenheit
-        WHERE abwesenheitsart=1 OR abwesenheitsart=2)
-        ))
+        WHERE erstellt_für={} AND ist_buchung=TRUE AND bezeichnung='Projektarbeit'
         """.format(user)
         cursor.execute(command)
         tuples = cursor.fetchall()
@@ -145,6 +142,39 @@ class ZeitintervallbuchungMapper(Mapper):
         WHERE erstellt_für={} AND ist_buchung=TRUE AND bezeichnung='Abwesenheit' AND zeitintervall in(
             SELECT id FROM projectone.abwesenheit
             WHERE abwesenheitsart=1
+        )
+        """.format(user)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+        result= []  
+
+        
+        for (id, timestamp, erstellt_von, erstellt_für, ist_buchung, zeitintervall, bezeichnung, zeitdifferenz) in tuples:
+            zeitintervallbuchung = Zeitintervallbuchung()
+            zeitintervallbuchung.set_id(id)
+            zeitintervallbuchung.set_timestamp(timestamp)
+            zeitintervallbuchung.set_erstellt_von(erstellt_von)
+            zeitintervallbuchung.set_erstellt_für(erstellt_für)
+            zeitintervallbuchung.set_ist_buchung(ist_buchung)
+            zeitintervallbuchung.set_zeitintervall(zeitintervall)
+            zeitintervallbuchung.set_bezeichnung(bezeichnung)
+            zeitintervallbuchung.set_zeitdifferenz(zeitdifferenz)
+            result.append(zeitintervallbuchung)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_all_urlaub_krank_buchungen(self, user):
+        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
+        """
+        cursor = self._cnx.cursor()
+        command = """SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung,zeitintervall, bezeichnung, zeitdifferenz 
+        FROM projectone.zeitintervallbuchung
+        WHERE erstellt_für={} AND ist_buchung=TRUE AND bezeichnung='Abwesenheit' AND zeitintervall in(
+            SELECT id FROM projectone.abwesenheit
+            WHERE abwesenheitsart=1 OR abwesenheitsart=2
         )
         """.format(user)
         cursor.execute(command)

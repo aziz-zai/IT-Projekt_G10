@@ -307,9 +307,9 @@ class Administration(object):
 
     def get_zeitintervallbuchung_by_id(self, id):
         """Den Benutzer mit der gegebenen ID auslesen."""
-        
         with ZeitintervallbuchungMapper() as mapper:
             return mapper.find_by_key(id)
+
     def get_soll_buchungen_by_user(self, erstellt_für):
         with ZeitintervallbuchungMapper() as mapper:
             return mapper.find_soll_buchungen_by_user(erstellt_für)
@@ -325,6 +325,10 @@ class Administration(object):
     def get_all_urlaubs_buchungen(self,user):
         with ZeitintervallbuchungMapper() as mapper:
             return mapper.find_all_urlaubs_buchungen(user)
+    
+    def get_all_urlaub_krank_buchungen(self,user):
+        with ZeitintervallbuchungMapper() as mapper:
+            return mapper.find_all_urlaub_krank_buchungen(user)
 
     def update_zeitintervallbuchung(self, zeitintervallbuchung):
         with ZeitintervallbuchungMapper() as mapper:
@@ -416,17 +420,22 @@ class Administration(object):
     def update_arbeitszeitkonto_ist_arbeitsleistung(self, user):
         arbeitszeitkonto = self.get_arbeitszeitkonto_by_userID(user)
         ist_zeitintervallbuchungen = self.get_ist_buchungen_by_user(user)
+        urlaub_krank_zeitintervallbuchungen = self.get_all_urlaub_krank_buchungen(user)
         pause_zeitintervallbuchungen = self.get_pause_buchungen_by_user(user)
         ist_stunden=0
         for buchung in ist_zeitintervallbuchungen:
             ist_stunden += float(buchung.get_zeitdifferenz())
+        urlaub_krank_stunden=0
+        for buchung in urlaub_krank_zeitintervallbuchungen:
+            urlaub_krank_stunden += float(buchung.get_zeitdifferenz())
         pause_stunden=0
         for buchung in pause_zeitintervallbuchungen:
             pause_stunden += float(buchung.get_zeitdifferenz())
-        arbeitsleistung = ist_stunden - pause_stunden
+        arbeitsleistung = (ist_stunden - pause_stunden) + (urlaub_krank_stunden/3)
         print(f"ist_stunden -> {ist_stunden}")
         print(f"pause_stunden -> {pause_stunden}")
         print(f"arbeitsleistung -> {arbeitsleistung}")
+        print(f"urlaub_krank -> {urlaub_krank_stunden/3}")
         arbeitszeitkonto.set_timestamp(datetime.now())
         arbeitszeitkonto.set_arbeitsleistung(arbeitsleistung)
         self.update_arbeitszeitkonto(arbeitszeitkonto)
@@ -439,7 +448,7 @@ class Administration(object):
         soll_stunden=0
         for buchung in soll_zeitintervallbuchungen:
             soll_stunden += float(buchung.get_zeitdifferenz())
-        soll_ist_diff = soll_stunden - aktuelle_arbeitsleistung
+        soll_ist_diff = aktuelle_arbeitsleistung - soll_stunden
         gleitzeit = soll_ist_diff
         arbeitszeitkonto.set_gleitzeit(gleitzeit)
         print(f"soll_ist -> {soll_ist_diff}")
