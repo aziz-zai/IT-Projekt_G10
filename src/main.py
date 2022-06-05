@@ -1083,7 +1083,9 @@ class ZeitintervallbuchungListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            a = adm.create_zeitintervallbuchung(proposal.get_zeitintervall(), proposal.get_ist_buchung(), proposal.get_erstellt_von(), proposal.get_erstellt_für(), proposal.get_bezeichnung())
+            a = adm.create_zeitintervallbuchung(proposal.get_zeitintervall(), 
+            proposal.get_ist_buchung(), proposal.get_erstellt_von(), 
+            proposal.get_erstellt_für(), proposal.get_bezeichnung())
             adm.update_arbeitszeitkonto_ist_arbeitsleistung(a.get_erstellt_von())
             adm.update_arbeitszeitkonto_gleitzeit(a.get_erstellt_von())
             adm.update_arbeitszeitkonto_abwesenheit(a.get_erstellt_von())
