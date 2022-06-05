@@ -110,7 +110,6 @@ class ArbeitszeitkontoMapper(Mapper):
 
         return result
 
-    
     def update(self, arbeitszeitkonto: Arbeitszeitkonto) -> Arbeitszeitkonto:
         """Wiederholtes Schreiben eines Objekts in die Datenbank.
 

@@ -291,6 +291,11 @@ class Administration(object):
             start_ereignis = adm.get_ereignis_by_id(zeitinter.get_start())
             end_ereignis = adm.get_ereignis_by_id(zeitinter.get_ende())
             zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(start_ereignis.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
+        elif zeitintervall_bez == "Abwesenheit":
+            zeitinter = adm.get_abwesenheit_by_id(zeitintervall)
+            start_ereignis = adm.get_ereignis_by_id(zeitinter.get_start())
+            end_ereignis = adm.get_ereignis_by_id(zeitinter.get_ende())
+            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(start_ereignis.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
         zeitdiff_sec = zeitdifferenz.total_seconds()   
         offset_hours = zeitdiff_sec / 3600
         offset_minutes = (offset_hours % 1) * 60
@@ -316,6 +321,10 @@ class Administration(object):
     def get_pause_buchungen_by_user(self, user):
         with ZeitintervallbuchungMapper() as mapper:
             return mapper.find_pause_buchungen_by_user(user)
+
+    def get_all_urlaubs_buchungen(self,user):
+        with ZeitintervallbuchungMapper() as mapper:
+            return mapper.find_all_urlaubs_buchungen(user)
 
     def update_zeitintervallbuchung(self, zeitintervallbuchung):
         with ZeitintervallbuchungMapper() as mapper:
@@ -437,7 +446,22 @@ class Administration(object):
         print(f"soll_stunden -> {soll_stunden}")
         arbeitszeitkonto.set_timestamp(datetime.now())
         self.update_arbeitszeitkonto(arbeitszeitkonto)
+    
+    def update_arbeitszeitkonto_abwesenheit(self, user):
+        arbeitszeitkonto = self.get_arbeitszeitkonto_by_userID(user)
+        aktuelles_urlaubskonto = arbeitszeitkonto.get_urlaubskonto()
+        urlaubs_buchungen = self.get_all_urlaubs_buchungen(user)
 
+        urlaubs_stunden=0
+        for buchung in urlaubs_buchungen:
+            urlaubs_stunden += float(buchung.get_zeitdifferenz())
+        
+        gebuchte_urlaubstage = urlaubs_stunden/24
+
+        updated_urlaubskonto = aktuelles_urlaubskonto - gebuchte_urlaubstage
+        arbeitszeitkonto.set_urlaubskonto(updated_urlaubskonto)
+        self.update_arbeitszeitkonto(arbeitszeitkonto) 
+    
     def delete_arbeitszeitkonto(self, arbeitszeitkonto):
         with ArbeitszeitkontoMapper() as mapper:
             return mapper.delete(arbeitszeitkonto)
