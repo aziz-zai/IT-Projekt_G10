@@ -6,6 +6,7 @@ import './Project.css'
 import CloseIcon from '@mui/icons-material/Close';
 import OneAPI from '../../api/OneAPI';
 import ProjectBO from '../../api/ProjectBO';
+import Aktivitäten from './Aktivitäten';
 
 export class SingleProject extends Component {
     constructor(props) {
@@ -199,8 +200,10 @@ export class SingleProject extends Component {
             />
           </ListItem>
           <Divider />
+          <Aktivitäten/>
         </List>
       </Dialog>
+      
       </CardActions>
       </CardContent>
       </Card>
