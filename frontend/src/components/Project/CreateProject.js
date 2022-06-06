@@ -104,7 +104,7 @@ textFieldValueChange = (event) => {
           </Toolbar>
         </AppBar>
         <List>
-          <ListItem button>
+          <ListItem>
           <TextField
             autoFocus type='text' required
             id="projektName"
@@ -113,7 +113,7 @@ textFieldValueChange = (event) => {
             onChange={this.textFieldValueChange}
             /> 
           </ListItem>
-          <ListItem button>
+          <ListItem>
           <TextField
             autoFocus type='text' required
             id="laufZeit"
@@ -122,7 +122,7 @@ textFieldValueChange = (event) => {
             onChange={this.textFieldValueChange}
             />
           </ListItem>
-          <ListItem button>
+          <ListItem>
           <TextField
             autoFocus type='text' required
             id="auftragGeber"
@@ -131,7 +131,7 @@ textFieldValueChange = (event) => {
             onChange={this.textFieldValueChange}
             />
           </ListItem>
-          <ListItem button>
+          <ListItem>
           <TextField
             autoFocus type='text' required
             id="availableHours"
