@@ -21,10 +21,11 @@ export class AddCard extends Component {
       })
     };
   
-  handleClose = () => {
+  handleClose = (project) => {
       this.setState({
           isOpen:false
-      })
+      });
+      this.props.onClose(project)
     };
 
   render() {
@@ -35,13 +36,15 @@ export class AddCard extends Component {
         <img class="addImg" src={add}></img>
       </CardContent>
       </Card>
-      <CreateProject isOpen={this.state.isOpen} handleClose={this.handleClose}/>
+      <CreateProject user={this.props.user} isOpen={this.state.isOpen} handleClose={this.handleClose}/>
       </div>
     )
   }
 }
 
 AddCard.propTypes = {
-    project: PropTypes.any.isRequired,
+    project: PropTypes.any,
+    user: PropTypes.any,
+    onClose: PropTypes.any,
   }
 export default AddCard

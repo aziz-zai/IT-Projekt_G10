@@ -46,6 +46,6 @@ export class Test extends Component {
   }
 }
 Test.propTypes = {
-    user: PropTypes.any.isRequired,
+    user: PropTypes.any,
   }
 export default Test

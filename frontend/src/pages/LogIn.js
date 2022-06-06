@@ -64,7 +64,7 @@ LogIn.propTypes = {
 	/** 
 	 * Handler function, which is called if the user wants to sign in.
 	 */
-	onLogIn: PropTypes.func.isRequired,
+	onLogIn: PropTypes.func,
 }
 
 export default LogIn;
