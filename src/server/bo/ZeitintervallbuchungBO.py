@@ -32,7 +32,6 @@ class Zeitintervallbuchung(Buchung):
         """Umwandeln eines Python dict() in Zeitintervallbuchung()."""
         obj = Zeitintervallbuchung()
         obj.set_zeitintervall(dictionary["zeitintervall"])
-        obj.set_zeitdifferenz(dictionary["zeitdifferenz"])  
         obj.set_erstellt_von(dictionary["erstellt_von"])
         obj.set_erstellt_für(dictionary["erstellt_für"])  
         obj.set_ist_buchung(dictionary["ist_buchung"])
