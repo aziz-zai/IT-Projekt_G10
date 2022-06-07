@@ -67,6 +67,35 @@ class EreignisbuchungMapper(Mapper):
         cursor.close()
 
         return result
+
+    def find_ist_ereignisbuchungen_by_user(self, erstellt_für):
+        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
+        """
+        cursor = self._cnx.cursor()
+        command = """SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung 
+        FROM projectone.ereignisbuchung
+        WHERE erstellt_für={} AND ist_buchung=FALSE
+        """.format(erstellt_für)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+        result= []
+
+        
+        for (id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung) in tuples[0]
+            ereignisbuchung = Ereignisbuchung()
+            ereignisbuchung.set_id(id)
+            ereignisbuchung.set_timestamp(timestamp)
+            ereignisbuchung.set_erstellt_von(erstellt_von)
+            ereignisbuchung.set_erstellt_für(erstellt_für)
+            ereignisbuchung.set_ist_buchung(ist_buchung)
+            ereignisbuchung.set_ereignis(ereignis)
+            ereignisbuchung.set_bezeichnung(bezeichnung)
+            result.append(ereignisbuchung)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
     
     def update(self, ereignisbuchung: Ereignisbuchung) -> Ereignisbuchung:
         """Wiederholtes Schreiben eines Objekts in die Datenbank.
