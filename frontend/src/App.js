@@ -11,6 +11,8 @@ import { getAuth, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged } f
 import { initializeApp } from 'firebase/app';
 import MyProfile from './pages/MyProfile';
 import OneAPI from './api/OneAPI';
+import Arbeitszeitkonto from './components/Arbeitszeitkonto';
+import Zeiterfassung from './components/Zeiterfassung';
 
 class App extends React.Component {
 	/** Constructor of the app, which initializes firebase  */
@@ -140,18 +142,20 @@ componentDidMount() {
 						<Route>
 						<Route path={process.env.PUBLIC_URL + '/'} element={
 							currentUser ?
-							<Navigate replace to={process.env.PUBLIC_URL + '/home'} />
+							<Navigate replace to={process.env.PUBLIC_URL + '/MeinProfil'} />
 							:
 							<LogIn  onLogIn={this.handleSignIn} />
 						}/>
 						<Route path={process.env.PUBLIC_URL + '/'} element={
 							currentUser ?
-							<Navigate replace to={process.env.PUBLIC_URL + '/home'} />
+							<Navigate replace to={process.env.PUBLIC_URL + '/MeinProfil'} />
 							:
 							<LogIn  onLogIn={this.handleSignIn} />
 						}/>
-                  		<Route path="/home" element={<Secured user={currentUser}><Home Cuser={currentUser} user={user}/></Secured>} />
-                  		<Route path="/MyProfile" element={<Secured user={currentUser}><MyProfile Cuser={currentUser} user={user} /></Secured>} />
+                  		<Route path="/MeineProjekte" element={<Secured user={currentUser}><Home Cuser={currentUser} user={user}/></Secured>} />
+                  		<Route path="/MeinProfil" element={<Secured user={currentUser}><MyProfile Cuser={currentUser} user={user} /></Secured>} />
+                  		<Route path="/Arbeitszeitkonto" element={<Secured user={currentUser}><Arbeitszeitkonto Cuser={currentUser} user={user} /></Secured>} />
+                  		<Route path="/Zeiterfassung" element={<Secured user={currentUser}><Zeiterfassung Cuser={currentUser} user={user} /></Secured>} />
 				  		</Route>
 					</Routes>
 				</Router>

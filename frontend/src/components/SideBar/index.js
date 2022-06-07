@@ -31,9 +31,9 @@ export class SideBar extends Component {
                 <ProfileDropDown user={this.props.user} Ahorizontol='center' Avertical='center' Thorizontol='right' Tvertical='top'/>
                 </div>
                 <div className="SideBarMenu">
-                    <Link to='/' onClick={this.handleOpenStateChange} className="SideBarLink">Projekte</Link>
-                    <Link to='/' onClick={this.handleOpenStateChange} className="SideBarLink">Zeiterfassung</Link>
-                    <Link to='/' onClick={this.handleOpenStateChange} className="SideBarLink">Arbeitszeitkonto</Link>
+                    <Link to='/MeineProjekte' onClick={this.handleOpenStateChange} className="SideBarLink">Projekte</Link>
+                    <Link to='/Zeiterfassung' onClick={this.handleOpenStateChange} className="SideBarLink">Zeiterfassung</Link>
+                    <Link to='/Arbeitszeitkonto' onClick={this.handleOpenStateChange} className="SideBarLink">Arbeitszeitkonto</Link>
                 </div>
             </div>
       </div>

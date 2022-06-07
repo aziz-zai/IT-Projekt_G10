@@ -6,7 +6,7 @@ import SideBar from '../components/SideBar'
 import NavBar from '../components/NavBar'
 import './MyProfile.css'
 import TextField from '@mui/material/TextField';
-import Success from '../components/Alerts/success'
+
 export class MyProfile extends Component {
     constructor(props) {
         super(props);
@@ -112,7 +112,6 @@ export class MyProfile extends Component {
               <div class="saveBtnWrapper">
                   <button onClick={this.updateUser}class="saveBtn">Speichern</button>
               </div>
-              <Success success={this.state.success} />{console.log('success', this.state.success)}
           </div>
         </div>
         :null}
