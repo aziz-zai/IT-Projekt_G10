@@ -11,7 +11,7 @@ import { getAuth, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged } f
 import { initializeApp } from 'firebase/app';
 import MyProfile from './pages/MyProfile';
 import OneAPI from './api/OneAPI';
-import Arbeitszeitkonto from './components/Arbeitszeitkonto';
+import Arbeitszeitkonto from './pages/Arbeitszeitkonto';
 import Zeiterfassung from './components/Zeiterfassung';
 
 class App extends React.Component {
