@@ -39,7 +39,7 @@ class EreignisbuchungMapper(Mapper):
 
         return result
 
-    def find_soll_erieignisbuchungen_by_user(self, erstellt_für):
+    def find_soll_ereignisbuchungen_by_user(self, erstellt_für):
         """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
         """
         cursor = self._cnx.cursor()
