@@ -6,6 +6,7 @@ import SideBar from '../components/SideBar'
 import NavBar from '../components/NavBar'
 import './MyProfile.css'
 import TextField from '@mui/material/TextField';
+import Success from '../components/Alerts/success'
 export class MyProfile extends Component {
     constructor(props) {
         super(props);
@@ -19,6 +20,7 @@ export class MyProfile extends Component {
           Open: 'SideBarContainerClosed', 
           firstName: fn,
           lastName: ln,
+          success: false
         };
       }
 
@@ -42,7 +44,7 @@ export class MyProfile extends Component {
         updatedUser.setNachname(this.state.lastName);
         OneAPI.getAPI().updateUser(updatedUser).then(user => {
           this.setState({
-                // no error message
+              success: true,// no error message
           });
           // keep the new state as base state
           this.baseState.firstName = this.state.firstName;
@@ -110,6 +112,7 @@ export class MyProfile extends Component {
               <div class="saveBtnWrapper">
                   <button onClick={this.updateUser}class="saveBtn">Speichern</button>
               </div>
+              <Success success={this.state.success} />{console.log('success', this.state.success)}
           </div>
         </div>
         :null}
