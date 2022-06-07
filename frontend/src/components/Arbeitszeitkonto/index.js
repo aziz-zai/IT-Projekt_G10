@@ -1,12 +1,20 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import './Arbeitszeitkonto.css'
 
 export class Arbeitszeitkonto extends Component {
 
+    // Init state
+    constructor(props) {
+        super(props);
+    this.state = {
+   
+    };
+  }
 
   render() {
     return (
-      <div>Arbeitszeitkonto
+      <div class="test">Arbeitszeitkonto
         
       </div>
     )
