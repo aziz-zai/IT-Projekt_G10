@@ -1172,7 +1172,7 @@ class ZeitintervallbuchungOperations(Resource):
         return '', 200
 @projectone.route('/zeitintervallbuchung-soll/<int:erstell_fuer>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@projectone.param('id', 'Die ID des User-Objekts')
+@projectone.param('id', 'Die ID des zeitintervallbuchung-user-Objekts')
 class ZeitintervallbuchungOperations(Resource):
     @projectone.marshal_with(zeitintervallbuchung)
 
@@ -1183,6 +1183,20 @@ class ZeitintervallbuchungOperations(Resource):
         adm = Administration()
         zeitintervallbuchung = adm.get_soll_buchungen_by_user(erstellt_fuer)
         return zeitintervallbuchung
+@projectone.route('/zeitintervallbuchung-ist/<int:erstell_fuer>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des zeitintervallbuchung-user-Objekts')
+class ZeitintervallbuchungOperations(Resource):
+    @projectone.marshal_with(zeitintervallbuchung)
+
+    def get(self, erstellt_fuer):
+        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts.
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        zeitintervallbuchung = adm.get_ist_buchungen_by_user(erstellt_fuer)
+        return zeitintervallbuchung
+    
 @projectone.route('/ereignis')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class EreignisListOperations(Resource):

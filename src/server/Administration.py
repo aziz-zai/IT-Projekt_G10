@@ -322,9 +322,9 @@ class Administration(object):
         with ZeitintervallbuchungMapper() as mapper:
             return mapper.find_soll_buchungen_by_user(erstellt_für)
 
-    def get_ist_buchungen_by_user(self, user):
+    def get_ist_buchungen_by_user(self, erstellt_für):
         with ZeitintervallbuchungMapper() as mapper:
-            return mapper.find_ist_buchungen_by_user(user)
+            return mapper.find_ist_buchungen_by_user(erstellt_für)
     
     def get_pause_buchungen_by_user(self, user):
         with ZeitintervallbuchungMapper() as mapper:
