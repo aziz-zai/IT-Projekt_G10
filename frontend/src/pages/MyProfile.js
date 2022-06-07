@@ -89,25 +89,21 @@ export class MyProfile extends Component {
         <div class="ProfileWrapper">
           <div class="ProfileContainer">
             <div><img class="ProfileAvatar" src={Cuser.photoURL}/></div> 
-            <div class="ProfileContent">
-              <div>
-              <form sx={{width: '100%'}} noValidate autoComplete='off'>
+            <div class="ProfileContent">   
+                <div>
                 <TextField
                     autoFocus type='text' required
                     id="firstName"
                     label="Vorname"
                     value={firstName}
                     onChange={this.textFieldValueChange}
-                    /> &nbsp; <TextField
+                    /></div> &nbsp; <div><TextField
                     autoFocus type='text' required
                     id="lastName"
                     label="Nachname"
                     value={lastName}
                     onChange={this.textFieldValueChange}
-                    />
-                </form>
-                </div>
-                
+                    /></div>
               </div>
               <div class="saveBtnWrapper">
                   <button onClick={this.updateUser}class="saveBtn">Speichern</button>
