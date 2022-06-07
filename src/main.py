@@ -845,6 +845,20 @@ class EreignisbuchungenOperations(Resource):
         ereignisbuchungen = adm.get_soll_ereignisbuchungen_by_user(erstellt_fuer)
         return ereignisbuchungen
 
+@projectone.route('/ereignisbuchungen-ist/<int:erstell_fuer>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des Ereignisbuchung-Objekts')
+class EreignisbuchungenOperations(Resource):
+    @projectone.marshal_with(ereignisbuchungen)
+
+    def get(self, erstellt_fuer):
+        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts.
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        ereignisbuchungen = adm.get_ist_eregnisbuchungen_by_user(erstellt_fuer)
+        return ereignisbuchungen
+
 """ANCHOR Gehen Views
 """
 @projectone.route('/gehen-ist/<int:projektarbeitid>/<int:user>/<int:activity>')

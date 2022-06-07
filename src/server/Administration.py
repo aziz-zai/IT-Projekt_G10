@@ -197,9 +197,9 @@ class Administration(object):
         with EreignisbuchungMapper() as mapper:
             return mapper.find_soll_ereignisbuchungen_by_user(erstellt_für)
 
-    def get_ist_eregnisbuchungen_by_user(self, user):
-        with ZeitintervallbuchungMapper() as mapper:
-            return mapper.find_ist_buchungen_by_user(user)
+    def get_ist_eregnisbuchungen_by_user(self, erstellt_für):
+        with EreignisbuchungMapper() as mapper:
+            return mapper.find_ist_ereignisbuchungen_by_user(erstellt_für)
 
     def update_ereignisbuchung(self, ereignisbuchung):
         with EreignisbuchungMapper() as mapper:
