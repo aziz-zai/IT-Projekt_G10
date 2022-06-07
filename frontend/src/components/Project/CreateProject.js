@@ -5,6 +5,7 @@ import ProjectBO from '../../api/ProjectBO';
 import { TextField, Dialog, ListItem, List, Divider, AppBar, 
 Toolbar, IconButton, Typography, Slide} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import Aktivitäten from './Aktivitäten';
 
 
 export class CreateProject extends Component {
@@ -77,7 +78,7 @@ textFieldValueChange = (event) => {
 }
 
   render() {
-      const {isOpen, project, user} = this.props;
+      const {isOpen, project, user, addAktivitäten} = this.props;
       const {projektName, projektNameEdited, projektNameValidationFailed, laufZeit, laufZeitEdited, laufZeitValidationFailed,
       auftragGeber, auftragGeberEdited, auftragGeberValidationFailed, availableHours, availableHoursEdited, availableHoursValidationFailed} = this.state;
 
@@ -100,7 +101,7 @@ textFieldValueChange = (event) => {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Projekt anlegen
             </Typography>
-            <button onClick={this.addProject} class="saveBtn">Speichern</button>
+            <button onClick={() => { this.addProject(); this.props.addAktivitäten(); }} class="saveBtn"> Speichern </button>
           </Toolbar>
         </AppBar>
         <List>
@@ -142,6 +143,7 @@ textFieldValueChange = (event) => {
           </ListItem>
           <Divider />
         </List>
+        <Aktivitäten></Aktivitäten>
       </Dialog>
     </div>
   );
@@ -152,5 +154,6 @@ CreateProject.propTypes = {
   isOpen: PropTypes.any,
   handleClose: PropTypes.any,
   user: PropTypes.any,
+  addAktivitäten: PropTypes.any
 }
 export default CreateProject

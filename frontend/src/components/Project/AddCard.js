@@ -5,6 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import './Project.css'
 import add from '../../media/add.svg'
 import CreateProject from './CreateProject';
+import Aktivitäten from './Aktivitäten';
 
 export class AddCard extends Component {
     constructor(props) {
@@ -45,6 +46,7 @@ export class AddCard extends Component {
 AddCard.propTypes = {
     project: PropTypes.any,
     user: PropTypes.any,
+    member: PropTypes.any,
     onClose: PropTypes.any,
   }
 export default AddCard

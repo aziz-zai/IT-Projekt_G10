@@ -166,6 +166,7 @@ export class SingleProject extends Component {
           <ListItem>
           <TextField
             autoFocus type='text' required
+            
             id="projektName"
             label="Projektname"
             value={projektName}
@@ -200,10 +201,10 @@ export class SingleProject extends Component {
             />
           </ListItem>
           <Divider />
-          <Aktivitäten/>
+          <Aktivitäten>
+            </Aktivitäten>
         </List>
       </Dialog>
-      
       </CardActions>
       </CardContent>
       </Card>
