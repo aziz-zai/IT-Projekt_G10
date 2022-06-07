@@ -49,7 +49,7 @@ class ZeitintervallbuchungMapper(Mapper):
         cursor = self._cnx.cursor()
         command = """SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung,zeitintervall, bezeichnung, zeitdifferenz 
         FROM projectone.zeitintervallbuchung
-        WHERE erstellt_für={} AND ist_buchung=FALSE AND bezeichnung='Projektarbeit'
+        WHERE erstellt_für={} AND ist_buchung=FALSE
         """.format(erstellt_für)
         cursor.execute(command)
         tuples = cursor.fetchall()
