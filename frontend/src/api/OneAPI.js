@@ -59,7 +59,7 @@ export default class OneAPI {
   //Aktivitäten related
   #getAktivitätenByIdURL = (id) => `${this.#OneServerBaseURL}/aktivitaeten/${id}`;
   #getAktivitätenByProjectIdURL = (project_id) => `${this.#OneServerBaseURL}/aktivitaeten-by-project/${project_id}`;
-  #addAktivitätenURL = () => `${this.#OneServerBaseURL}/aktivitaeten/`;
+  #addAktivitätenURL = () => `${this.#OneServerBaseURL}/aktivitaeten`;
   #updateAktivitätenURL = (id) => `${this.#OneServerBaseURL}/aktivitaeten/${id}`;
   #deleteAktivitätenURL = (id) => `${this.#OneServerBaseURL}/aktivitaeten/${id}`;
 
