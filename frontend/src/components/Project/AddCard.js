@@ -5,7 +5,6 @@ import CardContent from '@mui/material/CardContent';
 import './Project.css'
 import add from '../../media/add.svg'
 import CreateProject from './CreateProject';
-import Aktivitäten from './Aktivitäten';
 
 export class AddCard extends Component {
     constructor(props) {

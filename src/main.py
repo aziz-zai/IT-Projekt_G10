@@ -537,29 +537,16 @@ class ProjectListOperations(Resource):
 
 """ANCHOR Aktivitäten Views
 """
-@projectone.route('/aktivitäten-by-id/<int:id>')
-@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@projectone.param('id', 'Die ID des User-Objekts')
-class AktivitätenOperations(Resource):  
-    @projectone.marshal_with(aktivitäten)
 
-    def get(self, id):
-        """Auslesen eines bestimmten Aktivitäten-Objekts.
-
-        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
-        akt = Administration()
-        aktivitäten = akt.get_aktivitäten_by_id(id)
-        return aktivitäten
-
-@projectone.route('/aktivitäten-by-project/<int:project>')
+@projectone.route('/aktivitaeten-by-project/<int:project>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des User-Objekts')
 
-class AktivitätenOperations(Resource):
+class AktivitätenProjectOperations(Resource):
     @projectone.marshal_with(aktivitäten)
-
+    @secured    
     def get(self, project):
+    
         """Auslesen eines bestimmten Aktivitäten-Objekts.
 
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
@@ -569,74 +556,64 @@ class AktivitätenOperations(Resource):
         return aktivitäten
 
 
-@projectone.route('/aktivitäten-by-secured-project/<int:project>/<int:member>')
+@projectone.route('/aktivitaeten')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des User-Objekts')
-class AktivitätenProktleiterOperations(Resource):
+class AktivitätenErstellenOperations(Resource):
     
     @projectone.marshal_with(aktivitäten, code=200)
     @projectone.expect(aktivitäten)  # Wir erwarten ein User-Objekt von Client-Seite.
-    def post(self, project, member):
+    @secured
+    def post(self):
 
         adm = Administration()
-        member = adm.get_membership_by_user_and_project(member, project)
-
         proposal = Aktivitäten.from_dict(api.payload)
 
         if proposal is not None:
-            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
-            wird auch dem Client zurückgegeben. 
-            """
-        if member.get_projektleiter() == True:
             a = adm.create_aktivitäten(proposal.get_bezeichnung(), proposal.get_dauer(), proposal.get_capacity(), proposal.get_project())
             return a, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return print("Projektleiter Falsch")
 
+@projectone.route('/aktivitaeten/<int:id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des User-Objekts')
+class AktivitätenOperations(Resource):
+
     @projectone.marshal_with(aktivitäten)
-    def put(self, project, member):
-        """Update eines bestimmten AKtivitäten-Objekts.
+    @secured
+    def get(self, id):
+      
+        akt = Administration()
+        aktivitäten = akt.get_aktivitäten_by_id(id)
+        return aktivitäten
 
-        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
-        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
-        Customer-Objekts.
-        """
+    @projectone.marshal_with(aktivitäten)
+    @secured
+    def delete(self, id):
+
         adm = Administration()
-        member = adm.get_membership_by_user_and_project(member, project)
-        ak = Aktivitäten.from_dict(api.payload)
+        aktd = adm.get_aktivitäten_by_id(id)
+        adm.delete_aktivitäten(aktd)
+        return '', 200
 
+    @projectone.marshal_with(aktivitäten)
+    @secured
+    def put(self, id):
+        
+        adm = Administration()
+        ak = Aktivitäten.from_dict(api.payload)
 
         if ak is not None:
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
             Siehe Hinweise oben.
             """
-        if member.get_projektleiter() == True:
+            ak.set_id(id)
             adm.update_aktivitäten(ak)
             return ak, 200
         else:
             return print('Kein Projektleiter'), 500
-@projectone.route('/aktivitäten-by-secured-project/<int:project>/<int:member>/<int:id>')
-@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@projectone.param('id', 'Die ID des User-Objekts')
-class AktivitätenDeleteOperation(Resource):
-
-    @projectone.marshal_with(aktivitäten)
-    def delete(self, project, member, id):
-        """Löschen eines bestimmten Aktivitäten-Objekts.
-
-        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
-        adm = Administration()
-        member = adm.get_membership_by_user_and_project(member, project)
-        if member.get_projektleiter()==True:
-            aktd = adm.get_aktivitäten_by_id(id)
-            adm.delete_aktivitäten(aktd)
-            return '', 200
-        else:
-            return print('Kein Projektleiter', 200)
-
 """ANCHOR User Views
 """
 @projectone.route('/users/<int:id>')
@@ -1143,7 +1120,7 @@ class ZeitintervallbuchungOperations(Resource):
         zetd = adm.get_zeitintervallbuchung_by_id(id)
         adm.delete_zeitintervallbuchung(zetd)
         return '', 200
-@projectone.route('/zeitintervallbuchung-soll/<int:erstell_fuer>')
+@projectone.route('/zeitintervallbuchung-soll/<int:erstellt_fuer>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des User-Objekts')
 class ZeitintervallbuchungOperations(Resource):
