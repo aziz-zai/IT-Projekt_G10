@@ -27,8 +27,11 @@ export class ProjectSelection extends Component {
     this.setState({
       project: event.target.value
     });
+    setTimeout(() => {
+      if(this.state.project){
     this.props.handleSelection(this.state.project);
-	}
+  }}, 300);
+}
 
 
   render() {

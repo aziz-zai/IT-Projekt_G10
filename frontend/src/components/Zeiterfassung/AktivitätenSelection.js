@@ -27,7 +27,10 @@ export class AktivitätenSelection extends Component {
     this.setState({
       aktivität: event.target.value
     })
-    this.props.handleSelection(this.state.aktivität);
+    setTimeout(() => {
+        if(this.state.aktivität){
+      this.props.handleSelection(this.state.aktivität);
+    }}, 300);
 	}
 
 

@@ -46,7 +46,7 @@ export class Zeiterfassung extends Component {
 
   render() {
     const {} = this.props;
-    const {projectSelected, aktivitätSelected} = this.state;
+    const {projectSelected, aktivitätSelected, project, aktivität} = this.state;
     return (
       <div>
       <div class="selection">
@@ -54,7 +54,7 @@ export class Zeiterfassung extends Component {
         {projectSelected ?
          <AktivitätenSelection handleSelection={this.handleAktivitätSelection}/>:null}
         {aktivitätSelected ?
-         <ProjektarbeitenSelection/>:null}
+         <ProjektarbeitenSelection/>:null} {console.log('project',project )}{console.log('aktivität',aktivität )}
       </div>
       <div>
       </div>
