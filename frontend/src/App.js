@@ -12,7 +12,7 @@ import { initializeApp } from 'firebase/app';
 import MyProfile from './pages/MyProfile';
 import OneAPI from './api/OneAPI';
 import Arbeitszeitkonto from './components/Arbeitszeitkonto';
-import Zeiterfassung from './components/Zeiterfassung';
+import Zeiterfassung from './pages/Zeiterfassung';
 
 class App extends React.Component {
 	/** Constructor of the app, which initializes firebase  */
