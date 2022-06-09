@@ -831,7 +831,7 @@ class EreignisbuchungenOperations(Resource):
         adm.delete_ereignisbuchung(ergd)
         return '', 200
 
-@projectone.route('/ereignisbuchungen-soll/<int:erstell_fuer>')
+@projectone.route('/ereignisbuchungen-soll/<int:erstellt_fuer>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Ereignisbuchung-Objekts')
 class EreignisbuchungenOperations(Resource):
@@ -845,7 +845,7 @@ class EreignisbuchungenOperations(Resource):
         ereignisbuchungen = adm.get_soll_ereignisbuchungen_by_user(erstellt_fuer)
         return ereignisbuchungen
 
-@projectone.route('/ereignisbuchungen-ist/<int:erstell_fuer>')
+@projectone.route('/ereignisbuchungen-ist/<int:erstellt_fuer>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Ereignisbuchung-Objekts')
 class EreignisbuchungenOperations(Resource):

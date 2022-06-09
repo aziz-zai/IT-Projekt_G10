@@ -52,7 +52,7 @@ class EreignisbuchungMapper(Mapper):
         result= []
 
         
-        for (id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung) in tuples[0]
+        for (id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung) in tuples:
             ereignisbuchung = Ereignisbuchung()
             ereignisbuchung.set_id(id)
             ereignisbuchung.set_timestamp(timestamp)
@@ -81,7 +81,7 @@ class EreignisbuchungMapper(Mapper):
         result= []
 
         
-        for (id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung) in tuples[0]
+        for (id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung) in tuples:
             ereignisbuchung = Ereignisbuchung()
             ereignisbuchung.set_id(id)
             ereignisbuchung.set_timestamp(timestamp)
