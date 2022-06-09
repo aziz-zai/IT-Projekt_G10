@@ -73,7 +73,7 @@ export class ProfileDropDown extends Component {
                     <Divider  />
                     <Grid container justifyContent='center'>
                       <Grid item>
-                      <Link class="ProfileBtn" to='/MyProfile'>
+                      <Link class="ProfileBtn" to='/MeinProfil'>
                           <Button color='primary' startIcon={<AccountCircleIcon/>}>Profile</Button>
                       </Link>
                       </Grid>

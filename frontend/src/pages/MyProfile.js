@@ -6,21 +6,19 @@ import SideBar from '../components/SideBar'
 import NavBar from '../components/NavBar'
 import './MyProfile.css'
 import TextField from '@mui/material/TextField';
+import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
 
 export class MyProfile extends Component {
     constructor(props) {
         super(props);
         // Init state
-        let fn = '', ln = '';
-        if (props.user) {
-          fn = props.user[0].vorname;
-          ln = props.user[0].nachname;
-        }
         this.state = {
           Open: 'SideBarContainerClosed', 
-          firstName: fn,
-          lastName: ln,
-          success: false
+          firstName: '',
+          lastName: '',
+          success: false,
+          vertical: 'bottom',
+          horizontal: 'left',
         };
       }
 
@@ -39,6 +37,9 @@ export class MyProfile extends Component {
       updateUser = () => {
         // clone the original cutomer, in case the backend call fails
         let updatedUser = Object.assign(new UserBO(), this.props.user[0]);
+        this.setState({
+          success: true,// no error message
+      });
         // set the new attributes from our dialog
         updatedUser.setVorname(this.state.firstName);
         updatedUser.setNachname(this.state.lastName);
@@ -60,6 +61,12 @@ export class MyProfile extends Component {
         });
       }
 
+      handleClose = () => {
+        this.setState({
+          success: false
+        })
+      }
+
       textFieldValueChange = (event) => {
         const value = event.target.value;
     
@@ -72,10 +79,19 @@ export class MyProfile extends Component {
           [event.target.id]: event.target.value,
         });
       }
-
+      componentDidMount(){
+      setTimeout(() => {
+        if(this.props.user){
+          this.setState({
+            firstName: this.props.user[0].vorname,
+            lastName: this.props.user[0].nachname
+          })}
+      }, 500)
+      }
+      
     render() {  
       const {user, Cuser} = this.props;
-      const {firstName, lastName} = this.state;
+      const {firstName, lastName, success, vertical, horizontal} = this.state;
     return (
       <div>
         {Cuser ?
@@ -89,29 +105,35 @@ export class MyProfile extends Component {
         <div class="ProfileWrapper">
           <div class="ProfileContainer">
             <div><img class="ProfileAvatar" src={Cuser.photoURL}/></div> 
-            <div class="ProfileContent">
-              <div>
-              <form sx={{width: '100%'}} noValidate autoComplete='off'>
+            <div class="ProfileContent">   
+                <div>
                 <TextField
                     autoFocus type='text' required
                     id="firstName"
                     label="Vorname"
                     value={firstName}
                     onChange={this.textFieldValueChange}
-                    /> &nbsp; <TextField
+                    /></div> &nbsp; <div><TextField
                     autoFocus type='text' required
                     id="lastName"
                     label="Nachname"
                     value={lastName}
                     onChange={this.textFieldValueChange}
-                    />
-                </form>
-                </div>
-                
-              </div>
+                    /></div>
+              </div>{console.log('hier', success)}
               <div class="saveBtnWrapper">
                   <button onClick={this.updateUser}class="saveBtn">Speichern</button>
-              </div>
+              </div><Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={success}
+        onClose={this.handleClose}
+        message="Erfolgreich gespeichert!"
+        key={vertical + horizontal}
+        ContentProps={{
+          className: "snackBar"
+        }}
+
+      />
           </div>
         </div>
         :null}

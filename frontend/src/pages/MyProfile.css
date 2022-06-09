@@ -24,6 +24,7 @@
     box-shadow: #5e2e94 0px 3px 8px;
 }
 
+
 .ProfileContent{
     position: relative;
     top: -5rem
@@ -50,4 +51,24 @@
     justify-content: flex-end;
     width: 100%;
     padding: 0.5rem;
+    position: relative;
+    top: -1rem
+}
+
+.snackBar{
+    background-color: #5e2e94;
+}
+
+@media screen and (max-width: 700px){
+    .ProfileContainer{
+        width: 20rem;
+        display: flex;
+        justify-items: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 2rem;
+        border: 2px solid #ccc;
+        border-radius: 1rem;
+        box-shadow: #5e2e94 0px 3px 8px;
+    }
 }

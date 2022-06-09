@@ -14,6 +14,7 @@ import OneAPI from './api/OneAPI';
 import Arbeitszeitkonto from './pages/Arbeitszeitkonto';
 import Zeiterfassung from './components/Zeiterfassung';
 
+
 class App extends React.Component {
 	/** Constructor of the app, which initializes firebase  */
 	constructor(props) {
