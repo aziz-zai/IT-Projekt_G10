@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, Box, Grid, Typography, Paper } from '@material-ui/core';
-import { OneAPI } from '../../api';
-import { yellow } from '@mui/material/colors';
+
 
 class AktivitätenDetail extends Component {
 
@@ -24,19 +23,16 @@ class AktivitätenDetail extends Component {
 
     return (
       <Paper variant='outlined' className={classes.root}>
-        <Typography variant='h6'>
-          Aktivität
-        </Typography>
-        <Typography className={classes.accountEntry}>
-          ID: {akt_dauer}
-        </Typography>
-        {
-          aktivitäten ?
+        <div class="aktivitätenContent">
+        <h6 className="title">
+        {akt_bezeichnung}
+        </h6> 
             <Typography>
-              Aktivität: {akt_bezeichnung} {akt_dauer} {akt_capacity}
+              {akt_dauer} Tage übrig
             </Typography>
-            : null
-        }
+            <Typography>
+             {akt_capacity} Arbeitsstunden übrig
+            </Typography></div>
       </Paper>
     );
   }
@@ -45,18 +41,20 @@ class AktivitätenDetail extends Component {
 /** Component specific styles */
 const styles = theme => ({
   root: {
-    width: '100%',
+    minWidth: '20rem',
     padding: theme.spacing(1),
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
+    backgroundColor: "rgba(172, 132, 217, 0.497)",
+    borderRadius: "15px",
+    margin: "1rem"
   },
   accountEntry: {
     fontSize: theme.typography.pxToRem(15),
     flexBasis: '33.33%',
     flexShrink: 0,
   },
-  AktEntry: {
-  display: "flex",
-  flexDirection: "column"
+  title: {
+  marginRight: 50
 }
 
 });

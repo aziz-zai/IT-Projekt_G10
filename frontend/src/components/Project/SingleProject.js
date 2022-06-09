@@ -242,6 +242,9 @@ export class SingleProject extends Component {
             </Aktivitäten>
         </List>
         <div >
+        <Typography variant='h6'>
+        Aktivtäten:
+        </Typography> 
           {
             aktivitäten.map(aktivität => <AktivitätenDetail key={aktivität.getID()} 
             akt_bezeichnung={aktivität.getBezeichnung()} akt_dauer={aktivität.getDauer()} akt_capacity={aktivität.getCapacity()}/>)
