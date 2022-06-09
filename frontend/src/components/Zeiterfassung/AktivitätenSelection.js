@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
-
+import OneAPI from '../../api/OneAPI';
 
 
 export class AktivitätenSelection extends Component {
@@ -12,51 +12,72 @@ export class AktivitätenSelection extends Component {
 
     // Init state
     this.state = {
-      aktivität: '',
+      selectedAktivität: '',
+      aktivitäten: []
     };
   }
 
   componentDidMount() {
- 
+    this.loadAktivitäten()
   }
 
+  loadAktivitäten = () => {
+    OneAPI.getAPI().getAktivitätenByProjectId(this.props.project).then(aktivitäten =>
+      this.setState({
+        aktivitäten: aktivitäten,
+        loadingInProgress: false, // loading indicator 
+        loadingError: null
+      })).catch(e =>
+        this.setState({ // Reset state with error from catch 
+          loadingInProgress: false,
+          loadingError: e
+        })
+      );
+
+    // set loading to true
+    this.setState({
+      loadingInProgress: true,
+      loadingError: null
+    });
+  }
   /** gets the balance for this account */
 
 
   handleChange = (event) => {
     this.setState({
-      aktivität: event.target.value
+      selectedAktivität: event.target.value
     })
 
     setTimeout(() => {
-        if(this.state.aktivität){
-      this.props.handleSelection(this.state.aktivität);
+        if(this.state.selectedAktivität){
+      this.props.handleSelection(this.state.selectedAktivität);
     }}, 300);
 	}
 
 
   render() {
     const {} = this.props;
-    const {aktivität} = this.state;
+    const {selectedAktvität, aktivitäten} = this.state;
     return (
       <div>
         <div>
       <FormControl sx={{ m: 1, minWidth: 120 }}>
         <InputLabel variant="standard" htmlFor="uncontrolled-native">
-          Aktivität
+          Aktvität
         </InputLabel>
         <NativeSelect
-          defaultValue={aktivität}
+          defaultValue={0}
           inputProps={{
             name: 'aktivitäten',
             id: 'uncontrolled-native',
           }}
           onChange={this.handleChange}
         >
-          <option value={10}>Ten</option>
-          <option value={20}>Twenty</option>
-          <option value={30}>Thirty</option>
-        </NativeSelect>{console.log('project', this.props.project)}
+            <option value={0}></option>
+           {aktivitäten ?
+          aktivitäten.map((aktivität, index) => <option value={aktivität.id}>{aktivität.getBezeichnung()}</option>)
+          :null}
+        </NativeSelect>{console.log('akti', aktivitäten)}
       </FormControl>
         </div>
     </div>
