@@ -54,7 +54,7 @@ export class Zeiterfassung extends Component {
         {projectSelected ?
          <AktivitätenSelection project={project} handleSelection={this.handleAktivitätSelection}/>:null}
         {aktivitätSelected ?
-         <ProjektarbeitenSelection/>:null} {console.log('project',project )}{console.log('aktivität',aktivität )}
+         <ProjektarbeitenSelection aktivität={aktivität}/>:null} {console.log('aktivität',aktivität )}
       </div>
       <div>
       </div>

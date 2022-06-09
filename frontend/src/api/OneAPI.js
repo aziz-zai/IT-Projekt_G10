@@ -68,6 +68,7 @@ export default class OneAPI {
 
   //Projektarbeit related
   #getProjektarbeitURL = (id) => `${this.#OneServerBaseURL}/projektarbeiten/${id}`;
+  #getProjektarbeitByActivityURL = (activity) => `${this.#OneServerBaseURL}/projektarbeiten-activity/${activity}`;
   #addProjektarbeitURL = () => `${this.#OneServerBaseURL}/projektarbeiten/`;
   #updateProjektarbeitURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
   #deleteProjektarbeitURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
@@ -386,6 +387,16 @@ export default class OneAPI {
   }
   getProjektarbeit(id) {
     return this.#fetchAdvanced(this.#getProjektarbeitURL(id)).then((responseJSON) => {
+      let projektarbeitenBOs = ProjektarbeitBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(projektarbeitenBOs);
+      })
+    })
+  }
+
+  getProjektarbeitByActivity(activity) {
+    return this.#fetchAdvanced(this.#getProjektarbeitByActivityURL(activity)).then((responseJSON) => {
       let projektarbeitenBOs = ProjektarbeitBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {

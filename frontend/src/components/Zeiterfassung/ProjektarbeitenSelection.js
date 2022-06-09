@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
+import OneAPI from '../../api/OneAPI';
 
 
 
@@ -12,27 +13,47 @@ export class ProjektarbeitenSelection extends Component {
 
     // Init state
     this.state = {
-      projektarbeit: ''
+      selectedProjektarbeit: '',
+      projektarbeiten: []
     };
   }
 
   componentDidMount() {
- 
+    this.loadProjektarbeiten()
   }
 
   /** gets the balance for this account */
 
+  loadProjektarbeiten = () => {
+    OneAPI.getAPI().getProjektarbeitByActivity(this.props.aktivität).then(projektarbeiten =>
+      this.setState({
+        projektarbeiten: projektarbeiten,
+        loadingInProgress: false, // loading indicator 
+        loadingError: null
+      })).catch(e =>
+        this.setState({ // Reset state with error from catch 
+          loadingInProgress: false,
+          loadingError: e
+        })
+      );
+
+    // set loading to true
+    this.setState({
+      loadingInProgress: true,
+      loadingError: null
+    });
+  }
 
   handleChange = (event) => {
     this.setState({
-      projektarbeit: event.target.value
+      selectedProjektarbeit: event.target.value
     })
 	}
 
 
   render() {
     const {Cuser, user} = this.props;
-    const {projektarbeit} = this.state;
+    const {projektarbeiten} = this.state;
     return (
       <div>
         <div>
@@ -41,16 +62,17 @@ export class ProjektarbeitenSelection extends Component {
           Projektarbeit
         </InputLabel>
         <NativeSelect
-          defaultValue={projektarbeit}
+          defaultValue={0}
           inputProps={{
             name: 'projektarbeiten',
             id: 'uncontrolled-native',
           }}
         >
-          <option value={10}>Ten</option>
-          <option value={20}>Twenty</option>
-          <option value={30}>Thirty</option>
-        </NativeSelect>
+          <option value={0}></option>
+           {projektarbeiten ?
+          projektarbeiten.map((projektarbeit, index) => <option value={projektarbeit.id}>{projektarbeit.bezeichnung}</option>)
+          :null}
+        </NativeSelect>{console.log('acti', this.props.aktivität)}
       </FormControl>
         </div>
     </div>
@@ -59,6 +81,7 @@ export class ProjektarbeitenSelection extends Component {
 }
 
 ProjektarbeitenSelection.propTypes = {
+  aktivität: PropTypes.any
 }
 
 export default ProjektarbeitenSelection
