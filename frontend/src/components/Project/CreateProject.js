@@ -194,56 +194,6 @@ textFieldValueChange = (event) => {
           </Card>
         </Grid>
       </Container>
-    <Container maxWidth="sm" style={{marginTop:'10px'}} justify-content="space-between">
-    <Grid container spacing={2} justify="center" color="primary">
-    <Card sx={{ minWidth: 275 }} variant="contained" borderColor="black">
-    <Typography sx={{
-          mx: 'auto',
-          width: 200,
-          p: 1,
-          m: 1,
-          border: '1px solid',
-          borderColor: "black",
-          borderRadius: 2,
-          textAlign: 'center',
-          fontSize: '0.875rem',
-          fontWeight: '700',
-        }}> 
-            Details zur Aktivität eintragen
-            </Typography>
-        <List>
-          <ListItem>
-          <TextField
-            autoFocus type='text' required
-            id="bezeichnung"
-            label="Bezeichnung"
-            value={bezeichnung}
-            onChange={this.textFieldValueChange}
-            /> 
-          </ListItem>
-          <ListItem>
-          <TextField
-            autoFocus type='text' required
-            id="capacity"
-            label="Kapazität"
-            value={capacity}
-            onChange={this.textFieldValueChange}
-            />
-          </ListItem>
-          <ListItem>
-          <TextField
-            autoFocus type='text' required
-            id="dauer"
-            label="Dauer"
-            value={dauer}
-            onChange={this.textFieldValueChange}
-            />
-          </ListItem>
-          <Divider />
-        </List>
-        </Card>
-      </Grid>
-      </Container>
     </Dialog>
     </div>
   );

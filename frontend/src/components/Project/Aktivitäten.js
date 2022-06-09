@@ -3,24 +3,19 @@ import PropTypes from 'prop-types';
 import AktivitätenBO from '../../api/AktivitätenBO';
 import OneAPI from '../../api/OneAPI';
 import { Dialog, Card, TextField, List, ListItem, Divider, } from '@mui/material';
+import { Button, IconButton, DialogContent, DialogTitle, Typography, InputAdornment, MenuItem, DialogActions, Grid } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 export class Aktivitäten extends Component {
     constructor(props) {
         super(props);
-        let bz= "", da="", ca= "", pr= "";
-    if (props.aktivität) {
-        bz = props.aktivität.getBezeichnung();
-        da = props.aktivität.getDauer();
-        ca = props.aktivität.getCapacity();
-        pr = props.aktivität.getProject();
-    }
+        let bz= "", da="", ca= "";
         // Init state
         this.state = {
             open: false,
             bezeichnung: bz,
             dauer: da,
-            capacity: ca,
-            project: pr
+            capacity: ca
         };
          // save this state for canceling
         this.baseState = this.state;
@@ -28,8 +23,8 @@ export class Aktivitäten extends Component {
 
     
     addAktivitäten = () => {
-        let newAktivität = new AktivitätenBO(this.state.bezeichnung, this.state.dauer, this.state.capacity, this.state.project);
-        OneAPI.getAPI().addAktivitäten(newAktivität, this.props.member[0].id).then(aktivität => {
+        let newAktivität = new AktivitätenBO(this.state.bezeichnung, this.state.dauer, this.state.capacity, this.props.project.id);
+        OneAPI.getAPI().addAktivitäten(newAktivität).then(aktivität => {
           // Backend call sucessfull
           // reinit the dialogs state for a new empty project
           this.setState(this.baseState);
@@ -62,13 +57,23 @@ export class Aktivitäten extends Component {
     });
   }
 
-  
+  handleClose = () => {
+    // Reset the state
+    this.props.onClose();
+  }
+
     render() {
         const {isOpen} = this.props;
         const {bezeichnung, dauer, capacity} = this.state;
 
         return (
-            <div>
+              isOpen ?
+               <Dialog open={isOpen} onClose={this.handleClose} maxWidth='md'>
+                 <DialogTitle id='form-dialog-title'>Aktivität hinzufügen
+            <IconButton sx={{ position: 'absolute', right: 1, top: 1, color: 'grey[500]' }} onClick={this.handleClose}>
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
         <Card sx={{ minWidth: 275 }} variant="outlined" color="yellow">
         <List>
           <ListItem>
@@ -100,15 +105,17 @@ export class Aktivitäten extends Component {
           </ListItem>
           <Divider />
         </List>
+        <button onClick={this.addAktivitäten}>Hinzufügen</button>
         </Card>
-            </div>
+        </Dialog>:null
         );
     }
 }
 
 Aktivitäten.propTypes = {
-    member: PropTypes.any
-
+  isOpen: PropTypes.any,
+  onClose: PropTypes.any,
+  project: PropTypes.any
 };
 
 export default Aktivitäten;

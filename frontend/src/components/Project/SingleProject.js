@@ -27,8 +27,8 @@ export class SingleProject extends Component {
           projektName: pn,
           laufZeit: lz,
           auftragGeber: ag,
-          availableHours: ah
-
+          availableHours: ah,
+          openAkt: false
         };
     }
 
@@ -111,6 +111,17 @@ export class SingleProject extends Component {
         isOpen: true
       });
     }
+    openAkt = () => {
+      this.setState({
+        openAkt: true
+      });
+    }
+
+    closeAkt = () => {
+      this.setState({
+        openAkt: false
+      });
+    }
 
     handleDialogClose = () => {
       this.setState({
@@ -125,7 +136,7 @@ export class SingleProject extends Component {
 
   render() {
     const {project} = this.props;
-    const {projektleiter, isOpen, projektfarbe, projekttitel, projektName, laufZeit, auftragGeber, availableHours} = this.state
+    const {openAkt, projektleiter, isOpen, projektfarbe, projekttitel, projektName, laufZeit, auftragGeber, availableHours} = this.state
     
     return (
       <div class="ProjectCardWrapper">
@@ -201,7 +212,8 @@ export class SingleProject extends Component {
             />
           </ListItem>
           <Divider />
-          <Aktivitäten>
+          <button onClick={this.openAkt}> Aktivität hinzufügen</button>
+          <Aktivitäten isOpen={openAkt} onClose={this.closeAkt} project={project}>
             </Aktivitäten>
         </List>
       </Dialog>

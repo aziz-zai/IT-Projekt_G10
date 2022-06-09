@@ -760,14 +760,14 @@ export default class OneAPI {
     })
   }
 
-  addAktivitäten() {
+  addAktivitäten(aktivitätenBO) {
     return this.#fetchAdvanced(this.#addAktivitätenURL(), {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify()
+      body: JSON.stringify(aktivitätenBO)
     }).then((responseJSON) => {
       // We always get an array of ProjectBOs.fromJSON, but only need one object
       let responseAktivitätenBO = AktivitätenBO.fromJSON(responseJSON)[0];
