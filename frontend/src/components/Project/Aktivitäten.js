@@ -7,7 +7,7 @@ import { Dialog, Card, TextField, List, ListItem, Divider, } from '@mui/material
 export class Aktivitäten extends Component {
     constructor(props) {
         super(props);
-        let bz= "", da= null, ca= null, pr= null;
+        let bz= "", da="", ca= "", pr= "";
     if (props.aktivität) {
         bz = props.aktivität.getBezeichnung();
         da = props.aktivität.getDauer();
