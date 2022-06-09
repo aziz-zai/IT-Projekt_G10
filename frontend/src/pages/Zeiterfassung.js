@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
-import './Home.css'
-import NavBar from '../components/NavBar'
-import test from '../media/test.svg'
+import './Zeiterfassung.css'
 import PropTypes from 'prop-types'
-import OneAPI from '../api/OneAPI'
-import UserBO from '../api/UserBO';
-import SideBar from '../components/SideBar'
-import Project from '../components/Project'
-import { getTabsUtilityClass } from '@mui/material';
-import MyProfile from './MyProfile';
-import Test from '../components/Test';
+import ProjectSelection from '../components/Zeiterfassung/ProjectSelection';
+import AktivitätenSelection from '../components/Zeiterfassung/AktivitätenSelection';
+import ProjektarbeitenSelection from '../components/Zeiterfassung/ProjektarbeitenSelection';
+import Grid from '@mui/material/Grid';
+
 
 
 export class Zeiterfassung extends Component {
@@ -18,7 +14,11 @@ export class Zeiterfassung extends Component {
 
     // Init state
     this.state = {
-      Open: 'SideBarContainerClosed'
+      project: null,
+      aktivität: null,
+      projectSelected: false,
+      aktivitätSelected: false,
+
     };
   }
 
@@ -28,31 +28,37 @@ export class Zeiterfassung extends Component {
 
   /** gets the balance for this account */
 
+  handleProjectSelection = (project) => {
+    this.setState({
+      project: project,
+      projectSelected: true
+    })
+	}
 
-  handleOpenStateChange = () => {
-    if(this.state.Open =='SideBarContainerOpen'){
-      this.setState({
-        Open: 'SideBarContainerClosed'
-      })
-    }
-    if(this.state.Open =='SideBarContainerClosed'){
-		this.setState({
-			Open: 'SideBarContainerOpen'
-		})
-  }
+  handleAktivitätSelection = (aktivität) => {
+    this.setState({
+      aktivität: aktivität,
+      aktivitätSelected: true
+
+    })
 	}
 
 
   render() {
-    const {Cuser, user} = this.props;
+    const {} = this.props;
+    const {projectSelected, aktivitätSelected} = this.state;
     return (
       <div>
-         <SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={Cuser}/>
-         <NavBar toggle={this.handleOpenStateChange} user={Cuser} nav="navBlack"/>
-    <div class="ProjectList">
-     fgf
-    </div>
-    </div>
+      <div class="selection">
+         <ProjectSelection handleSelection={this.handleProjectSelection}/>
+        {projectSelected ?
+         <AktivitätenSelection handleSelection={this.handleAktivitätSelection}/>:null}
+        {aktivitätSelected ?
+         <ProjektarbeitenSelection/>:null}
+      </div>
+      <div>
+      </div>
+      </div>
     )
   }
 }

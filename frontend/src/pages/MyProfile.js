@@ -13,7 +13,6 @@ export class MyProfile extends Component {
         super(props);
         // Init state
         this.state = {
-          Open: 'SideBarContainerClosed', 
           firstName: '',
           lastName: '',
           success: false,
@@ -22,18 +21,7 @@ export class MyProfile extends Component {
         };
       }
 
-      handleOpenStateChange = () => {
-        if(this.state.Open =='SideBarContainerOpen'){
-          this.setState({
-            Open: 'SideBarContainerClosed'
-          })
-        }
-        if(this.state.Open =='SideBarContainerClosed'){
-        this.setState({
-          Open: 'SideBarContainerOpen'
-        })
-      }
-      }
+
       updateUser = () => {
         // clone the original cutomer, in case the backend call fails
         let updatedUser = Object.assign(new UserBO(), this.props.user[0]);
@@ -94,11 +82,6 @@ export class MyProfile extends Component {
       const {firstName, lastName, success, vertical, horizontal} = this.state;
     return (
       <div>
-        {Cuser ?
-        <div>
-        <SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={Cuser}/>
-        <NavBar toggle={this.handleOpenStateChange} user={Cuser} nav="navBlack"/> </div>
-      :null}
 
         {user?
         

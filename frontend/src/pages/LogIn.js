@@ -37,7 +37,6 @@ export class LogIn extends Component {
 		const { classes, user } = this.props;
 		return (
             <>  
-                <NavBar nav='navTrans'/>
 			<div className="homeContainer">
                 <div className="homeBackground">
                     <video className="homeVideo" autoPlay loop muted src={Video} type='video/mp4' ></video>

@@ -12,7 +12,9 @@ import { initializeApp } from 'firebase/app';
 import MyProfile from './pages/MyProfile';
 import OneAPI from './api/OneAPI';
 import Arbeitszeitkonto from './pages/Arbeitszeitkonto';
-import Zeiterfassung from './components/Zeiterfassung';
+import Zeiterfassung from './pages/Zeiterfassung';
+import NavBar from './components/NavBar';
+import SideBar from './components/SideBar';
 
 
 class App extends React.Component {
@@ -26,7 +28,8 @@ class App extends React.Component {
 			appError: null,
 			authError: null,
 			authLoading: false,
-			user:null
+			user:null,
+			Open: 'SideBarContainerClosed',
 		};
 	}
 
@@ -130,7 +133,18 @@ componentDidMount() {
    });
    
 }
-
+handleOpenStateChange = () => {
+    if(this.state.Open =='SideBarContainerOpen'){
+      this.setState({
+        Open: 'SideBarContainerClosed'
+      })
+    }
+    if(this.state.Open =='SideBarContainerClosed'){
+		this.setState({
+			Open: 'SideBarContainerOpen'
+		})
+  }
+	}
 
 	/** Renders the whole app */
 	render() {
@@ -139,6 +153,8 @@ componentDidMount() {
         <>
 		{console.log('user', user)}
 				<Router>
+				<SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={currentUser}/>
+         		<NavBar toggle={this.handleOpenStateChange} user={currentUser} nav="navBlack"/>
 					<Routes>
 						<Route>
 						<Route path={process.env.PUBLIC_URL + '/'} element={
