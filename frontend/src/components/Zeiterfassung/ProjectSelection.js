@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
+import OneAPI from '../../api/OneAPI';
 
 
 
@@ -12,49 +13,65 @@ export class ProjectSelection extends Component {
 
     // Init state
     this.state = {
-      project: '',
+      selectedProject: '',
+      project: null
     };
   }
 
   componentDidMount() {
- 
+    this.getMembershipByUser()
   }
 
+  getMembershipByUser = () => {
+    OneAPI.getAPI().getMembershipByUser(this.props.user[0].id).then(project =>
+      this.setState({
+        project: project
+      })
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+          project: null,
+        })
+      );
+    // set loading to true
+    this.setState({
+    });
+  }
   /** gets the balance for this account */
 
 
   handleChange = (event) => {
     this.setState({
-      project: event.target.value
+      selectedProject: event.target.value
     });
     setTimeout(() => {
-      if(this.state.project){
-    this.props.handleSelection(this.state.project);
+      if(this.state.selectedProject){
+    this.props.handleSelection(this.state.selectedProject);
   }}, 300);
 }
 
 
   render() {
-    const {Cuser, user} = this.props;
-    const {project} = this.state;
+    const {user} = this.props;
+    const {selectedProject, project} = this.state;
     return (
       <div>
-        <div>
-      <FormControl sx={{ m: 1, minWidth: 120 }}>
+        <div>{console.log('projcselec', project)}
+      <FormControl sx={{ m: 1, minWidth: 150 }}>
         <InputLabel variant="standard" htmlFor="uncontrolled-native">
           Projekt
         </InputLabel>
         <NativeSelect
-          defaultValue={project}
+          defaultValue={0}
           inputProps={{
             name: 'project',
             id: 'uncontrolled-native',
           }}
           onChange={this.handleChange}
         >
-          <option value={10}>Ten</option>
-          <option value={20}>Twenty</option>
-          <option value={30}>Thirty</option>
+          <option value={0}></option>
+          {project ?
+          project.map((project, index) => <option value={project.id}>{project.getProjektname()}</option>)
+          :null}
         </NativeSelect>
       </FormControl>
         </div>
@@ -65,6 +82,7 @@ export class ProjectSelection extends Component {
 
 ProjectSelection.propTypes = {
   handleSelection: PropTypes.any,
+  user: PropTypes.any
 }
 
 export default ProjectSelection

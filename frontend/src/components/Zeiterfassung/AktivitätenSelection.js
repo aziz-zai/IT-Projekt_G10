@@ -27,6 +27,7 @@ export class AktivitätenSelection extends Component {
     this.setState({
       aktivität: event.target.value
     })
+
     setTimeout(() => {
         if(this.state.aktivität){
       this.props.handleSelection(this.state.aktivität);
@@ -55,7 +56,7 @@ export class AktivitätenSelection extends Component {
           <option value={10}>Ten</option>
           <option value={20}>Twenty</option>
           <option value={30}>Thirty</option>
-        </NativeSelect>
+        </NativeSelect>{console.log('project', this.props.project)}
       </FormControl>
         </div>
     </div>
@@ -64,7 +65,8 @@ export class AktivitätenSelection extends Component {
 }
 
 AktivitätenSelection.propTypes = {
-    handleSelection: PropTypes.any
+    handleSelection: PropTypes.any,
+    project: PropTypes.any
 }
 
 export default AktivitätenSelection
