@@ -7,6 +7,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import OneAPI from '../../api/OneAPI';
 import ProjectBO from '../../api/ProjectBO';
 import Aktivitäten from './Aktivitäten';
+import AktivitätenDetail from './AktivitätenDetail';
+import { withStyles } from '@mui/styles';
 
 export class SingleProject extends Component {
     constructor(props) {
@@ -28,7 +30,8 @@ export class SingleProject extends Component {
           laufZeit: lz,
           auftragGeber: ag,
           availableHours: ah,
-          openAkt: false
+          openAkt: false,
+          aktivitäten: []
         };
     }
 
@@ -91,6 +94,26 @@ export class SingleProject extends Component {
       });
     }
 
+    loadAktivitäten = () => {
+      OneAPI.getAPI().getAktivitätenByProjectId(this.props.project.id).then(aktivitäten =>
+        this.setState({
+          aktivitäten: aktivitäten,
+          loadingInProgress: false, // loading indicator 
+          loadingError: null
+        })).catch(e =>
+          this.setState({ // Reset state with error from catch 
+            loadingInProgress: false,
+            loadingError: e
+          })
+        );
+  
+      // set loading to true
+      this.setState({
+        loadingInProgress: true,
+        loadingError: null
+      });
+    }
+
     textFieldValueChange = (event) => {
       const value = event.target.value;
   
@@ -132,11 +155,13 @@ export class SingleProject extends Component {
 
     componentDidMount() {
     this.getProjektleiterByProject();
+    this.loadAktivitäten();
+
     }
 
   render() {
-    const {project} = this.props;
-    const {openAkt, projektleiter, isOpen, projektfarbe, projekttitel, projektName, laufZeit, auftragGeber, availableHours} = this.state
+    const {project, classes} = this.props;
+    const {openAkt, aktivitäten, projektleiter, isOpen, projektfarbe, projekttitel, projektName, laufZeit, auftragGeber, availableHours} = this.state
     
     return (
       <div class="ProjectCardWrapper">
@@ -216,18 +241,33 @@ export class SingleProject extends Component {
           <Aktivitäten isOpen={openAkt} onClose={this.closeAkt} project={project}>
             </Aktivitäten>
         </List>
+        <div >
+          {
+            aktivitäten.map(aktivität => <AktivitätenDetail key={aktivität.getID()} 
+            akt_bezeichnung={aktivität.getBezeichnung()} akt_dauer={aktivität.getDauer()} akt_capacity={aktivität.getCapacity()}/>)
+          }
+      </div>
       </Dialog>
       </CardActions>
       </CardContent>
       </Card>
+      
       </div>
     )
   }
 }
+const styles = theme => ({
+  testa: {
+    width: '100%',
+  }
+});
 
 SingleProject.propTypes = {
     project: PropTypes.any,
     user: PropTypes.any,
     isOpen: PropTypes.any,
+    classes: PropTypes.object.isRequired,
   }
-export default SingleProject
+
+
+export default withStyles(styles)(SingleProject);
