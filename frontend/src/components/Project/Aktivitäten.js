@@ -5,6 +5,7 @@ import OneAPI from '../../api/OneAPI';
 import { Dialog, Card, TextField, List, ListItem, Divider, } from '@mui/material';
 import { Button, IconButton, DialogContent, DialogTitle, Typography, InputAdornment, MenuItem, DialogActions, Grid } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import './Aktivitäten.css'
 
 export class Aktivitäten extends Component {
     constructor(props) {
@@ -105,7 +106,7 @@ export class Aktivitäten extends Component {
           </ListItem>
           <Divider />
         </List>
-        <button onClick={this.addAktivitäten}>Hinzufügen</button>
+        <button class="HinzufügenBtn" onClick={this.addAktivitäten}>Hinzufügen</button>
         </Card>
         </Dialog>:null
         );

@@ -212,7 +212,7 @@ export class SingleProject extends Component {
             />
           </ListItem>
           <Divider />
-          <button onClick={this.openAkt}> Aktivität hinzufügen</button>
+          <button class="AktBtn" onClick={this.openAkt}> Aktivität hinzufügen</button>
           <Aktivitäten isOpen={openAkt} onClose={this.closeAkt} project={project}>
             </Aktivitäten>
         </List>

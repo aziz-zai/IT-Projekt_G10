@@ -1,0 +1,15 @@
+.HinzufügenBtn{
+    border-radius: 50px;
+    background: #5e2e94;
+    white-space: nowrap;
+    padding: 0.5rem 1rem;
+    color:#fff;
+    font-size: 0.8em;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+}
