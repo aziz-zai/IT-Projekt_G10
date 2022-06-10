@@ -1,34 +1,30 @@
-import BusinessObject from './BusinessObject';
+import ZeitintervallBO from './ZeitintervallBO';
 
 /**
  * Represents a Project
  */
-export default class ProjektarbeitBO extends BusinessObject {
+export default class ProjektarbeitBO extends ZeitintervallBO {
 
-  constructor(aBezeichnung, aActivity) {
+  constructor(aBeschreibung, aActivity) {
     super();
-    this.bezeichnung = aBezeichnung;
+    this.beschreibung = aBeschreibung;
     this.activity = aActivity;
   }
 
-  /**
-   * Sets a new firstname.
-   * 
-   * @param {String} aBezeichnung - the new firstname of this CustomerBO.
-   */
-  setBezeichnung(aBezeichnung) {
-    this.bezeichnung = aBezeichnung;
+  setBeschreibung(aBeschreibung) {
+    this.beschreibung = aBeschreibung;
   }
 
-  /**
-   * Gets the firstname.
-   */
-  getBezeichnung() {
-    return this.bezeichnung;
+  getBeschreibung() {
+    return this.beschreibung;
   }
 
-  setLaufzeit(aActivity) {
+  setActivity(aActivity) {
     this.activity = aActivity;
+  }
+
+  getActivity() {
+    return this.activity;
   }
 
   static fromJSON(projektarbeiten) {

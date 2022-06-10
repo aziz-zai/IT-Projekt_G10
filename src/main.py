@@ -265,6 +265,7 @@ class MembershipByProjectOperations(Resource):
         adm = Administration()
         membership = adm.get_members_by_project(project)
         return membership
+
 @projectone.route('/projektleiter-by-project/<int:project>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Membership-Objekts')
@@ -385,7 +386,7 @@ class ProjektarbeitenByActivityIdOperations(Resource):
 @projectone.route('/projektarbeit/Gehen/<int:id>/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Projektarbeit-Objekts')
-class ProjektarbeitenDetailOperations(Resource):
+class ProjektarbeitenGehenOperations(Resource):
     @projectone.marshal_with(projektarbeiten)
     def put(self, id, user):
     
@@ -526,6 +527,7 @@ class ProjectListOperations(Resource):
         project = adm.get_project_by_id(id)
         adm.delete_project(project)
         return '', 200
+        
 @projectone.route('/projektlaufzeit/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
@@ -1133,6 +1135,7 @@ class ZeitintervallbuchungOperations(Resource):
         adm = Administration()
         zeitintervallbuchung = adm.get_soll_buchungen_by_user(erstellt_fuer)
         return zeitintervallbuchung
+
 @projectone.route('/ereignis')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class EreignisListOperations(Resource):
@@ -1270,6 +1273,7 @@ class AbwesenheitOperations(Resource):
         abtd = adm.get_abwesenheit_by_id(id)
         adm.delete_abwesenheit(abtd)
         return '', 200
+
 @projectone.route('/zeitintervall')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ZeitintervallListOperations(Resource):
@@ -1340,6 +1344,7 @@ class ZeitintervallOperations(Resource):
         zi = adm.get_zeitintervall_by_id(id)
         adm.delete_zeitintervall(zi)
         return '', 200
+        
 """ !SECTION 
 """
 

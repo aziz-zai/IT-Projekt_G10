@@ -2,10 +2,11 @@ import BusinessObject from './BusinessObject';
 
 export default class ZeitintervallBO extends BusinessObject {
 
-    constructor(aStart, aEnde) {
+    constructor(aStart, aEnde, aBezeichnung) {
       super();
       this.start = aStart;
-      this.ende = aEnde
+      this.ende = aEnde;
+      this.bezeichnung = aBezeichnung;
     }
     
   /**
@@ -13,6 +14,15 @@ export default class ZeitintervallBO extends BusinessObject {
    * 
    * @param {String} aStart - the new firstname of this CustomerBO.
    */
+
+  setBezeichnung(aBezeichnung) {
+    this.bezeichnung = aBezeichnung;
+  }
+
+  getBezeichnung() {
+    return this.bezeichnung;
+  }
+
   setStart(aStart) {
     this.start = aStart;
   }
