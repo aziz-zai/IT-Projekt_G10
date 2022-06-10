@@ -22,12 +22,15 @@ export class Zeiterfassung extends Component {
       aktivität: null,
       projectSelected: false,
       aktivitätSelected: false,
-
+      kommenClicked: false,
+      stunden: 0,
+      minuten: 0,
+      sekunden: 0
     };
   }
 
   componentDidMount() {
- 
+  
   }
 
   /** gets the balance for this account */
@@ -47,10 +50,42 @@ export class Zeiterfassung extends Component {
     })
 	}
 
+  handleKommenClicked = () => {
+    this.setState({
+        kommenClicked: true
+    });
+    const update = () => {
+      var day1 = new Date("2022-06-10T21:00:00"); 
+      var day2 = new Date();
+      var seconds = Math.floor((day2 - (day1))/1000);
+      var minutes = Math.floor(seconds/60);
+      var hours = Math.floor(minutes/60);
+      var days = Math.floor(hours/24);
+      
+      hours = hours-(days*24);
+      minutes = minutes-(days*24*60)-(hours*60);
+      seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
+      console.log('days',days)
+      this.setState({
+          stunden: hours,
+          minuten: minutes,
+          sekunden: seconds
+      })
+  }
+
+  update();
+
+  const interval = setInterval(()=> {
+      update();
+  }, 1000);
+
+  return ()=>clearInterval(interval);
+ 
+}
 
   render() {
     const {user} = this.props;
-    const {projectSelected, aktivitätSelected, project, aktivität} = this.state;
+    const {projectSelected, aktivitätSelected, project, aktivität, kommenClicked, stunden, minuten, sekunden} = this.state;
     return (
       <div>
       <div class="selection">
@@ -58,13 +93,18 @@ export class Zeiterfassung extends Component {
         {projectSelected ?
          <AktivitätenSelection project={project} handleSelection={this.handleAktivitätSelection}/>:null}
         {aktivitätSelected ?
-         <ProjektarbeitenSelection aktivität={aktivität}/>:null} {console.log('aktivität',aktivität )}
+         <ProjektarbeitenSelection aktivität={aktivität}/>:null}
       </div>
+      <div>
+        {kommenClicked ?
+      <div class="zeitAngabe">
+        {String(stunden).padStart(2, "0")}:{String(minuten).padStart(2, "0")}:{String(sekunden).padStart(2, "0")}{console.log('kommen', kommenClicked)}
+    </div>:null}
       <div class="workBtns">
-        <Kommen/>
+        <Kommen handleClick={this.handleKommenClicked}/>
         <Gehen/>
         <Pause/>
-      </div>
+      </div></div>
       </div>
     )
   }

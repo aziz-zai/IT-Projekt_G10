@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import CallMissedOutgoingIcon from '@mui/icons-material/CallMissedOutgoing';
+import { IconButton } from '@mui/material';
 import './Gehen.css'
 
 
@@ -25,7 +26,9 @@ export class Gehen extends Component {
     return (
         <div class="BtnContainer">
         <div class="BtnWrapper">
+            <iconButton>
             <CallMissedOutgoingIcon sx={{ fontSize: 100, color: "red" }} />
+            </iconButton>
         </div>
         <h5 class="BtnText">Arbeitsende</h5>
     </div>
