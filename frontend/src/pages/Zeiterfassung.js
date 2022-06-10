@@ -5,6 +5,10 @@ import ProjectSelection from '../components/Zeiterfassung/ProjectSelection';
 import AktivitätenSelection from '../components/Zeiterfassung/AktivitätenSelection';
 import ProjektarbeitenSelection from '../components/Zeiterfassung/ProjektarbeitenSelection';
 import Grid from '@mui/material/Grid';
+import Kommen from '../components/Zeiterfassung/Kommen';
+import Gehen from '../components/Zeiterfassung/Gehen';
+import Pause from '../components/Zeiterfassung/Pause';
+
 
 
 
@@ -56,7 +60,10 @@ export class Zeiterfassung extends Component {
         {aktivitätSelected ?
          <ProjektarbeitenSelection aktivität={aktivität}/>:null} {console.log('aktivität',aktivität )}
       </div>
-      <div>
+      <div class="workBtns">
+        <Kommen/>
+        <Gehen/>
+        <Pause/>
       </div>
       </div>
     )

@@ -1,0 +1,24 @@
+.BtnWrapper{
+width: 6.5rem;
+display: flex;
+justify-content: center;
+align-items: center;
+border-radius: 50%;
+border: 2px solid #ccc;
+box-shadow: #5e2e94 0px 3px 8px;
+}
+
+.BtnContainer{
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+}
+.BtnContainer:hover{
+    cursor:pointer;
+}
+
+.BtnText{
+    margin-top: 1rem;
+    font-size: 1rem;
+}
