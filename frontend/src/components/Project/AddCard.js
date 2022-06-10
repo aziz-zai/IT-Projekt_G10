@@ -45,6 +45,7 @@ export class AddCard extends Component {
 AddCard.propTypes = {
     project: PropTypes.any,
     user: PropTypes.any,
+    member: PropTypes.any,
     onClose: PropTypes.any,
   }
 export default AddCard

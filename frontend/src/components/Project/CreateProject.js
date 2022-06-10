@@ -2,20 +2,26 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import OneAPI from '../../api/OneAPI'
 import ProjectBO from '../../api/ProjectBO';
-import { TextField, Dialog, ListItem, List, Divider, AppBar, 
-Toolbar, IconButton, Typography, Slide} from '@mui/material';
+import { Container, TextField, Dialog, ListItem, List, Divider, AppBar, 
+Toolbar, Grid, Card, IconButton, Typography, Slide} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import AktivitätenBO from '../../api/AktivitätenBO';
 
 
 export class CreateProject extends Component {
     constructor(props) {
         super(props);
-        let pn = '', lz = null, ag = '', ah = '';
+        let pn = '', lz = null, ag = '', ah = '', 
+        bz='', da=null, ca=null, pr=null;
     if (props.project) {
       pn = props.project.getProjektname();
       lz = props.project.getLaufzeit();
       ag = props.project.getAuftraggeber();
       ah = props.project.getAvailablehours();
+      bz = props.aktivität.getBezeichnung();
+      da = props.aktivität.getDauer();
+      ca = props.aktivität.getCapacity();
+      pr = props.aktivität.getProject();
     }
       // Init the state
     this.state = {
@@ -35,7 +41,11 @@ export class CreateProject extends Component {
       addingInProgress: false,
       updatingInProgress: false,
       addingError: null,
-      updatingError: null
+      updatingError: null,
+      bezeichnung: bz,
+      dauer: da,
+      capacity: ca,
+      project: pr
     };
     // save this state for canceling
     this.baseState = this.state;
@@ -59,7 +69,28 @@ export class CreateProject extends Component {
       updatingInProgress: true,       // show loading indicator
       updatingError: null             // disable error message
     });
-}
+  }
+
+  addAktivitäten = () => {
+   
+    OneAPI.getAPI().addAktivitäten(this.state.bezeichnung, this.state.dauer, this.state.capacity, 
+      this.state.project).then(aktivität => {
+      // Backend call sucessfull
+      // reinit the dialogs state for a new empty project
+      this.setState(this.baseState);
+      this.props.handleClose(aktivität); // call the parent with the project object from backend
+    }).catch(e =>
+      this.setState({
+        updatingInProgress: false,    // disable loading indicator 
+        updatingError: e              // show error message
+      })
+    );
+    // set loading to true
+    this.setState({
+      updatingInProgress: true,       // show loading indicator
+      updatingError: null             // disable error message
+    });
+  }
 
 textFieldValueChange = (event) => {
   const value = event.target.value;
@@ -79,7 +110,8 @@ textFieldValueChange = (event) => {
   render() {
       const {isOpen, project, user} = this.props;
       const {projektName, projektNameEdited, projektNameValidationFailed, laufZeit, laufZeitEdited, laufZeitValidationFailed,
-      auftragGeber, auftragGeberEdited, auftragGeberValidationFailed, availableHours, availableHoursEdited, availableHoursValidationFailed} = this.state;
+      auftragGeber, auftragGeberEdited, auftragGeberValidationFailed, availableHours, availableHoursEdited, availableHoursValidationFailed,
+      bezeichnung, dauer, capacity} = this.state;
 
     return (
     <div>
@@ -100,49 +132,69 @@ textFieldValueChange = (event) => {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Projekt anlegen
             </Typography>
-            <button onClick={this.addProject} class="saveBtn">Speichern</button>
+            <button onClick={() => { this.addProject(); this.addAktivitäten(); }} class="saveBtn"> Speichern </button>
           </Toolbar>
         </AppBar>
-        <List>
-          <ListItem>
-          <TextField
-            autoFocus type='text' required
-            id="projektName"
-            label="Projektname"
-            value={projektName}
-            onChange={this.textFieldValueChange}
-            /> 
-          </ListItem>
-          <ListItem>
-          <TextField
-            autoFocus type='text' required
-            id="laufZeit"
-            label="Projektlaufzeit"
-            value={laufZeit}
-            onChange={this.textFieldValueChange}
-            />
-          </ListItem>
-          <ListItem>
-          <TextField
-            autoFocus type='text' required
-            id="auftragGeber"
-            label="Auftraggeber"
-            value={auftragGeber}
-            onChange={this.textFieldValueChange}
-            />
-          </ListItem>
-          <ListItem>
-          <TextField
-            autoFocus type='text' required
-            id="availableHours"
-            label="Verfügbare Stunden"
-            value={availableHours}
-            onChange={this.textFieldValueChange}
-            />
-          </ListItem>
-          <Divider />
-        </List>
-      </Dialog>
+        <Container maxWidth="sm" style={{marginTop:'10px'}} justify-content="space-between"> 
+        <Grid container spacing={2} justify="center" color="primary"> 
+          <Card sx={{ minWidth: 275 }} variant="outlined" color="yellow">
+            <Typography sx={{
+          mx: 'auto',
+          width: 200,
+          p: 1,
+          m: 1,
+          border: '1px solid',
+          borderColor: "black",
+          borderRadius: 2,
+          textAlign: 'center',
+          fontSize: '0.875rem',
+          fontWeight: '700',
+        }}> 
+            Projektdetails eintragen
+            </Typography>
+              <List>
+                <ListItem>
+                <TextField
+                  autoFocus type='text' required
+                  id="projektName"
+                  label="Projektname"
+                  value={projektName}
+                  onChange={this.textFieldValueChange}
+                  /> 
+                </ListItem>
+                <ListItem>
+                <TextField
+                  autoFocus type='text' required
+                  id="laufZeit"
+                  label="Projektlaufzeit"
+                  value={laufZeit}
+                  onChange={this.textFieldValueChange}
+                  />
+                </ListItem>
+                <ListItem>
+                <TextField
+                  autoFocus type='text' required
+                  id="auftragGeber"
+                  label="Auftraggeber"
+                  value={auftragGeber}
+                  onChange={this.textFieldValueChange}
+                  />
+                </ListItem>
+                <ListItem>
+                <TextField
+                  autoFocus type='text' required
+                  id="availableHours"
+                  label="Verfügbare Stunden"
+                  value={availableHours}
+                  onChange={this.textFieldValueChange}
+                  />
+                </ListItem>
+                <Divider />
+              </List>
+          </Card>
+        </Grid>
+      </Container>
+    </Dialog>
     </div>
   );
 }

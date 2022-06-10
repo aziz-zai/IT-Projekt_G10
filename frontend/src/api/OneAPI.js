@@ -57,11 +57,11 @@ export default class OneAPI {
   #deleteAbwesenheitURL = (id) => `${this.#OneServerBaseURL}/abwesenheit/${id}`;
 
   //Aktivitäten related
-  #getAktivitätenByIdURL = (id) => `${this.#OneServerBaseURL}/aktivitäten-by-id/${id}`;
-  #getAktivitätenByProjectIdURL = (project_id) => `${this.#OneServerBaseURL}/aktivitäten-by-project/${project_id}`;
-  #addAktivitätenURL = (project_id, member) => `${this.#OneServerBaseURL}/aktivitäten-by-secured-project/${project_id}/${member}`;
-  #updateAktivitätenURL = (project_id, member) => `${this.#OneServerBaseURL}/aktivitäten-by-secured-project/${project_id}/${member}`;
-  #deleteAktivitätenURL = (project_id, member) => `${this.#OneServerBaseURL}/aktivitäten-by-secured-project/${project_id}/${member}`;
+  #getAktivitätenByIdURL = (id) => `${this.#OneServerBaseURL}/aktivitaeten/${id}`;
+  #getAktivitätenByProjectIdURL = (project_id) => `${this.#OneServerBaseURL}/aktivitaeten-by-project/${project_id}`;
+  #addAktivitätenURL = () => `${this.#OneServerBaseURL}/aktivitaeten`;
+  #updateAktivitätenURL = (id) => `${this.#OneServerBaseURL}/aktivitaeten/${id}`;
+  #deleteAktivitätenURL = (id) => `${this.#OneServerBaseURL}/aktivitaeten/${id}`;
 
 
   //Arbeitszeitkonto related
@@ -771,14 +771,14 @@ export default class OneAPI {
     })
   }
 
-  addAktivitäten(project_id, member) {
-    return this.#fetchAdvanced(this.#addAktivitätenURL(project_id, member), {
+  addAktivitäten(aktivitätenBO) {
+    return this.#fetchAdvanced(this.#addAktivitätenURL(), {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(project_id, member)
+      body: JSON.stringify(aktivitätenBO)
     }).then((responseJSON) => {
       // We always get an array of ProjectBOs.fromJSON, but only need one object
       let responseAktivitätenBO = AktivitätenBO.fromJSON(responseJSON)[0];
@@ -796,14 +796,14 @@ export default class OneAPI {
      * @public
      */
 
-  updateAktivitäten(project_id, member) {
-    return this.#fetchAdvanced(this.#updateAktivitätenURL(project_id, member), {
+  updateAktivitäten(id) {
+    return this.#fetchAdvanced(this.#updateAktivitätenURL(id), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(project_id, member)
+      body: JSON.stringify(id)
     }).then((responseJSON) => {
       // We always get an array of CustomerBOs.fromJSON
       let responseAktivitätenBO = AktivitätenBO.fromJSON(responseJSON)[0];
@@ -814,8 +814,8 @@ export default class OneAPI {
     })
   }
 
-  deleteAktivitäten(project_id, member) {
-    return this.#fetchAdvanced(this.#deleteAktivitätenURL(project_id, member), {
+  deleteAktivitäten(id) {
+    return this.#fetchAdvanced(this.#deleteAktivitätenURL(id), {
       method: 'DELETE'
     }).then((responseJSON) => {
       // We always get an array of CustomerBOs.fromJSON
