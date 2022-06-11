@@ -49,3 +49,20 @@
     }
 }
 
+@media screen and (max-width: 500px){
+    .zeitAngabe{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 3rem
+    }
+    
+    .zeitWrapper{
+        width: min-content;
+        border: 2px solid #ccc;
+        border-radius: 1rem;
+        box-shadow: #5e2e94 0px 3px 8px;
+        padding: 2rem;
+    }
+}
+
