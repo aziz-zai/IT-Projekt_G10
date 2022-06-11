@@ -1,0 +1,26 @@
+.BtnPauseWrapper{
+    text-decoration: none;
+    width: 8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    box-shadow: #5e2e94 0px 3px 8px;
+    background-color: white;
+    }
+    
+    .BtnPauseContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    }
+    .BtnPauseWrapper:hover{
+        cursor:pointer;
+    }
+    
+    .BtnPauseText{
+        margin-top: 1rem;
+        font-size: 1rem;
+    }

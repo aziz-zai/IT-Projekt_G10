@@ -195,8 +195,6 @@ zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
 class MembershipOperations(Resource):
     @projectone.marshal_with(membership, code=200)
     @projectone.expect(membership) # Wir erwarten ein Membership-Objekt von der Client-Seite.
-    #@secured 
-    @secured
     def post(self):
         """Anlegen eines neuen Membership-Objekts.
         """
@@ -214,7 +212,6 @@ class MembershipOperations(Resource):
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByIDOperations(Resource):
     @projectone.marshal_with(membership)
-
     def get(self, id):
         """Auslesen eines bestimmten Membership-Objekts.
 
@@ -285,7 +282,6 @@ class MembershipByProjectOperations(Resource):
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByUserAndProject(Resource):
     @projectone.marshal_with(membership)
-
     def get(self, user, project):
         """Auslesen eines bestimmten Membership-Objekts nach Projektid
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
@@ -299,7 +295,6 @@ class MembershipByUserAndProject(Resource):
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByUserOperations(Resource):
     @projectone.marshal_with(project)
-    @secured
     def get(self, user):
         adm = Administration()
         mu = adm.get_membership_by_user(user)
@@ -549,8 +544,7 @@ class ProjectListOperations(Resource):
 @projectone.param('id', 'Die ID des User-Objekts')
 
 class AktivitätenProjectOperations(Resource):
-    @projectone.marshal_with(aktivitäten)
-    @secured    
+    @projectone.marshal_with(aktivitäten) 
     def get(self, project):
     
         """Auslesen eines bestimmten Aktivitäten-Objekts.
@@ -569,7 +563,6 @@ class AktivitätenErstellenOperations(Resource):
     
     @projectone.marshal_with(aktivitäten, code=200)
     @projectone.expect(aktivitäten)  # Wir erwarten ein User-Objekt von Client-Seite.
-    @secured
     def post(self):
 
         adm = Administration()
@@ -586,9 +579,7 @@ class AktivitätenErstellenOperations(Resource):
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des User-Objekts')
 class AktivitätenOperations(Resource):
-
     @projectone.marshal_with(aktivitäten)
-    @secured
     def get(self, id):
       
         akt = Administration()
@@ -596,7 +587,6 @@ class AktivitätenOperations(Resource):
         return aktivitäten
 
     @projectone.marshal_with(aktivitäten)
-    @secured
     def delete(self, id):
 
         adm = Administration()
@@ -605,7 +595,6 @@ class AktivitätenOperations(Resource):
         return '', 200
 
     @projectone.marshal_with(aktivitäten)
-    @secured
     def put(self, id):
         
         adm = Administration()
@@ -627,7 +616,7 @@ class AktivitätenOperations(Resource):
 @projectone.param('id', 'Die ID des User-Objekts')
 class UserOperations(Resource):
     @projectone.marshal_with(user)
-
+    @secured
     def get(self, id):
         """Auslesen eines bestimmten Customer-Objekts.
 
@@ -853,11 +842,11 @@ class GehenListOperations(Resource):
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
-@projectone.route('/gehen-soll/<int:projektarbeitid>/<int:erstellt_von>/<int:erstellt_fuer>/<int:activity>')
+@projectone.route('/gehen-soll/<int:kommen>/<int:erstellt_von>/<int:erstellt_fuer>/<int:activity>/<string:projektarbeit>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class GehenSollListOperations(Resource):
     @projectone.marshal_with(gehen, code=200)
-    def post(self, projektarbeitid, erstellt_von, erstellt_fuer, activity):
+    def post(self, kommen, erstellt_von, erstellt_fuer, activity, projektarbeit):
       
         adm = Administration()
 
@@ -874,10 +863,7 @@ class GehenSollListOperations(Resource):
             """
             g = adm.create_gehen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
             adm.create_ereignisbuchung(erstellt_von=erstellt_von, erstellt_für=erstellt_fuer, ist_buchung=False, ereignis=g.get_id() ,bezeichnung="Arbeitsende")
-            projektarbeit=adm.get_projektarbeit_by_id(projektarbeitid)
-            projektarbeit.set_ende(g.get_id())
-            projektarbeit.set_activity(activity)
-            proarb=adm.update_projektarbeit(projektarbeit)
+            proarb = adm.create_projektarbeit(bezeichnung=projektarbeit, beschreibung="", start=kommen, ende=g.get_id(), activity=activity)
             adm.create_zeitintervallbuchung(proarb.get_id(), False, erstellt_von, erstellt_fuer,"Projektarbeit")
             
             adm.update_arbeitszeitkonto_gleitzeit(erstellt_fuer)
@@ -968,13 +954,13 @@ class KommenListOperations(Resource):
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
-@projectone.route('/kommen-soll/<int:erstellt_von>/<int:erstellt_fuer>/<string:projektarbeit>')
+@projectone.route('/kommen-soll/<int:erstellt_von>/<int:erstellt_fuer>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class KommenListOperations(Resource):
 
     @projectone.marshal_with(kommen, code=200)
     @projectone.expect(kommen)  # Wir erwarten ein Kommen-Objekt von Client-Seite.
-    def post(self, erstellt_von, erstellt_fuer, projektarbeit):
+    def post(self, erstellt_von, erstellt_fuer):
         
         adm = Administration()
 
@@ -989,7 +975,7 @@ class KommenListOperations(Resource):
 
             k = adm.create_kommen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
             adm.create_ereignisbuchung(erstellt_von=erstellt_von, erstellt_für=erstellt_fuer, ist_buchung=False, ereignis=k.get_id() ,bezeichnung="Arbeitsbeginn")
-            adm.create_projektarbeit(bezeichnung=projektarbeit, beschreibung="", start=k.get_id(), ende=0, activity=0)
+            
 
             return k, 200
         else:

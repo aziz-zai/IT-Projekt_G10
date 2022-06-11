@@ -170,7 +170,7 @@ handleOpenStateChange = () => {
 							<LogIn  onLogIn={this.handleSignIn} />
 						}/>
                   		<Route path="/MeineProjekte" element={<Secured user={currentUser}><Home Cuser={currentUser} user={user}/></Secured>} />
-                  		<Route path="/MeinProfil" element={<Secured user={currentUser}><MyProfile Cuser={currentUser} user={user} /></Secured>} />
+                  		<Route path="/MeinProfil" element={<Secured user={currentUser}><MyProfile Cuser={currentUser} user={user}  /></Secured>} />
                   		<Route path="/Arbeitszeitkonto" element={<Secured user={currentUser}><Arbeitszeitkonto Cuser={currentUser} user={user} /></Secured>} />
                   		<Route path="/Zeiterfassung" element={<Secured user={currentUser}><Zeiterfassung Cuser={currentUser} user={user} /></Secured>} />
 				  		</Route>
