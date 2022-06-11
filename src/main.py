@@ -673,7 +673,7 @@ class UserByGoogleUserIdOperations(Resource):
 @projectone.route('/potential-members/<int:user>/<int:project>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('google_user_id', 'Die G-ID des User-Objekts')
-class UserByGoogleUserIdOperations(Resource):
+class PotentialMembers(Resource):
 
     @projectone.marshal_with(user)
     def get(self, user, project):

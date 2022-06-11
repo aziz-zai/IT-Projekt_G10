@@ -35,7 +35,7 @@ export default class OneAPI {
   #getUserURL = (id) => `${this.#OneServerBaseURL}/users/${id}`;
   #updateUserURL = (id) => `${this.#OneServerBaseURL}/users/${id}`;
   #deleteUserURL = (id) => `${this.#OneServerBaseURL}/users/${id}`;
-  #getPotentialUserByGIDURL = (user, project) => `${this.#OneServerBaseURL}/potential-members/${user}/${project}`;
+  #getPotentialMembersURL = (user, project) => `${this.#OneServerBaseURL}/potential-members/${user}/${project}`;
 
   // Project related
   #getProjectsURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
@@ -178,8 +178,8 @@ export default class OneAPI {
     })
   }
 
-  getPotentialUserByGIDURL(user, project) {
-    return this.#fetchAdvanced(this.#getPotentialUserByGIDURL(user, project)).then((responseJSON) => {
+  getPotentialMembers(user, project) {
+    return this.#fetchAdvanced(this.#getPotentialMembersURL(user, project)).then((responseJSON) => {
       let usersBOs = UserBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {
@@ -187,6 +187,7 @@ export default class OneAPI {
       })
     })
   }
+
 
   updateUser(userBO) {
     return this.#fetchAdvanced(this.#updateUserURL(userBO.getID()), {

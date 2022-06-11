@@ -10,7 +10,6 @@ class AktivitätenDetail extends Component {
 
     // Init state
     this.state = {
-        aktivitäten: []
 
     };
   }
@@ -19,7 +18,6 @@ class AktivitätenDetail extends Component {
   /** Renders the component */
   render() {
     const { classes, akt_dauer, akt_bezeichnung, akt_capacity } = this.props;
-    const {aktivitäten} = this.state;
 
     return (
       <Paper variant='outlined' className={classes.root}>
@@ -47,11 +45,7 @@ const styles = theme => ({
     backgroundColor: "rgba(172, 132, 217, 0.497)",
     borderRadius: "15px",
     margin: "1rem"
-  },
-  accountEntry: {
-    fontSize: theme.typography.pxToRem(15),
-    flexBasis: '33.33%',
-    flexShrink: 0,
+
   },
   title: {
   marginRight: 50
@@ -64,9 +58,9 @@ AktivitätenDetail.propTypes = {
   /** @ignore */
   classes: PropTypes.object.isRequired,
   /** The customerID to be rendered */
-  akt_dauer: PropTypes.string.isRequired,
-  akt_bezeichnung: PropTypes.string.isRequired,
-  akt_capacity: PropTypes.string.isRequired
+  akt_dauer: PropTypes.any,
+  akt_bezeichnung: PropTypes.any,
+  akt_capacity: PropTypes.any
   /** The accountID to be rendered */
 }
 

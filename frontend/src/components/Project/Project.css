@@ -151,3 +151,10 @@ margin-bottom: 1rem;
     align-items: center;
     transition: all 0.2s ease-in-out;
 }
+
+.membersDisplay{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem
+}

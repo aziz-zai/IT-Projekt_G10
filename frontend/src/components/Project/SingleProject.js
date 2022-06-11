@@ -10,6 +10,7 @@ import Aktivitäten from './Aktivitäten';
 import AktivitätenDetail from './AktivitätenDetail';
 import Projektarbeit from './Projektarbeit';
 import { withStyles } from '@mui/styles';
+import Membership from './Membership';
 
 export class SingleProject extends Component {
     constructor(props) {
@@ -33,6 +34,7 @@ export class SingleProject extends Component {
           availableHours: ah,
           openAkt: false,
           openProArb: false,
+          membership: [],
           aktivitäten: []
         };
     }
@@ -116,6 +118,26 @@ export class SingleProject extends Component {
       });
     }
 
+    getMembersByProject = () => {
+      OneAPI.getAPI().getMembersByProject(this.props.project.id).then(membership =>
+        this.setState({
+          membership: membership,
+          loadingInProgress: false, // loading indicator 
+          loadingError: null
+        })).catch(e =>
+          this.setState({ // Reset state with error from catch 
+            loadingInProgress: false,
+            loadingError: e
+          })
+        );
+  
+      // set loading to true
+      this.setState({
+        loadingInProgress: true,
+        loadingError: null
+      });
+    }
+
     textFieldValueChange = (event) => {
       const value = event.target.value;
   
@@ -171,12 +193,13 @@ export class SingleProject extends Component {
     componentDidMount() {
     this.getProjektleiterByProject();
     this.loadAktivitäten();
+    this.getMembersByProject();
 
     }
 
   render() {
-    const {project, classes, projektarbeit} = this.props;
-    const {openAkt, openProArb, handleDialogClose, aktivitäten, projektleiter, isOpen, projektfarbe, projekttitel, projektName, laufZeit, auftragGeber, availableHours} = this.state
+    const {project, projektarbeit} = this.props;
+    const {openAkt, membership, openProArb, handleDialogClose, aktivitäten, projektleiter, isOpen, projektfarbe, projekttitel, projektName, laufZeit, auftragGeber, availableHours} = this.state
     
     return (
       <div class="ProjectCardWrapper">
@@ -268,6 +291,15 @@ export class SingleProject extends Component {
           <Projektarbeit isOpen={openProArb} onClose={this.closeProArb} Projektarbeit={projektarbeit}>
             </Projektarbeit>
       </div>
+      <div >
+        <Typography variant='h6'>
+        Membership:
+        </Typography> 
+          {
+            membership.map(member => <Membership key={member.getID()} 
+            m_vorname={member.getVorname()} m_nachname={member.getNachname()}/>)
+          }
+      </div>
       </Dialog>
       </CardActions>
       </CardContent>
@@ -287,7 +319,6 @@ SingleProject.propTypes = {
     project: PropTypes.any,
     user: PropTypes.any,
     isOpen: PropTypes.any,
-    classes: PropTypes.object.isRequired,
     projektarbeit: PropTypes.any
   }
 
