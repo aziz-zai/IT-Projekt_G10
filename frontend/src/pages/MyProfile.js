@@ -94,13 +94,13 @@ export class MyProfile extends Component {
                     autoFocus type='text' required
                     id="firstName"
                     label="Vorname"
-                    value={firstName}
+                    value={firstName ? firstName:user[0].vorname}
                     onChange={this.textFieldValueChange}
                     /></div> &nbsp; <div><TextField
-                    autoFocus type='text' required
+                    type='text' required
                     id="lastName"
                     label="Nachname"
-                    value={lastName}
+                    value={lastName ? lastName:user[0].nachname}
                     onChange={this.textFieldValueChange}
                     /></div>
               </div>{console.log('hier', success)}

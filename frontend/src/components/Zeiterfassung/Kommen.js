@@ -26,13 +26,13 @@ export class Kommen extends Component {
     const {} = this.props;
     const {} = this.state;
     return (
-      <div class="BtnContainer">
-        <div class="BtnWrapper">
-            <iconButton onClick={this.handleKommenClicked}>
+      <div class="BtnKommenContainer">
+        <div class="BtnKommenWrapper">
+            <IconButton onClick={this.handleKommenClicked}>
             <PlayForWorkIcon sx={{ fontSize: 100, color: "green" }} />
-            </iconButton>
+            </IconButton>
         </div>
-        <h5 class="BtnText">Arbeitsbeginn</h5>
+        <h5 class="BtnKommenText">Arbeitsbeginn</h5>
     </div>
     )
   }

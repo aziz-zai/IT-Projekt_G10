@@ -36,17 +36,17 @@ export class Pause extends Component {
     const {user} = this.props;
     const {pauseClicked} = this.state;
     return (
-        <div onClick={this.handlePauseClicked} class="BtnContainer">
-        <div class="BtnWrapper">
+        <div onClick={this.handlePauseClicked} class="BtnPauseContainer">
+        <div class="BtnPauseWrapper">
             {pauseClicked ?
-            <iconButton>
+            <IconButton>
             <EjectIcon sx={{ fontSize: 100, color: "orange", transform: "rotate(90deg)" }}/>
-            </iconButton>:
-            <iconButton>
+            </IconButton>:
+            <IconButton>
             <PauseIcon sx={{ fontSize: 100, color: "orange" }} />
-            </iconButton>}
+            </IconButton>}
         </div>
-        <h5 class="BtnText">Pause</h5>
+        <h5 class="BtnPauseText">Pause</h5>
     </div>
     )
   }

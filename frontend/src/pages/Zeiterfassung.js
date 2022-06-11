@@ -4,10 +4,11 @@ import PropTypes from 'prop-types'
 import ProjectSelection from '../components/Zeiterfassung/ProjectSelection';
 import AktivitätenSelection from '../components/Zeiterfassung/AktivitätenSelection';
 import ProjektarbeitenSelection from '../components/Zeiterfassung/ProjektarbeitenSelection';
-import Grid from '@mui/material/Grid';
 import Kommen from '../components/Zeiterfassung/Kommen';
 import Gehen from '../components/Zeiterfassung/Gehen';
 import Pause from '../components/Zeiterfassung/Pause';
+import CancelIcon from '@mui/icons-material/Cancel';
+import { IconButton } from '@mui/material';
 
 
 
@@ -50,12 +51,25 @@ export class Zeiterfassung extends Component {
     })
 	}
 
+  handleAktSelectionCLose = () => {
+    this.setState({
+      projectSelected: false,
+      aktivitätSelected: false
+    })
+	}
+
+  handlePrArSelectionCLose = () => {
+    this.setState({
+      aktivitätSelected: false
+    })
+  }
+
   handleKommenClicked = () => {
     this.setState({
         kommenClicked: true
     });
-    const update = () => {
-      var day1 = new Date("2022-06-10T21:00:00"); 
+    var day1 = new Date(); 
+    const update = () => { 
       var day2 = new Date();
       var seconds = Math.floor((day2 - (day1))/1000);
       var minutes = Math.floor(seconds/60);
@@ -65,7 +79,7 @@ export class Zeiterfassung extends Component {
       hours = hours-(days*24);
       minutes = minutes-(days*24*60)-(hours*60);
       seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
-      console.log('days',days)
+
       this.setState({
           stunden: hours,
           minuten: minutes,
@@ -88,23 +102,32 @@ export class Zeiterfassung extends Component {
     const {projectSelected, aktivitätSelected, project, aktivität, kommenClicked, stunden, minuten, sekunden} = this.state;
     return (
       <div>
-      <div class="selection">
+      <div class="selection">{console.log("Project", project, "aktiv", aktivität)}
          <ProjectSelection user={user} handleSelection={this.handleProjectSelection}/>
         {projectSelected ?
-         <AktivitätenSelection project={project} handleSelection={this.handleAktivitätSelection}/>:null}
+        <div class="selectionItem"> 
+         <AktivitätenSelection project={project} handleSelection={this.handleAktivitätSelection}/>
+         <IconButton onClick={this.handleAktSelectionCLose}><CancelIcon sx={{color: "#401F65"}}/></IconButton></div>:null}
         {aktivitätSelected ?
-         <ProjektarbeitenSelection aktivität={aktivität}/>:null}
+         <div class="selectionItem">
+         <ProjektarbeitenSelection aktivität={aktivität}/>
+         <IconButton onClick={this.handlePrArSelectionCLose}><CancelIcon sx={{color: "#401F65"}}/></IconButton></div>:null}
       </div>
-      <div>
+      <div class="zeitContainer">
+      <div class="zeitWrapper">
         {kommenClicked ?
       <div class="zeitAngabe">
-        {String(stunden).padStart(2, "0")}:{String(minuten).padStart(2, "0")}:{String(sekunden).padStart(2, "0")}{console.log('kommen', kommenClicked)}
-    </div>:null}
+        {String(stunden).padStart(2, "0")}:{String(minuten).padStart(2, "0")}:{String(sekunden).padStart(2, "0")}
+    </div>:<div class="zeitAngabe">
+       00:00:00
+    </div>}
       <div class="workBtns">
         <Kommen handleClick={this.handleKommenClicked}/>
         <Gehen/>
         <Pause/>
-      </div></div>
+      </div>
+      </div>
+      </div>
       </div>
     )
   }

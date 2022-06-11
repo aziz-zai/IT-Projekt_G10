@@ -195,8 +195,6 @@ zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
 class MembershipOperations(Resource):
     @projectone.marshal_with(membership, code=200)
     @projectone.expect(membership) # Wir erwarten ein Membership-Objekt von der Client-Seite.
-    #@secured 
-    @secured
     def post(self):
         """Anlegen eines neuen Membership-Objekts.
         """
@@ -214,7 +212,6 @@ class MembershipOperations(Resource):
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByIDOperations(Resource):
     @projectone.marshal_with(membership)
-
     def get(self, id):
         """Auslesen eines bestimmten Membership-Objekts.
 
@@ -284,7 +281,6 @@ class MembershipByProjectOperations(Resource):
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByUserAndProject(Resource):
     @projectone.marshal_with(membership)
-
     def get(self, user, project):
         """Auslesen eines bestimmten Membership-Objekts nach Projektid
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
@@ -298,7 +294,6 @@ class MembershipByUserAndProject(Resource):
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByUserOperations(Resource):
     @projectone.marshal_with(project)
-    @secured
     def get(self, user):
         adm = Administration()
         mu = adm.get_membership_by_user(user)
@@ -543,8 +538,7 @@ class ProjectListOperations(Resource):
 @projectone.param('id', 'Die ID des User-Objekts')
 
 class AktivitätenProjectOperations(Resource):
-    @projectone.marshal_with(aktivitäten)
-    @secured    
+    @projectone.marshal_with(aktivitäten) 
     def get(self, project):
     
         """Auslesen eines bestimmten Aktivitäten-Objekts.
@@ -563,7 +557,6 @@ class AktivitätenErstellenOperations(Resource):
     
     @projectone.marshal_with(aktivitäten, code=200)
     @projectone.expect(aktivitäten)  # Wir erwarten ein User-Objekt von Client-Seite.
-    @secured
     def post(self):
 
         adm = Administration()
@@ -580,9 +573,7 @@ class AktivitätenErstellenOperations(Resource):
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des User-Objekts')
 class AktivitätenOperations(Resource):
-
     @projectone.marshal_with(aktivitäten)
-    @secured
     def get(self, id):
       
         akt = Administration()
@@ -590,7 +581,6 @@ class AktivitätenOperations(Resource):
         return aktivitäten
 
     @projectone.marshal_with(aktivitäten)
-    @secured
     def delete(self, id):
 
         adm = Administration()
@@ -599,7 +589,6 @@ class AktivitätenOperations(Resource):
         return '', 200
 
     @projectone.marshal_with(aktivitäten)
-    @secured
     def put(self, id):
         
         adm = Administration()
@@ -621,7 +610,7 @@ class AktivitätenOperations(Resource):
 @projectone.param('id', 'Die ID des User-Objekts')
 class UserOperations(Resource):
     @projectone.marshal_with(user)
-
+    @secured
     def get(self, id):
         """Auslesen eines bestimmten Customer-Objekts.
 

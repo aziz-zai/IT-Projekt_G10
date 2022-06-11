@@ -24,13 +24,13 @@ export class Gehen extends Component {
     const {user} = this.props;
     const {selectedProject, project} = this.state;
     return (
-        <div class="BtnContainer">
-        <div class="BtnWrapper">
-            <iconButton>
+        <div class="BtnGehenContainer">
+        <div class="BtnGehenWrapper">
+            <IconButton>
             <CallMissedOutgoingIcon sx={{ fontSize: 100, color: "red" }} />
-            </iconButton>
+            </IconButton>
         </div>
-        <h5 class="BtnText">Arbeitsende</h5>
+        <h5 class="BtnGehenText">Arbeitsende</h5>
     </div>
     )
   }
