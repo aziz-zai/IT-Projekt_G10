@@ -77,7 +77,7 @@ export class AktivitätenSelection extends Component {
            {aktivitäten ?
           aktivitäten.map((aktivität, index) => <option value={aktivität.id}>{aktivität.getBezeichnung()}</option>)
           :null}
-        </NativeSelect>{console.log('akti', aktivitäten)}
+        </NativeSelect>
       </FormControl>
         </div>
     </div>

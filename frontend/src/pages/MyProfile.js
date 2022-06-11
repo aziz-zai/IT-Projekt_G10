@@ -97,7 +97,7 @@ export class MyProfile extends Component {
       const {user, Cuser} = this.props;
       const {firstName, lastName, success, vertical, horizontal} = this.state;
     return (
-      <div>{console.log('test', this.state.upUser[0])}
+      <div>
         {user?
         
         <div class="ProfileWrapper">

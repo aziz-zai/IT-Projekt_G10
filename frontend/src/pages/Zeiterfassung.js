@@ -9,6 +9,7 @@ import Gehen from '../components/Zeiterfassung/Gehen';
 import Pause from '../components/Zeiterfassung/Pause';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { IconButton } from '@mui/material';
+import OneAPI from '../api/OneAPI'
 
 
 
@@ -21,12 +22,14 @@ export class Zeiterfassung extends Component {
     this.state = {
       project: null,
       aktivität: null,
+      projektarbeit: null,
       projectSelected: false,
       aktivitätSelected: false,
       kommenClicked: false,
       stunden: 0,
       minuten: 0,
       sekunden: 0,
+      kommen: null,
     };
   }
 
@@ -35,6 +38,21 @@ export class Zeiterfassung extends Component {
   }
 
   /** gets the balance for this account */
+
+  addKommenIst = () => {
+    OneAPI.getAPI().addKommenIst(this.props.user[0].id, this.state.projektarbeit).then(kommen =>
+      this.setState({
+        kommen: kommen
+      })
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+          kommen: null,
+        })
+      );
+    // set loading to true
+    this.setState({
+    });
+  }
 
   handleProjectSelection = (project) => {
     this.setState({
@@ -51,11 +69,17 @@ export class Zeiterfassung extends Component {
     })
 	}
 
+  handleProjektarbeitSelection = (projektarbeit) => {
+    this.setState({
+      projektarbeit: projektarbeit,
+    });
+	}
+
   handleAktSelectionCLose = () => {
     this.setState({
       projectSelected: false,
       aktivitätSelected: false
-    })
+    });
 	}
 
   handlePrArSelectionCLose = () => {
@@ -65,6 +89,7 @@ export class Zeiterfassung extends Component {
   }
 
   handleKommenClicked = () => {
+    this.addKommenIst();
     this.setState({
         kommenClicked: true,
     });
@@ -100,10 +125,10 @@ handleGehenClicked = () => {
 
   render() {
     const {user} = this.props;
-    const {projectSelected, aktivitätSelected, project, aktivität, kommenClicked, stunden, minuten, sekunden} = this.state;
+    const {projectSelected, aktivitätSelected, project, aktivität, kommenClicked, stunden, minuten, sekunden, kommen} = this.state;
     return (
       <div>
-      <div class="selection">{console.log("Project", project, "aktiv", aktivität)}
+      <div class="selection">{console.log('kommen', kommen)}
          <ProjectSelection user={user} handleSelection={this.handleProjectSelection}/>
         {projectSelected ?
         <div class="selectionItem"> 
@@ -111,7 +136,7 @@ handleGehenClicked = () => {
          <IconButton onClick={this.handleAktSelectionCLose}><CancelIcon sx={{color: "#401F65"}}/></IconButton></div>:null}
         {aktivitätSelected ?
          <div class="selectionItem">
-         <ProjektarbeitenSelection aktivität={aktivität}/>
+         <ProjektarbeitenSelection aktivität={aktivität} handleSelection={this.handleProjektarbeitSelection}/>
          <IconButton onClick={this.handlePrArSelectionCLose}><CancelIcon sx={{color: "#401F65"}}/></IconButton></div>:null}
       </div>
       <div class="zeitContainer">

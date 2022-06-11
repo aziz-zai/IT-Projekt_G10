@@ -151,7 +151,6 @@ handleOpenStateChange = () => {
     const { currentUser, user } = this.state;
 		return (
         <>
-		{console.log('user', user)}
 				<Router>
 				<SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={currentUser}/>
          		<NavBar toggle={this.handleOpenStateChange} user={currentUser} nav="navBlack"/>

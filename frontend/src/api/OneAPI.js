@@ -95,7 +95,7 @@ export default class OneAPI {
 
 
   //Kommen related
-  #addKommenURL = () => `${this.#OneServerBaseURL}/kommen/`;
+  #addKommenIstURL = (user, projektarbeit) => `${this.#OneServerBaseURL}/kommen-ist/${user}/${projektarbeit}`;
   #getKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
   #updateKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
   #deleteKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
@@ -653,14 +653,14 @@ export default class OneAPI {
   }
 
 
-  addKommen(kommenBO) {
-    return this.#fetchAdvanced(this.#addKommenURL(), {
+  addKommenIst(user, projektarbeit) {
+    return this.#fetchAdvanced(this.#addKommenIstURL(user, projektarbeit), {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(kommenBO)
+      
     }).then((responseJSON) => {
       // We always get an array of EreignisBOs.fromJSON, but only need one object
       let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
