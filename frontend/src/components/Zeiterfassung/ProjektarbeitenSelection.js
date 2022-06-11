@@ -75,7 +75,7 @@ export class ProjektarbeitenSelection extends Component {
         >
           <option value={0}></option>
            {projektarbeiten ?
-          projektarbeiten.map((projektarbeit, index) => <option value={projektarbeit.id}>{projektarbeit.bezeichnung}</option>)
+          projektarbeiten.map((projektarbeit, index) => <option value={projektarbeit.bezeichnung}>{projektarbeit.bezeichnung}</option>)
           :null}
         </NativeSelect>
       </FormControl>

@@ -69,6 +69,7 @@ export default class OneAPI {
   //Projektarbeit related
   #getProjektarbeitURL = (id) => `${this.#OneServerBaseURL}/projektarbeiten/${id}`;
   #getProjektarbeitByActivityURL = (activity) => `${this.#OneServerBaseURL}/projektarbeiten-activity/${activity}`;
+  #getProjektarbeitByStartURL = (start) => `${this.#OneServerBaseURL}/projektarbeit-by-start/${start}`;
   #addProjektarbeitURL = () => `${this.#OneServerBaseURL}/projektarbeiten/`;
   #updateProjektarbeitURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
   #deleteProjektarbeitURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
@@ -103,7 +104,7 @@ export default class OneAPI {
 
   //Gehen related
   #getGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
-  #addGehenURL = () => `${this.#OneServerBaseURL}/gehen/`;
+  #addGehenIstURL = (projektarbeit, user, aktivität) => `${this.#OneServerBaseURL}/gehen-ist/${projektarbeit}/${user}/${aktivität}`;
   #updateGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
   #deleteGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
 
@@ -405,6 +406,16 @@ export default class OneAPI {
     })
   }
 
+  getProjektarbeitByStart(start) {
+    return this.#fetchAdvanced(this.#getProjektarbeitByStartURL(start)).then((responseJSON) => {
+      let projektarbeitenBOs = ProjektarbeitBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(projektarbeitenBOs);
+      })
+    })
+  }
+
 
   addProjektarbeit(projektarbeitBO) {
     return this.#fetchAdvanced(this.#addProjektarbeitURL(), {
@@ -598,14 +609,13 @@ export default class OneAPI {
   }
 
 
-  addGehen(gehenBO) {
-    return this.#fetchAdvanced(this.#addGehenURL(), {
+  addGehenIst(projektarbeit, user, aktivität) {
+    return this.#fetchAdvanced(this.#addGehenIstURL(projektarbeit, user, aktivität), {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(gehenBO)
     }).then((responseJSON) => {
       // We always get an array of ProjectBOs.fromJSON, but only need one object
       let responseGehenBO = GehenBO.fromJSON(responseJSON)[0];

@@ -377,26 +377,16 @@ class ProjektarbeitenByActivityIdOperations(Resource):
         projektarbeitenac = adm.get_projektarbeit_by_activity_id(activity)
         return projektarbeitenac
 
-@projectone.route('/projektarbeit/Gehen/<int:id>/<int:user>')
+@projectone.route('/projektarbeit-by-start/<int:kommen>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Projektarbeit-Objekts')
 class ProjektarbeitenDetailOperations(Resource):
     @projectone.marshal_with(projektarbeiten)
-    def put(self, id, user):
+    def get(self, kommen):
     
         adm = Administration()
-        pa = Projektarbeit.from_dict(api.payload)
-
-        if pa is not None:
-            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Projektarbeit-Objekts gesetzt.
-            Siehe Hinweise oben.
-            """
-            pa.set_id(id)
-            adm.update_projektarbeit(pa)
-            adm.create_zeitintervallbuchung(pa.get_id(), True, user, user, bezeichnung="Projektarbeit")
-            return '', 200
-        else:
-            return '', 500
+        projektarbeitenac = adm.get_projektarbeit_by_start(kommen)
+        return projektarbeitenac
 
 
 @projectone.route('/pausen')
@@ -807,7 +797,7 @@ class GehenListOperations(Resource):
         adm = Administration()
 
         proposal = Gehen()
-        now = datetime.now()
+        now = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
         proposal.set_zeitpunkt(now)
         proposal.set_bezeichnung("gehen")
 

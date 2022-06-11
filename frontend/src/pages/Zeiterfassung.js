@@ -31,7 +31,9 @@ export class Zeiterfassung extends Component {
       minuten: 0,
       sekunden: 0,
       kommen: new KommenBO(),
-      kommenDate: 0
+      kommenDate: 0,
+      projektarbeitIst: null,
+      gehen: null
     };
   }
 
@@ -49,6 +51,37 @@ export class Zeiterfassung extends Component {
       ).catch(e =>
         this.setState({ // Reset state with error from catch 
           kommen: null,
+        })
+      );
+    // set loading to true
+    this.setState({
+    });
+  }
+
+  getIstProjektarbeit = () => {
+    OneAPI.getAPI().getProjektarbeitByStart(this.state.kommen.id).then(projektarbeitIst =>
+      this.setState({
+        projektarbeitIst: projektarbeitIst[0].id,
+      }), setTimeout(() => {
+      this.addGehenIst();
+    }, 500)
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+          projektarbeitIst: null,
+        })
+      );
+    // set loading to true
+    this.setState({
+    });
+  }
+  addGehenIst = () => {
+    OneAPI.getAPI().addGehenIst(this.state.projektarbeitIst, this.props.user[0].id, this.state.aktivität).then(gehen =>
+      this.setState({
+        gehen: gehen,
+      }),
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+          gehen: null,
         })
       );
     // set loading to true
@@ -105,10 +138,6 @@ export class Zeiterfassung extends Component {
       var minutes = Math.floor(seconds/60);
       var hours = Math.floor(minutes/60);
       var days = Math.floor(hours/24);
-      console.log('day1', day1)
-      console.log('day2', day2)
-      console.log('seconds', seconds)
-      console.log('hours', hours)
       
       hours = hours-(days*24);
       minutes = minutes-(days*24*60)-(hours*60);
@@ -129,14 +158,15 @@ export class Zeiterfassung extends Component {
 }
 handleGehenClicked = () => {
   clearInterval(this.interval);
+  this.getIstProjektarbeit();
 }
 
   render() {
     const {user} = this.props;
-    const {projectSelected, aktivitätSelected, project, aktivität, kommenClicked, stunden, minuten, sekunden, kommen} = this.state;
+    const {projectSelected, aktivitätSelected, project, aktivität, kommenClicked, stunden, minuten, sekunden, kommen, projektarbeitIst, gehen} = this.state;
     return (
       <div>
-      <div class="selection">
+      <div class="selection"> {console.log('data', gehen, projektarbeitIst )}
          <ProjectSelection user={user} handleSelection={this.handleProjectSelection}/>
         {projectSelected ?
         <div class="selectionItem"> 
