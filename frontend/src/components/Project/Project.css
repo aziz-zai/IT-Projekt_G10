@@ -158,3 +158,15 @@ margin-bottom: 1rem;
     align-items: center;
     gap: 1rem
 }
+
+.tablem{
+    width: 50%;
+    background: #dbc7f2;
+    border-radius: 10px;
+}
+
+.tablea{
+    width: 50%;
+    background: #dbc7f2;
+    border-radius: 10px;
+}

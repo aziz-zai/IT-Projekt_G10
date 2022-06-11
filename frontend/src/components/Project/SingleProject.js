@@ -240,7 +240,6 @@ export class SingleProject extends Component {
           <ListItem>
           <TextField
             autoFocus type='text' required
-            
             id="projektName"
             label="Projektname"
             value={projektName}
@@ -279,9 +278,10 @@ export class SingleProject extends Component {
           <Aktivitäten isOpen={openAkt} onClose={this.closeAkt} project={project}>
             </Aktivitäten>
         </List>
+        <Divider />
         <div >
-        <Typography variant='h6'>
-        Aktivtäten:
+        <Typography component="h2" variant="h6" color="black" gutterBottom>
+        Aktivitäten
         </Typography> 
           {
             aktivitäten.map(aktivität => <AktivitätenDetail key={aktivität.getID()} 
@@ -291,24 +291,26 @@ export class SingleProject extends Component {
           <Projektarbeit isOpen={openProArb} onClose={this.closeProArb} Projektarbeit={projektarbeit}>
             </Projektarbeit>
       </div>
+      <Divider />
       <div >
-        <Typography variant='h6'>
-        Membership:
+      <Typography component="h2" variant="h6" color="black" gutterBottom>
+        Projektmitarbeiter
         </Typography> 
           {
             membership.map(member => <Membership key={member.getID()} 
             m_vorname={member.getVorname()} m_nachname={member.getNachname()}/>)
           }
       </div>
+      <Divider />
       </Dialog>
       </CardActions>
       </CardContent>
       </Card>
-      
       </div>
     )
   }
 }
+
 const styles = theme => ({
   testa: {
     width: '100%',

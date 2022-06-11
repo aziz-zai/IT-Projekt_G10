@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {Paper, Button, Grid, IconButton, DialogContent, DialogTitle, Typography, InputAdornment, MenuItem, DialogActions } from '@mui/material';
+import {Paper, TableHead, TableCell, TableRow, Table, TableBody, Button, Grid, IconButton, 
+DialogContent, DialogTitle, Typography, InputAdornment, MenuItem, DialogActions } from '@mui/material';
 import './Aktivitäten.css'
+import './Project.css'
 
 export class Membership extends Component {
     constructor(props) {
@@ -19,19 +21,28 @@ export class Membership extends Component {
 
         
     return (
-      <Paper variant='outlined'>
-        <div class="aktivitätenContent">
-        <Grid item>
-                <Typography variant='body2' color={'textSecondary'}>List of accounts</Typography>
-        </Grid>
-            <Grid container spacing={1} justify='flex-start' alignItems='center'>
-              <Grid item>
-                <Typography variant='body1'>{m_vorname}, {m_nachname}
-                </Typography>
-              </Grid>
-        </Grid>
-        </div>
-      </Paper>
+      <Table class="tablem" size="small" stickyHeader aria-label="sticky table">
+          <TableHead>
+            <TableRow>
+              <TableCell>
+              <Typography component="h3" variant="h6" color="black">
+                  Vorname
+                  </Typography>
+              </TableCell>
+              <TableCell>
+              <Typography component="h3" variant="h6" color="black" gutterBottom>
+                  Nachname
+                  </Typography>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+            <TableBody>
+            <TableRow>
+              <TableCell>{m_vorname}</TableCell>
+              <TableCell>{m_nachname}</TableCell>
+            </TableRow>
+            </TableBody>
+      </Table>
     );
   }
 }

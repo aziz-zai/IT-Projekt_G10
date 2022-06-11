@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Box, Grid, Typography, Paper } from '@material-ui/core';
-
+import {Table, TableCell, TableRow, TableBody, TableHead, Grid, Typography, Paper } from '@mui/material';
+import './Project.css'
+import './Aktivitäten.css'
 
 class AktivitätenDetail extends Component {
 
@@ -14,54 +15,57 @@ class AktivitätenDetail extends Component {
     };
   }
 
-
   /** Renders the component */
   render() {
     const { classes, akt_dauer, akt_bezeichnung, akt_capacity } = this.props;
 
     return (
-      <Paper variant='outlined' className={classes.root}>
-        <div class="aktivitätenContent">
-        <h6 className="title">
-        {akt_bezeichnung}
-        </h6> 
-            <Typography>
-              {akt_dauer} Tage übrig
-            </Typography>
-            <Typography>
-             {akt_capacity} Arbeitsstunden übrig
-            </Typography></div>
-      </Paper>
+      <Table  class="tablea" size="small" stickyHeader aria-label="sticky table">
+        <TableHead>
+            <TableRow>
+                <TableCell>
+                    <Typography component="h3" variant="h6" color="black">
+                        Bezeichnung
+                    </Typography>
+                </TableCell>
+                <TableCell>
+                    <Typography component="h3" variant="h6" color="black">
+                        Dauer
+                    </Typography>
+                </TableCell>
+                <TableCell>
+                    <Typography component="h3" variant="h6" color="black">
+                        Kapazität
+                    </Typography>
+                </TableCell>
+            </TableRow>
+        </TableHead>
+        <TableBody>
+            <TableRow>
+                <TableCell>{akt_bezeichnung}</TableCell>
+                <TableCell>{akt_dauer}</TableCell>
+                <TableCell>{akt_capacity}</TableCell>
+            </TableRow>
+        </TableBody>
+      </Table>
     );
   }
 }
 
-/** Component specific styles */
 const styles = theme => ({
-  root: {
-    minWidth: '20rem',
-    padding: theme.spacing(1),
-    marginTop: theme.spacing(1),
-    backgroundColor: "rgba(172, 132, 217, 0.497)",
-    borderRadius: "15px",
-    margin: "1rem"
+    root: {
+      width: '100%',
+    }
+  });
 
-  },
-  title: {
-  marginRight: 50
-}
-
-});
-
-/** PropTypes */
 AktivitätenDetail.propTypes = {
-  /** @ignore */
   classes: PropTypes.object.isRequired,
   /** The customerID to be rendered */
   akt_dauer: PropTypes.any,
   akt_bezeichnung: PropTypes.any,
   akt_capacity: PropTypes.any
-  /** The accountID to be rendered */
 }
 
-export default withStyles(styles)(AktivitätenDetail);
+export default AktivitätenDetail;
+
+
