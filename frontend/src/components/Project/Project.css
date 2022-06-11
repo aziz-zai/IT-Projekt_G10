@@ -163,10 +163,26 @@ margin-bottom: 1rem;
     width: 50%;
     background: #dbc7f2;
     border-radius: 10px;
+    border-bottom: 1.5px;
+    border: solid grey;
+    margin-top: 10px;
+    margin-bottom:10px;
+    justify-content: center;
 }
 
 .tablea{
     width: 50%;
     background: #dbc7f2;
     border-radius: 10px;
+    border: solid grey;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    justify-content: center;
+}
+
+.Projektdetails{
+    justify-content: center;
+    border: solid rgb(55, 53, 53);
+    border-radius: 12px;
+    margin-top: 10px;
 }

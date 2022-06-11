@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { TextField, List, AppBar, ListItem, Divider, Dialog, 
-IconButton, Toolbar, CardContent, CardActions, Card, Typography} from '@mui/material';
+IconButton, Container, Toolbar, CardContent, CardActions, Card, Typography} from '@mui/material';
 import './Project.css'
 import CloseIcon from '@mui/icons-material/Close';
 import OneAPI from '../../api/OneAPI';
@@ -203,7 +203,7 @@ export class SingleProject extends Component {
     
     return (
       <div class="ProjectCardWrapper">
-        <Card onClick = {this.handleDialogOpen}class={projektfarbe}>
+      <Card onClick = {this.handleDialogOpen}class={projektfarbe}>
       <CardContent>
         <Typography variant="h5" class={projekttitel} component="div">
           {projektName}
@@ -236,6 +236,8 @@ export class SingleProject extends Component {
             <button onClick={this.updateProject} class="saveBtn">Speichern</button>
           </Toolbar>
         </AppBar>
+        <Container> 
+        <Card class="Projektdetails">
         <List>
           <ListItem>
           <TextField
@@ -278,7 +280,10 @@ export class SingleProject extends Component {
           <Aktivitäten isOpen={openAkt} onClose={this.closeAkt} project={project}>
             </Aktivitäten>
         </List>
+        </Card>
+        </Container>
         <Divider />
+        <Container>
         <div >
         <Typography component="h2" variant="h6" color="black" gutterBottom>
         Aktivitäten
@@ -291,7 +296,9 @@ export class SingleProject extends Component {
           <Projektarbeit isOpen={openProArb} onClose={this.closeProArb} Projektarbeit={projektarbeit}>
             </Projektarbeit>
       </div>
+      </Container>
       <Divider />
+      <Container>
       <div >
       <Typography component="h2" variant="h6" color="black" gutterBottom>
         Projektmitarbeiter
@@ -301,11 +308,12 @@ export class SingleProject extends Component {
             m_vorname={member.getVorname()} m_nachname={member.getNachname()}/>)
           }
       </div>
+      </Container>
       <Divider />
       </Dialog>
       </CardActions>
       </CardContent>
-      </Card>
+      </Card> 
       </div>
     )
   }
