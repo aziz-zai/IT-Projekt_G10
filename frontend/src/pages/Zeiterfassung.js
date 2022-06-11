@@ -10,6 +10,7 @@ import Pause from '../components/Zeiterfassung/Pause';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { IconButton } from '@mui/material';
 import OneAPI from '../api/OneAPI'
+import KommenBO from '../api/KommenBO'
 
 
 
@@ -29,7 +30,8 @@ export class Zeiterfassung extends Component {
       stunden: 0,
       minuten: 0,
       sekunden: 0,
-      kommen: null,
+      kommen: new KommenBO(),
+      kommenDate: 0
     };
   }
 
@@ -42,8 +44,8 @@ export class Zeiterfassung extends Component {
   addKommenIst = () => {
     OneAPI.getAPI().addKommenIst(this.props.user[0].id, this.state.projektarbeit).then(kommen =>
       this.setState({
-        kommen: kommen
-      })
+        kommen: kommen,
+      }), this.handleKommenClicked
       ).catch(e =>
         this.setState({ // Reset state with error from catch 
           kommen: null,
@@ -93,13 +95,20 @@ export class Zeiterfassung extends Component {
     this.setState({
         kommenClicked: true,
     });
-    var day1 = new Date(); 
+
     const update = () => { 
+      
+      if(this.state.kommen.zeitpunkt){
+      var day1 = new Date(this.state.kommen.zeitpunkt); 
       var day2 = new Date();
       var seconds = Math.floor((day2 - (day1))/1000);
       var minutes = Math.floor(seconds/60);
       var hours = Math.floor(minutes/60);
       var days = Math.floor(hours/24);
+      console.log('day1', day1)
+      console.log('day2', day2)
+      console.log('seconds', seconds)
+      console.log('hours', hours)
       
       hours = hours-(days*24);
       minutes = minutes-(days*24*60)-(hours*60);
@@ -110,10 +119,9 @@ export class Zeiterfassung extends Component {
           minuten: minutes,
           sekunden: seconds
       })
+      }
   }
-
   update();
-
   this.interval = setInterval(()=> {
       update();
   }, 1000);
@@ -128,7 +136,7 @@ handleGehenClicked = () => {
     const {projectSelected, aktivitätSelected, project, aktivität, kommenClicked, stunden, minuten, sekunden, kommen} = this.state;
     return (
       <div>
-      <div class="selection">{console.log('kommen', kommen)}
+      <div class="selection">
          <ProjectSelection user={user} handleSelection={this.handleProjectSelection}/>
         {projectSelected ?
         <div class="selectionItem"> 

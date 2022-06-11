@@ -926,7 +926,7 @@ class KommenListOperations(Resource):
         adm = Administration()
 
         proposal = Kommen()
-        now = datetime.now()
+        now = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
         proposal.set_zeitpunkt(now)
         proposal.set_bezeichnung("kommen")
 
