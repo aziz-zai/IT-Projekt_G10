@@ -186,8 +186,8 @@ handleGehenClicked = () => {
        00:00:00
     </div>}
       <div class="workBtns">
-        <Kommen handleClick={this.handleKommenClicked}/>
-        <Gehen handleClick={this.handleGehenClicked}/>
+        <Kommen date={kommen? kommen.zeitpunkt:null} handleClick={this.handleKommenClicked}/>
+        <Gehen date={gehen? gehen.zeitpunkt:null} handleClick={this.handleGehenClicked}/>
         <Pause/>
       </div>
       </div>
