@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import OneAPI from '../api/OneAPI'
 import UserBO from '../api/UserBO'
 import PropTypes from 'prop-types'
-import SideBar from '../components/SideBar'
-import NavBar from '../components/NavBar'
 import './MyProfile.css'
 import TextField from '@mui/material/TextField';
 import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
@@ -24,7 +22,7 @@ export class MyProfile extends Component {
           success: false,
           vertical: 'bottom',
           horizontal: 'left',
-          upUser: null
+          upUser: new UserBO()
         };
       }
 
@@ -55,6 +53,23 @@ export class MyProfile extends Component {
                  // disable error message
         });
       }
+      getUserbygid = () => {
+        OneAPI.getAPI().getUserGid(this.props.Cuser.uid).then(user =>
+          this.setState({
+            upUser: user,
+            firstName: user[0].vorname,
+            lastName: user[0].nachname,
+          })
+          ).catch(e =>
+            this.setState({ // Reset state with error from catch 
+              upUser: null,
+            })
+          );
+        // set loading to true
+        this.setState({
+
+        });
+      }
 
       handleClose = () => {
         this.setState({
@@ -75,14 +90,14 @@ export class MyProfile extends Component {
         });
       }
       componentDidMount(){
-      
+        this.getUserbygid()
       }
       
     render() {  
       const {user, Cuser} = this.props;
       const {firstName, lastName, success, vertical, horizontal} = this.state;
     return (
-      <div>{console.log('test', this.props.user)}
+      <div>{console.log('test', this.state.upUser[0])}
         {user?
         
         <div class="ProfileWrapper">
