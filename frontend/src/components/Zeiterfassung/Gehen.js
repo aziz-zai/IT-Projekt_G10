@@ -18,7 +18,9 @@ export class Gehen extends Component {
 
   componentDidMount() {
   }
-
+  handleGehenClicked = () => {
+    this.props.handleClick()
+}
 
   render() {
     const {user} = this.props;
@@ -26,7 +28,7 @@ export class Gehen extends Component {
     return (
         <div class="BtnGehenContainer">
         <div class="BtnGehenWrapper">
-            <IconButton>
+            <IconButton onClick={this.handleGehenClicked}>
             <CallMissedOutgoingIcon sx={{ fontSize: 100, color: "red" }} />
             </IconButton>
         </div>
@@ -37,7 +39,7 @@ export class Gehen extends Component {
 }
 
 Gehen.propTypes = {
-  handleSelection: PropTypes.any,
+  handleClick: PropTypes.any,
   user: PropTypes.any
 }
 

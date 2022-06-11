@@ -26,7 +26,7 @@ export class Zeiterfassung extends Component {
       kommenClicked: false,
       stunden: 0,
       minuten: 0,
-      sekunden: 0
+      sekunden: 0,
     };
   }
 
@@ -66,7 +66,7 @@ export class Zeiterfassung extends Component {
 
   handleKommenClicked = () => {
     this.setState({
-        kommenClicked: true
+        kommenClicked: true,
     });
     var day1 = new Date(); 
     const update = () => { 
@@ -89,12 +89,13 @@ export class Zeiterfassung extends Component {
 
   update();
 
-  const interval = setInterval(()=> {
+  this.interval = setInterval(()=> {
       update();
   }, 1000);
 
-  return ()=>clearInterval(interval);
- 
+}
+handleGehenClicked = () => {
+  clearInterval(this.interval);
 }
 
   render() {
@@ -123,7 +124,7 @@ export class Zeiterfassung extends Component {
     </div>}
       <div class="workBtns">
         <Kommen handleClick={this.handleKommenClicked}/>
-        <Gehen/>
+        <Gehen handleClick={this.handleGehenClicked}/>
         <Pause/>
       </div>
       </div>
