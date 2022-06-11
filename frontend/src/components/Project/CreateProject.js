@@ -71,26 +71,7 @@ export class CreateProject extends Component {
     });
   }
 
-  addAktivitäten = () => {
-   
-    OneAPI.getAPI().addAktivitäten(this.state.bezeichnung, this.state.dauer, this.state.capacity, 
-      this.state.project).then(aktivität => {
-      // Backend call sucessfull
-      // reinit the dialogs state for a new empty project
-      this.setState(this.baseState);
-      this.props.handleClose(aktivität); // call the parent with the project object from backend
-    }).catch(e =>
-      this.setState({
-        updatingInProgress: false,    // disable loading indicator 
-        updatingError: e              // show error message
-      })
-    );
-    // set loading to true
-    this.setState({
-      updatingInProgress: true,       // show loading indicator
-      updatingError: null             // disable error message
-    });
-  }
+
 
 textFieldValueChange = (event) => {
   const value = event.target.value;
@@ -132,7 +113,7 @@ textFieldValueChange = (event) => {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Projekt anlegen
             </Typography>
-            <button onClick={() => { this.addProject(); this.addAktivitäten(); }} class="saveBtn"> Speichern </button>
+            <button onClick={this.addProject} class="saveBtn"> Speichern </button>
           </Toolbar>
         </AppBar>
         <Container maxWidth="sm" style={{marginTop:'10px'}} justify-content="space-between"> 

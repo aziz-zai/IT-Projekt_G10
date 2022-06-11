@@ -836,11 +836,11 @@ class GehenListOperations(Resource):
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
-@projectone.route('/gehen-soll/<int:projektarbeitid>/<int:erstellt_von>/<int:erstellt_fuer>/<int:activity>')
+@projectone.route('/gehen-soll/<int:kommen>/<int:erstellt_von>/<int:erstellt_fuer>/<int:activity>/<string:projektarbeit>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class GehenSollListOperations(Resource):
     @projectone.marshal_with(gehen, code=200)
-    def post(self, projektarbeitid, erstellt_von, erstellt_fuer, activity):
+    def post(self, kommen, erstellt_von, erstellt_fuer, activity, projektarbeit):
       
         adm = Administration()
 
@@ -857,10 +857,7 @@ class GehenSollListOperations(Resource):
             """
             g = adm.create_gehen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
             adm.create_ereignisbuchung(erstellt_von=erstellt_von, erstellt_für=erstellt_fuer, ist_buchung=False, ereignis=g.get_id() ,bezeichnung="Arbeitsende")
-            projektarbeit=adm.get_projektarbeit_by_id(projektarbeitid)
-            projektarbeit.set_ende(g.get_id())
-            projektarbeit.set_activity(activity)
-            proarb=adm.update_projektarbeit(projektarbeit)
+            proarb = adm.create_projektarbeit(bezeichnung=projektarbeit, beschreibung="", start=kommen, ende=g.get_id(), activity=activity)
             adm.create_zeitintervallbuchung(proarb.get_id(), False, erstellt_von, erstellt_fuer,"Projektarbeit")
             
             adm.update_arbeitszeitkonto_gleitzeit(erstellt_fuer)
@@ -951,13 +948,13 @@ class KommenListOperations(Resource):
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
-@projectone.route('/kommen-soll/<int:erstellt_von>/<int:erstellt_fuer>/<string:projektarbeit>')
+@projectone.route('/kommen-soll/<int:erstellt_von>/<int:erstellt_fuer>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class KommenListOperations(Resource):
 
     @projectone.marshal_with(kommen, code=200)
     @projectone.expect(kommen)  # Wir erwarten ein Kommen-Objekt von Client-Seite.
-    def post(self, erstellt_von, erstellt_fuer, projektarbeit):
+    def post(self, erstellt_von, erstellt_fuer):
         
         adm = Administration()
 
@@ -975,7 +972,7 @@ class KommenListOperations(Resource):
 
             k = adm.create_kommen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
             adm.create_ereignisbuchung(erstellt_von=erstellt_von, erstellt_für=erstellt_fuer, ist_buchung=False, ereignis=k.get_id() ,bezeichnung="Arbeitsbeginn")
-            adm.create_projektarbeit(bezeichnung=projektarbeit, beschreibung="", start=k.get_id(), ende=0, activity=0)
+            
 
             return k, 200
         else:

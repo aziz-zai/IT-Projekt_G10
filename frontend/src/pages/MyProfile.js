@@ -12,12 +12,19 @@ export class MyProfile extends Component {
     constructor(props) {
         super(props);
         // Init state
+        let fn = '', ln = ''
+          if(props.user){
+              fn= props.user[0].vorname;
+              ln= props.user[0].nachname;
+        }
+
         this.state = {
-          firstName: '',
-          lastName: '',
+          firstName: fn,
+          lastName: ln,
           success: false,
           vertical: 'bottom',
           horizontal: 'left',
+          upUser: null
         };
       }
 
@@ -68,21 +75,14 @@ export class MyProfile extends Component {
         });
       }
       componentDidMount(){
-      setTimeout(() => {
-        if(this.props.user){
-          this.setState({
-            firstName: this.props.user[0].vorname,
-            lastName: this.props.user[0].nachname
-          })}
-      }, 500)
+      
       }
       
     render() {  
       const {user, Cuser} = this.props;
       const {firstName, lastName, success, vertical, horizontal} = this.state;
     return (
-      <div>
-
+      <div>{console.log('test', this.props.user)}
         {user?
         
         <div class="ProfileWrapper">
