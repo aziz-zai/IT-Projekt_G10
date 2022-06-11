@@ -313,6 +313,7 @@ class ProjektarbeitListOperations(Resource):
 
     @projectone.marshal_with(projektarbeiten, code=200)
     @projectone.expect(projektarbeiten)  # Wir erwarten ein Projektarbeit-Objekt von der Client-Seite.
+    @secured
     def post(self):
         """Anlegen eines neuen Projektarbeit-Objekts.
         """
@@ -332,7 +333,7 @@ class ProjektarbeitListOperations(Resource):
 @projectone.param('id', 'Die ID des Projektarbeit-Objekts')
 class ProjektarbeitenOperations(Resource):
     @projectone.marshal_with(projektarbeiten)
-
+    @secured
     def get(self, id):
         """Auslesen eines bestimmten Projektarbeit-Objekts.
 
@@ -343,6 +344,7 @@ class ProjektarbeitenOperations(Resource):
         return projektarbeiten
 
     @projectone.marshal_with(projektarbeiten)
+    @secured
     def put(self, id):
         
         adm = Administration()
@@ -357,6 +359,7 @@ class ProjektarbeitenOperations(Resource):
             return '', 500
 
     @projectone.marshal_with(projektarbeiten)
+    @secured
     def delete(self, id):
         """Löschen eines bestimmten Projektarbeit-Objekts.
 
@@ -373,7 +376,7 @@ class ProjektarbeitenOperations(Resource):
 @projectone.param('id', 'Die ID des Projektarbeit-Objekts')
 class ProjektarbeitenByActivityIdOperations(Resource):
     @projectone.marshal_with(projektarbeiten)
-
+    @secured
     def get(self, activity):
         """Auslesen eines bestimmten Projektarbeit-Objekts anhand der Aktivitäten-ID.
 
@@ -388,6 +391,7 @@ class ProjektarbeitenByActivityIdOperations(Resource):
 @projectone.param('id', 'Die ID des Projektarbeit-Objekts')
 class ProjektarbeitenGehenOperations(Resource):
     @projectone.marshal_with(projektarbeiten)
+    @secured
     def put(self, id, user):
     
         adm = Administration()
@@ -974,10 +978,7 @@ class KommenListOperations(Resource):
         
         adm = Administration()
 
-        proposal = Kommen()
-        now = datetime.now()
-        proposal.set_zeitpunkt(now)
-        proposal.set_bezeichnung("kommen")
+        proposal = Kommen.from_dict(api.payload)
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
@@ -1344,7 +1345,7 @@ class ZeitintervallOperations(Resource):
         zi = adm.get_zeitintervall_by_id(id)
         adm.delete_zeitintervall(zi)
         return '', 200
-        
+
 """ !SECTION 
 """
 

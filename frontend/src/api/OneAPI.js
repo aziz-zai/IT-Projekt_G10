@@ -633,8 +633,8 @@ export default class OneAPI {
   }
 
 
-  addGehenIst(gehenBO) {
-    return this.#fetchAdvanced(this.#addGehenIstURL(), {
+  addGehenIst(gehenBO, projektarbeitid, user, activity) {
+    return this.#fetchAdvanced(this.#addGehenIstURL(projektarbeitid, user, activity), {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -651,8 +651,8 @@ export default class OneAPI {
     })
   }
 
-  addGehenSoll(gehenBO) {
-    return this.#fetchAdvanced(this.#addGehenSollURL(), {
+  addGehenSoll(gehenBO, projektarbeitid, erstellt_von, erstellt_fuer, activity) {
+    return this.#fetchAdvanced(this.#addGehenSollURL(projektarbeitid, erstellt_von, erstellt_fuer, activity), {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -704,8 +704,8 @@ export default class OneAPI {
    * Kommen related
   */
 
-  addKommenIst(kommenBO) {
-    return this.#fetchAdvanced(this.#addKommenIstURL(), {
+  addKommenIst(kommenBO, user, projektarbeit) {
+    return this.#fetchAdvanced(this.#addKommenIstURL(user, projektarbeit), {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -722,8 +722,8 @@ export default class OneAPI {
     })
   }
 
-  addKommenSoll(kommenBO) {
-    return this.#fetchAdvanced(this.#addKommenSollURL(), {
+  addKommenSoll(kommenBO, erstellt_von, erstellt_fuer, projektarbeit) {
+    return this.#fetchAdvanced(this.#addKommenSollURL(erstellt_von, erstellt_fuer, projektarbeit ), {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain',

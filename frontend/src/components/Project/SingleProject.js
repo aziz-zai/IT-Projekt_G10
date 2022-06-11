@@ -8,6 +8,7 @@ import OneAPI from '../../api/OneAPI';
 import ProjectBO from '../../api/ProjectBO';
 import Aktivitäten from './Aktivitäten';
 import AktivitätenDetail from './AktivitätenDetail';
+import Projektarbeit from './Projektarbeit';
 import { withStyles } from '@mui/styles';
 
 export class SingleProject extends Component {
@@ -31,6 +32,7 @@ export class SingleProject extends Component {
           auftragGeber: ag,
           availableHours: ah,
           openAkt: false,
+          openProArb: false,
           aktivitäten: []
         };
     }
@@ -146,12 +148,25 @@ export class SingleProject extends Component {
       });
     }
 
+    openProArb = () => {
+      this.setState({
+        openProArb: true
+      });
+    }
+
+    closeProArb = () => {
+      this.setState({
+        openProArb: false
+      });
+    }
+
     handleDialogClose = () => {
       this.setState({
         isOpen: false
       });
       console.log("Hier")
     }
+
 
     componentDidMount() {
     this.getProjektleiterByProject();
@@ -160,8 +175,8 @@ export class SingleProject extends Component {
     }
 
   render() {
-    const {project, classes} = this.props;
-    const {openAkt, aktivitäten, projektleiter, isOpen, projektfarbe, projekttitel, projektName, laufZeit, auftragGeber, availableHours} = this.state
+    const {project, classes, projektarbeit} = this.props;
+    const {openAkt, openProArb, handleDialogClose, aktivitäten, projektleiter, isOpen, projektfarbe, projekttitel, projektName, laufZeit, auftragGeber, availableHours} = this.state
     
     return (
       <div class="ProjectCardWrapper">
@@ -187,7 +202,7 @@ export class SingleProject extends Component {
             <IconButton
               edge="start"
               color="inherit"
-              onClick = {this.handleDialogClose}
+              onClick = {handleDialogClose}
               aria-label="close"
             >
               <CloseIcon />
@@ -249,6 +264,9 @@ export class SingleProject extends Component {
             aktivitäten.map(aktivität => <AktivitätenDetail key={aktivität.getID()} 
             akt_bezeichnung={aktivität.getBezeichnung()} akt_dauer={aktivität.getDauer()} akt_capacity={aktivität.getCapacity()}/>)
           }
+        <button class="ProArbBtn" onClick={this.openProArb}> Projektarbeit hinzufügen</button>
+          <Projektarbeit isOpen={openProArb} onClose={this.closeProArb} Projektarbeit={projektarbeit}>
+            </Projektarbeit>
       </div>
       </Dialog>
       </CardActions>
@@ -270,6 +288,7 @@ SingleProject.propTypes = {
     user: PropTypes.any,
     isOpen: PropTypes.any,
     classes: PropTypes.object.isRequired,
+    projektarbeit: PropTypes.any
   }
 
 
