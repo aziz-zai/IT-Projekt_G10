@@ -81,7 +81,7 @@ export default class OneAPI {
   #deleteZeitintervallbuchungURL = (id) => `${this.#OneServerBaseURL}/zeitintervallbuchung/${id}`;
 
   //Ereignisbuchung related
-  #addEreignisbuchungURL = () => `${this.#OneServerBaseURL}/ereignisbuchung/`;
+  #addEreignisbuchungURL = () => `${this.#OneServerBaseURL}/ereignisbuchung`;
   #getEreignisbuchungURL = (id) => `${this.#OneServerBaseURL}/ereignisbuchung/${id}`;
   #updateEreignisbuchungURL = (id) => `${this.#OneServerBaseURL}/ereignisbuchung/${id}`;
   #deleteEreignisbuchungURL = (id) => `${this.#OneServerBaseURL}/ereignisbuchung/${id}`;
@@ -540,7 +540,7 @@ export default class OneAPI {
 
 
     addEreignis(ereignisBO) {
-      return this.#fetchAdvanced(this.#addEreignisURL(ereignisBO), {
+      return this.#fetchAdvanced(this.#addEreignisURL(), {
         method: 'POST',
         headers: {
           'Accept': 'application/json, text/plain',

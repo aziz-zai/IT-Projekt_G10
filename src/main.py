@@ -389,7 +389,7 @@ class ProjektarbeitenDetailOperations(Resource):
         return projektarbeitenac
 
 
-@projectone.route('/pausen')
+@projectone.route('/pause')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class PausenListOperations(Resource):
 
@@ -716,7 +716,7 @@ class ArbeitszeitkontoOperations(Resource):
         adm.delete_arbeitszeitkonto(arb)
         return '', 200
 
-@projectone.route('/ereignisbuchungen')
+@projectone.route('/ereignisbuchung')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class EreignisbuchungenListOperations(Resource):
 
@@ -1115,13 +1115,13 @@ class ZeitintervallbuchungOperations(Resource):
         adm = Administration()
         zeitintervallbuchung = adm.get_soll_buchungen_by_user(erstellt_fuer)
         return zeitintervallbuchung
-@projectone.route('/ereignis')
+@projectone.route('/pausenBeginn/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class EreignisListOperations(Resource):
 
     @projectone.marshal_with(ereignis, code=200)
     @projectone.expect(ereignis)  # Wir erwarten ein Ereignis-Objekt von Client-Seite.
-    def post(self):
+    def post(self, user):
 
         adm = Administration()
 
@@ -1135,6 +1135,42 @@ class EreignisListOperations(Resource):
         if proposal is not None:
         
             er = adm.create_ereignis(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
+            adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=True, ereignis=er.get_id() ,bezeichnung="Pausenbeginn")
+            adm.create_pause(bezeichnung="Pause",start=er.get_id(), ende=0)
+
+            return er, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+
+@projectone.route('/pausenEnde/<int:pause>/<int:user>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class EreignisListOperations(Resource):
+
+    @projectone.marshal_with(ereignis, code=200)
+    @projectone.expect(ereignis)  # Wir erwarten ein Ereignis-Objekt von Client-Seite.
+    def post(self, pause, user):
+
+        adm = Administration()
+
+        proposal = Ereignis()
+        zeitpunkt_js_string = api.payload["zeitpunkt"]
+        zeitpunkt_py_date = datetime.strptime(zeitpunkt_js_string, '%Y-%m-%d %H:%M:%S')
+        zeitpunkt_py_string = zeitpunkt_py_date.strftime("%Y-%m-%dT%H:%M:%S")
+        proposal.set_zeitpunkt(zeitpunkt_py_string)
+        proposal.set_bezeichnung(api.payload["bezeichnung"])
+
+        if proposal is not None:
+        
+            er = adm.create_ereignis(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
+            pause=adm.get_pause_by_id(pause)
+            pause.set_ende(er.get_id())
+            pa=adm.update_pause(pause)
+            zeitintervallbuchung = adm.create_zeitintervallbuchung(pa.get_id(), True, user, user,"Pause")
+            
+            adm.update_arbeitszeitkonto_ist_arbeitsleistung(user)
+            adm.update_arbeitszeitkonto_gleitzeit(user)
+
             return er, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.

@@ -34,7 +34,9 @@ export class Zeiterfassung extends Component {
       kommen: new KommenBO(),
       kommenDate: 0,
       projektarbeitIst: null,
-      gehen: null
+      gehen: null,
+      pausenBeginn: null,
+      pausenEnde: null
     };
   }
 
@@ -77,24 +79,6 @@ export class Zeiterfassung extends Component {
   }
   addGehenIst = () => {
     OneAPI.getAPI().addGehenIst(this.state.projektarbeitIst, this.props.user[0].id, this.state.aktivität).then(gehen =>
-      this.setState({
-        gehen: gehen,
-      }),
-      ).catch(e =>
-        this.setState({ // Reset state with error from catch 
-          gehen: null,
-        })
-      );
-    // set loading to true
-    this.setState({
-    });
-  }
-
-  addPausenEreignis = () => {
-    currentDatetime = new Date()
-    dateFormat = currentDatetime.toLocaleString("nl-NL")
-    let newPausenEreignis = new EreignisBO()
-    OneAPI.getAPI().addEreignis().then(gehen =>
       this.setState({
         gehen: gehen,
       }),
