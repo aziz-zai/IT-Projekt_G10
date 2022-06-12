@@ -787,12 +787,12 @@ class EreignisbuchungenOperations(Resource):
 
 """ANCHOR Gehen Views
 """
-@projectone.route('/gehen-ist/<int:projektarbeitid>/<int:user>/<int:activity>')
+@projectone.route('/gehen-ist/<int:kommen>/<int:user>/<int:activity>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class GehenListOperations(Resource):
 
     @projectone.marshal_with(gehen, code=200)
-    def post(self, projektarbeitid, user, activity):
+    def post(self, kommen, user, activity):
       
         adm = Administration()
 
@@ -809,7 +809,7 @@ class GehenListOperations(Resource):
             """
             g = adm.create_gehen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
             adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=True, ereignis=g.get_id() ,bezeichnung="Arbeitsende")
-            projektarbeit=adm.get_projektarbeit_by_id(projektarbeitid)
+            projektarbeit=adm.get_projektarbeit_by_start(kommen)
             projektarbeit.set_ende(g.get_id())
             projektarbeit.set_activity(activity)
             proarb=adm.update_projektarbeit(projektarbeit)
