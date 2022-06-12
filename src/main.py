@@ -1127,7 +1127,7 @@ class EreignisListOperations(Resource):
 
         proposal = Ereignis()
         zeitpunkt_js_string = api.payload["zeitpunkt"]
-        zeitpunkt_py_date = datetime.strptime(zeitpunkt_js_string, '%Y-%m-%d %H:%M:%S')
+        zeitpunkt_py_date = datetime.strptime(zeitpunkt_js_string, '%d-%m-%Y %H:%M:%S')
         zeitpunkt_py_string = zeitpunkt_py_date.strftime("%Y-%m-%dT%H:%M:%S")
         proposal.set_zeitpunkt(zeitpunkt_py_string)
         proposal.set_bezeichnung(api.payload["bezeichnung"])
@@ -1155,7 +1155,7 @@ class EreignisListOperations(Resource):
 
         proposal = Ereignis()
         zeitpunkt_js_string = api.payload["zeitpunkt"]
-        zeitpunkt_py_date = datetime.strptime(zeitpunkt_js_string, '%Y-%m-%d %H:%M:%S')
+        zeitpunkt_py_date = datetime.strptime(zeitpunkt_js_string, '%d-%m-%Y %H:%M:%S')
         zeitpunkt_py_string = zeitpunkt_py_date.strftime("%Y-%m-%dT%H:%M:%S")
         proposal.set_zeitpunkt(zeitpunkt_py_string)
         proposal.set_bezeichnung(api.payload["bezeichnung"])

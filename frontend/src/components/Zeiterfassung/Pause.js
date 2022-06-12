@@ -23,19 +23,32 @@ export class Pause extends Component {
         this.setState({
             pauseClicked: true
         });
+        this.props.handlePauseClicked();
 }
 
 handlePauseDone= () => {
   this.setState({
       pauseClicked: false
   });
+  this.props.handlePauseDone();
 }
 
   render() {
-    const {user} = this.props;
+    const {beginn, ende} = this.props;
     const {pauseClicked} = this.state;
+    const beginnTime = new Date(beginn);
+    const Bh = beginnTime.getHours(); 
+    const Bm = beginnTime.getMinutes(); 
+    const Bs = beginnTime.getSeconds(); 
+    const endeTime = new Date(ende);
+    const Eh = endeTime.getHours(); 
+    const Em = endeTime.getMinutes(); 
+    const Es = endeTime.getSeconds(); 
     return (
         <div  class="BtnPauseContainer">
+          {beginn?
+          <div class="pause">{String(Bh).padStart(2, "0")}:{String(Bm).padStart(2, "0")}:{String(Bs).padStart(2, "0")} - 
+          {ende? <div>{String(Eh).padStart(2, "0")}:{String(Em).padStart(2, "0")}:{String(Es).padStart(2, "0")}</div>:null} </div>:null}
         <div class="BtnPauseWrapper">
             {pauseClicked ?
             <IconButton onClick={this.handlePauseDone}>
@@ -56,6 +69,8 @@ Pause.propTypes = {
   user: PropTypes.any,
   handlePauseClicked: PropTypes.any,
   handlePauseDone: PropTypes.any,
+  beginn: PropTypes.any,
+  ende: PropTypes.any,
 }
 
 export default Pause

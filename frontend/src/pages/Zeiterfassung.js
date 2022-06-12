@@ -61,30 +61,50 @@ export class Zeiterfassung extends Component {
     });
   }
 
-  getIstProjektarbeit = () => {
-    OneAPI.getAPI().getProjektarbeitByStart(this.state.kommen.id).then(projektarbeitIst =>
-      this.setState({
-        projektarbeitIst: projektarbeitIst[0].id,
-      }), setTimeout(() => {
-      this.addGehenIst();
-    }, 500)
-      ).catch(e =>
-        this.setState({ // Reset state with error from catch 
-          projektarbeitIst: null,
-        })
-      );
-    // set loading to true
-    this.setState({
-    });
-  }
+
   addGehenIst = () => {
-    OneAPI.getAPI().addGehenIst(this.state.projektarbeitIst, this.props.user[0].id, this.state.aktivität).then(gehen =>
+    OneAPI.getAPI().addGehenIst(this.state.kommen.id, this.props.user[0].id, this.state.aktivität).then(gehen =>
       this.setState({
         gehen: gehen,
       }),
       ).catch(e =>
         this.setState({ // Reset state with error from catch 
           gehen: null,
+        })
+      );
+    // set loading to true
+    this.setState({
+    });
+  }
+  addPausenBeginn = () => {
+    var currentDate = new Date()
+    var dateFormat = currentDate.toLocaleString("nl-NL")
+    let newPausenBeginn = new EreignisBO(dateFormat, "Pause")
+    OneAPI.getAPI().addPausenBeginn(newPausenBeginn, this.props.user[0].id).then(pausenBeginn =>
+      this.setState({
+        pausenBeginn: pausenBeginn,
+      }),
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+          pausenBeginn: null,
+        })
+      );
+    // set loading to true
+    this.setState({
+    });
+  }
+
+  addPausenEnde = () => {
+    var currentDate = new Date()
+    var dateFormat = currentDate.toLocaleString("nl-NL")
+    let newPausenEnde = new EreignisBO(dateFormat, "Pause")
+    OneAPI.getAPI().addPausenEnde(newPausenEnde, this.state.pausenBeginn.id, this.props.user[0].id).then(pausenEnde =>
+      this.setState({
+        pausenEnde: pausenEnde,
+      }),
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+          pausenEnde: null,
         })
       );
     // set loading to true
@@ -160,16 +180,16 @@ export class Zeiterfassung extends Component {
 
 }
 handleGehenClicked = () => {
+  this.addGehenIst();
   clearInterval(this.interval);
-  this.getIstProjektarbeit();
 }
 
   render() {
     const {user} = this.props;
-    const {projectSelected, aktivitätSelected, project, aktivität, kommenClicked, stunden, minuten, sekunden, kommen, projektarbeitIst, gehen} = this.state;
+    const {projectSelected, aktivitätSelected, project, aktivität, kommenClicked, stunden, minuten, sekunden, kommen, projektarbeitIst, gehen,pausenBeginn, pausenEnde} = this.state;
     return (
       <div>
-      <div class="selection"> {console.log('data', gehen, projektarbeitIst )}
+      <div class="selection"> {console.log('data', pausenBeginn,"data2", pausenEnde )}
          <ProjectSelection user={user} handleSelection={this.handleProjectSelection}/>
         {projectSelected ?
         <div class="selectionItem"> 
@@ -191,7 +211,7 @@ handleGehenClicked = () => {
       <div class="workBtns">
         <Kommen date={kommen? kommen.zeitpunkt:null} handleClick={this.handleKommenClicked}/>
         <Gehen date={gehen? gehen.zeitpunkt:null} handleClick={this.handleGehenClicked}/>
-        <Pause handlePauseClicked={this.handlePauseClicked} handlePauseDone={this.handlePauseDone}/>
+        <Pause beginn={pausenBeginn? pausenBeginn.zeitpunkt:null} ende={pausenEnde? pausenEnde.zeitpunkt:null} handlePauseClicked={this.addPausenBeginn} handlePauseDone={this.addPausenEnde}/>
       </div>
       </div>
       </div>

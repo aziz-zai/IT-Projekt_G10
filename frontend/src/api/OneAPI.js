@@ -950,7 +950,7 @@ addPausenBeginn(pauseBO, user) {
     body: JSON.stringify(pauseBO)
   }).then((responseJSON) => {
     // We always get an array of ArbeitszeitkontoBOs.fromJSON, but only need one object
-    let responsePauseBO = pauseBO.fromJSON(responseJSON)[0];
+    let responsePauseBO = PauseBO.fromJSON(responseJSON)[0];
     // 
     return new Promise(function (resolve) {
       resolve(responsePauseBO);
@@ -958,8 +958,8 @@ addPausenBeginn(pauseBO, user) {
   })
 }
 
-addPausenEnde(pauseBO, user) {
-  return this.#fetchAdvanced(this.#addPausenEndeURL(user), {
+addPausenEnde(pauseBO, pausenBeginn, user) {
+  return this.#fetchAdvanced(this.#addPausenEndeURL(pausenBeginn, user), {
     method: 'POST',
     headers: {
       'Accept': 'application/json, text/plain',
@@ -968,7 +968,7 @@ addPausenEnde(pauseBO, user) {
     body: JSON.stringify(pauseBO)
   }).then((responseJSON) => {
     // We always get an array of ArbeitszeitkontoBOs.fromJSON, but only need one object
-    let responsePauseBO = pauseBO.fromJSON(responseJSON)[0];
+    let responsePauseBO = PauseBO.fromJSON(responseJSON)[0];
     // 
     return new Promise(function (resolve) {
       resolve(responsePauseBO);
