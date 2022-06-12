@@ -88,7 +88,7 @@ export default class OneAPI {
 
 
   //Ereignis related
-  #addEreignisURL = () => `${this.#OneServerBaseURL}/ereignis/`;
+  #addEreignisURL = () => `${this.#OneServerBaseURL}/ereignis`;
   #getEreignisURL = (id) => `${this.#OneServerBaseURL}/ereignis/${id}`;
   #updateEreignisURL = (id) => `${this.#OneServerBaseURL}/ereignis/${id}`;
   #deleteEreignisURL = (id) => `${this.#OneServerBaseURL}/ereignis/${id}`;
@@ -540,7 +540,7 @@ export default class OneAPI {
 
 
     addEreignis(ereignisBO) {
-      return this.#fetchAdvanced(this.#addEreignisURL(), {
+      return this.#fetchAdvanced(this.#addEreignisURL(ereignisBO), {
         method: 'POST',
         headers: {
           'Accept': 'application/json, text/plain',

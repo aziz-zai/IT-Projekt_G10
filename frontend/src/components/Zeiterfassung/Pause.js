@@ -20,29 +20,28 @@ export class Pause extends Component {
   componentDidMount() {
   }
   handlePauseClicked = () => {
-    if(this.state.pauseClicked == true){
-        this.setState({
-            pauseClicked: false
-        });
-    }
-    else{
         this.setState({
             pauseClicked: true
         });
-    }
+}
+
+handlePauseDone= () => {
+  this.setState({
+      pauseClicked: false
+  });
 }
 
   render() {
     const {user} = this.props;
     const {pauseClicked} = this.state;
     return (
-        <div onClick={this.handlePauseClicked} class="BtnPauseContainer">
+        <div  class="BtnPauseContainer">
         <div class="BtnPauseWrapper">
             {pauseClicked ?
-            <IconButton>
+            <IconButton onClick={this.handlePauseDone}>
             <EjectIcon sx={{ fontSize: 100, color: "orange", transform: "rotate(90deg)" }}/>
             </IconButton>:
-            <IconButton>
+            <IconButton onClick={this.handlePauseClicked}>
             <PauseIcon sx={{ fontSize: 100, color: "orange" }} />
             </IconButton>}
         </div>
@@ -54,7 +53,9 @@ export class Pause extends Component {
 
 Pause.propTypes = {
   handleSelection: PropTypes.any,
-  user: PropTypes.any
+  user: PropTypes.any,
+  handlePauseClicked: PropTypes.any,
+  handlePauseDone: PropTypes.any,
 }
 
 export default Pause

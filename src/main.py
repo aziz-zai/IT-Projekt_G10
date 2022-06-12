@@ -877,8 +877,12 @@ class GehenOperations(Resource):
         Customer-Objekts.
         """
         adm = Administration()
-        ge = Gehen.from_dict(api.payload)
-
+        ge = Gehen()
+        zeitpunkt_js_string = api.payload["zeitpunkt"]
+        zeitpunkt_py_date = datetime.strptime(zeitpunkt_js_string, '%Y-%m-%d %H:%M:%S')
+        zeitpunkt_py_string = zeitpunkt_py_date.strftime("%Y-%m-%dT%H:%M:%S")
+        ge.set_zeitpunkt(zeitpunkt_py_string)
+        ge.set_bezeichnung(api.payload["bezeichnung"])
 
         if ge is not None:
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
@@ -990,7 +994,12 @@ class KommenOperations(Resource):
         Customer-Objekts.
         """
         adm = Administration()
-        ko = Kommen.from_dict(api.payload)
+        ko = Kommen()
+        zeitpunkt_js_string = api.payload["zeitpunkt"]
+        zeitpunkt_py_date = datetime.strptime(zeitpunkt_js_string, '%Y-%m-%d %H:%M:%S')
+        zeitpunkt_py_string = zeitpunkt_py_date.strftime("%Y-%m-%dT%H:%M:%S")
+        ko.set_zeitpunkt(zeitpunkt_py_string)
+        ko.set_bezeichnung(api.payload["bezeichnung"])
 
 
         if ko is not None:
@@ -1116,7 +1125,12 @@ class EreignisListOperations(Resource):
 
         adm = Administration()
 
-        proposal = Ereignis.from_dict(api.payload)
+        proposal = Ereignis()
+        zeitpunkt_js_string = api.payload["zeitpunkt"]
+        zeitpunkt_py_date = datetime.strptime(zeitpunkt_js_string, '%Y-%m-%d %H:%M:%S')
+        zeitpunkt_py_string = zeitpunkt_py_date.strftime("%Y-%m-%dT%H:%M:%S")
+        proposal.set_zeitpunkt(zeitpunkt_py_string)
+        proposal.set_bezeichnung(api.payload["bezeichnung"])
 
         if proposal is not None:
         
@@ -1150,15 +1164,20 @@ class EreignisOperations(Resource):
         Customer-Objekts.
         """
         adm = Administration()
-        eri = Ereignis.from_dict(api.payload)
+        proposal = Ereignis()
+        zeitpunkt_js_string = api.payload["zeitpunkt"]
+        zeitpunkt_py_date = datetime.strptime(zeitpunkt_js_string, '%Y-%m-%d %H:%M:%S')
+        zeitpunkt_py_string = zeitpunkt_py_date.strftime("%Y-%m-%dT%H:%M:%S")
+        proposal.set_zeitpunkt(zeitpunkt_py_string)
+        proposal.set_bezeichnung(api.payload["bezeichnung"])
 
-        if eri is not None:
+        if proposal is not None:
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
             Siehe Hinweise oben.
             """
-            eri.set_id(id)
-            er = adm.update_ereignis(eri)
-            return er, 200
+            proposal.set_id(id)
+            proposal = adm.update_ereignis(proposal)
+            return proposal, 200
         else:
             return '', 500
     

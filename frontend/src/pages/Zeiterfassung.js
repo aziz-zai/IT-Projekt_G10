@@ -11,6 +11,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { IconButton } from '@mui/material';
 import OneAPI from '../api/OneAPI'
 import KommenBO from '../api/KommenBO'
+import EreignisBO from '../api/EreignisBO';
 
 
 
@@ -76,6 +77,24 @@ export class Zeiterfassung extends Component {
   }
   addGehenIst = () => {
     OneAPI.getAPI().addGehenIst(this.state.projektarbeitIst, this.props.user[0].id, this.state.aktivität).then(gehen =>
+      this.setState({
+        gehen: gehen,
+      }),
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+          gehen: null,
+        })
+      );
+    // set loading to true
+    this.setState({
+    });
+  }
+
+  addPausenEreignis = () => {
+    currentDatetime = new Date()
+    dateFormat = currentDatetime.toLocaleString("nl-NL")
+    let newPausenEreignis = new EreignisBO()
+    OneAPI.getAPI().addEreignis().then(gehen =>
       this.setState({
         gehen: gehen,
       }),
@@ -188,7 +207,7 @@ handleGehenClicked = () => {
       <div class="workBtns">
         <Kommen date={kommen? kommen.zeitpunkt:null} handleClick={this.handleKommenClicked}/>
         <Gehen date={gehen? gehen.zeitpunkt:null} handleClick={this.handleGehenClicked}/>
-        <Pause/>
+        <Pause handlePauseClicked={this.handlePauseClicked} handlePauseDone={this.handlePauseDone}/>
       </div>
       </div>
       </div>
