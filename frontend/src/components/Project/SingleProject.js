@@ -99,17 +99,18 @@ export class SingleProject extends Component {
     }
 
     deleteProject = () => {
+      console.log(this.props.project.id)
       OneAPI.getAPI().deleteProject(this.props.project.id).then(() => {         //delete Person
-        this.setState({               // no error message
-        });
+        this.setState({    
+          isOpen: false           // no error message
+        });this.props.handleProjectDelete()
       }).catch(e =>
         this.setState({          // show error message
         })
       );
       // set loading to true
       this.setState({
-        deletingInProgress: true,                 // show loading indicator
-        deletingError: null                       // disable error message
+                     // disable error message
       });
     }
 
@@ -209,12 +210,12 @@ export class SingleProject extends Component {
     this.getProjektleiterByProject();
     this.loadAktivitäten();
     this.getMembersByProject();
-
     }
 
   render() {
     const {project, projektarbeit} = this.props;
-    const {openAkt, membership, openProArb, handleDialogClose, aktivitäten, projektleiter, isOpen, projektfarbe, projekttitel, projektName, laufZeit, auftragGeber, availableHours} = this.state
+    const {openAkt, membership, openProArb, handleDialogClose, aktivitäten, projektleiter, 
+    isOpen, projektfarbe, projekttitel, projektName, laufZeit, auftragGeber, availableHours} = this.state
     
     return (
       <div class="ProjectCardWrapper">
@@ -249,7 +250,7 @@ export class SingleProject extends Component {
               Projektdetails
             </Typography>
             <button onClick={this.updateProject} class="saveBtn">Speichern</button>
-            <button onClick={this.deleteProject} class="deleteBtn">Löschen</button>
+            <button onClick={this.deleteProject} class="saveBtn">Löschen</button>
           </Toolbar>
         </AppBar>
         <Container> 
@@ -338,7 +339,8 @@ SingleProject.propTypes = {
     project: PropTypes.any,
     user: PropTypes.any,
     isOpen: PropTypes.any,
-    projektarbeit: PropTypes.any
+    projektarbeit: PropTypes.any,
+    handleProjectDelete: PropTypes.any
   }
 
 
