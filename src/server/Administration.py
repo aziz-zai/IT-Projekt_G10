@@ -259,6 +259,11 @@ class Administration(object):
         """Die Pause mit der gegebenen ID auslesen"""
         with PauseMapper() as mapper:
             return mapper.find_by_key(id)
+    
+    def get_pause_by_beginn(self, beginn):
+        """Die Pause mit der gegebenen ID auslesen"""
+        with PauseMapper() as mapper:
+            return mapper.find_by_beginn(beginn)
 
     def update_pause(self, pause: Pause):
         with PauseMapper() as mapper:

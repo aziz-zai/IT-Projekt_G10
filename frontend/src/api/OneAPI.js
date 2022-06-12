@@ -110,7 +110,8 @@ export default class OneAPI {
 
 
   //Pause related
-  #addPauseURL = () => `${this.#OneServerBaseURL}/pausen`;
+  #addPausenBeginnURL = (user) => `${this.#OneServerBaseURL}/pausenBeginn/${user}`;
+  #addPausenEndeURL = (pausenBeginn, user) => `${this.#OneServerBaseURL}/pausenEnde/${pausenBeginn}/${user}`;
   #getPauseURL = (id) => `${this.#OneServerBaseURL}/pausen/${id}`;
   #updatePauseURL = (id) => `${this.#OneServerBaseURL}/pausen/${id}`;
   #deletePauseURL = (id) => `${this.#OneServerBaseURL}/pausen/${id}`;
@@ -939,8 +940,26 @@ deleteArbeitszeitkonto(arbeitszeitkontoBO) {
 }
 
 
-addPause(pauseBO) {
-  return this.#fetchAdvanced(this.#addPauseURL(), {
+addPausenBeginn(pauseBO, user) {
+  return this.#fetchAdvanced(this.#addPausenBeginnURL(user), {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json, text/plain',
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify(pauseBO)
+  }).then((responseJSON) => {
+    // We always get an array of ArbeitszeitkontoBOs.fromJSON, but only need one object
+    let responsePauseBO = pauseBO.fromJSON(responseJSON)[0];
+    // 
+    return new Promise(function (resolve) {
+      resolve(responsePauseBO);
+      })
+  })
+}
+
+addPausenEnde(pauseBO, user) {
+  return this.#fetchAdvanced(this.#addPausenEndeURL(user), {
     method: 'POST',
     headers: {
       'Accept': 'application/json, text/plain',

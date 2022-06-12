@@ -36,6 +36,37 @@ class PauseMapper(Mapper):
         cursor.close()
 
         return result
+
+    def find_by_beginn(self, beginn):
+        """Suchen eines Projektes mit vorgegebener Pausen ID, da diese eindeutig ist"""
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT id, timestamp, bezeichnung, start, ende FROM pause WHERE start={}".format(beginn)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (id, timestamp, bezeichnung, start, ende) = tuples[0]
+            pause = Pause()
+            pause.set_id(id)
+            pause.set_timestamp(timestamp)
+            pause.set_bezeichnung(bezeichnung)
+            pause.set_start(start)
+            pause.set_ende(ende)
+
+            result = pause
+
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
         
 
     def insert(self, pause: Pause) -> Pause:

@@ -1143,13 +1143,13 @@ class EreignisListOperations(Resource):
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
-@projectone.route('/pausenEnde/<int:pause>/<int:user>')
+@projectone.route('/pausenEnde/<int:pausenBeginn>/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class EreignisListOperations(Resource):
 
     @projectone.marshal_with(ereignis, code=200)
     @projectone.expect(ereignis)  # Wir erwarten ein Ereignis-Objekt von Client-Seite.
-    def post(self, pause, user):
+    def post(self, pausenBeginn, user):
 
         adm = Administration()
 
@@ -1163,7 +1163,7 @@ class EreignisListOperations(Resource):
         if proposal is not None:
         
             er = adm.create_ereignis(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
-            pause=adm.get_pause_by_id(pause)
+            pause=adm.get_pause_by_beginn(pausenBeginn)
             pause.set_ende(er.get_id())
             pa=adm.update_pause(pause)
             zeitintervallbuchung = adm.create_zeitintervallbuchung(pa.get_id(), True, user, user,"Pause")
