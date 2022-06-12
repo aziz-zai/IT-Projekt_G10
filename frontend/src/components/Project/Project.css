@@ -185,4 +185,9 @@ margin-bottom: 1rem;
     border: solid rgb(55, 53, 53);
     border-radius: 12px;
     margin-top: 10px;
+    background-color: rgb(255, 253, 255);
+}
+
+.überschriftakt{
+    margin-top: 10px;
 }

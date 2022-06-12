@@ -98,6 +98,21 @@ export class SingleProject extends Component {
       });
     }
 
+    deleteProject = () => {
+      OneAPI.getAPI().deleteProject(this.props.project.id).then(() => {         //delete Person
+        this.setState({               // no error message
+        });
+      }).catch(e =>
+        this.setState({          // show error message
+        })
+      );
+      // set loading to true
+      this.setState({
+        deletingInProgress: true,                 // show loading indicator
+        deletingError: null                       // disable error message
+      });
+    }
+
     loadAktivitäten = () => {
       OneAPI.getAPI().getAktivitätenByProjectId(this.props.project.id).then(aktivitäten =>
         this.setState({
@@ -234,9 +249,13 @@ export class SingleProject extends Component {
               Projektdetails
             </Typography>
             <button onClick={this.updateProject} class="saveBtn">Speichern</button>
+            <button onClick={this.deleteProject} class="deleteBtn">Löschen</button>
           </Toolbar>
         </AppBar>
         <Container> 
+        <Typography class="überschriftakt" component="h2" variant="h6" color="black" gutterBottom>
+        Projekt
+        </Typography>
         <Card class="Projektdetails">
         <List>
           <ListItem>
@@ -275,17 +294,15 @@ export class SingleProject extends Component {
             onChange={this.textFieldValueChange}
             />
           </ListItem>
-          <Divider />
           <button class="AktBtn" onClick={this.openAkt}> Aktivität hinzufügen</button>
           <Aktivitäten isOpen={openAkt} onClose={this.closeAkt} project={project}>
             </Aktivitäten>
         </List>
         </Card>
         </Container>
-        <Divider />
         <Container>
         <div >
-        <Typography component="h2" variant="h6" color="black" gutterBottom>
+        <Typography class="überschriftakt" component="h2" variant="h6" color="black" gutterBottom>
         Aktivitäten
         </Typography> 
           {
@@ -297,10 +314,9 @@ export class SingleProject extends Component {
             </Projektarbeit>
       </div>
       </Container>
-      <Divider />
       <Container>
       <div >
-      <Typography component="h2" variant="h6" color="black" gutterBottom>
+      <Typography class="überschriftakt" component="h2" variant="h6" color="black" gutterBottom>
         Projektmitarbeiter
         </Typography> 
           {
@@ -309,7 +325,6 @@ export class SingleProject extends Component {
           }
       </div>
       </Container>
-      <Divider />
       </Dialog>
       </CardActions>
       </CardContent>
@@ -319,12 +334,6 @@ export class SingleProject extends Component {
   }
 }
 
-const styles = theme => ({
-  testa: {
-    width: '100%',
-  }
-});
-
 SingleProject.propTypes = {
     project: PropTypes.any,
     user: PropTypes.any,
@@ -333,4 +342,4 @@ SingleProject.propTypes = {
   }
 
 
-export default withStyles(styles)(SingleProject);
+export default SingleProject;

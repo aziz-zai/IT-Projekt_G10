@@ -17,7 +17,7 @@ export class Membership extends Component {
     }
 
     render() {
-        const {classes, m_vorname, m_nachname} = this.props;
+        const {m_vorname, m_nachname} = this.props;
 
         
     return (

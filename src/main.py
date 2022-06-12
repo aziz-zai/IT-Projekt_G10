@@ -520,6 +520,7 @@ class ProjectListOperations(Resource):
             return pr, 500
     
     @projectone.marshal_with(project)
+    @secured
     def delete(self, id):
         """Löschen eines bestimmten User-Objekts."""
         adm = Administration()
