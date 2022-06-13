@@ -44,7 +44,20 @@ export class Zeiterfassung extends Component {
       pausenBeginn: null,
       pausenEnde: null,
       kommenAlert: false,
-      kommenErrorAlert: false
+      kommenErrorAlert: false,
+      gehenAlert: false,
+      h: 0,
+      m: 0,
+      s: 0,
+      Eh: 0,
+      Em: 0, 
+      Es: 0, 
+      PBh: 0,
+      PBm: 0,
+      PBs: 0, 
+      PEh: 0,
+      PEm: 0,
+      PEs: 0,
     };
   }
 
@@ -72,15 +85,31 @@ export class Zeiterfassung extends Component {
 
 
   addGehenIst = () => {
-    OneAPI.getAPI().addGehenIst(this.state.kommen.id, this.props.user[0].id, this.state.aktivität).then(gehen =>
+    OneAPI.getAPI().addGehenIst(this.state.kommen.id, this.props.user[0].id, this.state.aktivität).then(gehen => {
       this.setState({
         gehen: gehen,
-      }),
-      ).catch(e =>
-        this.setState({ // Reset state with error from catch 
-          gehen: null,
-        })
-      );
+        gehenAlert: true
+      });
+      return gehen
+      }).then(gehen =>{
+        const kommenTime = new Date(this.state.kommen.zeitpunkt);
+        const gehenTime = new Date(gehen.zeitpunkt);
+        const pausenBeginnTime = new Date(this.state.pausenBeginn.zeitpunkt);
+        const pausenEndeTime = new Date(this.state.pausenEnde.zeitpunkt);
+        this.setState({
+              h: kommenTime.getHours(), 
+              m: kommenTime.getMinutes(), 
+              s: kommenTime.getSeconds(), 
+              Eh: gehenTime.getHours(), 
+              Em: gehenTime.getMinutes(), 
+              Es: gehenTime.getSeconds(), 
+              PBh: pausenBeginnTime.getHours(), 
+              PBm: pausenBeginnTime.getMinutes(), 
+              PBs: pausenBeginnTime.getSeconds(), 
+              PEh: pausenEndeTime.getHours(), 
+              PEm: pausenEndeTime.getMinutes(), 
+              PEs: pausenEndeTime.getSeconds(), 
+            })})
     // set loading to true
     this.setState({
     });
@@ -199,11 +228,25 @@ export class Zeiterfassung extends Component {
 handleGehenClicked = () => {
   this.addGehenIst();
   clearInterval(this.interval);
+
 }
 
 handleKommenAlertCLose = () => {
   this.setState({
     kommenAlert: false
+  })
+}
+
+handleGehenAlertCLose = () => {
+  this.setState({
+    gehenAlert: false,
+    projectSelected: false,
+    aktivitätSelected: false,
+    kommenClicked: false,
+    kommen: null,
+    gehen: null,
+    pausenBeginn: null,
+    pausenEnde: null,
   })
 }
 
@@ -216,7 +259,8 @@ handleKommenErrorAlertCLose = () => {
   render() {
     const {user} = this.props;
     const {projectSelected, aktivitätSelected, project, aktivität, kommenClicked, stunden, minuten, sekunden, kommen, 
-      projektarbeitIst, gehen,pausenBeginn, pausenEnde, kommenAlert, kommenErrorAlert} = this.state;
+      projektarbeitIst, gehen,pausenBeginn, pausenEnde, kommenAlert, kommenErrorAlert, gehenAlert,
+    h, m, s, Eh, Em, Es, PBh, PBm, PBs, PEh, PEm, PEs} = this.state;
     return (
       <div>
       <div class="selection"> {console.log('data', pausenBeginn,"data2", pausenEnde )}
@@ -241,8 +285,9 @@ handleKommenErrorAlertCLose = () => {
       <div class="workBtns">
         <Kommen date={kommen? kommen.zeitpunkt:null} handleClick={this.handleKommenClicked}/>
         <Gehen date={gehen? gehen.zeitpunkt:null} handleClick={this.handleGehenClicked}/>
+        {kommenClicked ?
         <Pause beginn={pausenBeginn? pausenBeginn.zeitpunkt:null} ende={pausenEnde? pausenEnde.zeitpunkt:null} handlePauseClicked={this.addPausenBeginn} handlePauseDone={this.addPausenEnde}/>
-      </div>
+      :null}</div>
       {kommenAlert ? 
       <div>
       <Dialog
@@ -287,6 +332,31 @@ handleKommenErrorAlertCLose = () => {
       </Button>
     </DialogActions>
   </Dialog></div>:null}
+
+  {gehenAlert ? 
+  <div><Dialog
+  open={gehenAlert}
+  onClose={this.handleGehenAlertCLose}
+  aria-labelledby="alert-dialog-title"
+  aria-describedby="alert-dialog-description"
+>
+  <DialogTitle id="alert-dialog-title">
+    Arbeitszeit erfolgreich erfasst.
+  </DialogTitle>
+  <DialogContent>
+    <DialogContentText id="alert-dialog-description">
+      Arbeitsbeginn: <strong>{String(h).padStart(2, "0")}:{String(m).padStart(2, "0")}:{String(s).padStart(2, "0")}</strong> <br/>
+      Arbeitsende: <strong>{String(Eh).padStart(2, "0")}:{String(Em).padStart(2, "0")}:{String(Es).padStart(2, "0")}</strong> <br/><br/><br/>
+      Pause: von <strong>{String(PBh).padStart(2, "0")}:{String(PBm).padStart(2, "0")}:{String(PBs).padStart(2, "0")}</strong> bis <strong>{String(PEh).padStart(2, "0")}:{String(PEm).padStart(2, "0")}:{String(PEs).padStart(2, "0")}</strong><br/><br/><br/>
+      Das ergibt eine Arbeitszeit von: <strong></strong>
+    </DialogContentText>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={this.handleGehenAlertCLose} autoFocus>
+      OK
+    </Button>
+  </DialogActions>
+</Dialog></div>:null}
       </div>
       </div>
       </div>
