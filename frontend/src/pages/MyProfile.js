@@ -4,7 +4,9 @@ import UserBO from '../api/UserBO'
 import PropTypes from 'prop-types'
 import './MyProfile.css'
 import TextField from '@mui/material/TextField';
-import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 
 export class MyProfile extends Component {
     constructor(props) {
@@ -118,20 +120,14 @@ export class MyProfile extends Component {
                     value={lastName ? lastName:user[0].nachname}
                     onChange={this.textFieldValueChange}
                     /></div>
-              </div>{console.log('hier', success)}
+              </div><div class="success">
+                     {success ?
+              <Stack sx={{ width: '100%' }} spacing={2}>
+                      <Alert onClose={this.handleClose}>Porfil Daten erfolgreich gespeichert!</Alert>
+              </Stack>:null}</div>
               <div class="saveBtnWrapper">
                   <button onClick={this.updateUser}class="saveBtn">Speichern</button>
-              </div><Snackbar
-        anchorOrigin={{ vertical, horizontal }}
-        open={success}
-        onClose={this.handleClose}
-        message="Erfolgreich gespeichert!"
-        key={vertical + horizontal}
-        ContentProps={{
-          className: "snackBar"
-        }}
-
-      />
+              </div>
           </div>
         </div>
         :null}

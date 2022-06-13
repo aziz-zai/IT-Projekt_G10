@@ -12,6 +12,12 @@ import { IconButton } from '@mui/material';
 import OneAPI from '../api/OneAPI'
 import KommenBO from '../api/KommenBO'
 import EreignisBO from '../api/EreignisBO';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 
 
@@ -36,7 +42,9 @@ export class Zeiterfassung extends Component {
       projektarbeitIst: null,
       gehen: null,
       pausenBeginn: null,
-      pausenEnde: null
+      pausenEnde: null,
+      kommenAlert: false,
+      kommenErrorAlert: false
     };
   }
 
@@ -50,6 +58,7 @@ export class Zeiterfassung extends Component {
     OneAPI.getAPI().addKommenIst(this.props.user[0].id, this.state.projektarbeit).then(kommen =>
       this.setState({
         kommen: kommen,
+        kommenAlert: true
       }), this.handleKommenClicked
       ).catch(e =>
         this.setState({ // Reset state with error from catch 
@@ -147,7 +156,15 @@ export class Zeiterfassung extends Component {
   }
 
   handleKommenClicked = () => {
+
+    if(this.state.projektarbeit){
     this.addKommenIst();
+  }
+    else{
+      this.setState({
+        kommenErrorAlert: true,
+    });
+    }
     this.setState({
         kommenClicked: true,
     });
@@ -184,9 +201,22 @@ handleGehenClicked = () => {
   clearInterval(this.interval);
 }
 
+handleKommenAlertCLose = () => {
+  this.setState({
+    kommenAlert: false
+  })
+}
+
+handleKommenErrorAlertCLose = () => {
+  this.setState({
+    kommenErrorAlert: false
+  })
+}
+
   render() {
     const {user} = this.props;
-    const {projectSelected, aktivitätSelected, project, aktivität, kommenClicked, stunden, minuten, sekunden, kommen, projektarbeitIst, gehen,pausenBeginn, pausenEnde} = this.state;
+    const {projectSelected, aktivitätSelected, project, aktivität, kommenClicked, stunden, minuten, sekunden, kommen, 
+      projektarbeitIst, gehen,pausenBeginn, pausenEnde, kommenAlert, kommenErrorAlert} = this.state;
     return (
       <div>
       <div class="selection"> {console.log('data', pausenBeginn,"data2", pausenEnde )}
@@ -213,6 +243,50 @@ handleGehenClicked = () => {
         <Gehen date={gehen? gehen.zeitpunkt:null} handleClick={this.handleGehenClicked}/>
         <Pause beginn={pausenBeginn? pausenBeginn.zeitpunkt:null} ende={pausenEnde? pausenEnde.zeitpunkt:null} handlePauseClicked={this.addPausenBeginn} handlePauseDone={this.addPausenEnde}/>
       </div>
+      {kommenAlert ? 
+      <div>
+      <Dialog
+        open={kommenAlert}
+        onClose={this.handleKommenAlertCLose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Wichtige Informationen für die Zeiterfassung!
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Pro Tag darf keine Arbeitszeit über <strong>10 Stunden</strong> erfasst werden. <br/>
+            Nach mindestens <strong>6 Stunden</strong> muss eine Pause von mindestens <strong>45 Minuten</strong> erfasst werden.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.handleKommenAlertCLose} autoFocus>
+            Akzeptieren
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>:kommenErrorAlert?
+    <div><Dialog
+    open={kommenErrorAlert}
+    onClose={this.handleKommenErrorAlertCLose}
+    aria-labelledby="alert-dialog-title"
+    aria-describedby="alert-dialog-description"
+  >
+    <DialogTitle id="alert-dialog-title">
+      Unzureichende Informationen
+    </DialogTitle>
+    <DialogContent>
+      <DialogContentText id="alert-dialog-description">
+        Um deine Arbeitszeit zu erfassen, musst du erst ein <strong>Projekt</strong> eine <strong>Aktivität</strong> und eine <strong>Projektarbeit</strong> auswählen!
+      </DialogContentText>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={this.handleKommenErrorAlertCLose} autoFocus>
+        OK
+      </Button>
+    </DialogActions>
+  </Dialog></div>:null}
       </div>
       </div>
       </div>

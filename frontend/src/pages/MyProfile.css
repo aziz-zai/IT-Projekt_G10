@@ -30,6 +30,12 @@
     top: -5rem
 }
 
+.success{
+    position: relative;
+    top: -4rem;
+    height: 1rem
+}
+
 .saveBtn{
     border-radius: 50px;
     background: #5e2e94;
