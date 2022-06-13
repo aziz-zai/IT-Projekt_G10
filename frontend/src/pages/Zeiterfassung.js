@@ -58,6 +58,9 @@ export class Zeiterfassung extends Component {
       PEh: 0,
       PEm: 0,
       PEs: 0,
+      zeitDifHours: 0,
+      zeitDifMinutes: 0,
+      zeitDifSeconds: 0
     };
   }
 
@@ -94,8 +97,20 @@ export class Zeiterfassung extends Component {
       }).then(gehen =>{
         const kommenTime = new Date(this.state.kommen.zeitpunkt);
         const gehenTime = new Date(gehen.zeitpunkt);
-        const pausenBeginnTime = new Date(this.state.pausenBeginn.zeitpunkt);
-        const pausenEndeTime = new Date(this.state.pausenEnde.zeitpunkt);
+        const pausenBeginnTime = this.state.pausenBeginn ? new Date(this.state.pausenBeginn.zeitpunkt): 0;
+        const pausenEndeTime = this.state.pausenEnde ? new Date(this.state.pausenEnde.zeitpunkt): 0;
+        const arbeitsZeitSeconds = Math.floor(((gehenTime - kommenTime)-(pausenEndeTime - pausenBeginnTime))/1000)
+        const minutes = Math.floor(arbeitsZeitSeconds/60);
+        const hours = Math.floor(minutes/60);
+        const days = Math.floor(hours/24);
+              
+        const difHours = hours-(days*24);
+        const difMinutes = minutes-(days*24*60)-(hours*60);
+        const difSeconds = arbeitsZeitSeconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
+      
+
+      
+        console.log('win', arbeitsZeitSeconds, minutes, hours, days)
         this.setState({
               h: kommenTime.getHours(), 
               m: kommenTime.getMinutes(), 
@@ -103,13 +118,21 @@ export class Zeiterfassung extends Component {
               Eh: gehenTime.getHours(), 
               Em: gehenTime.getMinutes(), 
               Es: gehenTime.getSeconds(), 
-              PBh: pausenBeginnTime.getHours(), 
-              PBm: pausenBeginnTime.getMinutes(), 
-              PBs: pausenBeginnTime.getSeconds(), 
-              PEh: pausenEndeTime.getHours(), 
-              PEm: pausenEndeTime.getMinutes(), 
-              PEs: pausenEndeTime.getSeconds(), 
+              PBh: this.state.pausenBeginn ? pausenBeginnTime.getHours() : 0, 
+              PBm: this.state.pausenBeginn ? pausenBeginnTime.getMinutes() : 0, 
+              PBs: this.state.pausenBeginn ? pausenBeginnTime.getSeconds() : 0, 
+              PEh: this.state.pausenEnde ? pausenEndeTime.getHours() : 0, 
+              PEm: this.state.pausenEnde ? pausenEndeTime.getMinutes() : 0, 
+              PEs: this.state.pausenEnde ? pausenEndeTime.getSeconds() : 0,
+              zeitDifSeconds: difSeconds,
+              zeitDifHours: difHours,
+              zeitDifMinutes: difMinutes,
             })})
+            .catch(e =>
+              this.setState({ // Reset state with error from catch 
+                gehen: null,
+              })
+            ); console.log('fail')
     // set loading to true
     this.setState({
     });
@@ -238,16 +261,7 @@ handleKommenAlertCLose = () => {
 }
 
 handleGehenAlertCLose = () => {
-  this.setState({
-    gehenAlert: false,
-    projectSelected: false,
-    aktivitätSelected: false,
-    kommenClicked: false,
-    kommen: null,
-    gehen: null,
-    pausenBeginn: null,
-    pausenEnde: null,
-  })
+  window.location.reload(false);
 }
 
 handleKommenErrorAlertCLose = () => {
@@ -260,7 +274,7 @@ handleKommenErrorAlertCLose = () => {
     const {user} = this.props;
     const {projectSelected, aktivitätSelected, project, aktivität, kommenClicked, stunden, minuten, sekunden, kommen, 
       projektarbeitIst, gehen,pausenBeginn, pausenEnde, kommenAlert, kommenErrorAlert, gehenAlert,
-    h, m, s, Eh, Em, Es, PBh, PBm, PBs, PEh, PEm, PEs} = this.state;
+    h, m, s, Eh, Em, Es, PBh, PBm, PBs, PEh, PEm, PEs, zeitDifHours, zeitDifMinutes, zeitDifSeconds} = this.state;
     return (
       <div>
       <div class="selection"> {console.log('data', pausenBeginn,"data2", pausenEnde )}
@@ -346,9 +360,9 @@ handleKommenErrorAlertCLose = () => {
   <DialogContent>
     <DialogContentText id="alert-dialog-description">
       Arbeitsbeginn: <strong>{String(h).padStart(2, "0")}:{String(m).padStart(2, "0")}:{String(s).padStart(2, "0")}</strong> <br/>
-      Arbeitsende: <strong>{String(Eh).padStart(2, "0")}:{String(Em).padStart(2, "0")}:{String(Es).padStart(2, "0")}</strong> <br/><br/><br/>
-      Pause: von <strong>{String(PBh).padStart(2, "0")}:{String(PBm).padStart(2, "0")}:{String(PBs).padStart(2, "0")}</strong> bis <strong>{String(PEh).padStart(2, "0")}:{String(PEm).padStart(2, "0")}:{String(PEs).padStart(2, "0")}</strong><br/><br/><br/>
-      Das ergibt eine Arbeitszeit von: <strong></strong>
+      Arbeitsende: <strong>{String(Eh).padStart(2, "0")}:{String(Em).padStart(2, "0")}:{String(Es).padStart(2, "0")}</strong> <br/><br/>
+      Pause: von <strong>{String(PBh).padStart(2, "0")}:{String(PBm).padStart(2, "0")}:{String(PBs).padStart(2, "0")}</strong> bis <strong>{String(PEh).padStart(2, "0")}:{String(PEm).padStart(2, "0")}:{String(PEs).padStart(2, "0")}</strong><br/><br/>
+      Das ergibt eine Arbeitszeit von: <strong>{String(zeitDifHours).padStart(2, "0")}:{String(zeitDifMinutes).padStart(2, "0")}:{String(zeitDifSeconds).padStart(2, "0")}</strong>
     </DialogContentText>
   </DialogContent>
   <DialogActions>
