@@ -12,12 +12,15 @@ import { IconButton } from '@mui/material';
 import OneAPI from '../api/OneAPI'
 import KommenBO from '../api/KommenBO'
 import EreignisBO from '../api/EreignisBO';
+import ProjektarbeitBO from '../api/ProjektarbeitBO'
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
+
 
 
 
@@ -60,7 +63,8 @@ export class Zeiterfassung extends Component {
       PEs: 0,
       zeitDifHours: 0,
       zeitDifMinutes: 0,
-      zeitDifSeconds: 0
+      zeitDifSeconds: 0,
+      projektArbeitBeschreibung: "",
     };
   }
 
@@ -155,6 +159,35 @@ export class Zeiterfassung extends Component {
     });
   }
 
+  
+  getProjektarbeitByStart = () => {
+    OneAPI.getAPI().getProjektarbeitByStart(this.state.kommen.id).then(projektarbeitIst =>
+      this.setState({
+        projektarbeitIst: projektarbeitIst,
+      }),
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+          projektarbeitIst: null,
+        })
+      );
+    // set loading to true
+    this.setState({
+    });
+  }
+  
+  updateProjektarbeit = () => {
+    let newProjektarbeitIst = new ProjektarbeitBO(this.state.projektarbeit, this.state.projektArbeitBeschreibung, this.state.aktivität)
+
+    OneAPI.getAPI().updateProjektarbeit(newProjektarbeitIst).then(projektarbeitIst =>
+      console.log('projektarbeitIst', projektarbeitIst)
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+        })
+      );
+    // set loading to true
+    this.setState({
+    });
+  }
   addPausenEnde = () => {
     var currentDate = new Date()
     var dateFormat = currentDate.toLocaleString("nl-NL")
@@ -270,11 +303,17 @@ handleKommenErrorAlertCLose = () => {
   })
 }
 
+textFieldValueChange = (event) => {
+  this.setState({
+    projektArbeitBeschreibung: event.target.value,
+  });
+}
+
   render() {
     const {user} = this.props;
     const {projectSelected, aktivitätSelected, project, aktivität, kommenClicked, stunden, minuten, sekunden, kommen, 
       projektarbeitIst, gehen,pausenBeginn, pausenEnde, kommenAlert, kommenErrorAlert, gehenAlert,
-    h, m, s, Eh, Em, Es, PBh, PBm, PBs, PEh, PEm, PEs, zeitDifHours, zeitDifMinutes, zeitDifSeconds} = this.state;
+    h, m, s, Eh, Em, Es, PBh, PBm, PBs, PEh, PEm, PEs, zeitDifHours, zeitDifMinutes, zeitDifSeconds, projektArbeitBeschreibung} = this.state;
     return (
       <div>
       <div class="selection"> {console.log('data', pausenBeginn,"data2", pausenEnde )}
@@ -360,14 +399,25 @@ handleKommenErrorAlertCLose = () => {
   <DialogContent>
     <DialogContentText id="alert-dialog-description">
       Arbeitsbeginn: <strong>{String(h).padStart(2, "0")}:{String(m).padStart(2, "0")}:{String(s).padStart(2, "0")}</strong> <br/>
-      Arbeitsende: <strong>{String(Eh).padStart(2, "0")}:{String(Em).padStart(2, "0")}:{String(Es).padStart(2, "0")}</strong> <br/><br/>
-      Pause: von <strong>{String(PBh).padStart(2, "0")}:{String(PBm).padStart(2, "0")}:{String(PBs).padStart(2, "0")}</strong> bis <strong>{String(PEh).padStart(2, "0")}:{String(PEm).padStart(2, "0")}:{String(PEs).padStart(2, "0")}</strong><br/><br/>
+      Arbeitsende: <strong>{String(Eh).padStart(2, "0")}:{String(Em).padStart(2, "0")}:{String(Es).padStart(2, "0")}</strong> <br/>
+      Pause: von <strong>{String(PBh).padStart(2, "0")}:{String(PBm).padStart(2, "0")}:{String(PBs).padStart(2, "0")}</strong> bis <strong>{String(PEh).padStart(2, "0")}:{String(PEm).padStart(2, "0")}:{String(PEs).padStart(2, "0")}</strong><br/>
       Das ergibt eine Arbeitszeit von: <strong>{String(zeitDifHours).padStart(2, "0")}:{String(zeitDifMinutes).padStart(2, "0")}:{String(zeitDifSeconds).padStart(2, "0")}</strong>
+    </DialogContentText><br/><br/>
+    <DialogContentText id="alert-dialog-description">
+      Kurze Beschreibung deiner Tätigkeit:<br/>
+      <TextField
+          id="outlined-textarea"
+          label="Multiline Placeholder"
+          placeholder="Placeholder"
+          multiline
+          value={projektArbeitBeschreibung}
+          onChange={this.textFieldValueChange}
+        />
     </DialogContentText>
   </DialogContent>
   <DialogActions>
     <Button onClick={this.handleGehenAlertCLose} autoFocus>
-      OK
+      Abschicken
     </Button>
   </DialogActions>
 </Dialog></div>:null}
