@@ -17,7 +17,7 @@ export class Membership extends Component {
     }
 
     render() {
-        const {m_vorname, m_nachname} = this.props;
+        const {member} = this.props;
 
         
     return (
@@ -30,7 +30,7 @@ export class Membership extends Component {
                   </Typography>
               </TableCell>
               <TableCell>
-              <Typography component="h3" variant="h6" color="black" gutterBottom>
+              <Typography component="h3" variant="h6" color="black">
                   Nachname
                   </Typography>
               </TableCell>
@@ -38,8 +38,9 @@ export class Membership extends Component {
           </TableHead>
             <TableBody>
             <TableRow>
-              <TableCell>{m_vorname}</TableCell>
-              <TableCell>{m_nachname}</TableCell>
+              <TableCell>{member.vorname}</TableCell>
+              <TableCell>{member.nachname}</TableCell>
+              {console.log("member", member)}
             </TableRow>
             </TableBody>
       </Table>
@@ -59,8 +60,7 @@ Membership.propTypes = {
   onClose: PropTypes.any,
   classes: PropTypes.any,
   project: PropTypes.any,
-  m_vorname: PropTypes.any,
-  m_nachname: PropTypes.any
+  member: PropTypes.any
 };
 
 export default Membership;

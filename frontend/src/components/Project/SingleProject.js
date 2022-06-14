@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { TextField, List, AppBar, ListItem, Divider, Dialog, 
+import { TextField, List, AppBar, ListItem, Dialog, 
 IconButton, Container, Toolbar, CardContent, CardActions, Card, Typography} from '@mui/material';
 import './Project.css'
 import CloseIcon from '@mui/icons-material/Close';
@@ -9,8 +9,9 @@ import ProjectBO from '../../api/ProjectBO';
 import Aktivitäten from './Aktivitäten';
 import AktivitätenDetail from './AktivitätenDetail';
 import Projektarbeit from './Projektarbeit';
-import { withStyles } from '@mui/styles';
-import Membership from './Membership';
+import LoadingProgress from '../Dialogs/LoadingProgress'
+import MemberList from './MemberList';
+import Membership from './Membership'
 
 export class SingleProject extends Component {
     constructor(props) {
@@ -34,8 +35,10 @@ export class SingleProject extends Component {
           availableHours: ah,
           openAkt: false,
           openProArb: false,
+          openMember: false,
           membership: [],
-          aktivitäten: []
+          aktivitäten: [],
+          loadingInProgress: false,
         };
     }
 
@@ -154,6 +157,7 @@ export class SingleProject extends Component {
       });
     }
 
+
     textFieldValueChange = (event) => {
       const value = event.target.value;
   
@@ -198,6 +202,18 @@ export class SingleProject extends Component {
       });
     }
 
+    openMember = () => {
+      this.setState({
+        openMember: true
+      });
+    }
+
+    closeMember = () => {
+      this.setState({
+        openMember: false
+      });
+    }
+
     handleDialogClose = () => {
       this.setState({
         isOpen: false
@@ -213,9 +229,9 @@ export class SingleProject extends Component {
     }
 
   render() {
-    const {project, projektarbeit} = this.props;
+    const {project, user, projektarbeit} = this.props;
     const {openAkt, membership, openProArb, handleDialogClose, aktivitäten, projektleiter, 
-    isOpen, projektfarbe, projekttitel, projektName, laufZeit, auftragGeber, availableHours} = this.state
+    isOpen, projektfarbe, loadingInProgress, openMember, projekttitel, projektName, laufZeit, auftragGeber, availableHours} = this.state
     
     return (
       <div class="ProjectCardWrapper">
@@ -313,6 +329,7 @@ export class SingleProject extends Component {
         <button class="ProArbBtn" onClick={this.openProArb}> Projektarbeit hinzufügen</button>
           <Projektarbeit isOpen={openProArb} onClose={this.closeProArb} Projektarbeit={projektarbeit}>
             </Projektarbeit>
+            <LoadingProgress show={loadingInProgress} />
       </div>
       </Container>
       <Container>
@@ -320,10 +337,15 @@ export class SingleProject extends Component {
       <Typography class="überschriftakt" component="h2" variant="h6" color="black" gutterBottom>
         Projektmitarbeiter
         </Typography> 
-          {
+        {
             membership.map(member => <Membership key={member.getID()} 
-            m_vorname={member.getVorname()} m_nachname={member.getNachname()}/>)
+            member={member}/>)
           }
+        <button class="addMemberBtn" onClick={this.openMember}>Mitarbeiter hinzufügen</button>
+          <MemberList isOpen={openMember} onClose={this.closeMember} user={user} project={project}>
+          </MemberList>
+          {console.log("membershio", membership)}
+         
       </div>
       </Container>
       </Dialog>
