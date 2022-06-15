@@ -221,6 +221,25 @@ export class SingleProject extends Component {
       console.log("Hier")
     }
 
+    handleDialogClose = (member) => {
+      this.setState({
+        isOpen: false
+      });
+    }
+
+    handleNewMembe = member => {
+      // project is not null and therefore created
+      if (member) {
+        const newMembershipList = [...this.state.membership, member];
+        this.setState({
+          membership: newMembershipList,
+        });
+      } else {
+        this.setState({
+        });
+      }
+    }
+
 
     componentDidMount() {
     this.getProjektleiterByProject();
@@ -342,7 +361,7 @@ export class SingleProject extends Component {
             member={member}/>)
           }
         <button class="addMemberBtn" onClick={this.openMember}>Mitarbeiter hinzufügen</button>
-          <MemberList isOpen={openMember} onClose={this.closeMember} user={user} project={project}>
+          <MemberList isOpen={openMember} onClose={this.closeMember} user={user} project={project} handleNewMember={this.handleNewMember}>
           </MemberList>         
       </div>
       </Container>

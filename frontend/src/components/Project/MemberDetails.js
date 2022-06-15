@@ -27,10 +27,10 @@ class MemberDetails extends Component {
       // reinit the dialogs state for a new empty project
       this.setState({
         success: true,
-        newMember: membership
       });
-      this.props.handleClose(membership); // call the parent with the project object from backend
-    }).catch(e =>
+      return membership // call the parent with the project object from backend
+    }).then(membership => this.getUser(membership))
+    .catch(e =>
       this.setState({
         updatingInProgress: false,    // disable loading indicator 
         updatingError: e              // show error message
@@ -41,6 +41,29 @@ class MemberDetails extends Component {
     updatingInProgress: true,       // show loading indicator
     updatingError: null             // disable error message
   });
+}  
+
+getUser = (membership) => {
+
+  OneAPI.getAPI().getUser(membership.getUser()).then(user => {
+    // Backend call sucessfull
+    // reinit the dialogs state for a new empty project
+    this.setState({
+      success: true,
+      newMember: user
+    });
+    this.props.handleClose(user); // call the parent with the project object from backend
+  }).catch(e =>
+    this.setState({
+      updatingInProgress: false,    // disable loading indicator 
+      updatingError: e              // show error message
+    })
+  );
+// set loading to true
+this.setState({
+  updatingInProgress: true,       // show loading indicator
+  updatingError: null             // disable error message
+});
 }  
 
 
@@ -65,7 +88,7 @@ class MemberDetails extends Component {
      :<AddCircleOutlineIcon sx={{marginLeft:"auto"}}onClick={this.addMember}/>}
     </>
     : null
-} {console.log('add', this.state.test)}
+} {console.log('add', this.state.newMember)}
 </>
 </Paper>
     </div>
@@ -82,7 +105,8 @@ const styles = theme => ({
   MemberDetails.propTypes = {
   /** The customerID to be rendered */
     member: PropTypes.any,
-    project: PropTypes.any
+    project: PropTypes.any,
+    handleClose: PropTypes.any
 }
 
 export default MemberDetails;

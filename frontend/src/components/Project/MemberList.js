@@ -63,6 +63,11 @@ export class MembershipList extends Component {
     this.props.onClose();
   }
 
+  handleAddMember = member => {
+    // Reset the state
+    this.props.handleNewMember(member);
+  }
+
   componentDidMount() {
     this.getUsers();
     }
@@ -78,7 +83,7 @@ export class MembershipList extends Component {
             <CloseIcon />
           </IconButton>
           {
-            users.map(user => <MemberDetails member={user} project={project}
+            users.map(user => <MemberDetails member={user} project={project} handleClose={this.handleAddMember}
             ></MemberDetails>)
           }
         </DialogTitle>
@@ -92,7 +97,8 @@ MembershipList.propTypes = {
   onClose: PropTypes.any,
   classes: PropTypes.any,
   user: PropTypes.any,
-  project: PropTypes.any
+  project: PropTypes.any,
+  handleNewMember: PropTypes.any
 };
 
 export default MembershipList;
