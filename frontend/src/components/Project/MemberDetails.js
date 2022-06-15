@@ -52,7 +52,7 @@ getUser = (membership) => {
       success: true,
       newMember: user
     });
-    this.props.handleClose(user); // call the parent with the project object from backend
+    this.props.handleClose(user[0]); // call the parent with the project object from backend
   }).catch(e =>
     this.setState({
       updatingInProgress: false,    // disable loading indicator 

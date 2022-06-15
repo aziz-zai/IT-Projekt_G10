@@ -221,13 +221,8 @@ export class SingleProject extends Component {
       console.log("Hier")
     }
 
-    handleDialogClose = (member) => {
-      this.setState({
-        isOpen: false
-      });
-    }
 
-    handleNewMembe = member => {
+    handleNewMember = member => {
       // project is not null and therefore created
       if (member) {
         const newMembershipList = [...this.state.membership, member];
@@ -238,6 +233,7 @@ export class SingleProject extends Component {
         this.setState({
         });
       }
+      console.log('single', member)
     }
 
 
@@ -357,9 +353,11 @@ export class SingleProject extends Component {
         Projektmitarbeiter
         </Typography> 
         {
-            membership.map(member => <Membership key={member.getID()} 
+            membership.map(member => <Membership key={member.id} 
             member={member}/>)
+         
           }
+            {console.log('singlemmember', membership)}
         <button class="addMemberBtn" onClick={this.openMember}>Mitarbeiter hinzufügen</button>
           <MemberList isOpen={openMember} onClose={this.closeMember} user={user} project={project} handleNewMember={this.handleNewMember}>
           </MemberList>         
