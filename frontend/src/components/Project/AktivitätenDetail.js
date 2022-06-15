@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {Table, TableCell, TableRow, TableBody, TableHead, Grid, Typography, Paper } from '@mui/material';
+import {Table, Button, TableCell, TableRow, TableBody, TableHead, Grid, Typography, Paper } from '@mui/material';
 import './Project.css'
 import './Aktivitäten.css'
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+
 
 class AktivitätenDetail extends Component {
 
@@ -17,37 +20,17 @@ class AktivitätenDetail extends Component {
 
   /** Renders the component */
   render() {
-    const { classes, akt_dauer, akt_bezeichnung, akt_capacity } = this.props;
+    const {akt_dauer, akt_bezeichnung, akt_capacity } = this.props;
 
     return (
-      <Table  class="tablea" size="small" stickyHeader aria-label="sticky table">
-        <TableHead>
-            <TableRow>
-                <TableCell>
-                    <Typography component="h3" variant="h6" color="black">
-                        Bezeichnung
-                    </Typography>
-                </TableCell>
-                <TableCell>
-                    <Typography component="h3" variant="h6" color="black">
-                        Dauer
-                    </Typography>
-                </TableCell>
-                <TableCell>
-                    <Typography component="h3" variant="h6" color="black">
-                        Kapazität
-                    </Typography>
-                </TableCell>
-            </TableRow>
-        </TableHead>
-        <TableBody>
-            <TableRow>
-                <TableCell>{akt_bezeichnung}</TableCell>
-                <TableCell>{akt_dauer}</TableCell>
-                <TableCell>{akt_capacity}</TableCell>
-            </TableRow>
-        </TableBody>
-      </Table>
+      <Paper variant='outlined' class="papermitarbeiter">
+        <div><strong>{akt_bezeichnung}</strong></div>
+        <div><strong>{akt_dauer}</strong> Tage übrig</div>
+        <div><strong>{akt_capacity}</strong>h übrig</div>
+        <AddBoxIcon class="ProArbBtn" onClick={this.openProArb}/>
+        <Button><DeleteIcon color="secondary"/>
+          </Button>
+      </Paper>
     );
   }
 }

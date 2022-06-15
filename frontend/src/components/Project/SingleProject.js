@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { TextField, List, AppBar, ListItem, Dialog, 
-IconButton, Container, Toolbar, CardContent, CardActions, Card, Typography} from '@mui/material';
+IconButton, Button, Box, ButtonGroup, Container, Toolbar, CardContent, CardActions, Card, Typography} from '@mui/material';
 import './Project.css'
 import CloseIcon from '@mui/icons-material/Close';
 import OneAPI from '../../api/OneAPI';
@@ -295,33 +295,40 @@ export class SingleProject extends Component {
             <button onClick={this.deleteProject} class="saveBtn">Löschen</button>
           </Toolbar>
         </AppBar>
-        <Container> 
+        <Container class="containerproject"> 
         <Typography class="überschriftakt" component="h2" variant="h6" color="black" gutterBottom>
         Projekt
         </Typography>
         <Card class="Projektdetails">
-        <List>
+          <List>
           <ListItem>
           <TextField
             autoFocus type='text' required
+            color="secondary"
             id="projektName"
             label="Projektname"
             value={projektName}
             onChange={this.textFieldValueChange}
-            /> 
+            />  <Button>
+            <Typography class="Mit_btn" onClick={this.openMember}>Mitarbeiter hinzufügen </Typography>
+            </Button>
           </ListItem>
           <ListItem>
           <TextField
             autoFocus type='text' required
+            color="secondary"
             id="laufZeit"
             label="Projektlaufzeit"
             value={laufZeit}
             onChange={this.textFieldValueChange}
-            />
+            /><Button>
+            <Typography class="Akt_btn" onClick={this.openAkt}>Aktivitäten hinzufügen </Typography>
+            </Button>
           </ListItem>
           <ListItem>
           <TextField
             autoFocus type='text' required
+            color="secondary"
             id="auftragGeber"
             label="Auftraggeber"
             value={auftragGeber}
@@ -331,15 +338,16 @@ export class SingleProject extends Component {
           <ListItem>
           <TextField
             autoFocus type='text' required
+            color="secondary"
             id="availableHours"
             label="Verfügbare Stunden"
             value={availableHours}
             onChange={this.textFieldValueChange}
             />
           </ListItem>
-          <button class="AktBtn" onClick={this.openAkt}> Aktivität hinzufügen</button>
           <Aktivitäten isOpen={openAkt} onClose={this.closeAkt} project={project} handleClose={this.addAktvität}>
             </Aktivitäten>
+            <LoadingProgress show={loadingInProgress} />
         </List>
         </Card>
         </Container>
@@ -351,8 +359,7 @@ export class SingleProject extends Component {
           {
             aktivitäten.map(aktivität => <AktivitätenDetail key={aktivität.getID()} 
             akt_bezeichnung={aktivität.getBezeichnung()} akt_dauer={aktivität.getDauer()} akt_capacity={aktivität.getCapacity()}/>)
-          }{console.log('akti', aktivitäten)}
-        <button class="ProArbBtn" onClick={this.openProArb}> Projektarbeit hinzufügen</button>
+          }
           <Projektarbeit isOpen={openProArb} onClose={this.closeProArb} Projektarbeit={projektarbeit}>
             </Projektarbeit>
             <LoadingProgress show={loadingInProgress} />
@@ -366,11 +373,10 @@ export class SingleProject extends Component {
         {
             membership.map(member => <Membership key={member.id} 
             member={member}/>)
-         
           }
-        <button class="addMemberBtn" onClick={this.openMember}>Mitarbeiter hinzufügen</button>
           <MemberList isOpen={openMember} onClose={this.closeMember} user={user} project={project} handleNewMember={this.handleNewMember}>
-          </MemberList>         
+          </MemberList>  
+          <LoadingProgress show={loadingInProgress} />
       </div>
       </Container>
       </Dialog>

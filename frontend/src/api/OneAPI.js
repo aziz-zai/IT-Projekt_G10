@@ -130,9 +130,6 @@ export default class OneAPI {
   #updateZeitintervallURL = (id) => `${this.#OneServerBaseURL}/zeitintervall/${id}`;
   #deleteZeitintervallURL = (id) => `${this.#OneServerBaseURL}/zeitintervall/${id}`;
   
-
-
-
   /** 
    * Get the Singelton instance 
    * 

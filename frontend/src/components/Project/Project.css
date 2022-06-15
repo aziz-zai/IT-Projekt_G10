@@ -120,36 +120,9 @@ margin-bottom: 1rem;
     color: white
 }
 
-.AktBtn{
-    border-radius: 50px;
-    background: #5e2e94;
-    white-space: nowrap;
-    padding: 0.5rem 1rem;
-    color:#fff;
-    font-size: 0.8em;
-    outline: none;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.2s ease-in-out;
-}
-
 .ProArbBtn{
-    border-radius: 50px;
-    background: #5e2e94;
-    white-space: nowrap;
-    padding: 0.5rem 1rem;
-    color:#fff;
-    font-size: 0.8em;
-    outline: none;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.2s ease-in-out;
+    width: 20px;
+    margin-left: auto;
 }
 
 .membersDisplay{
@@ -189,7 +162,7 @@ margin-bottom: 1rem;
 }
 
 .überschriftakt{
-    margin-top: 10px;
+    margin-top: 25px;
 }
 
 .addMemberBtn{
@@ -206,4 +179,51 @@ margin-bottom: 1rem;
     justify-content: center;
     align-items: center;
     transition: all 0.2s ease-in-out;
+    margin-top: 10px;
+    margin-left: 50%;
+}
+
+.Akt_btn{
+    font-size: small;
+    color: white;
+    width: max-content;
+    background: #7e55ae;
+    border-radius: 50px;
+    white-space: nowrap;
+    padding: 0.1rem 0.5rem;
+    margin-top: 0px;
+    margin-left: 40px;   
+    margin-bottom: 30px;
+
+}
+
+.Mit_btn{
+    font-size: small;
+    color: white;
+    width: max-content;
+    background: #7e55ae;
+    border-radius: 50px;
+    white-space: nowrap;
+    padding: 0.1rem 0.5rem;
+    margin-top: 30px;
+    margin-left: 40px;
+}
+
+.containerproject{
+    width:fit-content;
+    margin-left: 30px;
+}
+
+.papermitarbeiter{
+    width: 60%;
+    background-color:#dbc7f2;
+    color: black;
+    font-size: large;
+    padding: 0.5em 1em;
+    margin-top: 7px; 
+    display: flex; 
+    border-radius: 40px;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
 }

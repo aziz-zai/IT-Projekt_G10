@@ -4,6 +4,9 @@ import {Paper, TableHead, TableCell, TableRow, Table, TableBody, Button, Grid, I
 DialogContent, DialogTitle, Typography, InputAdornment, MenuItem, DialogActions } from '@mui/material';
 import './Aktivitäten.css'
 import './Project.css'
+import DeleteIcon from '@mui/icons-material/Delete';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
 
 export class Membership extends Component {
     constructor(props) {
@@ -11,6 +14,7 @@ export class Membership extends Component {
       
         // Init state
         this.state = {
+
         };
          // save this state for canceling
         this.baseState = this.state;
@@ -21,29 +25,13 @@ export class Membership extends Component {
 
         
     return (
-      <Table class="tablem" size="small" stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              <TableCell>
-              <Typography component="h3" variant="h6" color="black">
-                  Vorname
-                  </Typography>
-              </TableCell>
-              <TableCell>
-              <Typography component="h3" variant="h6" color="black">
-                  Nachname
-                  </Typography>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-            <TableBody>
-            <TableRow>
-              <TableCell>{member.vorname}</TableCell>
-              <TableCell>{member.nachname}</TableCell>
-              {console.log("member", member)}
-            </TableRow>
-            </TableBody>
-      </Table>
+     
+      <Paper variant='outlined' class="papermitarbeiter">
+        <AccountCircleIcon/>      
+        {member.vorname} {member.nachname}
+        <Button><DeleteIcon color="secondary"/>
+          </Button>
+      </Paper>
     );
   }
 }

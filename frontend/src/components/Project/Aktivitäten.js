@@ -82,7 +82,7 @@ export class Aktivitäten extends Component {
           <TextField
             autoFocus type='text' required
             id="bezeichnung"
-            label="bezeichnung"
+            label="Bezeichnung"
             value={bezeichnung}
             onChange={this.textFieldValueChange}
             /> 
@@ -100,7 +100,7 @@ export class Aktivitäten extends Component {
           <TextField
             autoFocus type='text' required
             id="dauer"
-            label="dauer"
+            label="Dauer"
             value={dauer}
             onChange={this.textFieldValueChange}
             />
