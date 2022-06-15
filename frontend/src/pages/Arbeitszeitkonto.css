@@ -1,0 +1,22 @@
+.arbeitszeitKontoHeader{
+    margin-top: 7rem;
+    font-size: 1rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 0 1rem 0 1rem;
+}
+
+.azkHeaderItem{
+    border: 2px solid #ccc;
+    border-radius: 1rem;
+    box-shadow: #5e2e94 0px 3px 8px;
+    padding: 0.5rem
+}
+
+@media screen and (max-width: 700px){
+        .azkHeaderItem{
+            margin-bottom: 1rem;
+        }
+}

@@ -1129,16 +1129,6 @@ export default class OneAPI {
     }
 
 
-getArbeitszeitkonto(user) {
-  return this.#fetchAdvanced(this.#getArbeitszeitkontoURL(user)).then((responseJSON) => {
-    let arbeitszeitkontoBOs = ArbeitszeitkontoBO.fromJSON(responseJSON);
-    // console.info(customerBOs);
-    return new Promise(function (resolve) {
-      resolve(arbeitszeitkontoBOs);
-    })
-  })
-}
-
 updateArbeitszeitkonto(arbeitszeitkontoBO) {
   return this.#fetchAdvanced(this.#updateArbeitszeitkontoURL(arbeitszeitkontoBO.getID()), {
     method: 'PUT',

@@ -108,12 +108,14 @@ export class MyProfile extends Component {
             <div class="ProfileContent">   
                 <div>
                 <TextField
+                  color="secondary"
                     autoFocus type='text' required
                     id="firstName"
                     label="Vorname"
                     value={firstName ? firstName:user[0].vorname}
                     onChange={this.textFieldValueChange}
                     /></div> &nbsp; <div><TextField
+                    color="secondary"
                     type='text' required
                     id="lastName"
                     label="Nachname"

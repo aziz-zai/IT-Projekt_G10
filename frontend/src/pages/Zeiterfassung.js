@@ -443,6 +443,7 @@ textFieldValueChange = (event) => {
     <DialogContentText id="alert-dialog-description">
       Kurze Beschreibung deiner Tätigkeit:<br/>
       <TextField
+        color="secondary"
           id="outlined-textarea"
           label="Tätigkeitsbeschreibung"
           placeholder="Placeholder"
