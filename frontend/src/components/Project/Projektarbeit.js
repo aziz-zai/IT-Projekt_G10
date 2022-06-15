@@ -1,36 +1,36 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import AktivitätenBO from '../../api/AktivitätenBO';
+import ProjektarbeitBO from '../../api/ProjektarbeitBO';
 import OneAPI from '../../api/OneAPI';
 import { Dialog, Card, TextField, List, ListItem, Divider, } from '@mui/material';
 import { Button, IconButton, DialogContent, DialogTitle, Typography, InputAdornment, MenuItem, DialogActions, Grid } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import './Aktivitäten.css'
 
-export class Aktivitäten extends Component {
+
+
+export class Projektarbeit extends Component {
     constructor(props) {
         super(props);
-        let bz= "", da="", ca= "";
+        let bz="", st="", en="";
         // Init state
         this.state = {
             open: false,
             bezeichnung: bz,
-            dauer: da,
-            capacity: ca
+            start: st,
+            ende: en
         };
          // save this state for canceling
         this.baseState = this.state;
     }
 
-    
-    addAktivitäten = () => {
-        let newAktivität = new AktivitätenBO(this.state.bezeichnung, this.state.dauer, this.state.capacity, this.props.project.id);
-        OneAPI.getAPI().addAktivitäten(newAktivität).then(aktivität => {
+    addKommenSoll = () => {
+        let newKommenSoll = new ProjektarbeitBO(this.state.bezeichnung, this.state.start, this.state.ende);
+        OneAPI.getAPI().addKommenSoll(newKommenSoll, this.props.erstellt_fuer, this.props.erstellt_von, this.props.projektarbeit).then(kommensoll => {
           // Backend call sucessfull
           // reinit the dialogs state for a new empty project
           this.setState(this.baseState);
-          this.props.handleClose(aktivität);
-          this.props.onClose(); // call the parent with the project object from backend
+          this.props.handleClose(kommensoll); // call the parent with the project object from backend
         }).catch(e =>
           this.setState({
             updatingInProgress: false,    // disable loading indicator 
@@ -42,8 +42,29 @@ export class Aktivitäten extends Component {
         updatingInProgress: true,       // show loading indicator
         updatingError: null             // disable error message
       });
-  }
+    }
 
+    addGehenSoll = () => {
+        let newGehenSoll = new ProjektarbeitBO(this.state.bezeichnung, this.state.start, this.state.ende);
+        OneAPI.getAPI().addGehenSoll(newGehenSoll, this.props.projektarbeitid, this.props.erstellt_von, this.props.erstellt_fuer).then(gehensoll => {
+          // Backend call sucessfull
+          // reinit the dialogs state for a new empty project
+          this.setState(this.baseState);
+          this.props.handleClose(gehensoll); // call the parent with the project object from backend
+        }).catch(e =>
+          this.setState({
+            updatingInProgress: false,    // disable loading indicator 
+            updatingError: e              // show error message
+          })
+        );
+      // set loading to true
+      this.setState({
+        updatingInProgress: true,       // show loading indicator
+        updatingError: null             // disable error message
+      });
+    }
+
+ 
   textFieldValueChange = (event) => {
     const value = event.target.value;
 
@@ -66,12 +87,12 @@ export class Aktivitäten extends Component {
 
     render() {
         const {isOpen} = this.props;
-        const {bezeichnung, dauer, capacity} = this.state;
+        const {bezeichnung, start, ende} = this.state;
 
         return (
               isOpen ?
                <Dialog open={isOpen} onClose={this.handleClose} maxWidth='md'>
-                 <DialogTitle id='form-dialog-title'>Aktivität hinzufügen
+                 <DialogTitle id='form-dialog-title'>Projektarbeit hinzufügen
             <IconButton sx={{ position: 'absolute', right: 1, top: 1, color: 'grey[500]' }} onClick={this.handleClose}>
               <CloseIcon />
             </IconButton>
@@ -82,7 +103,7 @@ export class Aktivitäten extends Component {
           <TextField
             autoFocus type='text' required
             id="bezeichnung"
-            label="bezeichnung"
+            label="Bezeichnung"
             value={bezeichnung}
             onChange={this.textFieldValueChange}
             /> 
@@ -90,35 +111,37 @@ export class Aktivitäten extends Component {
           <ListItem>
           <TextField
             autoFocus type='text' required
-            id="capacity"
-            label="Kapazität"
-            value={capacity}
+            id="start"
+            label="Start"
+            value={start}
             onChange={this.textFieldValueChange}
             />
           </ListItem>
           <ListItem>
           <TextField
             autoFocus type='text' required
-            id="dauer"
-            label="dauer"
-            value={dauer}
+            id="ende"
+            label="Ende"
+            value={ende}
             onChange={this.textFieldValueChange}
             />
           </ListItem>
           <Divider />
         </List>
-        <button class="HinzufügenBtn" onClick={this.addAktivitäten}>Hinzufügen</button>
+        <button class="HinzufügenBtn" onClick={this.addKommenSoll}>Hinzufügen</button>
         </Card>
         </Dialog>:null
         );
     }
 }
 
-Aktivitäten.propTypes = {
+Projektarbeit.propTypes = {
   isOpen: PropTypes.any,
   onClose: PropTypes.any,
   project: PropTypes.any,
-  handleClose: PropTypes.any,
+  projektarbeit: PropTypes.any,
+  erstellt_fuer: PropTypes.any,
+  erstellt_von: PropTypes.any
 };
 
-export default Aktivitäten;
+export default Projektarbeit;
