@@ -1021,27 +1021,6 @@ export default class OneAPI {
    * Pause related
   */
 
-  addPause(pauseBO) {
-    return this.#fetchAdvanced(this.#addPauseURL(), {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json, text/plain',
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(pauseBO)
-    }).then((responseJSON) => {
-      // We always get an array of ArbeitszeitkontoBOs.fromJSON, but only need one object
-      let responsePauseBO = PauseBO.fromJSON(responseJSON)[0];
-      // 
-      return new Promise(function (resolve) {
-        resolve(responsePauseBO);
-        })
-    })
-  }
-
-
-
-
   getPause(id) {
     return this.#fetchAdvanced(this.#getPauseURL(id)).then((responseJSON) => {
       let pauseBOs = PauseBO.fromJSON(responseJSON);
