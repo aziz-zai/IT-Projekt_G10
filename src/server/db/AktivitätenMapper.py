@@ -44,15 +44,15 @@ class AktivitätenMapper(Mapper):
         """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
         """
 
-        result = None
+        result = []
 
         cursor = self._cnx.cursor()
         command = "SELECT id, timestamp, bezeichnung, dauer, capacity, project FROM activity WHERE project={}".format(project)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        try:
-            (id, timestamp, bezeichnung, dauer, capacity, project) = tuples[0]
+        
+        for(id, timestamp, bezeichnung, dauer, capacity, project) in tuples:
             aktivitäten = Aktivitäten()
             aktivitäten.set_id(id),
             aktivitäten.set_timestamp(timestamp),
@@ -61,11 +61,7 @@ class AktivitätenMapper(Mapper):
             aktivitäten.set_capacity(capacity),
             aktivitäten.set_project(project)
 
-            result = aktivitäten
-        except IndexError:
-            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
-            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
-            result = None
+            result.append(aktivitäten)
 
         self._cnx.commit()
         cursor.close()

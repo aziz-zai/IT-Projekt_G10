@@ -11,6 +11,7 @@ import AbwesenheitBO from './AbwesenheitBO';
 import AktivitätenBO from './AktivitätenBO';
 import PauseBO from './PauseBO';
 import ArbeitszeitkontoBO from './ArbeitszeitkontoBO'
+import ZeitintervallBO from './ZeitintervallBO';
 
 
 
@@ -30,18 +31,22 @@ export default class OneAPI {
   #OneServerBaseURL = 'http://localhost:5000/projectone';
 
   // User related
-  #getUserGidURL = (id) => `${this.#OneServerBaseURL}/users-by-gid/${id}`;
+  #getUserGidURL = (google_user_id) => `${this.#OneServerBaseURL}/users-by-gid/${google_user_id}`;
   #getUserURL = (id) => `${this.#OneServerBaseURL}/users/${id}`;
   #updateUserURL = (id) => `${this.#OneServerBaseURL}/users/${id}`;
+  #deleteUserURL = (id) => `${this.#OneServerBaseURL}/users/${id}`;
+  #getPotentialMembersURL = (user, project) => `${this.#OneServerBaseURL}/potential-members/${user}/${project}`;
 
   // Project related
   #getProjectsURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
   #addProjectsURL = (user) => `${this.#OneServerBaseURL}/projects/${user}`;
   #updateProjectURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
   #deleteProjectURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
+  #getProjektlaufzeitURL = (id) => `${this.#OneServerBaseURL}/projektlaufzeit/${id}`;
+
 
   //Membership related
-  #addMembershipURL = () => `${this.#OneServerBaseURL}/membership/`;
+  #addMembershipURL = () => `${this.#OneServerBaseURL}/membership`;
   #getMembershipURL = (id) => `${this.#OneServerBaseURL}/membership/${id}`;
   #getMembersByProjectURL = (project) => `${this.#OneServerBaseURL}/members-by-project/${project}`;
   #getProjektleiterByProjectURL = (project) => `${this.#OneServerBaseURL}/projektleiter-by-project/${project}`;
@@ -52,33 +57,33 @@ export default class OneAPI {
 
   //Abwesenheit related
   #getAbwesenheitURL = (id) => `${this.#OneServerBaseURL}/abwesenheit/${id}`;
-  #addAbwesenheitURL = () => `${this.#OneServerBaseURL}/abwesenheit/`;
+  #addAbwesenheitURL = () => `${this.#OneServerBaseURL}/abwesenheit`;
   #updateAbwesenheitURL = (id) => `${this.#OneServerBaseURL}/abwesenheit/${id}`;
   #deleteAbwesenheitURL = (id) => `${this.#OneServerBaseURL}/abwesenheit/${id}`;
 
   //Aktivitäten related
   #getAktivitätenByIdURL = (id) => `${this.#OneServerBaseURL}/aktivitaeten/${id}`;
-  #getAktivitätenByProjectIdURL = (project_id) => `${this.#OneServerBaseURL}/aktivitaeten-by-project/${project_id}`;
+  #getAktivitätenByProjectIdURL = (project) => `${this.#OneServerBaseURL}/aktivitaeten-by-project/${project}`;
   #addAktivitätenURL = () => `${this.#OneServerBaseURL}/aktivitaeten`;
   #updateAktivitätenURL = (id) => `${this.#OneServerBaseURL}/aktivitaeten/${id}`;
   #deleteAktivitätenURL = (id) => `${this.#OneServerBaseURL}/aktivitaeten/${id}`;
-
-
-  //Arbeitszeitkonto related
 
   //Projektarbeit related
   #getProjektarbeitURL = (id) => `${this.#OneServerBaseURL}/projektarbeiten/${id}`;
   #getProjektarbeitByActivityURL = (activity) => `${this.#OneServerBaseURL}/projektarbeiten-activity/${activity}`;
   #getProjektarbeitByStartURL = (start) => `${this.#OneServerBaseURL}/projektarbeit-by-start/${start}`;
-  #addProjektarbeitURL = () => `${this.#OneServerBaseURL}/projektarbeiten/`;
-  #updateProjektarbeitURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
-  #deleteProjektarbeitURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
+  #addProjektarbeitURL = () => `${this.#OneServerBaseURL}/projektarbeiten`;
+  #updateProjektarbeitURL = (id) => `${this.#OneServerBaseURL}/projektarbeiten/${id}`;
+  #deleteProjektarbeitURL = (id) => `${this.#OneServerBaseURL}/projektarbeiten/${id}`;
+  #gehenProjektarbeitURL = (id, user) => `${this.#OneServerBaseURL}/projektarbeit/Gehen/${id}/${user}`;
+  
 
   //Zeitintervallbuchung related
   #getZeitintervallbuchungURL = (id) => `${this.#OneServerBaseURL}/zeitintervallbuchung/${id}`;
-  #addZeitintervallbuchungURL = () => `${this.#OneServerBaseURL}/zeitintervallbuchung/`;
+  #addZeitintervallbuchungURL = () => `${this.#OneServerBaseURL}/zeitintervallbuchung`;
   #updateZeitintervallbuchungURL = (id) => `${this.#OneServerBaseURL}/zeitintervallbuchung/${id}`;
   #deleteZeitintervallbuchungURL = (id) => `${this.#OneServerBaseURL}/zeitintervallbuchung/${id}`;
+  #getZeitintervallbuchungSollURL = (erstellt_fuer) => `${this.#OneServerBaseURL}/zeitintervallbuchung/${erstellt_fuer}`;
 
   //Ereignisbuchung related
   #addEreignisbuchungURL = () => `${this.#OneServerBaseURL}/ereignisbuchung`;
@@ -93,21 +98,19 @@ export default class OneAPI {
   #updateEreignisURL = (id) => `${this.#OneServerBaseURL}/ereignis/${id}`;
   #deleteEreignisURL = (id) => `${this.#OneServerBaseURL}/ereignis/${id}`;
   
-
-
   //Kommen related
   #addKommenIstURL = (user, projektarbeit) => `${this.#OneServerBaseURL}/kommen-ist/${user}/${projektarbeit}`;
+  #addKommenSollURL = (erstellt_von, erstellt_fuer, projektarbeit) => `${this.#OneServerBaseURL}/kommen-soll/${erstellt_von}/${erstellt_fuer}/${projektarbeit}`;
   #getKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
   #updateKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
   #deleteKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
 
-
   //Gehen related
   #getGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
-  #addGehenIstURL = (projektarbeit, user, aktivität) => `${this.#OneServerBaseURL}/gehen-ist/${projektarbeit}/${user}/${aktivität}`;
+  #addGehenIstURL = (projektarbeitid, user, activity) => `${this.#OneServerBaseURL}/gehen-ist/${projektarbeitid}/${user}/${activity}`;
+  #addGehenSollURL = (projektarbeitid, erstellt_von, erstellt_fuer, activity) => `${this.#OneServerBaseURL}/gehen-soll/${projektarbeitid}/${erstellt_von}/${erstellt_fuer}/${activity}`;
   #updateGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
   #deleteGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
-
 
   //Pause related
   #addPausenBeginnURL = (user) => `${this.#OneServerBaseURL}/pausenBeginn/${user}`;
@@ -117,9 +120,15 @@ export default class OneAPI {
   #deletePauseURL = (id) => `${this.#OneServerBaseURL}/pausen/${id}`;
 
   //Arbeitszeitkonto related
-  #getArbeitszeitkontoURL	 = (id) => `${this.#OneServerBaseURL}/arbeitszeitkonto-by-user/${id}`;
-  #updateArbeitszeitkontoURL = (id) => `${this.#OneServerBaseURL}/arbeitszeitkonto-by-user/${id}`;
-  #deleteArbeitszeitkontoURL = (id) => `${this.#OneServerBaseURL}/arbeitszeitkonto-by-user/${id}`;
+  #getArbeitszeitkontoURL	 = (user) => `${this.#OneServerBaseURL}/arbeitszeitkonto-by-user/${user}`;
+  #updateArbeitszeitkontoURL = (user) => `${this.#OneServerBaseURL}/arbeitszeitkonto-by-user/${user}`;
+  #deleteArbeitszeitkontoURL = (user) => `${this.#OneServerBaseURL}/arbeitszeitkonto-by-user/${user}`;
+  
+  //Zeitintervall related
+  #addZeitintervallURL	 = () => `${this.#OneServerBaseURL}/zeitintervall`;
+  #getZeitintervallURL	 = (id) => `${this.#OneServerBaseURL}/zeitintervall/${id}`;
+  #updateZeitintervallURL = (id) => `${this.#OneServerBaseURL}/zeitintervall/${id}`;
+  #deleteZeitintervallURL = (id) => `${this.#OneServerBaseURL}/zeitintervall/${id}`;
   
 
 
@@ -149,14 +158,12 @@ export default class OneAPI {
        return res.json();
    })
 
- 
   /**
-   * Returns a Promise, which resolves to an Array of CustomerBOs
-   * 
-   * @public
-   */
-  getUserGid(id) {
-    return this.#fetchAdvanced(this.#getUserGidURL(id)).then((responseJSON) => {
+   * User related
+  */
+
+  getUserGid(google_user_id) {
+    return this.#fetchAdvanced(this.#getUserGidURL(google_user_id)).then((responseJSON) => {
       let usersBOs = UserBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {
@@ -174,14 +181,26 @@ export default class OneAPI {
       })
     })
   }
-  updateUser(UserBO) {
-    return this.#fetchAdvanced(this.#updateUserURL(UserBO.getID()), {
+
+  getPotentialMembers(user, project) {
+    return this.#fetchAdvanced(this.#getPotentialMembersURL(user, project)).then((responseJSON) => {
+      let usersBOs = UserBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(usersBOs);
+      })
+    })
+  }
+
+
+  updateUser(userBO) {
+    return this.#fetchAdvanced(this.#updateUserURL(userBO.getID()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(UserBO)
+      body: JSON.stringify(userBO)
     }).then((responseJSON) => {
       // We always get an array of CustomerBOs.fromJSON
       let responseUserBO = UserBO.fromJSON(responseJSON)[0];
@@ -191,6 +210,23 @@ export default class OneAPI {
       })
     })
   }
+
+  deleteUser(id) {
+    return this.#fetchAdvanced(this.#deleteUserURL(id), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseUserBO = UserBO.fromJSON(responseJSON)[0];
+      // console.info(accountBOs);
+      return new Promise(function (resolve) {
+        resolve(responseUserBO);
+      })
+    })
+  }
+
+  /**
+   * Project related
+  */
 
   getProject(id) {
     return this.#fetchAdvanced(this.#getProjectsURL(id)).then((responseJSON) => {
@@ -219,12 +255,7 @@ export default class OneAPI {
         })
     })
   }
-   /**
-     * Updates a customer and returns a Promise, which resolves to a CustomerBO.
-     * 
-     * @param {ProjectBO} projectBO to be updated
-     * @public
-     */
+
   updateProject(projectBO) {
     return this.#fetchAdvanced(this.#updateProjectURL(projectBO.getID()), {
       method: 'PUT',
@@ -243,6 +274,16 @@ export default class OneAPI {
     })
   }
 
+  getProjektlaufzeit(id) {
+    return this.#fetchAdvanced(this.#getProjektlaufzeitURL(id)).then((responseJSON) => {
+      let projectsBOs = ProjectBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(projectsBOs);
+      })
+    })
+  }
+
   deleteProject(id) {
     return this.#fetchAdvanced(this.#deleteProjectURL(id), {
       method: 'DELETE'
@@ -255,6 +296,10 @@ export default class OneAPI {
       })
     })
   }
+
+  /**
+   * Membership related
+  */
 
   getMembership(id) {
     return this.#fetchAdvanced(this.#getMembershipURL(id)).then((responseJSON) => {
@@ -316,19 +361,14 @@ export default class OneAPI {
       body: JSON.stringify(membershipBO)
     }).then((responseJSON) => {
       // We always get an array of ProjectBOs.fromJSON, but only need one object
-      let responseMembershipBO = ProjectBO.fromJSON(responseJSON)[0];
+      let responseMembershipBO = MembershipBO.fromJSON(responseJSON)[0];
       // 
       return new Promise(function (resolve) {
         resolve(responseMembershipBO);
         })
     })
   }
- /**
-     * Updates a membership and returns a Promise, which resolves to a MembershipBO.
-     * 
-     * @param {MembershipBO} membershipBO to be updated
-     * @public
-     */
+ 
   updateMembership(membershipBO) {
     return this.#fetchAdvanced(this.#updateMembershipURL(membershipBO.getID()), {
       method: 'PUT',
@@ -360,33 +400,10 @@ export default class OneAPI {
     })
   }
 
-
-  getAbwesenheit(id) {
-      return this.#fetchAdvanced(this.#getAbwesenheitURL(id)).then((responseJSON) => {
-        let abwesenheitBOs = AktivitätenBO.fromJSON(responseJSON);
-        // console.info(customerBOs);
-        return new Promise(function (resolve) {
-          resolve(abwesenheitBOs);
-        })
-      })
-    }
-
-  addAbwesenheit(abwesenheitBO) {
-    return this.#fetchAdvanced(this.#addAbwesenheitURL(), {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json, text/plain',
-        'Content-type': 'application/json',
-      },body: JSON.stringify(abwesenheitBO)
-    }).then((responseJSON) => {
-      // We always get an array of ProjectBOs.fromJSON, but only need one object
-      let responseAbwesenheitBO = AbwesenheitBO.fromJSON(responseJSON)[0];
-      // 
-      return new Promise(function (resolve) {
-        resolve(responseAbwesenheitBO);
-        })
-    })
-  }
+  /**
+   * Projektarbeit related
+  */
+ 
   getProjektarbeit(id) {
     return this.#fetchAdvanced(this.#getProjektarbeitURL(id)).then((responseJSON) => {
       let projektarbeitenBOs = ProjektarbeitBO.fromJSON(responseJSON);
@@ -435,14 +452,27 @@ export default class OneAPI {
         })
     })
   }
-    /**
-     * Updates a customer and returns a Promise, which resolves to a CustomerBO.
-     * 
-     * @param {ProjektarbeitBO} projektarbeitBO to be updated
-     * @public
-     */
-  updateProjektarbeit(projektarbeitBO) {
-    return this.#fetchAdvanced(this.#updateProjektarbeitURL(projektarbeitBO.getID()), {
+
+  updateProjektarbeit(projektarbeitBO, id, user) {
+    return this.#fetchAdvanced(this.#gehenProjektarbeitURL(projektarbeitBO.getID(), projektarbeitBO.getUser()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(projektarbeitBO)
+    }).then((responseJSON) => {
+      // We always get an array of CustomerBOs.fromJSON
+      let responseProjektarbeitBO = ProjektarbeitBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseProjektarbeitBO);
+      })
+    })
+  }
+
+  gehenProjektarbeit(projektarbeitBO) {
+    return this.#fetchAdvanced(this.#updateProjektarbeitURL(projektarbeitBO.getID(), projektarbeitBO.getUser()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -472,9 +502,22 @@ export default class OneAPI {
     })
   }
 
+  /**
+   * Zeitintervallbuchung related
+  */
 
   getZeitintervallbuchung(id) {
     return this.#fetchAdvanced(this.#getZeitintervallbuchungURL(id)).then((responseJSON) => {
+      let zeitintervallbuchungBOs = ZeitintervallbuchungBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(zeitintervallbuchungBOs);
+      })
+    })
+  }
+
+  getZeitintervallbuchungSoll(erstellt_fuer) {
+    return this.#fetchAdvanced(this.#getZeitintervallbuchungSollURL(erstellt_fuer)).then((responseJSON) => {
       let zeitintervallbuchungBOs = ZeitintervallbuchungBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {
@@ -500,14 +543,7 @@ export default class OneAPI {
         })
     })
   }
-   /**
-     * Updates a customer and returns a Promise, which resolves to a CustomerBO.
-     * 
-     * @param {ProjectBO} projectBO to be updated
-     * @public
-     */  
-
-
+   
   updateZeitintervallbuchung(zeitintervallbuchungBO) {
     return this.#fetchAdvanced(this.#updateZeitintervallbuchungURL(zeitintervallbuchungBO.getID()), {
       method: 'PUT',
@@ -539,35 +575,35 @@ export default class OneAPI {
     })
   }
 
-
-    addEreignis(ereignisBO) {
-      return this.#fetchAdvanced(this.#addEreignisURL(), {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json, text/plain',
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify(ereignisBO)
-      }).then((responseJSON) => {
-        // We always get an array of EreignisBOs.fromJSON, but only need one object
-        let responseEreignisBO = EreignisBO.fromJSON(responseJSON)[0];
-        // 
-        return new Promise(function (resolve) {
-          resolve(responseEreignisBO);
-          })
-      })
-    }
-      
-  
-  
-    getEreignis(id) {
-      return this.#fetchAdvanced(this.#getEreignisURL(id)).then((responseJSON) => {
-        let ereignisBOs = EreignisBO.fromJSON(responseJSON);
-        return new Promise(function (resolve) {
-          resolve(ereignisBOs);
+  /**
+   * Ereignis related
+  */
+  addEreignis(ereignisBO) {
+    return this.#fetchAdvanced(this.#addEreignisURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(ereignisBO)
+    }).then((responseJSON) => {
+      // We always get an array of EreignisBOs.fromJSON, but only need one object
+      let responseEreignisBO = EreignisBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseEreignisBO);
         })
+    })
+  }
+  
+  getEreignis(id) {
+    return this.#fetchAdvanced(this.#getEreignisURL(id)).then((responseJSON) => {
+      let ereignisBOs = EreignisBO.fromJSON(responseJSON);
+      return new Promise(function (resolve) {
+        resolve(ereignisBOs);
       })
-    }
+    })
+  }
   
   updateEreignis(ereignisBO) {
     return this.#fetchAdvanced(this.#updateEreignisURL(ereignisBO.getID()), {
@@ -599,6 +635,9 @@ export default class OneAPI {
     })
   }
 
+  /**
+   * Gehen related
+  */
   getGehen(id) {
     return this.#fetchAdvanced(this.#getGehenURL(id)).then((responseJSON) => {
       let gehenBOs = GehenBO.fromJSON(responseJSON);
@@ -626,12 +665,7 @@ export default class OneAPI {
         })
     })
   }
-   /**
-     * Updates a customer and returns a Promise, which resolves to a CustomerBO.
-     * 
-     * @param {GehenBO} gehenBO to be updated
-     * @public
-     */
+   
   updateGehen(gehenBO) {
     return this.#fetchAdvanced(this.#updateGehenURL(gehenBO.getID()), {
       method: 'PUT',
@@ -663,6 +697,9 @@ export default class OneAPI {
     })
   }
 
+  /**
+   * Kommen related
+  */
 
   addKommenIst(user, projektarbeit) {
     return this.#fetchAdvanced(this.#addKommenIstURL(user, projektarbeit), {
@@ -682,6 +719,23 @@ export default class OneAPI {
     })
   }
 
+  addKommenSoll(kommenBO, erstellt_von, erstellt_fuer, projektarbeit) {
+    return this.#fetchAdvanced(this.#addKommenSollURL(erstellt_von, erstellt_fuer, projektarbeit ), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(kommenBO)
+    }).then((responseJSON) => {
+      // We always get an array of EreignisBOs.fromJSON, but only need one object
+      let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseKommenBO);
+        })
+    })
+  }
 
   getKommen(id) {
     return this.#fetchAdvanced(this.#getKommenURL(id)).then((responseJSON) => {
@@ -691,7 +745,6 @@ export default class OneAPI {
       })
     })
   }
-
 
   updateKommen(kommenBO) {
     return this.#fetchAdvanced(this.#updateKommenURL(kommenBO.getID()), {
@@ -723,13 +776,36 @@ export default class OneAPI {
     })
   }
 
-   /**
-     * Updates a customer and returns a Promise, which resolves to a CustomerBO.
-     * 
-     * @param {AbwesenheitBO} abwesenheitBO to be updated
-     * @public
-     */
+  /**
+   * Abwesenheit related
+  */
 
+  getAbwesenheit(id) {
+    return this.#fetchAdvanced(this.#getAbwesenheitURL(id)).then((responseJSON) => {
+      let abwesenheitBOs = AktivitätenBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(abwesenheitBOs);
+      })
+    })
+  }
+
+  addAbwesenheit(abwesenheitBO) {
+    return this.#fetchAdvanced(this.#addAbwesenheitURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },body: JSON.stringify(abwesenheitBO)
+    }).then((responseJSON) => {
+      // We always get an array of ProjectBOs.fromJSON, but only need one object
+      let responseAbwesenheitBO = AbwesenheitBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseAbwesenheitBO);
+        })
+    })
+  }
 
   updateAbwesenheit(abwesenheitBO) {
     return this.#fetchAdvanced(this.#updateAbwesenheitURL(abwesenheitBO.getID()), {
@@ -762,6 +838,10 @@ export default class OneAPI {
     })
   }
 
+  /**
+   * Aktivitäten related
+  */
+
   getAktivitätenById(id) {
     return this.#fetchAdvanced(this.#getAktivitätenByIdURL(id)).then((responseJSON) => {
       let aktivitätenBOs = AktivitätenBO.fromJSON(responseJSON);
@@ -772,8 +852,8 @@ export default class OneAPI {
     })
   }
 
-  getAktivitätenByProjectId(project_id) {
-    return this.#fetchAdvanced(this.#getAktivitätenByProjectIdURL(project_id)).then((responseJSON) => {
+  getAktivitätenByProjectId(project) {
+    return this.#fetchAdvanced(this.#getAktivitätenByProjectIdURL(project)).then((responseJSON) => {
       let aktivitätenBOs = AktivitätenBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {
@@ -799,13 +879,6 @@ export default class OneAPI {
         })
     })
   }
-
-   /**
-     * Updates a customer and returns a Promise, which resolves to a CustomerBO.
-     * 
-     * @param {AktivitätenBO} aktivitätenBO to be updated
-     * @public
-     */
 
   updateAktivitäten(id) {
     return this.#fetchAdvanced(this.#updateAktivitätenURL(id), {
@@ -838,6 +911,10 @@ export default class OneAPI {
     })
   }
 
+  /**
+   * Ereignisbuchung related
+  */
+
   addEreignisbuchung(ereignisbuchungBO) {
     return this.#fetchAdvanced(this.#addEreignisbuchungURL(), {
       method: 'POST',
@@ -856,7 +933,6 @@ export default class OneAPI {
     })
   }
 
-
   getEreignisbuchung(id) {
     return this.#fetchAdvanced(this.#getEreignisbuchungURL(id)).then((responseJSON) => {
       let ereignisbuchungBOs = EreignisbuchungBO.fromJSON(responseJSON);
@@ -865,7 +941,6 @@ export default class OneAPI {
       })
     })
   }
-
 
   updateEreignisbuchung(ereignisbuchungBO) {
     return this.#fetchAdvanced(this.#updateEreignisbuchungURL(ereignisbuchungBO.getID()), {
@@ -896,6 +971,182 @@ export default class OneAPI {
       })
     })
   }
+
+  /**
+   * Arbeitszeitkonto related
+  */
+
+  getArbeitszeitkonto(user) {
+    return this.#fetchAdvanced(this.#getArbeitszeitkontoURL(user)).then((responseJSON) => {
+      let arbeitszeitkontoBOs = ArbeitszeitkontoBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(arbeitszeitkontoBOs);
+      })
+    })
+  }
+
+  updateArbeitszeitkonto(arbeitszeitkontoBO) {
+    return this.#fetchAdvanced(this.#updateArbeitszeitkontoURL(arbeitszeitkontoBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(arbeitszeitkontoBO)
+    }).then((responseJSON) => {
+      // We always get an array of ArbeitszeitkontoBOs.fromJSON
+      let responseArbeitszeitkontoBO = ArbeitszeitkontoBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseArbeitszeitkontoBO);
+      })
+    })
+  }
+
+  deleteArbeitszeitkonto(arbeitszeitkontoBO) {
+    return this.#fetchAdvanced(this.#deleteArbeitszeitkontoURL(arbeitszeitkontoBO), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of ArbeitszeitkontoBO.fromJSON
+      let responseArbeitszeitkontoBO = ArbeitszeitkontoBO.fromJSON(responseJSON)[0];
+      //
+      return new Promise(function (resolve) {
+        resolve(responseArbeitszeitkontoBO);
+      })
+    })
+  }
+
+  /**
+   * Pause related
+  */
+
+  addPause(pauseBO) {
+    return this.#fetchAdvanced(this.#addPauseURL(), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(pauseBO)
+    }).then((responseJSON) => {
+      // We always get an array of ArbeitszeitkontoBOs.fromJSON, but only need one object
+      let responsePauseBO = PauseBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responsePauseBO);
+        })
+    })
+  }
+
+
+
+
+  getPause(id) {
+    return this.#fetchAdvanced(this.#getPauseURL(id)).then((responseJSON) => {
+      let pauseBOs = PauseBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(pauseBOs);
+      })
+    })
+  }
+
+
+  updatePause(pauseBO) {
+    return this.#fetchAdvanced(this.#updatePauseURL(pauseBO.getID()), {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(pauseBO)
+    }).then((responseJSON) => {
+      // We always get an array of ArbeitszeitkontoBOs.fromJSON
+      let responsePauseBO = PauseBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responsePauseBO);
+      })
+    })
+  }
+
+
+  deletePause(pauseBO) {
+    return this.#fetchAdvanced(this.#deletePauseURL(pauseBO), {
+      method: 'DELETE'
+    }).then((responseJSON) => {
+      // We always get an array of ArbeitszeitkontoBO.fromJSON
+      let responsePauseBO = PauseBO.fromJSON(responseJSON)[0];
+      //
+      return new Promise(function (resolve) {
+        resolve(responsePauseBO);
+      })
+    })
+  }
+  
+  /**
+   * Zeitintervall related
+  */
+
+    addZeitintervall(zeitintervallBO) {
+      return this.#fetchAdvanced(this.#addZeitintervallURL(), {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json, text/plain',
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(zeitintervallBO)
+      }).then((responseJSON) => {
+        // We always get an array of ArbeitszeitkontoBOs.fromJSON, but only need one object
+        let responseZeitintervallBO = ZeitintervallbuchungBO.fromJSON(responseJSON)[0];
+        // 
+        return new Promise(function (resolve) {
+          resolve(responseZeitintervallBO);
+          })
+      })
+    }
+  
+    getZeitintervall(id) {
+      return this.#fetchAdvanced(this.#getZeitintervallURL(id)).then((responseJSON) => {
+        let zeitintervallBOs = ZeitintervallBO.fromJSON(responseJSON);
+        // console.info(customerBOs);
+        return new Promise(function (resolve) {
+          resolve(zeitintervallBOs);
+        })
+      })
+    }
+  
+    updateZeitintervall(zeitintervallBO) {
+      return this.#fetchAdvanced(this.#updateZeitintervallURL(zeitintervallBO.getID()), {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json, text/plain',
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(zeitintervallBO)
+      }).then((responseJSON) => {
+        // We always get an array of ArbeitszeitkontoBOs.fromJSON
+        let responseZeitintervallBO = ZeitintervallBO.fromJSON(responseJSON)[0];
+        // 
+        return new Promise(function (resolve) {
+          resolve(responseZeitintervallBO);
+        })
+      })
+    }
+  
+    deleteZeitintervall(zeitintervallBO) {
+      return this.#fetchAdvanced(this.#deleteZeitintervallURL(zeitintervallBO), {
+        method: 'DELETE'
+      }).then((responseJSON) => {
+        // We always get an array of ArbeitszeitkontoBO.fromJSON
+        let responseZeitintervallBO = ZeitintervallBO.fromJSON(responseJSON)[0];
+        //
+        return new Promise(function (resolve) {
+          resolve(responseZeitintervallBO);
+        })
+      })
+    }
 
 
 getArbeitszeitkonto(user) {

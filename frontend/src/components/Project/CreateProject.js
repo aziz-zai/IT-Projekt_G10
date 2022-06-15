@@ -5,7 +5,8 @@ import ProjectBO from '../../api/ProjectBO';
 import { Container, TextField, Dialog, ListItem, List, Divider, AppBar, 
 Toolbar, Grid, Card, IconButton, Typography, Slide} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import AktivitätenBO from '../../api/AktivitätenBO';
+import ContextErrorMessage from '../Dialogs/ContextErrorMessage';
+import LoadingProgress from '../Dialogs/LoadingProgress';
 
 
 export class CreateProject extends Component {
@@ -89,10 +90,9 @@ textFieldValueChange = (event) => {
 }
 
   render() {
-      const {isOpen, project, user} = this.props;
-      const {projektName, projektNameEdited, projektNameValidationFailed, laufZeit, laufZeitEdited, laufZeitValidationFailed,
-      auftragGeber, auftragGeberEdited, auftragGeberValidationFailed, availableHours, availableHoursEdited, availableHoursValidationFailed,
-      bezeichnung, dauer, capacity} = this.state;
+      const {isOpen} = this.props;
+      const {projektName, projektNameValidationFailed, laufZeit, laufZeitValidationFailed,
+      auftragGeber, addingInProgress, updatingInProgress, auftragGeberValidationFailed, availableHours, availableHoursValidationFailed,} = this.state;
 
     return (
     <div>
@@ -141,6 +141,8 @@ textFieldValueChange = (event) => {
                   label="Projektname"
                   value={projektName}
                   onChange={this.textFieldValueChange}
+                  error={projektNameValidationFailed} 
+                  helperText={projektNameValidationFailed ? 'The Project name must contain at least one character' : ' '}
                   /> 
                 </ListItem>
                 <ListItem>
@@ -150,6 +152,8 @@ textFieldValueChange = (event) => {
                   label="Projektlaufzeit"
                   value={laufZeit}
                   onChange={this.textFieldValueChange}
+                  error={laufZeitValidationFailed} 
+                  helperText={laufZeitValidationFailed ? 'Die Laufzeit darf nicht leer sein' : ' '}
                   />
                 </ListItem>
                 <ListItem>
@@ -159,6 +163,8 @@ textFieldValueChange = (event) => {
                   label="Auftraggeber"
                   value={auftragGeber}
                   onChange={this.textFieldValueChange}
+                  error={auftragGeberValidationFailed} 
+                  helperText={auftragGeberValidationFailed ? 'Das Feld darf nicht leer sein!' : ' '}
                   />
                 </ListItem>
                 <ListItem>
@@ -168,7 +174,10 @@ textFieldValueChange = (event) => {
                   label="Verfügbare Stunden"
                   value={availableHours}
                   onChange={this.textFieldValueChange}
+                  error={availableHoursValidationFailed} 
+                  helperText={availableHoursValidationFailed ? 'Das Feld darf nicht leer sein!' : ' '}
                   />
+                  <LoadingProgress show={addingInProgress} />
                 </ListItem>
                 <Divider />
               </List>

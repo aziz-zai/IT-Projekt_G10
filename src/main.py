@@ -262,6 +262,7 @@ class MembershipByProjectOperations(Resource):
         adm = Administration()
         membership = adm.get_members_by_project(project)
         return membership
+
 @projectone.route('/projektleiter-by-project/<int:project>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Membership-Objekts')
@@ -307,6 +308,7 @@ class ProjektarbeitListOperations(Resource):
 
     @projectone.marshal_with(projektarbeiten, code=200)
     @projectone.expect(projektarbeiten)  # Wir erwarten ein Projektarbeit-Objekt von der Client-Seite.
+    @secured
     def post(self):
         """Anlegen eines neuen Projektarbeit-Objekts.
         """
@@ -326,7 +328,7 @@ class ProjektarbeitListOperations(Resource):
 @projectone.param('id', 'Die ID des Projektarbeit-Objekts')
 class ProjektarbeitenOperations(Resource):
     @projectone.marshal_with(projektarbeiten)
-
+    @secured
     def get(self, id):
         """Auslesen eines bestimmten Projektarbeit-Objekts.
 
@@ -337,6 +339,7 @@ class ProjektarbeitenOperations(Resource):
         return projektarbeiten
 
     @projectone.marshal_with(projektarbeiten)
+    @secured
     def put(self, id):
         
         adm = Administration()
@@ -351,6 +354,7 @@ class ProjektarbeitenOperations(Resource):
             return '', 500
 
     @projectone.marshal_with(projektarbeiten)
+    @secured
     def delete(self, id):
         """Löschen eines bestimmten Projektarbeit-Objekts.
 
@@ -367,7 +371,7 @@ class ProjektarbeitenOperations(Resource):
 @projectone.param('id', 'Die ID des Projektarbeit-Objekts')
 class ProjektarbeitenByActivityIdOperations(Resource):
     @projectone.marshal_with(projektarbeiten)
-
+    @secured
     def get(self, activity):
         """Auslesen eines bestimmten Projektarbeit-Objekts anhand der Aktivitäten-ID.
 
@@ -380,7 +384,7 @@ class ProjektarbeitenByActivityIdOperations(Resource):
 @projectone.route('/projektarbeit-by-start/<int:kommen>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Projektarbeit-Objekts')
-class ProjektarbeitenDetailOperations(Resource):
+class ProjektarbeitenGehenOperations(Resource):
     @projectone.marshal_with(projektarbeiten)
     def get(self, kommen):
     
@@ -502,12 +506,14 @@ class ProjectListOperations(Resource):
             return pr, 500
     
     @projectone.marshal_with(project)
+    @secured
     def delete(self, id):
         """Löschen eines bestimmten User-Objekts."""
         adm = Administration()
         project = adm.get_project_by_id(id)
         adm.delete_project(project)
         return '', 200
+        
 @projectone.route('/projektlaufzeit/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
@@ -654,7 +660,7 @@ class UserByGoogleUserIdOperations(Resource):
 @projectone.route('/potential-members/<int:user>/<int:project>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('google_user_id', 'Die G-ID des User-Objekts')
-class UserByGoogleUserIdOperations(Resource):
+class PotentialMembers(Resource):
 
     @projectone.marshal_with(user)
     def get(self, user, project):
@@ -949,10 +955,7 @@ class KommenListOperations(Resource):
         
         adm = Administration()
 
-        proposal = Kommen()
-        now = datetime.now()
-        proposal.set_zeitpunkt(now)
-        proposal.set_bezeichnung("kommen")
+        proposal = Kommen.from_dict(api.payload)
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
@@ -1298,6 +1301,7 @@ class AbwesenheitOperations(Resource):
         abtd = adm.get_abwesenheit_by_id(id)
         adm.delete_abwesenheit(abtd)
         return '', 200
+
 @projectone.route('/zeitintervall')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ZeitintervallListOperations(Resource):
@@ -1368,6 +1372,7 @@ class ZeitintervallOperations(Resource):
         zi = adm.get_zeitintervall_by_id(id)
         adm.delete_zeitintervall(zi)
         return '', 200
+
 """ !SECTION 
 """
 
