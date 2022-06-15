@@ -19,27 +19,7 @@ export class MembershipList extends Component {
         };
          // save this state for canceling
         this.baseState = this.state;
-    }
-
-    addMember = () => {
-      let newMember = new MembershipBO();
-      OneAPI.getAPI().addMembership(newMember, this.props.user[0].id).then(membership => {
-        // Backend call sucessfull
-        // reinit the dialogs state for a new empty project
-        this.setState(this.baseState);
-        this.props.handleClose(membership); // call the parent with the project object from backend
-      }).catch(e =>
-        this.setState({
-          updatingInProgress: false,    // disable loading indicator 
-          updatingError: e              // show error message
-        })
-      );
-    // set loading to true
-    this.setState({
-      updatingInProgress: true,       // show loading indicator
-      updatingError: null             // disable error message
-    });
-  }    
+    }  
 
   getUsers = () => {
     OneAPI.getAPI().getPotentialMembers(this.props.user, this.props.project.getID()).then(userBOs =>
@@ -88,7 +68,7 @@ export class MembershipList extends Component {
     }
 
   render() {
-      const {isOpen, user, project} = this.props;
+      const {isOpen, project} = this.props;
       const {users} = this.state;
       return (
             isOpen ?
@@ -98,7 +78,7 @@ export class MembershipList extends Component {
             <CloseIcon />
           </IconButton>
           {
-            users.map(user => <MemberDetails member={user}
+            users.map(user => <MemberDetails member={user} project={project}
             ></MemberDetails>)
           }
         </DialogTitle>

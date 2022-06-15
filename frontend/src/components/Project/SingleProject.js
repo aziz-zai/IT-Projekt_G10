@@ -343,9 +343,7 @@ export class SingleProject extends Component {
           }
         <button class="addMemberBtn" onClick={this.openMember}>Mitarbeiter hinzufügen</button>
           <MemberList isOpen={openMember} onClose={this.closeMember} user={user} project={project}>
-          </MemberList>
-          {console.log("membershio", membership)}
-         
+          </MemberList>         
       </div>
       </Container>
       </Dialog>

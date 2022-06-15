@@ -46,7 +46,7 @@ export default class OneAPI {
 
 
   //Membership related
-  #addMembershipURL = () => `${this.#OneServerBaseURL}/membership/`;
+  #addMembershipURL = () => `${this.#OneServerBaseURL}/membership`;
   #getMembershipURL = (id) => `${this.#OneServerBaseURL}/membership/${id}`;
   #getMembersByProjectURL = (project) => `${this.#OneServerBaseURL}/members-by-project/${project}`;
   #getProjektleiterByProjectURL = (project) => `${this.#OneServerBaseURL}/projektleiter-by-project/${project}`;
@@ -357,7 +357,7 @@ export default class OneAPI {
       body: JSON.stringify(membershipBO)
     }).then((responseJSON) => {
       // We always get an array of ProjectBOs.fromJSON, but only need one object
-      let responseMembershipBO = ProjectBO.fromJSON(responseJSON)[0];
+      let responseMembershipBO = MembershipBO.fromJSON(responseJSON)[0];
       // 
       return new Promise(function (resolve) {
         resolve(responseMembershipBO);
