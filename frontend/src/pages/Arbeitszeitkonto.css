@@ -6,6 +6,7 @@
     flex-wrap: wrap;
     justify-content: space-between;
     padding: 0 1rem 0 1rem;
+    margin-bottom: 5rem
 }
 
 .azkHeaderItem{
@@ -13,6 +14,103 @@
     border-radius: 1rem;
     box-shadow: #5e2e94 0px 3px 8px;
     padding: 0.5rem
+}
+
+.buchungContainer{
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #ccc;
+    border-radius: 1rem;
+    box-shadow: #5e2e94 0px 3px 8px;
+    margin: 1rem
+}
+
+.buchungHeader{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 2px solid black;
+    padding: 0.5rem 2rem 0.5rem 2rem;
+}
+
+.buchungSelection{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.selectionItem1{
+flex-grow: 2;
+align-self: center;
+border-right: 2px solid black;
+display: flex;
+justify-content: center;
+font-size: 1.2rem;
+padding-bottom: 0.5rem;
+margin-top: 2rem;
+}
+
+.selectionItem2{
+    flex-grow: 2;
+    align-self: center;
+    display: flex;
+    justify-content: center;
+    font-size: 1.2rem;
+    padding-bottom: 0.5rem;
+    margin-top: 2rem;
+}
+
+.selectionBtn{
+    border-radius: 10px;
+    background: #5e2e94;
+    white-space: nowrap;
+    padding: 14px 48px;
+    color:#fff;
+    font-size: 1rem;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+    width: 100%;
+    margin: 0 0.5rem 0 0.5rem
+}
+
+.selectionBtnAlt{
+    border-radius: 10px;
+    background: #5e2e947e;
+    white-space: nowrap;
+    padding: 14px 48px;
+    color:#fff;
+    font-size: 1rem;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+    width: 100%;
+    margin: 0 0.5rem 0 0.5rem
+}
+
+.abwesenheitBtn{
+    border-radius: 10px;
+    background: #5e2e94;
+    white-space: nowrap;
+    padding: 6px 25px;
+    color:#fff;
+    font-size: 1rem;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+    margin: 0 0.5rem 0 0.5rem
 }
 
 @media screen and (max-width: 700px){
