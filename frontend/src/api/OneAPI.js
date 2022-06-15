@@ -453,8 +453,8 @@ export default class OneAPI {
     })
   }
 
-  updateProjektarbeit(projektarbeitBO, id, user) {
-    return this.#fetchAdvanced(this.#gehenProjektarbeitURL(projektarbeitBO.getID(), projektarbeitBO.getUser()), {
+  updateProjektarbeit(projektarbeitBO, id) {
+    return this.#fetchAdvanced(this.#updateProjektarbeitURL(id), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -472,7 +472,7 @@ export default class OneAPI {
   }
 
   gehenProjektarbeit(projektarbeitBO) {
-    return this.#fetchAdvanced(this.#updateProjektarbeitURL(projektarbeitBO.getID(), projektarbeitBO.getUser()), {
+    return this.#fetchAdvanced(this.#updateProjektarbeitURL(projektarbeitBO.getID()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -1021,26 +1021,6 @@ export default class OneAPI {
    * Pause related
   */
 
-  addPause(pauseBO) {
-    return this.#fetchAdvanced(this.#addPauseURL(), {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json, text/plain',
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(pauseBO)
-    }).then((responseJSON) => {
-      // We always get an array of ArbeitszeitkontoBOs.fromJSON, but only need one object
-      let responsePauseBO = PauseBO.fromJSON(responseJSON)[0];
-      // 
-      return new Promise(function (resolve) {
-        resolve(responsePauseBO);
-        })
-    })
-  }
-
-
-
 
   getPause(id) {
     return this.#fetchAdvanced(this.#getPauseURL(id)).then((responseJSON) => {
@@ -1051,7 +1031,7 @@ export default class OneAPI {
       })
     })
   }
-
+  
 
   updatePause(pauseBO) {
     return this.#fetchAdvanced(this.#updatePauseURL(pauseBO.getID()), {

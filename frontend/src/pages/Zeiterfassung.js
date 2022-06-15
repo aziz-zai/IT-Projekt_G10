@@ -112,9 +112,6 @@ export class Zeiterfassung extends Component {
         const difMinutes = minutes-(days*24*60)-(hours*60);
         const difSeconds = arbeitsZeitSeconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
       
-
-      
-        console.log('win', arbeitsZeitSeconds, minutes, hours, days)
         this.setState({
               h: kommenTime.getHours(), 
               m: kommenTime.getMinutes(), 
@@ -136,7 +133,7 @@ export class Zeiterfassung extends Component {
               this.setState({ // Reset state with error from catch 
                 gehen: null,
               })
-            ); console.log('fail')
+            ); 
     // set loading to true
     this.setState({
     });
@@ -176,13 +173,52 @@ export class Zeiterfassung extends Component {
   }
   
   updateProjektarbeit = () => {
-    let newProjektarbeitIst = new ProjektarbeitBO(this.state.projektarbeit, this.state.projektArbeitBeschreibung, this.state.aktivität)
-
-    OneAPI.getAPI().updateProjektarbeit(newProjektarbeitIst).then(projektarbeitIst =>
-      console.log('projektarbeitIst', projektarbeitIst)
-      ).catch(e =>
-        this.setState({ // Reset state with error from catch 
-        })
+    let newProjektarbeitIst = new ProjektarbeitBO()
+    newProjektarbeitIst.setActivity(this.state.aktivität)
+    newProjektarbeitIst.setBeschreibung(this.state.projektArbeitBeschreibung)
+    newProjektarbeitIst.setBezeichnung(this.state.projektarbeitIst[0].bezeichnung)
+    newProjektarbeitIst.setEnde(this.state.gehen.id)
+    newProjektarbeitIst.setStart(this.state.kommen.id)
+    OneAPI.getAPI().updateProjektarbeit(newProjektarbeitIst, this.state.projektarbeitIst[0].id).then(projektarbeitIst =>{
+    this.setState({
+      project: null,
+      aktivität: null,
+      projektarbeit: null,
+      projectSelected: false,
+      aktivitätSelected: false,
+      kommenClicked: false,
+      stunden: 0,
+      minuten: 0,
+      sekunden: 0,
+      kommen: new KommenBO(),
+      kommenDate: 0,
+      projektarbeitIst: null,
+      gehen: null,
+      pausenBeginn: null,
+      pausenEnde: null,
+      kommenAlert: false,
+      kommenErrorAlert: false,
+      gehenAlert: false,
+      h: 0,
+      m: 0,
+      s: 0,
+      Eh: 0,
+      Em: 0, 
+      Es: 0, 
+      PBh: 0,
+      PBm: 0,
+      PBs: 0, 
+      PEh: 0,
+      PEm: 0,
+      PEs: 0,
+      zeitDifHours: 0,
+      zeitDifMinutes: 0,
+      zeitDifSeconds: 0,
+      projektArbeitBeschreibung: "",
+    })
+    }
+     ).catch(e =>
+      console.log('projektarbeitIstfail', newProjektarbeitIst)
       );
     // set loading to true
     this.setState({
@@ -283,6 +319,7 @@ export class Zeiterfassung extends Component {
 }
 handleGehenClicked = () => {
   this.addGehenIst();
+  this.getProjektarbeitByStart();
   clearInterval(this.interval);
 
 }
@@ -294,7 +331,7 @@ handleKommenAlertCLose = () => {
 }
 
 handleGehenAlertCLose = () => {
-  window.location.reload(false);
+  this.updateProjektarbeit()
 }
 
 handleKommenErrorAlertCLose = () => {
@@ -316,7 +353,7 @@ textFieldValueChange = (event) => {
     h, m, s, Eh, Em, Es, PBh, PBm, PBs, PEh, PEm, PEs, zeitDifHours, zeitDifMinutes, zeitDifSeconds, projektArbeitBeschreibung} = this.state;
     return (
       <div>
-      <div class="selection"> {console.log('data', pausenBeginn,"data2", pausenEnde )}
+      <div class="selection"> 
          <ProjectSelection user={user} handleSelection={this.handleProjectSelection}/>
         {projectSelected ?
         <div class="selectionItem"> 
@@ -407,11 +444,12 @@ textFieldValueChange = (event) => {
       Kurze Beschreibung deiner Tätigkeit:<br/>
       <TextField
           id="outlined-textarea"
-          label="Multiline Placeholder"
+          label="Tätigkeitsbeschreibung"
           placeholder="Placeholder"
           multiline
           value={projektArbeitBeschreibung}
           onChange={this.textFieldValueChange}
+          fullWidth
         />
     </DialogContentText>
   </DialogContent>
