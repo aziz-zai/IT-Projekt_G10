@@ -102,7 +102,6 @@ export class SingleProject extends Component {
     }
 
     deleteProject = () => {
-      console.log(this.props.project.id)
       OneAPI.getAPI().deleteProject(this.props.project.id).then(() => {         //delete Person
         this.setState({    
           isOpen: false           // no error message
@@ -218,7 +217,7 @@ export class SingleProject extends Component {
       this.setState({
         isOpen: false
       });
-      console.log("Hier")
+
     }
 
 
@@ -233,7 +232,19 @@ export class SingleProject extends Component {
         this.setState({
         });
       }
-      console.log('single', member)
+    }
+
+    addAktvität = aktivität => {
+      // project is not null and therefore created
+      if (aktivität) {
+        const newAktivitätshipList = [...this.state.aktivitäten, aktivität];
+        this.setState({
+          aktivitäten: newAktivitätshipList,
+        });
+      } else {
+        this.setState({
+        });
+      }
     }
 
 
@@ -327,7 +338,7 @@ export class SingleProject extends Component {
             />
           </ListItem>
           <button class="AktBtn" onClick={this.openAkt}> Aktivität hinzufügen</button>
-          <Aktivitäten isOpen={openAkt} onClose={this.closeAkt} project={project}>
+          <Aktivitäten isOpen={openAkt} onClose={this.closeAkt} project={project} handleClose={this.addAktvität}>
             </Aktivitäten>
         </List>
         </Card>
@@ -340,7 +351,7 @@ export class SingleProject extends Component {
           {
             aktivitäten.map(aktivität => <AktivitätenDetail key={aktivität.getID()} 
             akt_bezeichnung={aktivität.getBezeichnung()} akt_dauer={aktivität.getDauer()} akt_capacity={aktivität.getCapacity()}/>)
-          }
+          }{console.log('akti', aktivitäten)}
         <button class="ProArbBtn" onClick={this.openProArb}> Projektarbeit hinzufügen</button>
           <Projektarbeit isOpen={openProArb} onClose={this.closeProArb} Projektarbeit={projektarbeit}>
             </Projektarbeit>
@@ -357,7 +368,6 @@ export class SingleProject extends Component {
             member={member}/>)
          
           }
-            {console.log('singlemmember', membership)}
         <button class="addMemberBtn" onClick={this.openMember}>Mitarbeiter hinzufügen</button>
           <MemberList isOpen={openMember} onClose={this.closeMember} user={user} project={project} handleNewMember={this.handleNewMember}>
           </MemberList>         

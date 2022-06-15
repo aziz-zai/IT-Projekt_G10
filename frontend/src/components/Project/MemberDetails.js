@@ -88,7 +88,7 @@ this.setState({
      :<AddCircleOutlineIcon sx={{marginLeft:"auto"}}onClick={this.addMember}/>}
     </>
     : null
-} {console.log('add', this.state.newMember)}
+}
 </>
 </Paper>
     </div>

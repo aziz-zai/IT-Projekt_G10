@@ -44,15 +44,15 @@ class ProjektarbeitMapper(Mapper):
         """Suchen einer Projektarbeit anhand der Aktivitäten-ID. Da diese eindeutig ist,
         wird genau ein Objekt zurückgegeben.
         """
-        result = None
+        result = []
 
         cursor = self._cnx.cursor()
         command = "SELECT id, timestamp, bezeichnung, beschreibung, start, ende, activity FROM projektarbeit WHERE activity={}".format(activity)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        try:
-            (id, timestamp, bezeichnung, beschreibung, start, ende, activity) = tuples[0]
+        
+        for(id, timestamp, bezeichnung, beschreibung, start, ende, activity) in tuples:
             projektarbeit = Projektarbeit()
             projektarbeit.set_id(id),
             projektarbeit.set_timestamp(timestamp)
@@ -62,12 +62,7 @@ class ProjektarbeitMapper(Mapper):
             projektarbeit.set_ende(ende)
             projektarbeit.set_activity(activity)
 
-            result = projektarbeit
-
-        except IndexError:
-            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
-            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
-            result = None
+            result.append(projektarbeit)
 
         self._cnx.commit()
         cursor.close()

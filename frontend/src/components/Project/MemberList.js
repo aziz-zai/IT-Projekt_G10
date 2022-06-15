@@ -65,8 +65,6 @@ export class MembershipList extends Component {
 
   handleAddMember = member => {
     // Reset the state
-   
-    console.log('list', member)
     this.props.handleNewMember(member);
   }
 

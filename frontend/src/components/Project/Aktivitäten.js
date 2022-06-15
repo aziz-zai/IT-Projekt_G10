@@ -29,7 +29,8 @@ export class Aktivitäten extends Component {
           // Backend call sucessfull
           // reinit the dialogs state for a new empty project
           this.setState(this.baseState);
-          this.props.handleClose(aktivität); // call the parent with the project object from backend
+          this.props.handleClose(aktivität);
+          this.props.onClose(); // call the parent with the project object from backend
         }).catch(e =>
           this.setState({
             updatingInProgress: false,    // disable loading indicator 
@@ -116,7 +117,8 @@ export class Aktivitäten extends Component {
 Aktivitäten.propTypes = {
   isOpen: PropTypes.any,
   onClose: PropTypes.any,
-  project: PropTypes.any
+  project: PropTypes.any,
+  handleClose: PropTypes.any,
 };
 
 export default Aktivitäten;
