@@ -59,8 +59,6 @@
     margin-right: 0.5rem;
 }
 
-
-
 .ProjektTitel{
 font-weight: bold;
 font-size: 1.3rem;
@@ -98,6 +96,12 @@ margin-bottom: 1rem;
     justify-content: center;
     align-items: center;
     transition: all 0.2s ease-in-out;
+}
+
+.learnBtn:hover{
+    transform: scale(1.1);
+    transition: all 0.2s ease-in-out;
+    cursor:pointer;
 }
 
 .learnBtnWrapper{
