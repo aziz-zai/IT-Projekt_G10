@@ -28,7 +28,7 @@ export default class OneAPI {
 
 
   // Local Python backend
-  #OneServerBaseURL = 'http://localhost:5000/projectone';
+  #OneServerBaseURL = '/projectone';
 
   // User related
   #getUserGidURL = (google_user_id) => `${this.#OneServerBaseURL}/users-by-gid/${google_user_id}`;
