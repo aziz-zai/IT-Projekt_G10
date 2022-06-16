@@ -28,7 +28,7 @@ class AktivitätenDetail extends Component {
         deletingError: null
       })
       // console.log(account);
-      this.props.onClose(this.props.aktivität);  // call the parent with the deleted customer
+      this.props.aktivitätDeleted(this.props.aktivität);  // call the parent with the deleted customer
     }).catch(e =>
       this.setState({ // Reset state with error from catch 
         deletingInProgress: false,
@@ -77,7 +77,8 @@ AktivitätenDetail.propTypes = {
   akt_bezeichnung: PropTypes.any,
   onClose: PropTypes.any,
   akt_capacity: PropTypes.any,
-  aktivität: PropTypes.any
+  aktivität: PropTypes.any,
+  aktivitätDeleted: PropTypes.any
 }
 
 export default AktivitätenDetail;

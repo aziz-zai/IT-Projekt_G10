@@ -250,9 +250,9 @@ export class SingleProject extends Component {
     addAktvität = aktivität => {
       // project is not null and therefore created
       if (aktivität) {
-        const newAktivitätshipList = [...this.state.aktivitäten, aktivität];
+        const newAktivitätenList = [...this.state.aktivitäten, aktivität];
         this.setState({
-          aktivitäten: newAktivitätshipList,
+          aktivitäten: newAktivitätenList,
         });
       } else {
         this.setState({
@@ -260,6 +260,12 @@ export class SingleProject extends Component {
       }
     }
 
+    aktivitätDeleted = aktivität => {
+      const newAktivitätenList = this.state.aktivität.filter(aktivitätFromState => aktivitätFromState.getID() !== aktivität);
+      this.setState({
+        aktivität: newAktivitätenList
+      });
+    }
 
     componentDidMount() {
     this.getProjektleiterByProject();
@@ -371,7 +377,8 @@ export class SingleProject extends Component {
         </Typography> 
           {
             aktivitäten.map(aktivität => <AktivitätenDetail key={aktivität.getID()} 
-            aktivität={aktivität.getID()} akt_bezeichnung={aktivität.getBezeichnung()} akt_dauer={aktivität.getDauer()} akt_capacity={aktivität.getCapacity()}/>)
+            aktivitätDeleted={this.aktivitätDeleted} aktivität={aktivität.getID()} akt_bezeichnung={aktivität.getBezeichnung()} akt_dauer={aktivität.getDauer()} 
+            akt_capacity={aktivität.getCapacity()}/>)
           }
             <LoadingProgress show={loadingInProgress} />
       </div>
