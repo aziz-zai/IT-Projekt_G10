@@ -124,9 +124,6 @@ textFieldValueChange = (event) => {
           width: 200,
           p: 1,
           m: 1,
-          border: '1px solid',
-          borderColor: "black",
-          borderRadius: 2,
           textAlign: 'center',
           fontSize: '0.875rem',
           fontWeight: '700',
@@ -142,7 +139,7 @@ textFieldValueChange = (event) => {
                   value={projektName}
                   onChange={this.textFieldValueChange}
                   error={projektNameValidationFailed} 
-                  helperText={projektNameValidationFailed ? 'The Project name must contain at least one character' : ' '}
+                  helperText={projektNameValidationFailed ? 'Der Projektname muss mindestens ein Zeichen besitzen!' : ' '}
                   /> 
                 </ListItem>
                 <ListItem>
@@ -153,7 +150,7 @@ textFieldValueChange = (event) => {
                   value={laufZeit}
                   onChange={this.textFieldValueChange}
                   error={laufZeitValidationFailed} 
-                  helperText={laufZeitValidationFailed ? 'Die Laufzeit darf nicht leer sein' : ' '}
+                  helperText={laufZeitValidationFailed ? 'Die Laufzeit darf nicht leer sein!' : ' '}
                   />
                 </ListItem>
                 <ListItem>
