@@ -1,5 +1,9 @@
 import BusinessObject from "./BusinessObject";
 
+/**
+ * Represents a Activity
+ */
+
 export default class AktivitätenBO extends BusinessObject {
 
   constructor(aBezeichnung, aDauer, aCapacity, aProject) {
