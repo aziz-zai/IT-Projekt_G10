@@ -120,11 +120,6 @@ margin-bottom: 1rem;
     color: white
 }
 
-.ProArbBtn{
-    width: 20px;
-    margin-left: auto;
-}
-
 .membersDisplay{
     display: flex;
     flex-direction: row;
@@ -194,7 +189,6 @@ margin-bottom: 1rem;
     margin-top: 0px;
     margin-left: 40px;   
     margin-bottom: 30px;
-
 }
 
 .Mit_btn{
@@ -226,4 +220,24 @@ margin-bottom: 1rem;
     align-items: center;
     justify-content: space-between;
     flex-direction: row;
+}
+
+.paperaktivitäten{
+    width: 60%;
+    color:#5e2e94;
+    background-color:#dbc7f2;
+    color: black;
+    font-size: large;
+    padding: 0.1em 1em;
+    margin-top: 7px; 
+    display: flex; 
+    border-radius: 40px;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.ProArbBtn{
+    width: 22px;
+    margin-left: auto;
 }

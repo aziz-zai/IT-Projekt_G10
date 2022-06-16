@@ -39,12 +39,16 @@ export class SingleProject extends Component {
           membership: [],
           aktivitäten: [],
           loadingInProgress: false,
+          deletingInProgress: false,
+          loadingError: null,
+          deletingError: null,
         };
     }
-
+    
     getProjektleiterByProject = () => {
       OneAPI.getAPI().getProjektleiterByProject(this.props.project.id).then(projektleiter =>
         this.handleProjektfarbe(projektleiter)
+        
         ).catch(e =>
           this.setState({ // Reset state with error from catch 
             projektleiter: null,
@@ -102,19 +106,28 @@ export class SingleProject extends Component {
     }
 
     deleteProject = () => {
-      OneAPI.getAPI().deleteProject(this.props.project.id).then(() => {         //delete Person
-        this.setState({    
-          isOpen: false           // no error message
-        });this.props.handleProjectDelete()
+
+      OneAPI.getAPI().deleteProject(this.props.project.getID()).then(() => {
+        this.setState({  // Set new state when AccountBOs have been fetched
+          deletingInProgress: false, // loading indicator 
+          deletingError: null
+        })
+        // console.log(account);
+        this.props.onClose(this.props.project);  // call the parent with the deleted customer
       }).catch(e =>
-        this.setState({          // show error message
+        this.setState({ // Reset state with error from catch 
+          deletingInProgress: false,
+          deletingError: e
         })
       );
+  
       // set loading to true
       this.setState({
-                     // disable error message
+        deletingInProgress: true,
+        deletingError: null
       });
     }
+
 
     loadAktivitäten = () => {
       OneAPI.getAPI().getAktivitätenByProjectId(this.props.project.id).then(aktivitäten =>
@@ -358,10 +371,8 @@ export class SingleProject extends Component {
         </Typography> 
           {
             aktivitäten.map(aktivität => <AktivitätenDetail key={aktivität.getID()} 
-            akt_bezeichnung={aktivität.getBezeichnung()} akt_dauer={aktivität.getDauer()} akt_capacity={aktivität.getCapacity()}/>)
+            aktivität={aktivität.getID()} akt_bezeichnung={aktivität.getBezeichnung()} akt_dauer={aktivität.getDauer()} akt_capacity={aktivität.getCapacity()}/>)
           }
-          <Projektarbeit isOpen={openProArb} onClose={this.closeProArb} Projektarbeit={projektarbeit}>
-            </Projektarbeit>
             <LoadingProgress show={loadingInProgress} />
       </div>
       </Container>

@@ -22,7 +22,6 @@ export class Aktivitäten extends Component {
         this.baseState = this.state;
     }
 
-    
     addAktivitäten = () => {
         let newAktivität = new AktivitätenBO(this.state.bezeichnung, this.state.dauer, this.state.capacity, this.props.project.id);
         OneAPI.getAPI().addAktivitäten(newAktivität).then(aktivität => {
