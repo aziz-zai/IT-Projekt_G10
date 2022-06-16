@@ -123,7 +123,7 @@ export class MyProfile extends Component {
               </div><div class="success">
                      {success ?
               <Stack sx={{ width: '100%' }} spacing={2}>
-                      <Alert onClose={this.handleClose}>Porfil Daten erfolgreich gespeichert!</Alert>
+                      <Alert onClose={this.handleClose}>Profil Daten erfolgreich gespeichert!</Alert>
               </Stack>:null}</div>
               <div class="saveBtnWrapper">
                   <button onClick={this.updateUser}class="saveBtn">Speichern</button>

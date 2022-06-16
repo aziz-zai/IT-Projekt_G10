@@ -35,17 +35,17 @@
 }
 
 .ProjectCard:hover{
-    transform: scale(1.2);
+    transform: scale(1.1);
     transition: all 0.2s ease-in-out;
     cursor:pointer;
 }
 .ProjectCard-PL:hover{
-    transform: scale(1.2);
+    transform: scale(1.1);
     transition: all 0.2s ease-in-out;
     cursor:pointer;
 }
 .AddProjectCard:hover{
-    transform: scale(1.2);
+    transform: scale(1.1);
     transition: all 0.2s ease-in-out;
     cursor:pointer;
 }
@@ -55,7 +55,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: 0.5rem;
+    margin-left: 2rem;
     margin-right: 0.5rem;
 }
 
@@ -63,7 +63,7 @@
 
 .ProjektTitel{
 font-weight: bold;
-font-size: 1.5rem;
+font-size: 1.3rem;
 display: flex;
 justify-content: center;
 border-bottom: 1.5px solid #5e2e94;
@@ -72,7 +72,7 @@ margin-bottom: 1rem;
 
 .ProjektTitel-PL{
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     display: flex;
     justify-content: center;
     border-bottom: 1.5px solid white;
