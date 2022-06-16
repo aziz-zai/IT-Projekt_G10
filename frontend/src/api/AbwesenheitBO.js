@@ -1,5 +1,9 @@
 import ZeitintervallBO from './ZeitintervallBO'
 
+/**
+ * Represents a Abwesenheit
+ */
+
 export default class AbwesenheitBO extends ZeitintervallBO {
 
   constructor(aAbwesenheitsart) {

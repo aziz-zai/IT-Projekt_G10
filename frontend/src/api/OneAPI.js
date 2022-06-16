@@ -15,12 +15,6 @@ import ZeitintervallBO from './ZeitintervallBO';
 
 
 
-/**
- * Abstracts the REST interface of the Python backend with convenient access methods.
- * The class is implemented as a singleton. 
- * 
- * @author [Christoph Kunz](https://github.com/christophkunz)
- */
 export default class OneAPI {
 
   // Singelton instance
@@ -28,7 +22,7 @@ export default class OneAPI {
 
 
   // Local Python backend
-  #OneServerBaseURL = 'http://localhost:5000/projectone';
+  #OneServerBaseURL = '/projectone';
 
   // User related
   #getUserGidURL = (google_user_id) => `${this.#OneServerBaseURL}/users-by-gid/${google_user_id}`;
