@@ -7,7 +7,7 @@ import './Project.css'
 import OneAPI from '../../api/OneAPI';
 import MembershipBO from '../../api/MembershipBO'
 import CloseIcon from '@mui/icons-material/Close';
-import MemberDetails from './MemberDetails'
+import PotentialMember from './PotentialMember'
 
 export class MembershipList extends Component {
     constructor(props) {
@@ -83,8 +83,8 @@ export class MembershipList extends Component {
             <CloseIcon />
           </IconButton>
           {
-            users.map(user => <MemberDetails member={user} project={project} handleClose={this.handleAddMember}
-            ></MemberDetails>)
+            users.map(user => <PotentialMember member={user} project={project} handleClose={this.handleAddMember}
+            ></PotentialMember>)
           }
         </DialogTitle>
       </Dialog>:null

@@ -11,7 +11,7 @@ import AktivitätenDetail from './AktivitätenDetail';
 import Projektarbeit from './Projektarbeit';
 import LoadingProgress from '../Dialogs/LoadingProgress'
 import MemberList from './MemberList';
-import Membership from './Membership'
+import MemberDetail from './MemberDetail'
 
 export class SingleProject extends Component {
     constructor(props) {
@@ -109,7 +109,8 @@ export class SingleProject extends Component {
       OneAPI.getAPI().deleteProject(this.props.project.getID()).then(() => {
         this.setState({  // Set new state when AccountBOs have been fetched
           deletingInProgress: false, // loading indicator 
-          deletingError: null
+          deletingError: null,
+          isOpen: false
         })
         // console.log(account);
         this.props.onClose(this.props.project);  // call the parent with the deleted customer
@@ -395,8 +396,8 @@ export class SingleProject extends Component {
         Projektmitarbeiter
         </Typography> 
         {
-            membership.map(member => <Membership key={member.id} memberd={member.getID()} 
-            member={member}/>)
+            membership.map(member => <MemberDetail key={member.id}
+            member={member} project={project.id}/>)
           }
           <MemberList isOpen={openMember} onClose={this.closeMember} user={user} project={project} handleNewMember={this.handleNewMember}>
           </MemberList>  

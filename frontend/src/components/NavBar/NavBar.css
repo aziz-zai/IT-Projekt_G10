@@ -68,10 +68,10 @@
 }
 
 .navLink:hover{
-    border-bottom: 3px solid #5e2e94;
+    border-bottom: 3px solid #e3caff;
 }
 .navLink:active{
-    border-bottom: 3px solid #5e2e94;
+    border-bottom: 3px solid #e3caff;
 }
 .Profile{
     display: flex;

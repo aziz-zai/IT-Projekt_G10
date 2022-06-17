@@ -22,7 +22,7 @@ export default class OneAPI {
 
 
   // Local Python backend
-  #OneServerBaseURL = '/projectone';
+  #OneServerBaseURL = 'http://localhost:5000/projectone';
 
   // User related
   #getUserGidURL = (google_user_id) => `${this.#OneServerBaseURL}/users-by-gid/${google_user_id}`;
@@ -47,7 +47,7 @@ export default class OneAPI {
   #getMembershipByUserURL = (id) => `${this.#OneServerBaseURL}/membership-by-user/${id}`;
   #getMembershipByUserAndProjectURL = (id) => `${this.#OneServerBaseURL}/membership-by-user-and-project/${id}`;
   #updateMembershipURL = (id) => `${this.#OneServerBaseURL}/membership/${id}`;
-  #deleteMembershipURL = (id) => `${this.#OneServerBaseURL}/membership/${id}`;
+  #deleteMembershipURL = (user, project) => `${this.#OneServerBaseURL}/membership/${user}/${project}`;
 
   //Abwesenheit related
   #getAbwesenheitURL = (id) => `${this.#OneServerBaseURL}/abwesenheit/${id}`;
@@ -378,8 +378,8 @@ export default class OneAPI {
     })
   }
 
-  deleteMembership(id) {
-    return this.#fetchAdvanced(this.#deleteMembershipURL(id), {
+  deleteMembership(user, project) {
+    return this.#fetchAdvanced(this.#deleteMembershipURL(user, project), {
       method: 'DELETE'
     }).then((responseJSON) => {
       // We always get an array of MembershipBO.fromJSON
