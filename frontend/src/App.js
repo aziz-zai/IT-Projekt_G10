@@ -11,6 +11,11 @@ import { getAuth, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged } f
 import { initializeApp } from 'firebase/app';
 import MyProfile from './pages/MyProfile';
 import OneAPI from './api/OneAPI';
+import Arbeitszeitkonto from './pages/Arbeitszeitkonto';
+import Zeiterfassung from './pages/Zeiterfassung';
+import NavBar from './components/NavBar';
+import SideBar from './components/SideBar';
+
 
 class App extends React.Component {
 	/** Constructor of the app, which initializes firebase  */
@@ -23,7 +28,8 @@ class App extends React.Component {
 			appError: null,
 			authError: null,
 			authLoading: false,
-			user:null
+			user:null,
+			Open: 'SideBarContainerClosed',
 		};
 	}
 
@@ -127,31 +133,45 @@ componentDidMount() {
    });
    
 }
-
+handleOpenStateChange = () => {
+    if(this.state.Open =='SideBarContainerOpen'){
+      this.setState({
+        Open: 'SideBarContainerClosed'
+      })
+    }
+    if(this.state.Open =='SideBarContainerClosed'){
+		this.setState({
+			Open: 'SideBarContainerOpen'
+		})
+  }
+	}
 
 	/** Renders the whole app */
 	render() {
     const { currentUser, user } = this.state;
 		return (
         <>
-		{console.log('user', user)}
 				<Router>
+				<SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={currentUser}/>
+         		<NavBar toggle={this.handleOpenStateChange} user={currentUser} nav="navBlack"/>
 					<Routes>
 						<Route>
 						<Route path={process.env.PUBLIC_URL + '/'} element={
 							currentUser ?
-							<Navigate replace to={process.env.PUBLIC_URL + '/home'} />
+							<Navigate replace to={process.env.PUBLIC_URL + '/MeinProfil'} />
 							:
 							<LogIn  onLogIn={this.handleSignIn} />
 						}/>
 						<Route path={process.env.PUBLIC_URL + '/'} element={
 							currentUser ?
-							<Navigate replace to={process.env.PUBLIC_URL + '/home'} />
+							<Navigate replace to={process.env.PUBLIC_URL + '/MeinProfil'} />
 							:
 							<LogIn  onLogIn={this.handleSignIn} />
 						}/>
-                  		<Route path="/home" element={<Secured user={currentUser}><Home Cuser={currentUser} user={user}/></Secured>} />
-                  		<Route path="/MyProfile" element={<Secured user={currentUser}><MyProfile Cuser={currentUser} user={user} /></Secured>} />
+                  		<Route path="/MeineProjekte" element={<Secured user={currentUser}><Home Cuser={currentUser} user={user}/></Secured>} />
+                  		<Route path="/MeinProfil" element={<Secured user={currentUser}><MyProfile Cuser={currentUser} user={user}  /></Secured>} />
+                  		<Route path="/Arbeitszeitkonto" element={<Secured user={currentUser}><Arbeitszeitkonto user={user} /></Secured>} />
+                  		<Route path="/Zeiterfassung" element={<Secured user={currentUser}><Zeiterfassung Cuser={currentUser} user={user} /></Secured>} />
 				  		</Route>
 					</Routes>
 				</Router>

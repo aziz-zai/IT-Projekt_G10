@@ -23,19 +23,19 @@ export class NavBar extends Component {
     return (
         <div className={this.state.nav}>
         <div className="navContainer">
-        <Link to='/home' className="navLink"><div className="navLogo">project.one</div></Link>
+        <Link to='/MeinProfil' className="navLink"><div className="navLogo">project.one</div></Link>
             <div className="navMobile" onClick={this.handleOpenStateChange}>
                     <MenuIcon/>
             </div>
             <ul className="navMenu">
                 <li className="navItem">
-                    <Link to='/MyProfile' className="navLink">Projekte</Link>
+                    <Link to='/MeineProjekte' className="navLink">Projekte</Link>
                 </li>
                 <li className="navItem">
-                    <Link to='/' className="navLink">Zeiterfassung</Link>
+                    <Link to='/Zeiterfassung' className="navLink">Zeiterfassung</Link>
                 </li>
                 <li className="navItem">
-                    <Link to='/'className="navLink">Arbeitszeitkonto</Link>
+                    <Link to='/Arbeitszeitkonto' className="navLink">Arbeitszeitkonto</Link>
                 </li>
                 <ProfileDropDown user={user} Ahorizontol='center' Avertical='center' Thorizontol='right' Tvertical='top'/>
             </ul>

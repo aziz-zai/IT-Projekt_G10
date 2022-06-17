@@ -1,0 +1,68 @@
+.selection{
+    margin-top: 6rem;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.workBtns{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 3rem;
+    margin-top: 2rem;
+}
+
+.zeitAngabe{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 6.5rem
+}
+
+.zeitWrapper{
+    width: min-content;
+    border: 2px solid #ccc;
+    border-radius: 1rem;
+    box-shadow: #5e2e94 0px 3px 8px;
+    padding: 2rem;
+}
+
+.zeitContainer{
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.selectionItem{
+    display: flex;
+    flex-direction:row;
+}
+
+@media screen and (max-width: 700px){
+    .selection{
+        margin-top: 6rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+@media screen and (max-width: 500px){
+    .zeitAngabe{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 3rem
+    }
+    
+    .zeitWrapper{
+        width: min-content;
+        border: 2px solid #ccc;
+        border-radius: 1rem;
+        box-shadow: #5e2e94 0px 3px 8px;
+        padding: 2rem;
+    }
+}
+

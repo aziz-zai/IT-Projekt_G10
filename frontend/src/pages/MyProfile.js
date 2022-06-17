@@ -2,43 +2,39 @@ import React, { Component } from 'react'
 import OneAPI from '../api/OneAPI'
 import UserBO from '../api/UserBO'
 import PropTypes from 'prop-types'
-import SideBar from '../components/SideBar'
-import NavBar from '../components/NavBar'
 import './MyProfile.css'
 import TextField from '@mui/material/TextField';
-import Success from '../components/Alerts/success'
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+
 export class MyProfile extends Component {
     constructor(props) {
         super(props);
         // Init state
-        let fn = '', ln = '';
-        if (props.user) {
-          fn = props.user[0].vorname;
-          ln = props.user[0].nachname;
+        let fn = '', ln = ''
+          if(props.user){
+              fn= props.user[0].vorname;
+              ln= props.user[0].nachname;
         }
+
         this.state = {
-          Open: 'SideBarContainerClosed', 
           firstName: fn,
           lastName: ln,
-          success: false
+          success: false,
+          vertical: 'bottom',
+          horizontal: 'left',
+          upUser: new UserBO()
         };
       }
 
-      handleOpenStateChange = () => {
-        if(this.state.Open =='SideBarContainerOpen'){
-          this.setState({
-            Open: 'SideBarContainerClosed'
-          })
-        }
-        if(this.state.Open =='SideBarContainerClosed'){
-        this.setState({
-          Open: 'SideBarContainerOpen'
-        })
-      }
-      }
+
       updateUser = () => {
         // clone the original cutomer, in case the backend call fails
         let updatedUser = Object.assign(new UserBO(), this.props.user[0]);
+        this.setState({
+          success: true,// no error message
+      });
         // set the new attributes from our dialog
         updatedUser.setVorname(this.state.firstName);
         updatedUser.setNachname(this.state.lastName);
@@ -59,6 +55,29 @@ export class MyProfile extends Component {
                  // disable error message
         });
       }
+      getUserbygid = () => {
+        OneAPI.getAPI().getUserGid(this.props.Cuser.uid).then(user =>
+          this.setState({
+            upUser: user,
+            firstName: user[0].vorname,
+            lastName: user[0].nachname,
+          })
+          ).catch(e =>
+            this.setState({ // Reset state with error from catch 
+              upUser: null,
+            })
+          );
+        // set loading to true
+        this.setState({
+
+        });
+      }
+
+      handleClose = () => {
+        this.setState({
+          success: false
+        })
+      }
 
       textFieldValueChange = (event) => {
         const value = event.target.value;
@@ -72,47 +91,45 @@ export class MyProfile extends Component {
           [event.target.id]: event.target.value,
         });
       }
-
+      componentDidMount(){
+        this.getUserbygid()
+      }
+      
     render() {  
       const {user, Cuser} = this.props;
-      const {firstName, lastName} = this.state;
+      const {firstName, lastName, success, vertical, horizontal} = this.state;
     return (
       <div>
-        {Cuser ?
-        <div>
-        <SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={Cuser}/>
-        <NavBar toggle={this.handleOpenStateChange} user={Cuser} nav="navBlack"/> </div>
-      :null}
-
         {user?
         
         <div class="ProfileWrapper">
           <div class="ProfileContainer">
             <div><img class="ProfileAvatar" src={Cuser.photoURL}/></div> 
-            <div class="ProfileContent">
-              <div>
-              <form sx={{width: '100%'}} noValidate autoComplete='off'>
+            <div class="ProfileContent">   
+                <div>
                 <TextField
+                  color="secondary"
                     autoFocus type='text' required
                     id="firstName"
                     label="Vorname"
-                    value={firstName}
+                    value={firstName ? firstName:user[0].vorname}
                     onChange={this.textFieldValueChange}
-                    /> &nbsp; <TextField
-                    autoFocus type='text' required
+                    /></div> &nbsp; <div><TextField
+                    color="secondary"
+                    type='text' required
                     id="lastName"
                     label="Nachname"
-                    value={lastName}
+                    value={lastName ? lastName:user[0].nachname}
                     onChange={this.textFieldValueChange}
-                    />
-                </form>
-                </div>
-                
-              </div>
+                    /></div>
+              </div><div class="success">
+                     {success ?
+              <Stack sx={{ width: '100%' }} spacing={2}>
+                      <Alert onClose={this.handleClose}>Porfil Daten erfolgreich gespeichert!</Alert>
+              </Stack>:null}</div>
               <div class="saveBtnWrapper">
                   <button onClick={this.updateUser}class="saveBtn">Speichern</button>
               </div>
-              <Success success={this.state.success} />{console.log('success', this.state.success)}
           </div>
         </div>
         :null}

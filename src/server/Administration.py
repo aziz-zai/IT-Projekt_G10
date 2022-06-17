@@ -236,6 +236,11 @@ class Administration(object):
         with ProjektarbeitMapper() as mapper:
             return mapper.find_by_activity_id(activity)
 
+    def get_projektarbeit_by_start(self, start):
+        """Die Projektarbeit anhand der Aktivitäten ID auslesen"""
+        with ProjektarbeitMapper() as mapper:
+            return mapper.find_by_start(start)
+
     def update_projektarbeit(self, projektarbeit: Projektarbeit):
         with ProjektarbeitMapper() as mapper:
             return mapper.update(projektarbeit)
@@ -262,6 +267,11 @@ class Administration(object):
         """Die Pause mit der gegebenen ID auslesen"""
         with PauseMapper() as mapper:
             return mapper.find_by_key(id)
+    
+    def get_pause_by_beginn(self, beginn):
+        """Die Pause mit der gegebenen ID auslesen"""
+        with PauseMapper() as mapper:
+            return mapper.find_by_beginn(beginn)
 
     def update_pause(self, pause: Pause):
         with PauseMapper() as mapper:
@@ -288,22 +298,22 @@ class Administration(object):
             zeitinter = adm.get_projektarbeit_by_id(zeitintervall)
             kommen = adm.get_kommen_by_id(zeitinter.get_start())
             gehen = adm.get_gehen_by_id(zeitinter.get_ende())
-            zeitdifferenz = datetime.strptime(gehen.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(kommen.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
+            zeitdifferenz = datetime.strptime(gehen.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S") - datetime.strptime(kommen.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S")
         elif zeitintervall_bez == "Projektlaufzeit":
             zeitinter = adm.get_zeitintervall_by_id(zeitintervall)
             start_ereignis = adm.get_ereignis_by_id(zeitinter.get_start())
             end_ereignis = adm.get_ereignis_by_id(zeitinter.get_ende())
-            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(start_ereignis.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
+            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S") - datetime.strptime(start_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S")
         elif zeitintervall_bez == "Pause":
             zeitinter = adm.get_pause_by_id(zeitintervall)
             start_ereignis = adm.get_ereignis_by_id(zeitinter.get_start())
             end_ereignis = adm.get_ereignis_by_id(zeitinter.get_ende())
-            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(start_ereignis.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
+            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S") - datetime.strptime(start_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S")
         elif zeitintervall_bez == "Abwesenheit":
             zeitinter = adm.get_abwesenheit_by_id(zeitintervall)
             start_ereignis = adm.get_ereignis_by_id(zeitinter.get_start())
             end_ereignis = adm.get_ereignis_by_id(zeitinter.get_ende())
-            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S") - datetime.strptime(start_ereignis.get_zeitpunkt().strftime("%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M:%S")
+            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S") - datetime.strptime(start_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S")
         zeitdiff_sec = zeitdifferenz.total_seconds()   
         offset_hours = zeitdiff_sec / 3600
         offset_minutes = (offset_hours % 1) * 60

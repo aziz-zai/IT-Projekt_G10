@@ -195,8 +195,6 @@ zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
 class MembershipOperations(Resource):
     @projectone.marshal_with(membership, code=200)
     @projectone.expect(membership) # Wir erwarten ein Membership-Objekt von der Client-Seite.
-    #@secured 
-    @secured
     def post(self):
         """Anlegen eines neuen Membership-Objekts.
         """
@@ -214,7 +212,6 @@ class MembershipOperations(Resource):
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByIDOperations(Resource):
     @projectone.marshal_with(membership)
-
     def get(self, id):
         """Auslesen eines bestimmten Membership-Objekts.
 
@@ -265,6 +262,7 @@ class MembershipByProjectOperations(Resource):
         adm = Administration()
         membership = adm.get_members_by_project(project)
         return membership
+
 @projectone.route('/projektleiter-by-project/<int:project>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Membership-Objekts')
@@ -284,7 +282,6 @@ class MembershipByProjectOperations(Resource):
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByUserAndProject(Resource):
     @projectone.marshal_with(membership)
-
     def get(self, user, project):
         """Auslesen eines bestimmten Membership-Objekts nach Projektid
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
@@ -298,7 +295,6 @@ class MembershipByUserAndProject(Resource):
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByUserOperations(Resource):
     @projectone.marshal_with(project)
-    @secured
     def get(self, user):
         adm = Administration()
         mu = adm.get_membership_by_user(user)
@@ -312,6 +308,7 @@ class ProjektarbeitListOperations(Resource):
 
     @projectone.marshal_with(projektarbeiten, code=200)
     @projectone.expect(projektarbeiten)  # Wir erwarten ein Projektarbeit-Objekt von der Client-Seite.
+    @secured
     def post(self):
         """Anlegen eines neuen Projektarbeit-Objekts.
         """
@@ -331,7 +328,7 @@ class ProjektarbeitListOperations(Resource):
 @projectone.param('id', 'Die ID des Projektarbeit-Objekts')
 class ProjektarbeitenOperations(Resource):
     @projectone.marshal_with(projektarbeiten)
-
+    @secured
     def get(self, id):
         """Auslesen eines bestimmten Projektarbeit-Objekts.
 
@@ -342,6 +339,7 @@ class ProjektarbeitenOperations(Resource):
         return projektarbeiten
 
     @projectone.marshal_with(projektarbeiten)
+    @secured
     def put(self, id):
         
         adm = Administration()
@@ -356,6 +354,7 @@ class ProjektarbeitenOperations(Resource):
             return '', 500
 
     @projectone.marshal_with(projektarbeiten)
+    @secured
     def delete(self, id):
         """Löschen eines bestimmten Projektarbeit-Objekts.
 
@@ -372,7 +371,7 @@ class ProjektarbeitenOperations(Resource):
 @projectone.param('id', 'Die ID des Projektarbeit-Objekts')
 class ProjektarbeitenByActivityIdOperations(Resource):
     @projectone.marshal_with(projektarbeiten)
-
+    @secured
     def get(self, activity):
         """Auslesen eines bestimmten Projektarbeit-Objekts anhand der Aktivitäten-ID.
 
@@ -382,29 +381,19 @@ class ProjektarbeitenByActivityIdOperations(Resource):
         projektarbeitenac = adm.get_projektarbeit_by_activity_id(activity)
         return projektarbeitenac
 
-@projectone.route('/projektarbeit/Gehen/<int:id>/<int:user>')
+@projectone.route('/projektarbeit-by-start/<int:kommen>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Projektarbeit-Objekts')
-class ProjektarbeitenDetailOperations(Resource):
+class ProjektarbeitenGehenOperations(Resource):
     @projectone.marshal_with(projektarbeiten)
-    def put(self, id, user):
+    def get(self, kommen):
     
         adm = Administration()
-        pa = Projektarbeit.from_dict(api.payload)
-
-        if pa is not None:
-            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Projektarbeit-Objekts gesetzt.
-            Siehe Hinweise oben.
-            """
-            pa.set_id(id)
-            adm.update_projektarbeit(pa)
-            adm.create_zeitintervallbuchung(pa.get_id(), True, user, user, bezeichnung="Projektarbeit")
-            return '', 200
-        else:
-            return '', 500
+        projektarbeitenac = adm.get_projektarbeit_by_start(kommen)
+        return projektarbeitenac
 
 
-@projectone.route('/pausen')
+@projectone.route('/pause')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class PausenListOperations(Resource):
 
@@ -475,7 +464,6 @@ class ProjectListOperations(Resource):
 
     @projectone.marshal_with(project, code=200)
     @projectone.expect(project)  # Wir erwarten ein User-Objekt von Client-Seite.
-    @secured
     def post(self, user):
         
         adm = Administration()
@@ -495,14 +483,12 @@ class ProjectListOperations(Resource):
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
     @projectone.marshal_with(project)
-    @secured
     def get(self, id):
         adm = Administration()
         project = adm.get_project_by_id(id)
         return project
 
     @projectone.marshal_with(project)
-    @secured
     def put(self, id):
         """Update eines bestimmten Project-Objekts."""
         adm = Administration()
@@ -520,12 +506,14 @@ class ProjectListOperations(Resource):
             return pr, 500
     
     @projectone.marshal_with(project)
+    @secured
     def delete(self, id):
         """Löschen eines bestimmten User-Objekts."""
         adm = Administration()
         project = adm.get_project_by_id(id)
         adm.delete_project(project)
         return '', 200
+        
 @projectone.route('/projektlaufzeit/<int:id>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
@@ -537,29 +525,15 @@ class ProjectListOperations(Resource):
 
 """ANCHOR Aktivitäten Views
 """
-@projectone.route('/aktivitäten-by-id/<int:id>')
-@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@projectone.param('id', 'Die ID des User-Objekts')
-class AktivitätenOperations(Resource):  
-    @projectone.marshal_with(aktivitäten)
 
-    def get(self, id):
-        """Auslesen eines bestimmten Aktivitäten-Objekts.
-
-        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
-        akt = Administration()
-        aktivitäten = akt.get_aktivitäten_by_id(id)
-        return aktivitäten
-
-@projectone.route('/aktivitäten-by-project/<int:project>')
+@projectone.route('/aktivitaeten-by-project/<int:project>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des User-Objekts')
 
-class AktivitätenOperations(Resource):
-    @projectone.marshal_with(aktivitäten)
-
+class AktivitätenProjectOperations(Resource):
+    @projectone.marshal_with(aktivitäten) 
     def get(self, project):
+    
         """Auslesen eines bestimmten Aktivitäten-Objekts.
 
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
@@ -569,74 +543,59 @@ class AktivitätenOperations(Resource):
         return aktivitäten
 
 
-@projectone.route('/aktivitäten-by-secured-project/<int:project>/<int:member>')
+@projectone.route('/aktivitaeten')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des User-Objekts')
-class AktivitätenProktleiterOperations(Resource):
+class AktivitätenErstellenOperations(Resource):
     
     @projectone.marshal_with(aktivitäten, code=200)
     @projectone.expect(aktivitäten)  # Wir erwarten ein User-Objekt von Client-Seite.
-    def post(self, project, member):
+    def post(self):
 
         adm = Administration()
-        member = adm.get_membership_by_user_and_project(member, project)
-
         proposal = Aktivitäten.from_dict(api.payload)
 
         if proposal is not None:
-            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
-            wird auch dem Client zurückgegeben. 
-            """
-        if member.get_projektleiter() == True:
             a = adm.create_aktivitäten(proposal.get_bezeichnung(), proposal.get_dauer(), proposal.get_capacity(), proposal.get_project())
             return a, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return print("Projektleiter Falsch")
 
+@projectone.route('/aktivitaeten/<int:id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des User-Objekts')
+class AktivitätenOperations(Resource):
     @projectone.marshal_with(aktivitäten)
-    def put(self, project, member):
-        """Update eines bestimmten AKtivitäten-Objekts.
+    def get(self, id):
+      
+        akt = Administration()
+        aktivitäten = akt.get_aktivitäten_by_id(id)
+        return aktivitäten
 
-        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
-        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
-        Customer-Objekts.
-        """
+    @projectone.marshal_with(aktivitäten)
+    def delete(self, id):
+
         adm = Administration()
-        member = adm.get_membership_by_user_and_project(member, project)
-        ak = Aktivitäten.from_dict(api.payload)
+        aktd = adm.get_aktivitäten_by_id(id)
+        adm.delete_aktivitäten(aktd)
+        return '', 200
 
+    @projectone.marshal_with(aktivitäten)
+    def put(self, id):
+        
+        adm = Administration()
+        ak = Aktivitäten.from_dict(api.payload)
 
         if ak is not None:
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
             Siehe Hinweise oben.
             """
-        if member.get_projektleiter() == True:
+            ak.set_id(id)
             adm.update_aktivitäten(ak)
             return ak, 200
         else:
             return print('Kein Projektleiter'), 500
-@projectone.route('/aktivitäten-by-secured-project/<int:project>/<int:member>/<int:id>')
-@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
-@projectone.param('id', 'Die ID des User-Objekts')
-class AktivitätenDeleteOperation(Resource):
-
-    @projectone.marshal_with(aktivitäten)
-    def delete(self, project, member, id):
-        """Löschen eines bestimmten Aktivitäten-Objekts.
-
-        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
-        adm = Administration()
-        member = adm.get_membership_by_user_and_project(member, project)
-        if member.get_projektleiter()==True:
-            aktd = adm.get_aktivitäten_by_id(id)
-            adm.delete_aktivitäten(aktd)
-            return '', 200
-        else:
-            return print('Kein Projektleiter', 200)
-
 """ANCHOR User Views
 """
 @projectone.route('/users/<int:id>')
@@ -644,7 +603,7 @@ class AktivitätenDeleteOperation(Resource):
 @projectone.param('id', 'Die ID des User-Objekts')
 class UserOperations(Resource):
     @projectone.marshal_with(user)
-
+    @secured
     def get(self, id):
         """Auslesen eines bestimmten Customer-Objekts.
 
@@ -701,7 +660,7 @@ class UserByGoogleUserIdOperations(Resource):
 @projectone.route('/potential-members/<int:user>/<int:project>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('google_user_id', 'Die G-ID des User-Objekts')
-class UserByGoogleUserIdOperations(Resource):
+class PotentialMembers(Resource):
 
     @projectone.marshal_with(user)
     def get(self, user, project):
@@ -763,7 +722,7 @@ class ArbeitszeitkontoOperations(Resource):
         adm.delete_arbeitszeitkonto(arb)
         return '', 200
 
-@projectone.route('/ereignisbuchungen')
+@projectone.route('/ereignisbuchung')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class EreignisbuchungenListOperations(Resource):
 
@@ -861,17 +820,17 @@ class EreignisbuchungenOperations(Resource):
 
 """ANCHOR Gehen Views
 """
-@projectone.route('/gehen-ist/<int:projektarbeitid>/<int:user>/<int:activity>')
+@projectone.route('/gehen-ist/<int:kommen>/<int:user>/<int:activity>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class GehenListOperations(Resource):
 
     @projectone.marshal_with(gehen, code=200)
-    def post(self, projektarbeitid, user, activity):
+    def post(self, kommen, user, activity):
       
         adm = Administration()
 
         proposal = Gehen()
-        now = datetime.now()
+        now = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
         proposal.set_zeitpunkt(now)
         proposal.set_bezeichnung("gehen")
 
@@ -883,7 +842,7 @@ class GehenListOperations(Resource):
             """
             g = adm.create_gehen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
             adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=True, ereignis=g.get_id() ,bezeichnung="Arbeitsende")
-            projektarbeit=adm.get_projektarbeit_by_id(projektarbeitid)
+            projektarbeit=adm.get_projektarbeit_by_start(kommen)
             projektarbeit.set_ende(g.get_id())
             projektarbeit.set_activity(activity)
             proarb=adm.update_projektarbeit(projektarbeit)
@@ -897,11 +856,11 @@ class GehenListOperations(Resource):
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
-@projectone.route('/gehen-soll/<int:projektarbeitid>/<int:erstellt_von>/<int:erstellt_fuer>/<int:activity>')
+@projectone.route('/gehen-soll/<int:kommen>/<int:erstellt_von>/<int:erstellt_fuer>/<int:activity>/<string:projektarbeit>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class GehenSollListOperations(Resource):
     @projectone.marshal_with(gehen, code=200)
-    def post(self, projektarbeitid, erstellt_von, erstellt_fuer, activity):
+    def post(self, kommen, erstellt_von, erstellt_fuer, activity, projektarbeit):
       
         adm = Administration()
 
@@ -918,10 +877,7 @@ class GehenSollListOperations(Resource):
             """
             g = adm.create_gehen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
             adm.create_ereignisbuchung(erstellt_von=erstellt_von, erstellt_für=erstellt_fuer, ist_buchung=False, ereignis=g.get_id() ,bezeichnung="Arbeitsende")
-            projektarbeit=adm.get_projektarbeit_by_id(projektarbeitid)
-            projektarbeit.set_ende(g.get_id())
-            projektarbeit.set_activity(activity)
-            proarb=adm.update_projektarbeit(projektarbeit)
+            proarb = adm.create_projektarbeit(bezeichnung=projektarbeit, beschreibung="", start=kommen, ende=g.get_id(), activity=activity)
             adm.create_zeitintervallbuchung(proarb.get_id(), False, erstellt_von, erstellt_fuer,"Projektarbeit")
             
             adm.update_arbeitszeitkonto_gleitzeit(erstellt_fuer)
@@ -954,8 +910,12 @@ class GehenOperations(Resource):
         Customer-Objekts.
         """
         adm = Administration()
-        ge = Gehen.from_dict(api.payload)
-
+        ge = Gehen()
+        zeitpunkt_js_string = api.payload["zeitpunkt"]
+        zeitpunkt_py_date = datetime.strptime(zeitpunkt_js_string, '%Y-%m-%d %H:%M:%S')
+        zeitpunkt_py_string = zeitpunkt_py_date.strftime("%Y-%m-%dT%H:%M:%S")
+        ge.set_zeitpunkt(zeitpunkt_py_string)
+        ge.set_bezeichnung(api.payload["bezeichnung"])
 
         if ge is not None:
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
@@ -993,7 +953,7 @@ class KommenListOperations(Resource):
         adm = Administration()
 
         proposal = Kommen()
-        now = datetime.now()
+        now = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
         proposal.set_zeitpunkt(now)
         proposal.set_bezeichnung("kommen")
 
@@ -1012,20 +972,17 @@ class KommenListOperations(Resource):
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
-@projectone.route('/kommen-soll/<int:erstellt_von>/<int:erstellt_fuer>/<string:projektarbeit>')
+@projectone.route('/kommen-soll/<int:erstellt_von>/<int:erstellt_fuer>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class KommenListOperations(Resource):
 
     @projectone.marshal_with(kommen, code=200)
     @projectone.expect(kommen)  # Wir erwarten ein Kommen-Objekt von Client-Seite.
-    def post(self, erstellt_von, erstellt_fuer, projektarbeit):
+    def post(self, erstellt_von, erstellt_fuer):
         
         adm = Administration()
 
-        proposal = Kommen()
-        now = datetime.now()
-        proposal.set_zeitpunkt(now)
-        proposal.set_bezeichnung("kommen")
+        proposal = Kommen.from_dict(api.payload)
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
@@ -1036,7 +993,7 @@ class KommenListOperations(Resource):
 
             k = adm.create_kommen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
             adm.create_ereignisbuchung(erstellt_von=erstellt_von, erstellt_für=erstellt_fuer, ist_buchung=False, ereignis=k.get_id() ,bezeichnung="Arbeitsbeginn")
-            adm.create_projektarbeit(bezeichnung=projektarbeit, beschreibung="", start=k.get_id(), ende=0, activity=0)
+            
 
             return k, 200
         else:
@@ -1067,7 +1024,12 @@ class KommenOperations(Resource):
         Customer-Objekts.
         """
         adm = Administration()
-        ko = Kommen.from_dict(api.payload)
+        ko = Kommen()
+        zeitpunkt_js_string = api.payload["zeitpunkt"]
+        zeitpunkt_py_date = datetime.strptime(zeitpunkt_js_string, '%Y-%m-%d %H:%M:%S')
+        zeitpunkt_py_string = zeitpunkt_py_date.strftime("%Y-%m-%dT%H:%M:%S")
+        ko.set_zeitpunkt(zeitpunkt_py_string)
+        ko.set_bezeichnung(api.payload["bezeichnung"])
 
 
         if ko is not None:
@@ -1170,7 +1132,7 @@ class ZeitintervallbuchungOperations(Resource):
         zetd = adm.get_zeitintervallbuchung_by_id(id)
         adm.delete_zeitintervallbuchung(zetd)
         return '', 200
-@projectone.route('/zeitintervallbuchung-soll/<int:erstell_fuer>')
+@projectone.route('/zeitintervallbuchung-soll/<int:erstellt_fuer>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des zeitintervallbuchung-user-Objekts')
 class ZeitintervallbuchungOperations(Resource):
@@ -1183,6 +1145,7 @@ class ZeitintervallbuchungOperations(Resource):
         adm = Administration()
         zeitintervallbuchung = adm.get_soll_buchungen_by_user(erstellt_fuer)
         return zeitintervallbuchung
+
 @projectone.route('/zeitintervallbuchung-ist/<int:erstell_fuer>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des zeitintervallbuchung-user-Objekts')
@@ -1196,22 +1159,63 @@ class ZeitintervallbuchungOperations(Resource):
         adm = Administration()
         zeitintervallbuchung = adm.get_ist_buchungen_by_user(erstellt_fuer)
         return zeitintervallbuchung
-    
-@projectone.route('/ereignis')
+
+@projectone.route('/pausenBeginn/<int:user>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class EreignisListOperations(Resource):
 
     @projectone.marshal_with(ereignis, code=200)
     @projectone.expect(ereignis)  # Wir erwarten ein Ereignis-Objekt von Client-Seite.
-    def post(self):
+    def post(self, user):
 
         adm = Administration()
 
-        proposal = Ereignis.from_dict(api.payload)
+        proposal = Ereignis()
+        zeitpunkt_js_string = api.payload["zeitpunkt"]
+        zeitpunkt_py_date = datetime.strptime(zeitpunkt_js_string, '%d-%m-%Y %H:%M:%S')
+        zeitpunkt_py_string = zeitpunkt_py_date.strftime("%Y-%m-%dT%H:%M:%S")
+        proposal.set_zeitpunkt(zeitpunkt_py_string)
+        proposal.set_bezeichnung(api.payload["bezeichnung"])
 
         if proposal is not None:
         
             er = adm.create_ereignis(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
+            adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=True, ereignis=er.get_id() ,bezeichnung="Pausenbeginn")
+            adm.create_pause(bezeichnung="Pause",start=er.get_id(), ende=0)
+
+            return er, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+
+@projectone.route('/pausenEnde/<int:pausenBeginn>/<int:user>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class EreignisListOperations(Resource):
+
+    @projectone.marshal_with(ereignis, code=200)
+    @projectone.expect(ereignis)  # Wir erwarten ein Ereignis-Objekt von Client-Seite.
+    def post(self, pausenBeginn, user):
+
+        adm = Administration()
+
+        proposal = Ereignis()
+        zeitpunkt_js_string = api.payload["zeitpunkt"]
+        zeitpunkt_py_date = datetime.strptime(zeitpunkt_js_string, '%d-%m-%Y %H:%M:%S')
+        zeitpunkt_py_string = zeitpunkt_py_date.strftime("%Y-%m-%dT%H:%M:%S")
+        proposal.set_zeitpunkt(zeitpunkt_py_string)
+        proposal.set_bezeichnung(api.payload["bezeichnung"])
+
+        if proposal is not None:
+        
+            er = adm.create_ereignis(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
+            pause=adm.get_pause_by_beginn(pausenBeginn)
+            pause.set_ende(er.get_id())
+            pa=adm.update_pause(pause)
+            zeitintervallbuchung = adm.create_zeitintervallbuchung(pa.get_id(), True, user, user,"Pause")
+            
+            adm.update_arbeitszeitkonto_ist_arbeitsleistung(user)
+            adm.update_arbeitszeitkonto_gleitzeit(user)
+
             return er, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -1241,15 +1245,20 @@ class EreignisOperations(Resource):
         Customer-Objekts.
         """
         adm = Administration()
-        eri = Ereignis.from_dict(api.payload)
+        proposal = Ereignis()
+        zeitpunkt_js_string = api.payload["zeitpunkt"]
+        zeitpunkt_py_date = datetime.strptime(zeitpunkt_js_string, '%Y-%m-%d %H:%M:%S')
+        zeitpunkt_py_string = zeitpunkt_py_date.strftime("%Y-%m-%dT%H:%M:%S")
+        proposal.set_zeitpunkt(zeitpunkt_py_string)
+        proposal.set_bezeichnung(api.payload["bezeichnung"])
 
-        if eri is not None:
+        if proposal is not None:
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
             Siehe Hinweise oben.
             """
-            eri.set_id(id)
-            er = adm.update_ereignis(eri)
-            return er, 200
+            proposal.set_id(id)
+            proposal = adm.update_ereignis(proposal)
+            return proposal, 200
         else:
             return '', 500
     
@@ -1334,6 +1343,7 @@ class AbwesenheitOperations(Resource):
         abtd = adm.get_abwesenheit_by_id(id)
         adm.delete_abwesenheit(abtd)
         return '', 200
+
 @projectone.route('/zeitintervall')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ZeitintervallListOperations(Resource):
@@ -1404,6 +1414,7 @@ class ZeitintervallOperations(Resource):
         zi = adm.get_zeitintervall_by_id(id)
         adm.delete_zeitintervall(zi)
         return '', 200
+
 """ !SECTION 
 """
 

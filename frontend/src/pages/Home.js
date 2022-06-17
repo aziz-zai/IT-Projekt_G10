@@ -20,7 +20,6 @@ export class Home extends Component {
     this.state = {
       loadingInProgress: false,
       loadingError: null,
-      Open: 'SideBarContainerClosed',
       check: true
     };
   }
@@ -32,27 +31,10 @@ export class Home extends Component {
   /** gets the balance for this account */
 
 
-  handleOpenStateChange = () => {
-    if(this.state.Open =='SideBarContainerOpen'){
-      this.setState({
-        Open: 'SideBarContainerClosed'
-      })
-    }
-    if(this.state.Open =='SideBarContainerClosed'){
-		this.setState({
-			Open: 'SideBarContainerOpen'
-		})
-  }
-	}
-
-
   render() {
     const {Cuser, user} = this.props;
     return (
       <div>
-         <SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={Cuser}/>
-         <NavBar toggle={this.handleOpenStateChange} user={Cuser} nav="navBlack"/>
-         <div class='Test'><Test/></div>
     <div class="ProjectList">
       {user ?
       <Project user={user}/>

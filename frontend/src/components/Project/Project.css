@@ -119,3 +119,91 @@ margin-bottom: 1rem;
     background-color:#5e2e94;
     color: white
 }
+
+.AktBtn{
+    border-radius: 50px;
+    background: #5e2e94;
+    white-space: nowrap;
+    padding: 0.5rem 1rem;
+    color:#fff;
+    font-size: 0.8em;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+}
+
+.ProArbBtn{
+    border-radius: 50px;
+    background: #5e2e94;
+    white-space: nowrap;
+    padding: 0.5rem 1rem;
+    color:#fff;
+    font-size: 0.8em;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+}
+
+.membersDisplay{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem
+}
+
+.tablem{
+    width: 50%;
+    background: #dbc7f2;
+    border-radius: 10px;
+    border-bottom: 1.5px;
+    border: solid grey;
+    margin-top: 10px;
+    margin-bottom:10px;
+    justify-content: center;
+}
+
+.tablea{
+    width: 50%;
+    background: #dbc7f2;
+    border-radius: 10px;
+    border: solid grey;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    justify-content: center;
+}
+
+.Projektdetails{
+    justify-content: center;
+    border: solid rgb(55, 53, 53);
+    border-radius: 12px;
+    margin-top: 10px;
+    background-color: rgb(255, 253, 255);
+}
+
+.überschriftakt{
+    margin-top: 10px;
+}
+
+.addMemberBtn{
+    border-radius: 50px;
+    background: #5e2e94;
+    white-space: nowrap;
+    padding: 0.5rem 1rem;
+    color:#fff;
+    font-size: 0.8em;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+}

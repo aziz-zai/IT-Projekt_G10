@@ -44,10 +44,43 @@ class ProjektarbeitMapper(Mapper):
         """Suchen einer Projektarbeit anhand der Aktivitäten-ID. Da diese eindeutig ist,
         wird genau ein Objekt zurückgegeben.
         """
+        result = []
+
+        cursor = self._cnx.cursor()
+        command = """SELECT id, timestamp, bezeichnung, beschreibung, start, ende, activity 
+        FROM projektarbeit 
+        WHERE activity={} AND id in (
+            SELECT zeitintervall FROM zeitintervallbuchung 
+            WHERE ist_buchung = false)""".format(activity)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        
+        for(id, timestamp, bezeichnung, beschreibung, start, ende, activity) in tuples:
+            projektarbeit = Projektarbeit()
+            projektarbeit.set_id(id),
+            projektarbeit.set_timestamp(timestamp)
+            projektarbeit.set_bezeichnung(bezeichnung)
+            projektarbeit.set_beschreibung(beschreibung)
+            projektarbeit.set_start(start)
+            projektarbeit.set_ende(ende)
+            projektarbeit.set_activity(activity)
+
+            result.append(projektarbeit)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
+    def find_by_start(self, start):
+        """Suchen einer Projektarbeit anhand der Aktivitäten-ID. Da diese eindeutig ist,
+        wird genau ein Objekt zurückgegeben.
+        """
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, bezeichnung, beschreibung, start, ende, activity FROM projektarbeit WHERE activity={}".format(activity)
+        command = "SELECT id, timestamp, bezeichnung, beschreibung, start, ende, activity FROM projektarbeit WHERE start={}".format(start)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
