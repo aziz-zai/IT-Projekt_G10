@@ -113,7 +113,7 @@ export class SingleProject extends Component {
           isOpen: false
         })
         // console.log(account);
-        this.props.onClose(this.props.project);  // call the parent with the deleted customer
+        this.props.handleProjectDelete(this.props.project);  // call the parent with the deleted customer
       }).catch(e =>
         this.setState({ // Reset state with error from catch 
           deletingInProgress: false,
@@ -261,16 +261,16 @@ export class SingleProject extends Component {
     }
 
     aktivitätDeleted = aktivität => {
-      const newAktivitätenList = this.state.aktivität.filter(aktivitätFromState => aktivitätFromState.getID() !== aktivität);
+      const newAktivitätenList = this.state.aktivitäten.filter(aktivitätFromState => aktivitätFromState.getID() !== aktivität);
       this.setState({
-        aktivität: newAktivitätenList
+        aktivitäten: newAktivitätenList
       });
     }
 
     memberDeleted = member => {
-      const newMemberList = this.state.member.filter(memberFromState => memberFromState.getID() !== member);
+      const newMemberList = this.state.membership.filter(memberFromState => memberFromState.getID() !== member);
       this.setState({
-        member: newMemberList
+        membership: newMemberList
       });
     }
 
@@ -397,7 +397,7 @@ export class SingleProject extends Component {
         </Typography> 
         {
             membership.map(member => <MemberDetail key={member.id}
-            member={member} project={project.id}/>)
+            member={member} project={project.id} memberDeleted={this.memberDeleted}/> )
           }
           <MemberList isOpen={openMember} onClose={this.closeMember} user={user} project={project} handleNewMember={this.handleNewMember}>
           </MemberList>  

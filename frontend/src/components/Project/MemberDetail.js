@@ -71,7 +71,8 @@ Membership.propTypes = {
   classes: PropTypes.any,
   project: PropTypes.any,
   member: PropTypes.any,
-  project: PropTypes.any
+  project: PropTypes.any,
+  memberDeleted: PropTypes.any,
 };
 
 export default Membership;
