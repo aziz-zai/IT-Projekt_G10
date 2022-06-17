@@ -45,8 +45,8 @@ class EreignisbuchungMapper(Mapper):
         cursor = self._cnx.cursor()
         command = """SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung 
         FROM projectone.ereignisbuchung
-        WHERE erstellt_für={} AND ist_buchung=FALSE
-        """.format(erstellt_für)
+        WHERE (erstellt_für={} OR erstellt_von={}) AND ist_buchung=FALSE
+        """.format(erstellt_für, erstellt_für)
         cursor.execute(command)
         tuples = cursor.fetchall()
         result= []
@@ -74,8 +74,8 @@ class EreignisbuchungMapper(Mapper):
         cursor = self._cnx.cursor()
         command = """SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung 
         FROM projectone.ereignisbuchung
-        WHERE erstellt_für={} AND ist_buchung=True
-        """.format(erstellt_für)
+        WHERE (erstellt_für={} OR erstellt_von={}) AND ist_buchung=True
+        """.format(erstellt_für, erstellt_für)
         cursor.execute(command)
         tuples = cursor.fetchall()
         result= []

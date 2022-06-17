@@ -43,6 +43,9 @@ class User(BusinessObject):
 
     def get_urlaubstage(self):
         return self._urlaubstage
+    
+    def set_urlaubstage(self, urlaubstage):
+        self._urlaubstage = urlaubstage
 
 
     def __str__(self):

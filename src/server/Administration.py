@@ -328,13 +328,13 @@ class Administration(object):
         with ZeitintervallbuchungMapper() as mapper:
             return mapper.find_by_key(id)
 
-    def get_soll_buchungen_by_user(self, erstellt_für):
+    def get_soll_projektarbeit_buchungen_by_user(self, erstellt_für):
         with ZeitintervallbuchungMapper() as mapper:
-            return mapper.find_soll_buchungen_by_user(erstellt_für)
+            return mapper.find_soll_projektarbeit_buchungen_by_user(erstellt_für)
 
-    def get_ist_buchungen_by_user(self, erstellt_für):
+    def get_ist_projektarbeit_buchungen_by_user(self, erstellt_für):
         with ZeitintervallbuchungMapper() as mapper:
-            return mapper.find_ist_buchungen_by_user(erstellt_für)
+            return mapper.find_ist_projektarbeit_buchungen_by_user(erstellt_für)
     
     def get_pause_buchungen_by_user(self, user):
         with ZeitintervallbuchungMapper() as mapper:
@@ -437,7 +437,7 @@ class Administration(object):
     
     def update_arbeitszeitkonto_ist_arbeitsleistung(self, user):
         arbeitszeitkonto = self.get_arbeitszeitkonto_by_userID(user)
-        ist_zeitintervallbuchungen = self.get_ist_buchungen_by_user(user)
+        ist_zeitintervallbuchungen = self.get_ist_projektarbeit_buchungen_by_user(user)
         urlaub_krank_zeitintervallbuchungen = self.get_all_urlaub_krank_buchungen(user)
         pause_zeitintervallbuchungen = self.get_pause_buchungen_by_user(user)
         ist_stunden=0
