@@ -106,7 +106,6 @@ export class SingleProject extends Component {
     }
 
     deleteProject = () => {
-
       OneAPI.getAPI().deleteProject(this.props.project.getID()).then(() => {
         this.setState({  // Set new state when AccountBOs have been fetched
           deletingInProgress: false, // loading indicator 
@@ -267,6 +266,13 @@ export class SingleProject extends Component {
       });
     }
 
+    memberDeleted = member => {
+      const newMemberList = this.state.member.filter(memberFromState => memberFromState.getID() !== member);
+      this.setState({
+        member: newMemberList
+      });
+    }
+
     componentDidMount() {
     this.getProjektleiterByProject();
     this.loadAktivitäten();
@@ -389,7 +395,7 @@ export class SingleProject extends Component {
         Projektmitarbeiter
         </Typography> 
         {
-            membership.map(member => <Membership key={member.id} 
+            membership.map(member => <Membership key={member.id} memberd={member.getID()} 
             member={member}/>)
           }
           <MemberList isOpen={openMember} onClose={this.closeMember} user={user} project={project} handleNewMember={this.handleNewMember}>

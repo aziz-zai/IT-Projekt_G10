@@ -378,8 +378,8 @@ export default class OneAPI {
     })
   }
 
-  deleteMembership(membershipBO) {
-    return this.#fetchAdvanced(this.#deleteMembershipURL(membershipBO), {
+  deleteMembership(id) {
+    return this.#fetchAdvanced(this.#deleteMembershipURL(id), {
       method: 'DELETE'
     }).then((responseJSON) => {
       // We always get an array of MembershipBO.fromJSON

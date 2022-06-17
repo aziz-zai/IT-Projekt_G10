@@ -6,6 +6,7 @@ import './Aktivitäten.css'
 import './Project.css'
 import DeleteIcon from '@mui/icons-material/Delete';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import OneAPI from '../../api/OneAPI';
 
 
 export class Membership extends Component {
@@ -14,23 +15,44 @@ export class Membership extends Component {
       
         // Init state
         this.state = {
-
+          deletingInProgress: false,
+          deletingError: null,
         };
          // save this state for canceling
         this.baseState = this.state;
     }
 
-    render() {
-        const {member} = this.props;
+    deleteMember = () => {
+      OneAPI.getAPI().deleteMembership(this.props.memberd).then(() => {
+        this.setState({  // Set new state when AccountBOs have been fetched
+          deletingInProgress: false, // loading indicator 
+          deletingError: null
+        })
+        // console.log(account);
+        this.props.memberDeleted(this.props.memberd);  // call the parent with the deleted customer
+      }).catch(e =>
+        this.setState({ // Reset state with error from catch 
+          deletingInProgress: false,
+          deletingError: e
+        })
+      );
+      // set loading to true
+      this.setState({
+        deletingInProgress: true,
+        deletingError: null
+      });
+    }
 
+    render() {
+        const {member, memberd} = this.props;
         
     return (
-     
       <Paper variant='outlined' class="papermitarbeiter">
         <AccountCircleIcon/>      
         {member.vorname} {member.nachname}
-        <Button><DeleteIcon color="secondary"/>
-          </Button>
+        <Button><DeleteIcon onClick={this.deleteMember} color="secondary"/>
+          </Button>    
+          {console.log("memberid", this.props.memberd)}
       </Paper>
     );
   }
@@ -48,7 +70,8 @@ Membership.propTypes = {
   onClose: PropTypes.any,
   classes: PropTypes.any,
   project: PropTypes.any,
-  member: PropTypes.any
+  member: PropTypes.any,
+  memberd: PropTypes.any
 };
 
 export default Membership;
