@@ -80,6 +80,7 @@ componentDidMount(){
 }
   render() {
     const {arbeitszeitKonto, ereignisbuchungSelected, zeitintervallbuchungSelected, startFilter, endFilter, istBuchung} = this.state;
+    const {user} = this.props;
     return (
       <div>
         {arbeitszeitKonto ? 
@@ -132,7 +133,9 @@ componentDidMount(){
            <div class="selectionItem2"><button class={ereignisbuchungSelected ? "selectionBtn" : "selectionBtnAlt"} onClick={this.handleEreignisbuchung}>Ereignisbuchungen</button></div>
          </div>
          <div class="buchungen">
-           {istBuchung  ? <div>ist</div> :<div>soll</div>}
+           {zeitintervallbuchungSelected ?
+           <Zeitintervallbuchung istBuchung={istBuchung} startFilter={startFilter} endFilter={endFilter} user={user}/>
+          : <Ereignisbuchung istBuchung={istBuchung} startFilter={startFilter} endFilter={endFilter} user={user}/>}
          </div>
        </div>
       </div>

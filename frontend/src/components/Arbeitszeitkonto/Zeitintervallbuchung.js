@@ -34,8 +34,8 @@ export class Zeitintervallbuchung extends Component {
       const {istBuchung} = this.props;
     return (
       <div >
-          {(istBuchung == true) ?
-          <div>ist buchung zeitintervall</div>: <div>sasdsa</div>} {console.log('zeitintervallbsollist', istBuchung)}
+          {istBuchung  ?
+          <div>ist buchung zeitintervall</div>: <div>soll buchung zeitintervall</div>}
       </div>
     )
   }
@@ -43,5 +43,8 @@ export class Zeitintervallbuchung extends Component {
 
 Zeitintervallbuchung.propTypes = {
     istBuchung: PropTypes.any,
+    startFilter: PropTypes.any,
+    endFilter: PropTypes.any,
+    user: PropTypes.any,
   }
 export default Zeitintervallbuchung
