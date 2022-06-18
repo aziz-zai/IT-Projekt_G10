@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import './Arbeitszeitkonto.css'
+import './Ereignisbuchung.css'
 
-export class Arbeitszeitkonto extends Component {
+export class Ereignisbuchung extends Component {
 
     // Init state
     constructor(props) {
@@ -14,15 +14,15 @@ export class Arbeitszeitkonto extends Component {
 
   render() {
     return (
-      <div class="test">Arbeitszeitkonto
-        
+      <div>
+        Ereignisbuchung
       </div>
     )
   }
 }
 
-Arbeitszeitkonto.propTypes = {
+Ereignisbuchung.propTypes = {
     user: PropTypes.any,
     Cuser: PropTypes.any,
   }
-export default Arbeitszeitkonto
+export default Ereignisbuchung

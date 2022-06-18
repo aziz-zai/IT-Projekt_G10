@@ -100,6 +100,7 @@ margin-top: 2rem;
     border-radius: 10px;
     background: #5e2e94;
     white-space: nowrap;
+    height: 2rem;
     padding: 6px 25px;
     color:#fff;
     font-size: 1rem;
@@ -110,7 +111,7 @@ margin-top: 2rem;
     justify-content: center;
     align-items: center;
     transition: all 0.2s ease-in-out;
-    margin: 0 0.5rem 0 0.5rem
+    margin-left: 1rem;
 }
 
 @media screen and (max-width: 600px){

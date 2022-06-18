@@ -461,7 +461,7 @@ class Administration(object):
     def update_arbeitszeitkonto_gleitzeit(self, user):
         arbeitszeitkonto = self.get_arbeitszeitkonto_by_userID(user)
         aktuelle_arbeitsleistung = arbeitszeitkonto.get_arbeitsleistung() 
-        soll_zeitintervallbuchungen = self.get_soll_buchungen_by_user(user)
+        soll_zeitintervallbuchungen = self.get_soll_projektarbeit_buchungen_by_user(user)
 
         soll_stunden=0
         for buchung in soll_zeitintervallbuchungen:

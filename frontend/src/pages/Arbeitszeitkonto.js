@@ -7,6 +7,9 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import Ereignisbuchung from '../components/Arbeitszeitkonto/Ereignisbuchung';
+import Zeitintervallbuchung from '../components/Arbeitszeitkonto/Zeitintervallbuchung';
+import TextField from '@mui/material/TextField';
 
 export class Arbeitszeitkonto extends Component {
 
@@ -15,7 +18,11 @@ export class Arbeitszeitkonto extends Component {
     this.state = {
       arbeitszeitKonto: null,
       ereignisbuchungSelected: false,
-      zeitintervallbuchungSelected: true
+      zeitintervallbuchungSelected: true,
+      startFilter: null,
+      endFilter: null,
+      istBuchung: true
+
     };
   }
 
@@ -47,11 +54,32 @@ handleZeitintervallbuchung = () => {
     zeitintervallbuchungSelected: true,
   })
 }
+
+dateFilterChanged = (event) => {
+  this.setState({
+    [event.target.id]: event.target.value,
+  });
+}
+
+handleIstSelected = () => {
+    this.setState({
+    istBuchung: true,
+  });
+
+}
+
+handleSollSelected = () => {
+  this.setState({
+  istBuchung: false,
+});
+
+}
+
 componentDidMount(){
   this.loadArbeitszeitkonto();
 }
   render() {
-    const {arbeitszeitKonto, ereignisbuchungSelected, zeitintervallbuchungSelected} = this.state;
+    const {arbeitszeitKonto, ereignisbuchungSelected, zeitintervallbuchungSelected, startFilter, endFilter, istBuchung} = this.state;
     return (
       <div>
         {arbeitszeitKonto ? 
@@ -60,6 +88,7 @@ componentDidMount(){
        <div class="azkHeaderItem">Urlaubskonto: <strong>{arbeitszeitKonto[0].urlaubskonto} </strong>Tage</div>
        <div class="azkHeaderItem">Gleitzeit: <strong>{arbeitszeitKonto[0].gleitzeit}</strong> Stunden</div>
        </div>:null}
+       <button class="abwesenheitBtn"> Abwesenheit </button>
        <div class="buchungContainer">
          <div class="buchungHeader">
            <div class="buchungFilter"><FormControl>
@@ -68,18 +97,43 @@ componentDidMount(){
         row
         aria-labelledby="demo-row-radio-buttons-group-label"
         name="row-radio-buttons-group"
+        value={istBuchung}
       >
-        <FormControlLabel value="female" control={<Radio />} label="Ist Buchungen" />
-        <FormControlLabel value="male" control={<Radio />} label="Soll Buchungen" />
+        <FormControlLabel onClick={this.handleIstSelected}value={true} control={<Radio />} label="Ist Buchungen" />
+        <FormControlLabel onClick={this.handleSollSelected}value={false} control={<Radio />} label="Soll Buchungen" />
       </RadioGroup>
+      <TextField
+        id="startFilter"
+        label="Von"
+        type="datetime-local"
+        defaultValue="2017-05-24T10:30"
+        value={startFilter}
+        onChange={this.dateFilterChanged}
+        sx={{ width: 200, marginTop:2 }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+      /> <TextField
+      id="endFilter"
+      label="Bis"
+      type="datetime-local"
+      defaultValue="2017-05-24T10:30"
+      value={endFilter}
+      onChange={this.dateFilterChanged}
+      sx={{width: 200, marginTop:2 }}
+      InputLabelProps={{
+        shrink: true,
+      }}
+    /> 
     </FormControl></div>
-           <button class="abwesenheitBtn"> Abwesenheit </button>
          </div>
          <div class="buchungSelection">
            <div class="selectionItem1"><button class={zeitintervallbuchungSelected ? "selectionBtn" : "selectionBtnAlt"} onClick={this.handleZeitintervallbuchung}>Zeitintervallbuchungen</button></div>
            <div class="selectionItem2"><button class={ereignisbuchungSelected ? "selectionBtn" : "selectionBtnAlt"} onClick={this.handleEreignisbuchung}>Ereignisbuchungen</button></div>
          </div>
-         <div class="buchungen"></div>
+         <div class="buchungen">
+           {istBuchung  ? <div>ist</div> :<div>soll</div>}
+         </div>
        </div>
       </div>
     )
