@@ -4,6 +4,7 @@ import OneAPI from '../../api/OneAPI';
 import { Typography, Accordion, AccordionSummary, AccordionDetails, Grid } from '@mui/material';
 import { Button, ButtonGroup } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import './Ereignisbuchung.css'
 
 export class EreignisbuchungListEntry extends Component {
 
@@ -18,7 +19,9 @@ export class EreignisbuchungListEntry extends Component {
         ereignisDay: null,
         ereignisHour: null,
         ereignisMinute: null,
-        ereignisSecond: null
+        ereignisSecond: null,
+        erstellt_fuer: null,
+        erstellt_von: null,
     };
   }
 
@@ -105,11 +108,46 @@ export class EreignisbuchungListEntry extends Component {
 
     });
   }
+
+  getErstelltFuerById = () => {
+    OneAPI.getAPI().getUser(this.props.ereignisbuchung.erstellt_für).then(user =>
+      this.setState({
+        erstellt_fuer: user,
+
+      })
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+
+        })
+      );
+    // set loading to true
+    this.setState({
+
+    });
+  }
+
+  getErstelltVonById = () => {
+    OneAPI.getAPI().getUser(this.props.ereignisbuchung.erstellt_von).then(user =>
+      this.setState({
+        erstellt_von: user,
+      })
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+
+        })
+      );
+    // set loading to true
+    this.setState({
+
+    });
+  }
   handleExpandState = () => {
     this.setState({
         expandState: !this.state.expandState,
   });
   {console.log('expandState', this.state.expandState)}
+  this.getErstelltFuerById();
+  this.getErstelltVonById();
   }
 
 
@@ -126,9 +164,9 @@ componentDidMount() {
 }
   render() {
       const {ereignisbuchung} = this.props;
-      const {expandState,  ereignis, ereignisYear, ereignisMonth, ereignisDay,ereignisHour, ereignisMinute, ereignisSecond} = this.state;
+      const {expandState,  ereignis, ereignisYear, ereignisMonth, ereignisDay,ereignisHour, ereignisMinute, ereignisSecond, erstellt_von, erstellt_fuer} = this.state;
     return (
-      <div>{console.log('ereignis', ereignis)}
+      <div>
         <Accordion defaultExpanded={false} expanded={expandState} >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon onClick={this.handleExpandState}/>}
@@ -136,8 +174,13 @@ componentDidMount() {
           >
             <Grid container spacing={1} justify='flex-start' alignItems='center'>
               <Grid item>
-                <Typography variant='body1' sx={{typography: 'heading'}}>{ereignisbuchung.bezeichnung},
-                </Typography>
+                <div class="ereignisBuchungHeader">
+                <Typography variant='body1' sx={{typography: 'heading'}}>{ereignisbuchung.bezeichnung}: &nbsp;&nbsp;
+                </Typography>  &nbsp;
+                { ereignis ?
+                <Typography variant='body1'><strong>{String(ereignisYear).padStart(4, "0")}-{String(ereignisMonth).padStart(2, "0")}-{String(ereignisDay).padStart(2, "0")}</strong> &nbsp; um &nbsp;
+              <strong>{String(ereignisHour).padStart(2, "0")}:{String(ereignisMinute).padStart(2, "0")}:{String(ereignisSecond).padStart(2, "0")}Uhr</strong> </Typography> :null}
+               </div>
               </Grid>
               <Grid item>
                 <ButtonGroup variant='text' size='small'>
@@ -151,13 +194,14 @@ componentDidMount() {
               </Grid>
               <Grid item xs />
               <Grid item>
-                <Typography variant='body2' color={'textSecondary'}>List of accounts</Typography>
+                <Typography variant='body2' color={'textSecondary'}>Mehr Infos</Typography>
               </Grid>
             </Grid>
           </AccordionSummary>
           <AccordionDetails>
-              { ereignis ? <div>{String(ereignisYear).padStart(4, "0")}-{String(ereignisMonth).padStart(2, "0")}-{String(ereignisDay).padStart(2, "0")} &nbsp;
-              {String(ereignisHour).padStart(2, "0")}:{String(ereignisMinute).padStart(2, "0")}:{String(ereignisSecond).padStart(2, "0")} </div>:null} sads
+              {erstellt_von ?
+              <div>
+           Erstellt von:{erstellt_von[0].vorname},{erstellt_von[0].nachname}  Erstellt für:{erstellt_fuer[0].vorname}, {erstellt_fuer[0].nachname}</div>:null}
           </AccordionDetails>
         </Accordion>
       </div>
