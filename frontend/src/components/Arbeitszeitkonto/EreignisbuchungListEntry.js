@@ -168,8 +168,8 @@ componentDidMount() {
       const {expandState,  ereignis, ereignisYear, ereignisMonth, ereignisDay,ereignisHour, ereignisMinute, ereignisSecond, erstellt_von, erstellt_fuer} = this.state;
     return (
       <div>
-        <Accordion TransitionProps={{ unmountOnExit: true }} defaultExpanded={false} expanded={expandState} >
-          <AccordionSummary
+        <Accordion TransitionProps={{ unmountOnExit: true }} defaultExpanded={false} expanded={expandState} sx={{backgroundColor:"#5e2e942d", marginLeft: 1, marginRight:1}}>
+          <AccordionSummary 
             expandIcon={<ExpandMoreIcon onClick={this.handleExpandState}/>}
             id={`customer${ereignisbuchung.getID()}accountpanel-header`}
           >
@@ -202,7 +202,7 @@ componentDidMount() {
               </Grid>
             </Grid>
           </AccordionSummary>
-          <AccordionDetails>
+          <AccordionDetails sx={{backgroundColor:"#54377550"}}>
               {erstellt_von ?
               <div class="ersteller">
            {erstellt_von[0].vorname}  {erstellt_von[0].nachname}&nbsp;&nbsp;<DoubleArrowIcon sx={{color:"#5e2e94"}}/>&nbsp;&nbsp;{erstellt_fuer[0].vorname}  {erstellt_fuer[0].nachname}</div>:null}
