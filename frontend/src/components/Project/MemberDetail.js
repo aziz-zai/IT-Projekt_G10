@@ -52,7 +52,6 @@ export class Membership extends Component {
         {member.vorname} {member.nachname}
         <Button><DeleteIcon onClick={this.deleteMember} color="secondary"/>
           </Button>    
-          {console.log("memberid", this.props.memberd)}
       </Paper>
     );
   }

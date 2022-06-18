@@ -92,7 +92,7 @@ textFieldValueChange = (event) => {
   render() {
       const {isOpen} = this.props;
       const {projektName, projektNameValidationFailed, laufZeit, laufZeitValidationFailed,
-      auftragGeber, addingInProgress, updatingInProgress, auftragGeberValidationFailed, availableHours, availableHoursValidationFailed,} = this.state;
+      auftragGeber, addingInProgress, auftragGeberValidationFailed, availableHours, availableHoursValidationFailed,} = this.state;
 
     return (
     <div>
@@ -116,74 +116,55 @@ textFieldValueChange = (event) => {
             <button onClick={this.addProject} class="saveBtn"> Speichern </button>
           </Toolbar>
         </AppBar>
-        <Container maxWidth="sm" style={{marginTop:'10px'}} justify-content="space-between"> 
-        <Grid container spacing={2} justify="center" color="primary"> 
-          <Card sx={{ minWidth: 275 }} variant="outlined" color="yellow">
-            <Typography sx={{
-          mx: 'auto',
-          width: 200,
-          p: 1,
-          m: 1,
-          border: '1px solid',
-          borderColor: "black",
-          borderRadius: 2,
-          textAlign: 'center',
-          fontSize: '0.875rem',
-          fontWeight: '700',
-        }}> 
-            Projektdetails eintragen
-            </Typography>
-              <List>
-                <ListItem>
-                <TextField
-                  autoFocus type='text' required
-                  id="projektName"
-                  label="Projektname"
-                  value={projektName}
-                  onChange={this.textFieldValueChange}
-                  error={projektNameValidationFailed} 
-                  helperText={projektNameValidationFailed ? 'The Project name must contain at least one character' : ' '}
-                  /> 
-                </ListItem>
-                <ListItem>
-                <TextField
-                  autoFocus type='text' required
-                  id="laufZeit"
-                  label="Projektlaufzeit"
-                  value={laufZeit}
-                  onChange={this.textFieldValueChange}
-                  error={laufZeitValidationFailed} 
-                  helperText={laufZeitValidationFailed ? 'Die Laufzeit darf nicht leer sein' : ' '}
-                  />
-                </ListItem>
-                <ListItem>
-                <TextField
-                  autoFocus type='text' required
-                  id="auftragGeber"
-                  label="Auftraggeber"
-                  value={auftragGeber}
-                  onChange={this.textFieldValueChange}
-                  error={auftragGeberValidationFailed} 
-                  helperText={auftragGeberValidationFailed ? 'Das Feld darf nicht leer sein!' : ' '}
-                  />
-                </ListItem>
-                <ListItem>
-                <TextField
-                  autoFocus type='text' required
-                  id="availableHours"
-                  label="Verfügbare Stunden"
-                  value={availableHours}
-                  onChange={this.textFieldValueChange}
-                  error={availableHoursValidationFailed} 
-                  helperText={availableHoursValidationFailed ? 'Das Feld darf nicht leer sein!' : ' '}
-                  />
-                  <LoadingProgress show={addingInProgress} />
-                </ListItem>
-                <Divider />
-              </List>
-          </Card>
-        </Grid>
-      </Container>
+        <Container class="containerproject"> 
+        <Typography class="überschriftakt" component="h2" variant="h6" color="black" gutterBottom>
+        Projekt
+        </Typography>
+        <Card class="Projektdetails">
+          <List>
+          <ListItem>
+          <TextField
+            autoFocus type='text' required
+            color="secondary"
+            id="projektName"
+            label="Projektname"
+            value={projektName}
+            onChange={this.textFieldValueChange}
+            />  
+          </ListItem>
+          <ListItem>
+          <TextField
+            autoFocus type='text' required
+            color="secondary"
+            id="laufZeit"
+            label="Projektlaufzeit"
+            value={laufZeit}
+            onChange={this.textFieldValueChange}
+            />
+          </ListItem>
+          <ListItem>
+          <TextField
+            autoFocus type='text' required
+            color="secondary"
+            id="auftragGeber"
+            label="Auftraggeber"
+            value={auftragGeber}
+            onChange={this.textFieldValueChange}
+            />
+          </ListItem>
+          <ListItem>
+          <TextField
+            autoFocus type='text' required
+            color="secondary"
+            id="availableHours"
+            label="Verfügbare Stunden"
+            value={availableHours}
+            onChange={this.textFieldValueChange}
+            />
+          </ListItem>
+        </List>
+        </Card>
+        </Container>
     </Dialog>
     </div>
   );
