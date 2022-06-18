@@ -5,6 +5,7 @@ import { Typography, Accordion, AccordionSummary, AccordionDetails, Grid } from 
 import { Button, ButtonGroup } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import './Ereignisbuchung.css'
+import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 
 export class EreignisbuchungListEntry extends Component {
 
@@ -167,7 +168,7 @@ componentDidMount() {
       const {expandState,  ereignis, ereignisYear, ereignisMonth, ereignisDay,ereignisHour, ereignisMinute, ereignisSecond, erstellt_von, erstellt_fuer} = this.state;
     return (
       <div>
-        <Accordion defaultExpanded={false} expanded={expandState} >
+        <Accordion TransitionProps={{ unmountOnExit: true }} defaultExpanded={false} expanded={expandState} >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon onClick={this.handleExpandState}/>}
             id={`customer${ereignisbuchung.getID()}accountpanel-header`}
@@ -181,6 +182,9 @@ componentDidMount() {
                 <Typography variant='body1'><strong>{String(ereignisYear).padStart(4, "0")}-{String(ereignisMonth).padStart(2, "0")}-{String(ereignisDay).padStart(2, "0")}</strong> &nbsp; um &nbsp;
               <strong>{String(ereignisHour).padStart(2, "0")}:{String(ereignisMinute).padStart(2, "0")}:{String(ereignisSecond).padStart(2, "0")}Uhr</strong> </Typography> :null}
                </div>
+              </Grid>
+              <Grid item>
+                    {ereignisbuchung.ist_buchung ?<Typography sx={{color: "green"}}> IST</Typography>:<Typography sx={{color: "red"}}> SOLL</Typography>}
               </Grid>
               <Grid item>
                 <ButtonGroup variant='text' size='small'>
@@ -200,8 +204,8 @@ componentDidMount() {
           </AccordionSummary>
           <AccordionDetails>
               {erstellt_von ?
-              <div>
-           Erstellt von:{erstellt_von[0].vorname},{erstellt_von[0].nachname}  Erstellt für:{erstellt_fuer[0].vorname}, {erstellt_fuer[0].nachname}</div>:null}
+              <div class="ersteller">
+           {erstellt_von[0].vorname}  {erstellt_von[0].nachname}&nbsp;&nbsp;<DoubleArrowIcon sx={{color:"#5e2e94"}}/>&nbsp;&nbsp;{erstellt_fuer[0].vorname}  {erstellt_fuer[0].nachname}</div>:null}
           </AccordionDetails>
         </Accordion>
       </div>
