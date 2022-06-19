@@ -46,6 +46,7 @@ class EreignisbuchungMapper(Mapper):
         command = """SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung 
         FROM projectone.ereignisbuchung
         WHERE (erstellt_für={} OR erstellt_von={}) AND ist_buchung=False
+        order by timestamp desc
         """.format(erstellt_für, erstellt_für)
         cursor.execute(command)
         tuples = cursor.fetchall()
@@ -75,6 +76,7 @@ class EreignisbuchungMapper(Mapper):
         command = """SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung 
         FROM projectone.ereignisbuchung
         WHERE (erstellt_für={} OR erstellt_von={}) AND ist_buchung=True
+        order by timestamp desc
         """.format(erstellt_für, erstellt_für)
         cursor.execute(command)
         tuples = cursor.fetchall()
