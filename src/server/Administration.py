@@ -201,6 +201,21 @@ class Administration(object):
         with EreignisbuchungMapper() as mapper:
             return mapper.find_ist_ereignisbuchungen_by_user(erstellt_für)
 
+    def get_ist_eregnisbuchungen_by_zeitspanne(self, erstellt_für, startFilter, endFilter):
+        ereignisbuchungen = self.get_ist_eregnisbuchungen_by_user(erstellt_für)
+        if((startFilter != "null" or "") and (endFilter != "null" or "")):
+            startTime = datetime.strptime(startFilter, "%Y-%m-%dT%H:%M")
+            endTime = datetime.strptime(endFilter, "%Y-%m-%dT%H:%M")
+            ereignisbuchungen_in_time = []
+            for(buchung) in ereignisbuchungen:
+                ereignis = self.get_ereignis_by_id(buchung.get_ereignis())
+                ereignisTime = datetime.strptime(ereignis.get_zeitpunkt(), "%Y-%m-%dT%H:%M")
+                if(startTime <= ereignisTime <= endTime):
+                    ereignisbuchungen_in_time.append(buchung)
+                return ereignisbuchungen_in_time
+        else:
+            return ereignisbuchungen
+
     def update_ereignisbuchung(self, ereignisbuchung):
         with EreignisbuchungMapper() as mapper:
             return mapper.update(ereignisbuchung)

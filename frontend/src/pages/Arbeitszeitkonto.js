@@ -56,9 +56,16 @@ handleZeitintervallbuchung = () => {
 }
 
 dateFilterChanged = (event) => {
+if(event.target.value != ""){
   this.setState({
     [event.target.id]: event.target.value,
   });
+}
+else{
+  this.setState({
+    [event.target.id]: null,
+  });
+}
 }
 
 handleIstSelected = () => {
@@ -107,7 +114,6 @@ componentDidMount(){
         id="startFilter"
         label="Von"
         type="datetime-local"
-        defaultValue="2017-05-24T10:30"
         value={startFilter}
         onChange={this.dateFilterChanged}
         sx={{ width: 200, marginTop:2 }}
@@ -118,7 +124,6 @@ componentDidMount(){
       id="endFilter"
       label="Bis"
       type="datetime-local"
-      defaultValue="2017-05-24T10:30"
       value={endFilter}
       onChange={this.dateFilterChanged}
       sx={{width: 200, marginTop:2 }}

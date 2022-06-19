@@ -14,7 +14,7 @@ export class Ereignisbuchung extends Component {
     };
   }
   getEreignisbuchungIST = () => {
-    OneAPI.getAPI().getEreignisbuchungIST(this.props.user[0].id).then(ereignisbuchungen =>
+    OneAPI.getAPI().getEreignisbuchungIST(this.props.user[0].id, this.props.startFilter, this.props.endFilter).then(ereignisbuchungen =>
       this.setState({
         ereignisbuchungen: ereignisbuchungen,
     
@@ -39,6 +39,7 @@ this.getEreignisbuchungIST()
       <div>
         {istBuchung ?
         <div>
+          <button onClick={this.getEreignisbuchungIST} class="filterBtn">Suche</button>
             {ereignisbuchungen ?
             ereignisbuchungen.map(ereignisbuchung => <EreignisbuchungListEntry key={ereignisbuchung.getID()} ereignisbuchung={ereignisbuchung}/>):null}
         </div>
