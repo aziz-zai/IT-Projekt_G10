@@ -101,7 +101,7 @@ export default class OneAPI {
   #deleteEreignisURL = (id) => `${this.#OneServerBaseURL}/ereignis/${id}`;
   
   //Kommen related
-  #addKommenIstURL = (user, projektarbeit) => `${this.#OneServerBaseURL}/kommen-ist/${user}/${projektarbeit}`;
+  #addKommenIstURL = (user, projektarbeit, kommenZeit) => `${this.#OneServerBaseURL}/kommen-ist/${user}/${projektarbeit}/${kommenZeit}`;
   #addKommenSollURL = (erstellt_von, erstellt_fuer, projektarbeit) => `${this.#OneServerBaseURL}/kommen-soll/${erstellt_von}/${erstellt_fuer}/${projektarbeit}`;
   #getKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
   #updateKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
@@ -109,7 +109,7 @@ export default class OneAPI {
 
   //Gehen related
   #getGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
-  #addGehenIstURL = (projektarbeitid, user, activity) => `${this.#OneServerBaseURL}/gehen-ist/${projektarbeitid}/${user}/${activity}`;
+  #addGehenIstURL = (projektarbeitid, user, activity, gehenZeit) => `${this.#OneServerBaseURL}/gehen-ist/${projektarbeitid}/${user}/${activity}/${gehenZeit}`;
   #addGehenSollURL = (projektarbeitid, erstellt_von, erstellt_fuer, activity) => `${this.#OneServerBaseURL}/gehen-soll/${projektarbeitid}/${erstellt_von}/${erstellt_fuer}/${activity}`;
   #updateGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
   #deleteGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
@@ -651,8 +651,8 @@ export default class OneAPI {
   }
 
 
-  addGehenIst(projektarbeit, user, aktivität) {
-    return this.#fetchAdvanced(this.#addGehenIstURL(projektarbeit, user, aktivität), {
+  addGehenIst(projektarbeit, user, aktivität, gehenZeit) {
+    return this.#fetchAdvanced(this.#addGehenIstURL(projektarbeit, user, aktivität, gehenZeit), {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -703,8 +703,8 @@ export default class OneAPI {
    * Kommen related
   */
 
-  addKommenIst(user, projektarbeit) {
-    return this.#fetchAdvanced(this.#addKommenIstURL(user, projektarbeit), {
+  addKommenIst(user, projektarbeit, kommenZeit) {
+    return this.#fetchAdvanced(this.#addKommenIstURL(user, projektarbeit, kommenZeit), {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -1149,36 +1149,7 @@ export default class OneAPI {
     }
 
 
-updateArbeitszeitkonto(arbeitszeitkontoBO) {
-  return this.#fetchAdvanced(this.#updateArbeitszeitkontoURL(arbeitszeitkontoBO.getID()), {
-    method: 'PUT',
-    headers: {
-      'Accept': 'application/json, text/plain',
-      'Content-type': 'application/json',
-    },
-    body: JSON.stringify(arbeitszeitkontoBO)
-  }).then((responseJSON) => {
-    // We always get an array of ArbeitszeitkontoBOs.fromJSON
-    let responseArbeitszeitkontoBO = arbeitszeitkontoBO.fromJSON(responseJSON)[0];
-    // 
-    return new Promise(function (resolve) {
-      resolve(responseArbeitszeitkontoBO);
-    })
-  })
-}
 
-deleteArbeitszeitkonto(arbeitszeitkontoBO) {
-  return this.#fetchAdvanced(this.#deleteArbeitszeitkontoURL(arbeitszeitkontoBO), {
-    method: 'DELETE'
-  }).then((responseJSON) => {
-    // We always get an array of ArbeitszeitkontoBO.fromJSON
-    let responseArbeitszeitkontoBO = arbeitszeitkontoBO.fromJSON(responseJSON)[0];
-    //
-    return new Promise(function (resolve) {
-      resolve(responseArbeitszeitkontoBO);
-    })
-  })
-}
 
 
 addPausenBeginn(pauseBO, user) {
@@ -1217,49 +1188,4 @@ addPausenEnde(pauseBO, pausenBeginn, user) {
   })
 }
 
-
-
-
-getPause(id) {
-  return this.#fetchAdvanced(this.#getPauseURL(id)).then((responseJSON) => {
-    let pauseBOs = PauseBO.fromJSON(responseJSON);
-    // console.info(customerBOs);
-    return new Promise(function (resolve) {
-      resolve(pauseBOs);
-    })
-  })
-}
-
-
-updatePause(pauseBO) {
-  return this.#fetchAdvanced(this.#updatePauseURL(pauseBO.getID()), {
-    method: 'PUT',
-    headers: {
-      'Accept': 'application/json, text/plain',
-      'Content-type': 'application/json',
-    },
-    body: JSON.stringify(pauseBO)
-  }).then((responseJSON) => {
-    // We always get an array of ArbeitszeitkontoBOs.fromJSON
-    let responsePauseBO = pauseBO.fromJSON(responseJSON)[0];
-    // 
-    return new Promise(function (resolve) {
-      resolve(responsePauseBO);
-    })
-  })
-}
-
-
-deletePause(pauseBO) {
-  return this.#fetchAdvanced(this.#deletePauseURL(pauseBO), {
-    method: 'DELETE'
-  }).then((responseJSON) => {
-    // We always get an array of ArbeitszeitkontoBO.fromJSON
-    let responsePauseBO = pauseBO.fromJSON(responseJSON)[0];
-    //
-    return new Promise(function (resolve) {
-      resolve(responsePauseBO);
-    })
-  })
-}
 }

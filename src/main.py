@@ -308,7 +308,6 @@ class ProjektarbeitListOperations(Resource):
 
     @projectone.marshal_with(projektarbeiten, code=200)
     @projectone.expect(projektarbeiten)  # Wir erwarten ein Projektarbeit-Objekt von der Client-Seite.
-    @secured
     def post(self):
         """Anlegen eines neuen Projektarbeit-Objekts.
         """
@@ -328,7 +327,6 @@ class ProjektarbeitListOperations(Resource):
 @projectone.param('id', 'Die ID des Projektarbeit-Objekts')
 class ProjektarbeitenOperations(Resource):
     @projectone.marshal_with(projektarbeiten)
-    @secured
     def get(self, id):
         """Auslesen eines bestimmten Projektarbeit-Objekts.
 
@@ -818,18 +816,17 @@ class EreignisbuchungenOperations(Resource):
 
 """ANCHOR Gehen Views
 """
-@projectone.route('/gehen-ist/<int:kommen>/<int:user>/<int:activity>')
+@projectone.route('/gehen-ist/<int:kommen>/<int:user>/<int:activity>/<string:gehenZeit>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class GehenListOperations(Resource):
 
     @projectone.marshal_with(gehen, code=200)
-    def post(self, kommen, user, activity):
+    def post(self, kommen, user, activity, gehenZeit):
       
         adm = Administration()
 
         proposal = Gehen()
-        now = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
-        proposal.set_zeitpunkt(now)
+        proposal.set_zeitpunkt(gehenZeit)
         proposal.set_bezeichnung("gehen")
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
@@ -937,19 +934,18 @@ class GehenOperations(Resource):
 
 """ANCHOR Kommen Views
 """
-@projectone.route('/kommen-ist/<int:user>/<string:projektarbeit>')
+@projectone.route('/kommen-ist/<int:user>/<string:projektarbeit>/<string:kommenZeit>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class KommenListOperations(Resource):
 
     @projectone.marshal_with(kommen, code=200)
     @projectone.expect(kommen)  # Wir erwarten ein Kommen-Objekt von Client-Seite.
-    def post(self, user, projektarbeit):
+    def post(self, user, projektarbeit, kommenZeit):
         
         adm = Administration()
 
         proposal = Kommen()
-        now = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
-        proposal.set_zeitpunkt(now)
+        proposal.set_zeitpunkt(kommenZeit)
         proposal.set_bezeichnung("kommen")
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
@@ -1166,10 +1162,7 @@ class EreignisListOperations(Resource):
         adm = Administration()
 
         proposal = Ereignis()
-        zeitpunkt_js_string = api.payload["zeitpunkt"]
-        zeitpunkt_py_date = datetime.strptime(zeitpunkt_js_string, '%d-%m-%Y %H:%M:%S')
-        zeitpunkt_py_string = zeitpunkt_py_date.strftime("%Y-%m-%dT%H:%M:%S")
-        proposal.set_zeitpunkt(zeitpunkt_py_string)
+        proposal.set_zeitpunkt(api.payload["zeitpunkt"])
         proposal.set_bezeichnung(api.payload["bezeichnung"])
 
         if proposal is not None:
@@ -1194,10 +1187,7 @@ class EreignisListOperations(Resource):
         adm = Administration()
 
         proposal = Ereignis()
-        zeitpunkt_js_string = api.payload["zeitpunkt"]
-        zeitpunkt_py_date = datetime.strptime(zeitpunkt_js_string, '%d-%m-%Y %H:%M:%S')
-        zeitpunkt_py_string = zeitpunkt_py_date.strftime("%Y-%m-%dT%H:%M:%S")
-        proposal.set_zeitpunkt(zeitpunkt_py_string)
+        proposal.set_zeitpunkt(api.payload["zeitpunkt"])
         proposal.set_bezeichnung(api.payload["bezeichnung"])
 
         if proposal is not None:

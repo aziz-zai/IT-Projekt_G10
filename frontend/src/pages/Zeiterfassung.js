@@ -65,6 +65,11 @@ export class Zeiterfassung extends Component {
       zeitDifMinutes: 0,
       zeitDifSeconds: 0,
       projektArbeitBeschreibung: "",
+      kommenZeit: null,
+      gehenZeit: null,
+      pausenBeginnZeit: null,
+      pausenEndeZeit: null,
+      pausenAlert: false
     };
   }
 
@@ -75,7 +80,7 @@ export class Zeiterfassung extends Component {
   /** gets the balance for this account */
 
   addKommenIst = () => {
-    OneAPI.getAPI().addKommenIst(this.props.user[0].id, this.state.projektarbeit).then(kommen =>
+    OneAPI.getAPI().addKommenIst(this.props.user[0].id, this.state.projektarbeit, this.state.kommenZeit).then(kommen =>
       this.setState({
         kommen: kommen,
         kommenAlert: true
@@ -92,7 +97,7 @@ export class Zeiterfassung extends Component {
 
 
   addGehenIst = () => {
-    OneAPI.getAPI().addGehenIst(this.state.kommen.id, this.props.user[0].id, this.state.aktivität).then(gehen => {
+    OneAPI.getAPI().addGehenIst(this.state.kommen.id, this.props.user[0].id, this.state.aktivität, this.state.gehenZeit).then(gehen => {
       this.setState({
         gehen: gehen,
         gehenAlert: true
@@ -101,17 +106,13 @@ export class Zeiterfassung extends Component {
       }).then(gehen =>{
         const kommenTime = new Date(this.state.kommen.zeitpunkt);
         const gehenTime = new Date(gehen.zeitpunkt);
-        const pausenBeginnTime = this.state.pausenBeginn ? new Date(this.state.pausenBeginn.zeitpunkt): 0;
-        const pausenEndeTime = this.state.pausenEnde ? new Date(this.state.pausenEnde.zeitpunkt): 0;
-        const arbeitsZeitSeconds = Math.floor(((gehenTime - kommenTime)-(pausenEndeTime - pausenBeginnTime))/1000)
+        const arbeitsZeitSeconds = Math.floor(((gehenTime - kommenTime))/1000)
         const minutes = Math.floor(arbeitsZeitSeconds/60);
-        const hours = Math.floor(minutes/60);
-        const days = Math.floor(hours/24);
-              
-        const difHours = hours-(days*24);
-        const difMinutes = minutes-(days*24*60)-(hours*60);
-        const difSeconds = arbeitsZeitSeconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
-      
+        const hours = (minutes/60);
+        const difHours = Math.floor(minutes/60);
+        const rMinutes = (hours - difHours) * 60;
+        const difMinutes = Math.round(rMinutes)
+
         this.setState({
               h: kommenTime.getHours(), 
               m: kommenTime.getMinutes(), 
@@ -119,13 +120,6 @@ export class Zeiterfassung extends Component {
               Eh: gehenTime.getHours(), 
               Em: gehenTime.getMinutes(), 
               Es: gehenTime.getSeconds(), 
-              PBh: this.state.pausenBeginn ? pausenBeginnTime.getHours() : 0, 
-              PBm: this.state.pausenBeginn ? pausenBeginnTime.getMinutes() : 0, 
-              PBs: this.state.pausenBeginn ? pausenBeginnTime.getSeconds() : 0, 
-              PEh: this.state.pausenEnde ? pausenEndeTime.getHours() : 0, 
-              PEm: this.state.pausenEnde ? pausenEndeTime.getMinutes() : 0, 
-              PEs: this.state.pausenEnde ? pausenEndeTime.getSeconds() : 0,
-              zeitDifSeconds: difSeconds,
               zeitDifHours: difHours,
               zeitDifMinutes: difMinutes,
             })})
@@ -139,14 +133,14 @@ export class Zeiterfassung extends Component {
     });
   }
   addPausenBeginn = () => {
-    var currentDate = new Date()
-    var dateFormat = currentDate.toLocaleString("nl-NL")
-    let newPausenBeginn = new EreignisBO(dateFormat, "Pause")
-    OneAPI.getAPI().addPausenBeginn(newPausenBeginn, this.props.user[0].id).then(pausenBeginn =>
+    let newPausenBeginn = new EreignisBO(this.state.pausenBeginnZeit, "Pause")
+    OneAPI.getAPI().addPausenBeginn(newPausenBeginn, this.props.user[0].id).then(pausenBeginn =>{
       this.setState({
         pausenBeginn: pausenBeginn,
-      }),
-      ).catch(e =>
+      })
+      return pausenBeginn
+    }).then(pausenBeginn => this.addPausenEnde(pausenBeginn))
+          .catch(e =>
         this.setState({ // Reset state with error from catch 
           pausenBeginn: null,
         })
@@ -215,6 +209,11 @@ export class Zeiterfassung extends Component {
       zeitDifMinutes: 0,
       zeitDifSeconds: 0,
       projektArbeitBeschreibung: "",
+      kommenZeit: null,
+      gehenZeit: null,
+      pausenBeginnZeit: null,
+      pausenEndeZeit: null,
+      pausenAlert: false
     })
     }
      ).catch(e =>
@@ -224,15 +223,36 @@ export class Zeiterfassung extends Component {
     this.setState({
     });
   }
-  addPausenEnde = () => {
-    var currentDate = new Date()
-    var dateFormat = currentDate.toLocaleString("nl-NL")
-    let newPausenEnde = new EreignisBO(dateFormat, "Pause")
-    OneAPI.getAPI().addPausenEnde(newPausenEnde, this.state.pausenBeginn.id, this.props.user[0].id).then(pausenEnde =>
+  addPausenEnde = (pausenBeginn) => {
+
+    let newPausenEnde = new EreignisBO(this.state.pausenEndeZeit, "Pause")
+    OneAPI.getAPI().addPausenEnde(newPausenEnde, pausenBeginn.id, this.props.user[0].id).then(pausenEnde =>{
       this.setState({
         pausenEnde: pausenEnde,
-      }),
-      ).catch(e =>
+        pausenAlert: true,
+      })
+      return pausenEnde
+    }).then(pausenEnde =>{
+      const pausenBeginnTime = new Date(this.state.pausenBeginn.zeitpunkt);
+      const pausenEndeTime = new Date(pausenEnde.zeitpunkt);
+      const pausenZeitSeconds = Math.floor(((pausenEndeTime - pausenBeginnTime))/1000)
+      const minutes = Math.floor(pausenZeitSeconds/60);
+      const hours = (minutes/60);
+      const difHours = Math.floor(minutes/60);
+      const rMinutes = (hours - difHours) * 60;
+      const difMinutes = Math.round(rMinutes)
+    
+      this.setState({
+            PBh: pausenBeginnTime.getHours(), 
+            PBm: pausenBeginnTime.getMinutes(), 
+            PBs: pausenBeginnTime.getSeconds(), 
+            PEh: pausenEndeTime.getHours(), 
+            PEm: pausenEndeTime.getMinutes(), 
+            PEs: pausenEndeTime.getSeconds(),
+            zeitDifHours: difHours,
+            zeitDifMinutes: difMinutes,
+          })})
+          .catch(e =>
         this.setState({ // Reset state with error from catch 
           pausenEnde: null,
         })
@@ -333,7 +353,49 @@ handleKommenAlertCLose = () => {
 handleGehenAlertCLose = () => {
   this.updateProjektarbeit()
 }
-
+handlepausenAlertCLose = () => {
+  this.setState({
+    project: null,
+      aktivität: null,
+      projektarbeit: null,
+      projectSelected: false,
+      aktivitätSelected: false,
+      kommenClicked: false,
+      stunden: 0,
+      minuten: 0,
+      sekunden: 0,
+      kommen: new KommenBO(),
+      kommenDate: 0,
+      projektarbeitIst: null,
+      gehen: null,
+      pausenBeginn: null,
+      pausenEnde: null,
+      kommenAlert: false,
+      kommenErrorAlert: false,
+      gehenAlert: false,
+      h: 0,
+      m: 0,
+      s: 0,
+      Eh: 0,
+      Em: 0, 
+      Es: 0, 
+      PBh: 0,
+      PBm: 0,
+      PBs: 0, 
+      PEh: 0,
+      PEm: 0,
+      PEs: 0,
+      zeitDifHours: 0,
+      zeitDifMinutes: 0,
+      zeitDifSeconds: 0,
+      projektArbeitBeschreibung: "",
+      kommenZeit: null,
+      gehenZeit: null,
+      pausenBeginnZeit: null,
+      pausenEndeZeit: null,
+      pausenAlert: false
+  })
+}
 handleKommenErrorAlertCLose = () => {
   this.setState({
     kommenErrorAlert: false
@@ -346,14 +408,21 @@ textFieldValueChange = (event) => {
   });
 }
 
+dateFilterChanged = (event) => {
+  this.setState({
+    [event.target.id]: event.target.value,
+  });
+}
+
   render() {
     const {user} = this.props;
     const {projectSelected, aktivitätSelected, project, aktivität, kommenClicked, stunden, minuten, sekunden, kommen, 
       projektarbeitIst, gehen,pausenBeginn, pausenEnde, kommenAlert, kommenErrorAlert, gehenAlert,
-    h, m, s, Eh, Em, Es, PBh, PBm, PBs, PEh, PEm, PEs, zeitDifHours, zeitDifMinutes, zeitDifSeconds, projektArbeitBeschreibung} = this.state;
+    h, m, s, Eh, Em, Es, PBh, PBm, PBs, PEh, PEm, PEs, zeitDifHours, zeitDifMinutes, zeitDifSeconds, projektArbeitBeschreibung, kommenZeit, gehenZeit, 
+    pausenBeginnZeit, pausenEndeZeit, pausenAlert} = this.state;
     return (
       <div>
-      <div class="selection"> 
+      <div class="selection"> {console.log('gehenZeit', kommenZeit, gehenZeit)}
          <ProjectSelection user={user} handleSelection={this.handleProjectSelection}/>
         {projectSelected ?
         <div class="selectionItem"> 
@@ -366,18 +435,63 @@ textFieldValueChange = (event) => {
       </div>
       <div class="zeitContainer">
       <div class="zeitWrapper">
-        {kommenClicked ?
-      <div class="zeitAngabe">
-        {String(stunden).padStart(2, "0")}:{String(minuten).padStart(2, "0")}:{String(sekunden).padStart(2, "0")}
-    </div>:<div class="zeitAngabe">
-       00:00:00
-    </div>}
+    
       <div class="workBtns">
-        <Kommen date={kommen? kommen.zeitpunkt:null} handleClick={this.handleKommenClicked}/>
-        <Gehen date={gehen? gehen.zeitpunkt:null} handleClick={this.handleGehenClicked}/>
-        {kommenClicked ?
-        <Pause beginn={pausenBeginn? pausenBeginn.zeitpunkt:null} ende={pausenEnde? pausenEnde.zeitpunkt:null} handlePauseClicked={this.addPausenBeginn} handlePauseDone={this.addPausenEnde}/>
-      :null}</div>
+        <div>
+        <TextField
+        id="kommenZeit"
+        label="Von"
+        type="datetime-local"
+        defaultValue="2017-05-24T10:30"
+        value={kommenZeit}
+        onChange={this.dateFilterChanged}
+        sx={{ width: 200, marginTop:2 }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+      /> 
+        <Kommen date={kommen? kommen.zeitpunkt:null} handleClick={this.handleKommenClicked}/></div>
+        <div>
+        <TextField
+        id="gehenZeit"
+        label="Bis"
+        type="datetime-local"
+        defaultValue="2017-05-24T10:30"
+        value={gehenZeit}
+        onChange={this.dateFilterChanged}
+        sx={{ width: 200, marginTop:2 }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+      /> 
+        <Gehen date={gehen? gehen.zeitpunkt:null} handleClick={this.handleGehenClicked}/></div>
+
+        <div>
+        <TextField
+        id="pausenBeginnZeit"
+        label="Von"
+        type="datetime-local"
+        defaultValue="2017-05-24T10:30"
+        value={pausenBeginnZeit}
+        onChange={this.dateFilterChanged}
+        sx={{ width: 200, marginTop:2 }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+      /> <TextField
+      id="pausenEndeZeit"
+      label="Bis"
+      type="datetime-local"
+      defaultValue="2017-05-24T10:30"
+      value={pausenEndeZeit}
+      onChange={this.dateFilterChanged}
+      sx={{ width: 200, marginTop:2 }}
+      InputLabelProps={{
+        shrink: true,
+      }}
+    /> 
+        <Pause beginn={pausenBeginn? pausenBeginn.zeitpunkt:null} ende={pausenEnde? pausenEnde.zeitpunkt:null} handlePauseClicked={this.addPausenBeginn} />
+</div></div>
       {kommenAlert ? 
       <div>
       <Dialog
@@ -436,9 +550,8 @@ textFieldValueChange = (event) => {
   <DialogContent>
     <DialogContentText id="alert-dialog-description">
       Arbeitsbeginn: <strong>{String(h).padStart(2, "0")}:{String(m).padStart(2, "0")}:{String(s).padStart(2, "0")}</strong> <br/>
-      Arbeitsende: <strong>{String(Eh).padStart(2, "0")}:{String(Em).padStart(2, "0")}:{String(Es).padStart(2, "0")}</strong> <br/>
-      Pause: von <strong>{String(PBh).padStart(2, "0")}:{String(PBm).padStart(2, "0")}:{String(PBs).padStart(2, "0")}</strong> bis <strong>{String(PEh).padStart(2, "0")}:{String(PEm).padStart(2, "0")}:{String(PEs).padStart(2, "0")}</strong><br/>
-      Das ergibt eine Arbeitszeit von: <strong>{String(zeitDifHours).padStart(2, "0")}:{String(zeitDifMinutes).padStart(2, "0")}:{String(zeitDifSeconds).padStart(2, "0")}</strong>
+      Arbeitsende: <strong>{String(Eh).padStart(2, "0")}:{String(Em).padStart(2, "0")}:{String(Es).padStart(2, "0")}</strong> <br/><br/>
+      Das ergibt eine Arbeitszeit von: <strong>{String(zeitDifHours).padStart(2, "0")}:{String(zeitDifMinutes).padStart(2, "0")}:00</strong>
     </DialogContentText><br/><br/>
     <DialogContentText id="alert-dialog-description">
       Kurze Beschreibung deiner Tätigkeit:<br/>
@@ -456,6 +569,29 @@ textFieldValueChange = (event) => {
   </DialogContent>
   <DialogActions>
     <Button onClick={this.handleGehenAlertCLose} autoFocus>
+      Abschicken
+    </Button>
+  </DialogActions>
+</Dialog></div>:null}
+{pausenAlert ? 
+  <div><Dialog
+  open={pausenAlert}
+  onClose={this.handlepausenAlertCLose}
+  aria-labelledby="alert-dialog-title"
+  aria-describedby="alert-dialog-description"
+>
+  <DialogTitle id="alert-dialog-title">
+    Pause erfolgreich erfasst.
+  </DialogTitle>
+  <DialogContent>
+    <DialogContentText id="alert-dialog-description">
+
+      Pause: von <strong>{String(PBh).padStart(2, "0")}:{String(PBm).padStart(2, "0")}:{String(PBs).padStart(2, "0")}</strong> bis <strong>{String(PEh).padStart(2, "0")}:{String(PEm).padStart(2, "0")}:{String(PEs).padStart(2, "0")}</strong><br/>
+      Das ergibt eine Pause von: <strong>{String(zeitDifHours).padStart(2, "0")}:{String(zeitDifMinutes).padStart(2, "0")}:00</strong>
+    </DialogContentText><br/><br/>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={this.handlepausenAlertCLose} autoFocus>
       Abschicken
     </Button>
   </DialogActions>

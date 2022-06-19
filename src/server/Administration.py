@@ -298,22 +298,22 @@ class Administration(object):
             zeitinter = adm.get_projektarbeit_by_id(zeitintervall)
             kommen = adm.get_kommen_by_id(zeitinter.get_start())
             gehen = adm.get_gehen_by_id(zeitinter.get_ende())
-            zeitdifferenz = datetime.strptime(gehen.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S") - datetime.strptime(kommen.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S")
+            zeitdifferenz = datetime.strptime(gehen.get_zeitpunkt(),"%Y-%m-%dT%H:%M") - datetime.strptime(kommen.get_zeitpunkt(),"%Y-%m-%dT%H:%M")
         elif zeitintervall_bez == "Projektlaufzeit":
             zeitinter = adm.get_zeitintervall_by_id(zeitintervall)
             start_ereignis = adm.get_ereignis_by_id(zeitinter.get_start())
             end_ereignis = adm.get_ereignis_by_id(zeitinter.get_ende())
-            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S") - datetime.strptime(start_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S")
+            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M") - datetime.strptime(start_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M")
         elif zeitintervall_bez == "Pause":
             zeitinter = adm.get_pause_by_id(zeitintervall)
             start_ereignis = adm.get_ereignis_by_id(zeitinter.get_start())
             end_ereignis = adm.get_ereignis_by_id(zeitinter.get_ende())
-            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S") - datetime.strptime(start_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S")
+            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M") - datetime.strptime(start_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M")
         elif zeitintervall_bez == "Abwesenheit":
             zeitinter = adm.get_abwesenheit_by_id(zeitintervall)
             start_ereignis = adm.get_ereignis_by_id(zeitinter.get_start())
             end_ereignis = adm.get_ereignis_by_id(zeitinter.get_ende())
-            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S") - datetime.strptime(start_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S")
+            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M") - datetime.strptime(start_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M")
         zeitdiff_sec = zeitdifferenz.total_seconds()   
         offset_hours = zeitdiff_sec / 3600
         offset_minutes = (offset_hours % 1) * 60
