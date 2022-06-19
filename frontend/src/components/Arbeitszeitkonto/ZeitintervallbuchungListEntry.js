@@ -29,6 +29,7 @@ export class ZeitintervallbuchungListEntry extends Component {
         ereignis2Second: null,
         erstellt_fuer: null,
         erstellt_von: null,
+        projektarbeit: null
     };
   }
 

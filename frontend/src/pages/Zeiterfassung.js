@@ -280,6 +280,7 @@ export class Zeiterfassung extends Component {
   handleProjektarbeitSelection = (projektarbeit) => {
     this.setState({
       projektarbeit: projektarbeit,
+      kommenAlert: true
     });
 	}
 
@@ -503,7 +504,7 @@ dateFilterChanged = (event) => {
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             Pro Tag darf keine Arbeitszeit über <strong>10 Stunden</strong> erfasst werden. <br/>
-            Nach mindestens <strong>6 Stunden</strong> muss eine Pause von mindestens <strong>45 Minuten</strong> erfasst werden.
+            Nach mindestens <strong>6.5 Stunden</strong> muss eine Pause von mindestens <strong>45 Minuten</strong> erfasst werden.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
