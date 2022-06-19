@@ -384,13 +384,24 @@ class Administration(object):
             zeitintervallbuchungen_in_time = []
             for(buchung) in zeitintervallbuchungen:
                 if(buchung.get_bezeichnung()=='Projektarbeit'):
-                    ereignis1 = self.get_kommen_by_id(buchung.get_start())
-                    ereignis2 = self.get_kommen_by_id(buchung.get_ende())
-                else:
-                    ereignis1 = self.get_ereignis_by_id(buchung.get_start())
-                    ereignis2 = self.get_ereignis_by_id(buchung.get_ende())
-                ereignisTime = datetime.strptime(ereignis.get_zeitpunkt(), "%Y-%m-%dT%H:%M")
-                if((startTime <= ereignis1 <= endTime) and (startTime <= ereignis2 <= endTime)):
+                    zeitintervall = self.get_projektarbeit_by_id(buchung.get_zeitintervall())
+                    ereignis1 = self.get_kommen_by_id(zeitintervall.get_start())
+                    ereignis2 = self.get_gehen_by_id(zeitintervall.get_ende())
+                elif buchung.get_bezeichnung() == "Projektlaufzeit":
+                    zeitintervall = self.get_zeitintervall_by_id(buchung.get_zeitintervall())
+                    ereignis1 = self.get_ereignis_by_id(zeitintervall.get_start())
+                    ereignis2 = self.get_ereignis_by_id(zeitintervall.get_ende())
+                elif buchung.get_bezeichnung() == "Pause":
+                    zeitintervall = self.get_pause_by_id(buchung.get_zeitintervall())
+                    ereignis1 = self.get_ereignis_by_id(zeitintervall.get_start())
+                    ereignis2 = self.get_ereignis_by_id(zeitintervall.get_ende())
+                elif buchung.get_bezeichnung() == "Abwesenheit":
+                    zeitintervall = self.get_abwesenheit_by_id(buchung.get_zeitintervall())
+                    ereignis1 = self.get_ereignis_by_id(zeitintervall.get_start())
+                    ereignis2 = self.get_ereignis_by_id(zeitintervall.get_ende())
+                ereignis1Time = datetime.strptime(ereignis1.get_zeitpunkt(), "%Y-%m-%dT%H:%M")
+                ereignis2Time = datetime.strptime(ereignis2.get_zeitpunkt(), "%Y-%m-%dT%H:%M")
+                if((startTime <= ereignis1Time <= endTime) and (startTime <= ereignis2Time <= endTime)):
                     zeitintervallbuchungen_in_time.append(buchung)
             return zeitintervallbuchungen_in_time
         else:
@@ -404,13 +415,24 @@ class Administration(object):
             zeitintervallbuchungen_in_time = []
             for(buchung) in zeitintervallbuchungen:
                 if(buchung.get_bezeichnung()=='Projektarbeit'):
-                    ereignis1 = self.get_kommen_by_id(buchung.get_start())
-                    ereignis2 = self.get_kommen_by_id(buchung.get_ende())
-                else:
-                    ereignis1 = self.get_ereignis_by_id(buchung.get_start())
-                    ereignis2 = self.get_ereignis_by_id(buchung.get_ende())
-                ereignisTime = datetime.strptime(ereignis.get_zeitpunkt(), "%Y-%m-%dT%H:%M")
-                if((startTime <= ereignis1 <= endTime) and (startTime <= ereignis2 <= endTime)):
+                    zeitintervall = self.get_projektarbeit_by_id(buchung.get_zeitintervall())
+                    ereignis1 = self.get_kommen_by_id(zeitintervall.get_start())
+                    ereignis2 = self.get_gehen_by_id(zeitintervall.get_ende())
+                elif buchung.get_bezeichnung() == "Projektlaufzeit":
+                    zeitintervall = self.get_zeitintervall_by_id(buchung.get_zeitintervall())
+                    ereignis1 = self.get_ereignis_by_id(zeitintervall.get_start())
+                    ereignis2 = self.get_ereignis_by_id(zeitintervall.get_ende())
+                elif buchung.get_bezeichnung() == "Pause":
+                    zeitintervall = self.get_pause_by_id(buchung.get_zeitintervall())
+                    ereignis1 = self.get_ereignis_by_id(zeitintervall.get_start())
+                    ereignis2 = self.get_ereignis_by_id(zeitintervall.get_ende())
+                elif buchung.get_bezeichnung() == "Abwesenheit":
+                    zeitintervall = self.get_abwesenheit_by_id(buchung.get_zeitintervall())
+                    ereignis1 = self.get_ereignis_by_id(zeitintervall.get_start())
+                    ereignis2 = self.get_ereignis_by_id(zeitintervall.get_ende())
+                ereignis1Time = datetime.strptime(ereignis1.get_zeitpunkt(), "%Y-%m-%dT%H:%M")
+                ereignis2Time = datetime.strptime(ereignis2.get_zeitpunkt(), "%Y-%m-%dT%H:%M")
+                if((startTime <= ereignis1Time <= endTime) and (startTime <= ereignis2Time <= endTime)):
                     zeitintervallbuchungen_in_time.append(buchung)
             return zeitintervallbuchungen_in_time
         else:
