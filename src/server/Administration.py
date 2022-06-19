@@ -198,13 +198,18 @@ class Administration(object):
             return mapper.find_soll_ereignisbuchungen_by_user(erstellt_für)
     
     def get_soll_ereignisbuchungen_by_zeitspanne(self, erstellt_für, startFilter, endFilter):
-        ereignisbuchungen = self.get_soll_eregnisbuchungen_by_user(erstellt_für)
+        ereignisbuchungen = self.get_soll_ereignisbuchungen_by_user(erstellt_für)
         if((startFilter != "null" or "") and (endFilter != "null" or "")):
             startTime = datetime.strptime(startFilter, "%Y-%m-%dT%H:%M")
             endTime = datetime.strptime(endFilter, "%Y-%m-%dT%H:%M")
             ereignisbuchungen_in_time = []
             for(buchung) in ereignisbuchungen:
-                ereignis = self.get_ereignis_by_id(buchung.get_ereignis())
+                if(buchung.get_bezeichnung()=='Arbeitsbeginn'):
+                    ereignis = self.get_kommen_by_id(buchung.get_ereignis())
+                elif(buchung.get_bezeichnung()=='Arbeitsende'):
+                    ereignis = self.get_gehen_by_id(buchung.get_ereignis())
+                else:
+                    ereignis = self.get_ereignis_by_id(buchung.get_ereignis())
                 ereignisTime = datetime.strptime(ereignis.get_zeitpunkt(), "%Y-%m-%dT%H:%M")
                 if(startTime <= ereignisTime <= endTime):
                     ereignisbuchungen_in_time.append(buchung)
@@ -232,13 +237,6 @@ class Administration(object):
                 ereignisTime = datetime.strptime(ereignis.get_zeitpunkt(), "%Y-%m-%dT%H:%M")
                 if(startTime <= ereignisTime <= endTime):
                     ereignisbuchungen_in_time.append(buchung)
-                    print(f"startTime -> {startTime}")
-                    print(f"ereignisTime -> {ereignisTime}")
-                    print(f"endTime -> {endTime}")
-                else:
-                    print(f"failstartTime -> {startTime}")
-                    print(f"failereignisTime -> {ereignisTime}")
-                    print(f"failendTime -> {endTime}")
             return ereignisbuchungen_in_time
         else:
             return ereignisbuchungen

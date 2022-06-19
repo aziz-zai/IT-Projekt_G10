@@ -89,7 +89,7 @@ export default class OneAPI {
   #addEreignisbuchungURL = () => `${this.#OneServerBaseURL}/ereignisbuchung`;
   #getEreignisbuchungURL = (id) => `${this.#OneServerBaseURL}/ereignisbuchung/${id}`;
   #getEreignisbuchungISTURL = (user, startFilter, endFilter) => `${this.#OneServerBaseURL}/ereignisbuchungen-ist/${user}/${startFilter}/${endFilter}`;
-  #getEreignisbuchungSOLLURL = (user) => `${this.#OneServerBaseURL}/ereignisbuchungen-soll/${user}`;
+  #getEreignisbuchungSOLLURL = (user, startFilter, endFilter) => `${this.#OneServerBaseURL}/ereignisbuchungen-soll/${user}/${startFilter}/${endFilter}`;
   #updateEreignisbuchungURL = (id) => `${this.#OneServerBaseURL}/ereignisbuchung/${id}`;
   #deleteEreignisbuchungURL = (id) => `${this.#OneServerBaseURL}/ereignisbuchung/${id}`;
 
@@ -953,8 +953,8 @@ export default class OneAPI {
     })
   }
 
-  getEreignisbuchungSOLL(user) {
-    return this.#fetchAdvanced(this.#getEreignisbuchungSOLLURL(user)).then((responseJSON) => {
+  getEreignisbuchungSOLL(user, startFilter, endFilter) {
+    return this.#fetchAdvanced(this.#getEreignisbuchungSOLLURL(user, startFilter, endFilter)).then((responseJSON) => {
       let ereignisbuchungBOs = EreignisbuchungBO.fromJSON(responseJSON);
       return new Promise(function (resolve) {
         resolve(ereignisbuchungBOs);

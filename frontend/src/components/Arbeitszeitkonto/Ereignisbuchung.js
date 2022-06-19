@@ -10,7 +10,8 @@ export class Ereignisbuchung extends Component {
     constructor(props) {
         super(props);
     this.state = {
-        ereignisbuchungen: []
+        ereignisbuchungen: [],
+        ereignisbuchungenSoll: []
     };
   }
   getEreignisbuchungIST = () => {
@@ -29,12 +30,29 @@ export class Ereignisbuchung extends Component {
     });
   }
 
+  getEreignisbuchungSOLL = () => {
+    OneAPI.getAPI().getEreignisbuchungSOLL(this.props.user[0].id, this.props.startFilter, this.props.endFilter).then(ereignisbuchungen =>
+      this.setState({
+        ereignisbuchungenSoll: ereignisbuchungen,
+    
+      })
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+        })
+      );
+    // set loading to true
+    this.setState({
+
+    });
+  }
+
 componentDidMount() {
 this.getEreignisbuchungIST()
+this.getEreignisbuchungSOLL()
 }
   render() {
       const {istBuchung} = this.props;
-      const {ereignisbuchungen} = this.state;
+      const {ereignisbuchungen, ereignisbuchungenSoll} = this.state;
     return (
       <div>
         {istBuchung ?
@@ -43,8 +61,11 @@ this.getEreignisbuchungIST()
             {ereignisbuchungen ?
             ereignisbuchungen.map(ereignisbuchung => <EreignisbuchungListEntry key={ereignisbuchung.getID()} ereignisbuchung={ereignisbuchung}/>):null}
         </div>
-        : <div>soll Ereignis</div>}
-        {console.log('ereignisbuchungen', ereignisbuchungen)}
+        : <div>
+          <button onClick={this.getEreignisbuchungSOLL} class="filterBtn">Suche</button>
+            {ereignisbuchungenSoll ?
+            ereignisbuchungenSoll.map(ereignisbuchung => <EreignisbuchungListEntry key={ereignisbuchung.getID()} ereignisbuchung={ereignisbuchung}/>):null}
+          </div>}
       </div>
     )
   }
