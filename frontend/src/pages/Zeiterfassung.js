@@ -442,7 +442,7 @@ dateFilterChanged = (event) => {
         id="kommenZeit"
         label="Von"
         type="datetime-local"
-        defaultValue="2017-05-24T10:30"
+
         value={kommenZeit}
         onChange={this.dateFilterChanged}
         sx={{ width: 200, marginTop:2 }}
@@ -456,7 +456,6 @@ dateFilterChanged = (event) => {
         id="gehenZeit"
         label="Bis"
         type="datetime-local"
-        defaultValue="2017-05-24T10:30"
         value={gehenZeit}
         onChange={this.dateFilterChanged}
         sx={{ width: 200, marginTop:2 }}
@@ -471,7 +470,6 @@ dateFilterChanged = (event) => {
         id="pausenBeginnZeit"
         label="Von"
         type="datetime-local"
-        defaultValue="2017-05-24T10:30"
         value={pausenBeginnZeit}
         onChange={this.dateFilterChanged}
         sx={{ width: 200, marginTop:2 }}
@@ -482,7 +480,6 @@ dateFilterChanged = (event) => {
       id="pausenEndeZeit"
       label="Bis"
       type="datetime-local"
-      defaultValue="2017-05-24T10:30"
       value={pausenEndeZeit}
       onChange={this.dateFilterChanged}
       sx={{ width: 200, marginTop:2 }}
@@ -559,7 +556,7 @@ dateFilterChanged = (event) => {
         color="secondary"
           id="outlined-textarea"
           label="Tätigkeitsbeschreibung"
-          placeholder="Placeholder"
+          placeholder="Eine kurze Beschreibung was du getan hast"
           multiline
           value={projektArbeitBeschreibung}
           onChange={this.textFieldValueChange}

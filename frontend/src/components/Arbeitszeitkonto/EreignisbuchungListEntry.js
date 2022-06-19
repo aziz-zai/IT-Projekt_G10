@@ -160,7 +160,7 @@ componentDidMount() {
         this.getGehenById();
     }
     else{
-        this.getEreignis();
+        this.getEreignisById();
     }
 }
   render() {
