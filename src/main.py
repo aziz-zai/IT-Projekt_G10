@@ -1123,32 +1123,31 @@ class ZeitintervallbuchungOperations(Resource):
         zetd = adm.get_zeitintervallbuchung_by_id(id)
         adm.delete_zeitintervallbuchung(zetd)
         return '', 200
-@projectone.route('/zeitintervallbuchung-soll/<int:erstellt_fuer>')
+@projectone.route('/zeitintervallbuchung-soll/<int:erstellt_fuer>/<string:startFilter>/<string:endeFilter>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des zeitintervallbuchung-user-Objekts')
 class ZeitintervallbuchungOperations(Resource):
     @projectone.marshal_with(zeitintervallbuchung)
-
-    def get(self, erstellt_fuer):
+    def get(self, erstellt_fuer, startFilter, endeFilter):
         """Auslesen eines bestimmten Zeitintervallbuchung-Objekts.
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
-        zeitintervallbuchung = adm.get_soll_buchungen_by_user(erstellt_fuer)
+        zeitintervallbuchung = adm.get_soll_zeitintervallbuchungen_by_zeitspanne(erstellt_fuer, startFilter, endeFilter)
         return zeitintervallbuchung
 
-@projectone.route('/zeitintervallbuchung-ist/<int:erstell_fuer>')
+@projectone.route('/zeitintervallbuchung-ist/<int:erstellt_fuer>/<string:startFilter>/<string:endeFilter>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des zeitintervallbuchung-user-Objekts')
 class ZeitintervallbuchungOperations(Resource):
     @projectone.marshal_with(zeitintervallbuchung)
 
-    def get(self, erstellt_fuer):
+    def get(self, erstellt_fuer, startFilter, endeFilter):
         """Auslesen eines bestimmten Zeitintervallbuchung-Objekts.
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
-        zeitintervallbuchung = adm.get_ist_buchungen_by_user(erstellt_fuer)
+        zeitintervallbuchung = adm.get_ist_zeitintervallbuchungen_by_zeitspanne(erstellt_fuer, startFilter, endeFilter)
         return zeitintervallbuchung
 
 @projectone.route('/pausenBeginn/<int:user>')

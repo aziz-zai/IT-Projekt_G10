@@ -372,6 +372,54 @@ class Administration(object):
         with ZeitintervallbuchungMapper() as mapper:
             return mapper.find_soll_projektarbeit_buchungen_by_user(erstellt_für)
 
+    def get_soll_zeitintervallbuchungen_by_user(self, erstellt_für):
+        with ZeitintervallbuchungMapper() as mapper:
+            return mapper.find_soll_buchungen_by_user(erstellt_für)
+    
+    def get_soll_zeitintervallbuchungen_by_zeitspanne(self, user, startFilter, endFilter):
+        zeitintervallbuchungen = self.get_soll_zeitintervallbuchungen_by_user(user)
+        if((startFilter != "null" or "") and (endFilter != "null" or "")):
+            startTime = datetime.strptime(startFilter, "%Y-%m-%dT%H:%M")
+            endTime = datetime.strptime(endFilter, "%Y-%m-%dT%H:%M")
+            zeitintervallbuchungen_in_time = []
+            for(buchung) in zeitintervallbuchungen:
+                if(buchung.get_bezeichnung()=='Projektarbeit'):
+                    ereignis1 = self.get_kommen_by_id(buchung.get_start())
+                    ereignis2 = self.get_kommen_by_id(buchung.get_ende())
+                else:
+                    ereignis1 = self.get_ereignis_by_id(buchung.get_start())
+                    ereignis2 = self.get_ereignis_by_id(buchung.get_ende())
+                ereignisTime = datetime.strptime(ereignis.get_zeitpunkt(), "%Y-%m-%dT%H:%M")
+                if((startTime <= ereignis1 <= endTime) and (startTime <= ereignis2 <= endTime)):
+                    zeitintervallbuchungen_in_time.append(buchung)
+            return zeitintervallbuchungen_in_time
+        else:
+            return zeitintervallbuchungen
+    
+    def get_ist_zeitintervallbuchungen_by_zeitspanne(self, user, startFilter, endFilter):
+        zeitintervallbuchungen = self.get_ist_zeitintervallbuchungen_by_user(user)
+        if((startFilter != "null" or "") and (endFilter != "null" or "")):
+            startTime = datetime.strptime(startFilter, "%Y-%m-%dT%H:%M")
+            endTime = datetime.strptime(endFilter, "%Y-%m-%dT%H:%M")
+            zeitintervallbuchungen_in_time = []
+            for(buchung) in zeitintervallbuchungen:
+                if(buchung.get_bezeichnung()=='Projektarbeit'):
+                    ereignis1 = self.get_kommen_by_id(buchung.get_start())
+                    ereignis2 = self.get_kommen_by_id(buchung.get_ende())
+                else:
+                    ereignis1 = self.get_ereignis_by_id(buchung.get_start())
+                    ereignis2 = self.get_ereignis_by_id(buchung.get_ende())
+                ereignisTime = datetime.strptime(ereignis.get_zeitpunkt(), "%Y-%m-%dT%H:%M")
+                if((startTime <= ereignis1 <= endTime) and (startTime <= ereignis2 <= endTime)):
+                    zeitintervallbuchungen_in_time.append(buchung)
+            return zeitintervallbuchungen_in_time
+        else:
+            return zeitintervallbuchungen
+
+    def get_ist_zeitintervallbuchungen_by_user(self, erstellt_für):
+        with ZeitintervallbuchungMapper() as mapper:
+            return mapper.find_ist_buchungen_by_user(erstellt_für)
+
     def get_ist_projektarbeit_buchungen_by_user(self, erstellt_für):
         with ZeitintervallbuchungMapper() as mapper:
             return mapper.find_ist_projektarbeit_buchungen_by_user(erstellt_für)

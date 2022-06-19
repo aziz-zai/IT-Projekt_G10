@@ -83,7 +83,8 @@ export default class OneAPI {
   #addZeitintervallbuchungURL = () => `${this.#OneServerBaseURL}/zeitintervallbuchung`;
   #updateZeitintervallbuchungURL = (id) => `${this.#OneServerBaseURL}/zeitintervallbuchung/${id}`;
   #deleteZeitintervallbuchungURL = (id) => `${this.#OneServerBaseURL}/zeitintervallbuchung/${id}`;
-  #getZeitintervallbuchungSollURL = (erstellt_fuer) => `${this.#OneServerBaseURL}/zeitintervallbuchung/${erstellt_fuer}`;
+  #getZeitintervallbuchungSollURL = (user, startFilter, endFilter) => `${this.#OneServerBaseURL}/zeitintervallbuchung-soll/${user}/${startFilter}/${endFilter}`;
+  #getZeitintervallbuchungIstURL = (user, startFilter, endFilter) => `${this.#OneServerBaseURL}/zeitintervallbuchung-ist/${user}/${startFilter}/${endFilter}`;
 
   //Ereignisbuchung related
   #addEreignisbuchungURL = () => `${this.#OneServerBaseURL}/ereignisbuchung`;
@@ -518,8 +519,18 @@ export default class OneAPI {
     })
   }
 
-  getZeitintervallbuchungSoll(erstellt_fuer) {
-    return this.#fetchAdvanced(this.#getZeitintervallbuchungSollURL(erstellt_fuer)).then((responseJSON) => {
+  getZeitintervallbuchungSoll(user, startFilter, endFilter) {
+    return this.#fetchAdvanced(this.#getZeitintervallbuchungSollURL(user, startFilter, endFilter)).then((responseJSON) => {
+      let zeitintervallbuchungBOs = ZeitintervallbuchungBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(zeitintervallbuchungBOs);
+      })
+    })
+  }
+
+  getZeitintervallbuchungIst(user, startFilter, endFilter) {
+    return this.#fetchAdvanced(this.#getZeitintervallbuchungIstURL(user, startFilter, endFilter)).then((responseJSON) => {
       let zeitintervallbuchungBOs = ZeitintervallbuchungBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {
