@@ -1,30 +1,11 @@
-from time import time
 from server.bo.AktivitätenBO import Aktivitäten
 from server.db.Mapper import Mapper
 
 
 class AktivitätenMapper(Mapper):
 
-
     def __init__(self):
         super().__init__()
-
-    def find_all(self):
-        
-        result = []
-        cursor = self._cnx.cursor()
-        cursor.execute("SELECT id, timestamp, bezeichnung, dauer, capacity from activity")
-        tuples = cursor.fetchall()
-
-        for (id, timestamp, bezeichnung, dauer, capacity) in tuples:
-            aktivitäten = Aktivitäten(id=id, timestamp=timestamp, bezeichnung=bezeichnung, dauer=dauer, capacity = capacity)
-
-            result.append(aktivitäten)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
     
     def find_by_key(self, key):
         """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
@@ -33,19 +14,22 @@ class AktivitätenMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, bezeichnung, dauer, capacity FROM activity WHERE id={}".format(key)
+        command = "SELECT id, timestamp, bezeichnung, dauer, capacity, project FROM activity WHERE id={}".format(key)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, bezeichnung, dauer, capacity) = tuples[0]
+            (id, timestamp, bezeichnung, dauer, capacity, project) = tuples[0]
             aktivitäten = Aktivitäten()
-            id=id,
-            timestamp=timestamp,
-            bezeichnung=bezeichnung,
-            dauer=dauer,
-            capacity=capacity,
+            aktivitäten.set_id(id),
+            aktivitäten.set_timestamp(timestamp),
+            aktivitäten.set_bezeichnung(bezeichnung),
+            aktivitäten.set_dauer(dauer),
+            aktivitäten.set_capacity(capacity),
+            aktivitäten.set_project(project)
+            
             result = aktivitäten
+
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
             keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
@@ -56,52 +40,34 @@ class AktivitätenMapper(Mapper):
 
         return result
 
-    def find_by_bezeichnung(self, bezeichnung):
-        """Auslesen aller Aktivitäten anhand der bezeichnung.
+    def find_all_activties_by_project(self, project: int):
+        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
         """
+
         result = []
+
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, bezeichnung, dauer, capacity FROM activity WHERE bezeichnung LIKE '{}' ORDER BY bezeichnung".format(bezeichnung)
+        command = "SELECT id, timestamp, bezeichnung, dauer, capacity, project FROM activity WHERE project={}".format(project)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        for (id, timestamp, bezeichnung, dauer, capacity) in tuples:
-            aktivitäten = Aktivitäten
-            id=id,
-            timestamp=timestamp,
-            bezeichnung=bezeichnung,
-            dauer=dauer,
-            capacity=capacity, 
-            result.append(aktivitäten)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
-    
-    def find_by_dauer(self, dauer):
-    
-        result = []
-        cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, bezeichnung, dauer, capacity FROM activity WHERE dauer LIKE '{}' ORDER BY dauer".format(dauer)
-        cursor.execute(command)
-        tuples = cursor.fetchall()
-
-        for (id, timestamp, bezeichnung, dauer, capacity) in tuples:
-            aktivitäten = Aktivitäten(
-            id=id,
-            timestamp=timestamp,
-            bezeichnung=bezeichnung,
-            dauer=dauer,
-            capacity=capacity,)
-            result = aktivitäten    
-            result.append(aktivitäten)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return result
         
+        for(id, timestamp, bezeichnung, dauer, capacity, project) in tuples:
+            aktivitäten = Aktivitäten()
+            aktivitäten.set_id(id),
+            aktivitäten.set_timestamp(timestamp),
+            aktivitäten.set_bezeichnung(bezeichnung),
+            aktivitäten.set_dauer(dauer),
+            aktivitäten.set_capacity(capacity),
+            aktivitäten.set_project(project)
+
+            result.append(aktivitäten)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
 
     def insert(self, aktivitäten: Aktivitäten) -> Aktivitäten:
         """Create activity Object."""
@@ -111,22 +77,24 @@ class AktivitätenMapper(Mapper):
 
         for (maxid) in tuples:
             if maxid[0] is not None:
-                aktivitäten.id = maxid[0] + 1
+                aktivitäten.set_id(maxid[0] + 1)
             else:
-                aktivitäten.id = 1
+                aktivitäten.set_id(1)
         command = """
             INSERT INTO activity (
-                id, timestamp, bezeichnung, dauer, capacity
-            ) VALUES (%s,%s,%s,%s,%s)
+                id, timestamp, bezeichnung, dauer, capacity, project
+            ) VALUES (%s,%s,%s,%s,%s,%s)
         """
-        cursor.execute(command, (
-            aktivitäten.id,
-            aktivitäten.timestamp,
-            aktivitäten.bezeichnung,
-            aktivitäten.dauer,
-            aktivitäten.capacity,
-        ))
+        data = (aktivitäten.get_id(),
+                aktivitäten.get_timestamp(),
+                aktivitäten.get_bezeichnung(),
+                aktivitäten.get_dauer(),
+                aktivitäten.get_capacity(),
+                aktivitäten.get_project())
+        cursor.execute(command, data)
+        
         self._cnx.commit()
+        cursor.close()
 
         return aktivitäten
     
@@ -137,8 +105,8 @@ class AktivitätenMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE activity SET timestamp=%s, bezeichnung=%s, dauer=%s, capacity=%s WHERE id=%s"
-        data = (aktivitäten.timestamp, aktivitäten.bezeichnung, aktivitäten.dauer, aktivitäten.capacity)
+        command = "UPDATE activity SET timestamp=%s, bezeichnung=%s, dauer=%s, capacity=%s, project=%s WHERE id=%s"
+        data = (aktivitäten.get_timestamp(), aktivitäten.get_bezeichnung(), aktivitäten.get_dauer(), aktivitäten.get_capacity(), aktivitäten.get_project(), aktivitäten.get_id())
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -150,7 +118,7 @@ class AktivitätenMapper(Mapper):
 
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM activity WHERE id={}".format(aktivitäten.id)
+        command = "DELETE FROM activity WHERE id={}".format(aktivitäten.get_id())
         cursor.execute(command)
 
         self._cnx.commit()

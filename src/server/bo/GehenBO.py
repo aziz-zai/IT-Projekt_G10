@@ -1,23 +1,19 @@
-from .BusinessObject import BusinessObject
-from datetime import datetime
+from .EreignisBO import Ereignis
 
 
-class Gehen(BusinessObject):
-
-    def __init__(self, timestamp_: datetime = datetime.now()):
-        self.timestamp = timestamp_
-
-    def get_timestamp(self):
-        """Auslesen des Zeitstempels von Gehen."""
-        return self._timestamp
-
-    def set_timestamp(self, timestamp):
-        self._timestamp = timestamp
+class Gehen(Ereignis):
+    def __init__(self):
+        super().__init__()
 
 
     @staticmethod
     def from_dict(dictionary=dict()):
-        """Umwandeln eines Python dict() in einen Customer()."""
+        """Umwandeln eines Python dict() in Gehen()."""
         obj = Gehen()
-        obj.set_timestamp(dictionary["timestamp"])
+        obj.set_zeitpunkt(dictionary["zeitpunkt"])
+        obj.set_bezeichnung(dictionary["bezeichnung"])
+        
         return obj
+  
+
+        

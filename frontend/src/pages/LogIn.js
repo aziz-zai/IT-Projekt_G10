@@ -37,14 +37,13 @@ export class LogIn extends Component {
 		const { classes, user } = this.props;
 		return (
             <>  
-                <NavBar nav='navTrans'/>
 			<div className="homeContainer">
                 <div className="homeBackground">
                     <video className="homeVideo" autoPlay loop muted src={Video} type='video/mp4' ></video>
                 </div>
                 <div className="homeContent">
                     <h1 className="homeTitle">Project.ONE</h1>
-                    <p className="homeText">Wir helfen dir deine Projekte zu organisieren!</p>
+                    <p className="homeText">Wir helfen dir, deine Projekte zu organisieren!</p>
                     <div className="btnContainer">
                         <button className="homeBtn" onClick={this.handleLogInButtonClicked}><FcGoogle></FcGoogle>&nbsp; Sign In</button>
                     </div>
@@ -64,7 +63,7 @@ LogIn.propTypes = {
 	/** 
 	 * Handler function, which is called if the user wants to sign in.
 	 */
-	onLogIn: PropTypes.func.isRequired,
+	onLogIn: PropTypes.func,
 }
 
 export default LogIn;

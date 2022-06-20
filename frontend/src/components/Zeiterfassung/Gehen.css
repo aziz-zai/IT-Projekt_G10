@@ -1,0 +1,32 @@
+.BtnGehenWrapper{
+    text-decoration: none;
+    width: 8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    box-shadow: #5e2e94 0px 3px 8px;
+    background-color: white;
+    }
+    
+    .BtnGehenContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    }
+    .BtnGehenWrapper:hover{
+        cursor:pointer;
+    }
+    
+    .BtnGehenText{
+        margin-top: 1rem;
+        font-size: 1rem;
+    }
+
+    .endTime{
+        color:red;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }

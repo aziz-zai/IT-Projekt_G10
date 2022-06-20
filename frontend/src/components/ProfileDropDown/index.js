@@ -2,7 +2,11 @@ import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { Popover, IconButton, Avatar, ClickAwayListener, withStyles, Typography, Paper, Button, Grid, Divider } from '@material-ui/core';
 import firebase from 'firebase/compat/app';
-
+import firebasConfig from '../../firebaseconfig'
+import {Link} from 'react-router-dom'
+import './ProfileDropDown.css'
+import LogoutIcon from '@mui/icons-material/Logout';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 export class ProfileDropDown extends Component {
     #avatarButtonRef = createRef();
     constructor(props) {
@@ -36,6 +40,7 @@ export class ProfileDropDown extends Component {
          * @see See Google [firebase.auth().signOut](https://firebase.google.com/docs/reference/js/firebase.auth.Auth#signout)
          */
       handleSignOutButtonClicked = () => {
+        firebase.initializeApp(firebasConfig)
         firebase.auth().signOut();
       }
     
@@ -68,9 +73,17 @@ export class ProfileDropDown extends Component {
                     <Divider  />
                     <Grid container justifyContent='center'>
                       <Grid item>
-                        <Button color='primary' onClick={this.handleSignOutButtonClicked}>Logout</Button>
+                      <Link class="ProfileBtn" to='/MeinProfil'>
+                          <Button color='primary' startIcon={<AccountCircleIcon/>}>Profile</Button>
+                      </Link>
                       </Grid>
                     </Grid>
+                    <Divider  />
+                    <Grid container justifyContent='center'>
+                      <Grid item>
+                      <Button color='error' startIcon={<LogoutIcon/>}onClick={this.handleSignOutButtonClicked}>Logout</Button>
+                      </Grid>
+                    </Grid>                  
                   </Paper>
                 </ClickAwayListener>
               </Popover>

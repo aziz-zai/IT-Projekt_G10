@@ -1,0 +1,30 @@
+import EreignisBO from './EreignisBO';
+
+/**
+ * Represents a Project
+ */
+export default class GehenBO extends EreignisBO {
+
+  constructor() {
+    super();
+  }
+
+  
+  static fromJSON(gehen) {
+    let result = [];
+
+    if (Array.isArray(gehen)) {
+        gehen.forEach((g) => {
+        Object.setPrototypeOf(g, GehenBO.prototype);
+        result.push(g);
+      })
+    } else {
+      // Es handelt sich offenbar um ein singuläres Objekt
+      let g = gehen;
+      Object.setPrototypeOf(g, GehenBO.prototype);
+      result.push(g);
+    }
+
+    return result;
+  }
+}
