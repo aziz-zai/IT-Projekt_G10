@@ -29,7 +29,7 @@ export class ZeitintervallbuchungListEntry extends Component {
         ereignis2Second: null,
         erstellt_fuer: null,
         erstellt_von: null,
-        projektarbeit: null
+        zeitintervall: null,
     };
   }
 
@@ -178,6 +178,70 @@ export class ZeitintervallbuchungListEntry extends Component {
 
     });
   }
+
+  getProjektlaufzeit = () => {
+    OneAPI.getAPI().getZeitintervall(this.props.buchung.zeitintervall).then(zeitintervall =>
+      this.setState({
+        zeitintervall: zeitintervall[0],
+      })
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+
+        })
+      );
+    // set loading to true
+    this.setState({
+
+    });
+  }
+
+  getProjektarbeit = () => {
+    OneAPI.getAPI().getProjektarbeit(this.props.buchung.zeitintervall).then(zeitintervall =>
+      this.setState({
+        zeitintervall: zeitintervall[0],
+      })
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+
+        })
+      );
+    // set loading to true
+    this.setState({
+
+    });
+  }
+
+  getAbwesenheit = () => {
+    OneAPI.getAPI().getAbwesenheit(this.props.buchung.zeitintervall).then(zeitintervall =>
+      this.setState({
+        zeitintervall: zeitintervall[0],
+      })
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+
+        })
+      );
+    // set loading to true
+    this.setState({
+
+    });
+  }
+
+  getPause = () => {
+    OneAPI.getAPI().getPause(this.props.buchung.zeitintervall).then(zeitintervall =>
+      this.setState({
+        zeitintervall: zeitintervall[0],
+      })
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+
+        })
+      );
+    // set loading to true
+    this.setState({
+
+    });
+  }
   handleExpandState = () => {
     this.setState({
         expandState: !this.state.expandState,
@@ -189,14 +253,26 @@ export class ZeitintervallbuchungListEntry extends Component {
 
 
 componentDidMount() {
-    
+  if(this.props.buchung){
+    if(this.props.buchung.bezeichnung == 'Projektlaufzeit'){
+      this.getProjektlaufzeit();
+    }
+    else if(this.props.buchung.bezeichnung == 'Projektarbeit'){
+      this.getProjektarbeit();
+    }
+    else if(this.props.buchung.bezeichnung == 'Abwesenheit'){
+      this.getAbwesenheit();
+    }
+    else if(this.props.buchung.bezeichnung == 'Pause'){
+      this.getPause();
+    }}
 }
   render() {
       const {buchung} = this.props;
       const {expandState,  ereignis1, ereignis1Year, ereignis1Month, ereignis1Day,ereignis1Hour, ereignis1Minute, ereignis1Second, 
-        ereignis2, ereignis2Year, ereignis2Month, ereignis2Day,ereignis2Hour, ereignis2Minute, ereignis2Second, erstellt_von, erstellt_fuer} = this.state;
+        ereignis2, ereignis2Year, ereignis2Month, zeitintervall, ereignis2Day,ereignis2Hour, ereignis2Minute, ereignis2Second, erstellt_von, erstellt_fuer} = this.state;
     return (
-      <div>
+      <div>{console.log('intervall', buchung)}
         <Accordion TransitionProps={{ unmountOnExit: true }} defaultExpanded={false} expanded={expandState} sx={{backgroundColor:"#5e2e942d", marginLeft: 1, marginRight:1}}>
           <AccordionSummary 
             expandIcon={<ExpandMoreIcon onClick={this.handleExpandState}/>}
@@ -205,7 +281,7 @@ componentDidMount() {
             <Grid container spacing={1} justify='flex-start' alignItems='center'>
               <Grid item>
                 <div class="ereignisBuchungHeader">
-                <Typography variant='body1' sx={{typography: 'heading'}}>{buchung.bezeichnung}: &nbsp;&nbsp;
+                <Typography variant='body1' sx={{typography: 'heading'}}>{buchung.bezeichnung}: {zeitintervall ? <strong>{zeitintervall.bezeichnung}</strong>:null} &nbsp;&nbsp;
                 </Typography>  &nbsp;
                 { ereignis2 ?
                 <Typography variant='body1'><strong>{String(ereignis1Year).padStart(4, "0")}-{String(ereignis1Month).padStart(2, "0")}-{String(ereignis1Day).padStart(2, "0")}</strong> 
