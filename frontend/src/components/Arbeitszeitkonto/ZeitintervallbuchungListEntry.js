@@ -33,8 +33,8 @@ export class ZeitintervallbuchungListEntry extends Component {
     };
   }
 
-  getKommenById = () => {
-    OneAPI.getAPI().getKommen(this.props.buchung.start).then(kommen =>{
+  getKommenById = (zeitintervall) => {
+    OneAPI.getAPI().getKommen(zeitintervall.start).then(kommen =>{
         const ereignisZeitpunkt = new Date(kommen[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
         const month = ereignisZeitpunkt.getMonth()
@@ -61,8 +61,8 @@ export class ZeitintervallbuchungListEntry extends Component {
     });
   }
 
-  getGehenById = () => {
-    OneAPI.getAPI().getGehen(this.props.buchung.ende).then(gehen =>{
+  getGehenById = (zeitintervall) => {
+    OneAPI.getAPI().getGehen(zeitintervall.ende).then(gehen =>{
         const ereignisZeitpunkt = new Date(gehen[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
         const month = ereignisZeitpunkt.getMonth()
@@ -88,8 +88,8 @@ export class ZeitintervallbuchungListEntry extends Component {
 
     });
   }
-  getEreignis1ById = () => {
-    OneAPI.getAPI().getEreignis(this.props.buchung.start).then(ereignis =>{
+  getEreignis1ById = (zeitintervall) => {
+    OneAPI.getAPI().getEreignis(zeitintervall.start).then(ereignis =>{
         const ereignisZeitpunkt = new Date(ereignis[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
         const month = ereignisZeitpunkt.getMonth()
@@ -117,8 +117,8 @@ export class ZeitintervallbuchungListEntry extends Component {
     });
   }
 
-  getEreignis2ById = () => {
-    OneAPI.getAPI().getEreignis(this.props.buchung.ende).then(ereignis =>{
+  getEreignis2ById = (zeitintervall) => {
+    OneAPI.getAPI().getEreignis(zeitintervall.ende).then(ereignis =>{
         const ereignisZeitpunkt = new Date(ereignis[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
         const month = ereignisZeitpunkt.getMonth()
@@ -180,11 +180,15 @@ export class ZeitintervallbuchungListEntry extends Component {
   }
 
   getProjektlaufzeit = () => {
-    OneAPI.getAPI().getZeitintervall(this.props.buchung.zeitintervall).then(zeitintervall =>
+    OneAPI.getAPI().getZeitintervall(this.props.buchung.zeitintervall).then(zeitintervall =>{
       this.setState({
         zeitintervall: zeitintervall[0],
       })
-      ).catch(e =>
+        return zeitintervall}
+      ).then(zeitintervall=>{
+        this.getEreignis1ById(zeitintervall[0]);
+        this.getEreignis2ById(zeitintervall[0])
+      }).catch(e =>
         this.setState({ // Reset state with error from catch 
 
         })
@@ -196,11 +200,15 @@ export class ZeitintervallbuchungListEntry extends Component {
   }
 
   getProjektarbeit = () => {
-    OneAPI.getAPI().getProjektarbeit(this.props.buchung.zeitintervall).then(zeitintervall =>
+    OneAPI.getAPI().getProjektarbeit(this.props.buchung.zeitintervall).then(zeitintervall =>{
       this.setState({
         zeitintervall: zeitintervall[0],
       })
-      ).catch(e =>
+        return zeitintervall}
+      ).then(zeitintervall => {
+        this.getKommenById(zeitintervall[0]);
+        this.getGehenById(zeitintervall[0])
+      }).catch(e =>
         this.setState({ // Reset state with error from catch 
 
         })
@@ -212,11 +220,15 @@ export class ZeitintervallbuchungListEntry extends Component {
   }
 
   getAbwesenheit = () => {
-    OneAPI.getAPI().getAbwesenheit(this.props.buchung.zeitintervall).then(zeitintervall =>
+    OneAPI.getAPI().getAbwesenheit(this.props.buchung.zeitintervall).then(zeitintervall =>{
       this.setState({
         zeitintervall: zeitintervall[0],
       })
-      ).catch(e =>
+      return zeitintervall}
+      ).then(zeitintervall=>{
+        this.getEreignis1ById(zeitintervall[0]);
+        this.getEreignis2ById(zeitintervall[0])
+      }).catch(e =>
         this.setState({ // Reset state with error from catch 
 
         })
@@ -228,11 +240,15 @@ export class ZeitintervallbuchungListEntry extends Component {
   }
 
   getPause = () => {
-    OneAPI.getAPI().getPause(this.props.buchung.zeitintervall).then(zeitintervall =>
+    OneAPI.getAPI().getPause(this.props.buchung.zeitintervall).then(zeitintervall =>{
       this.setState({
         zeitintervall: zeitintervall[0],
       })
-      ).catch(e =>
+      return zeitintervall}
+      ).then(zeitintervall=>{
+        this.getEreignis1ById(zeitintervall[0]);
+        this.getEreignis2ById(zeitintervall[0])
+      }).catch(e =>
         this.setState({ // Reset state with error from catch 
 
         })
@@ -272,7 +288,7 @@ componentDidMount() {
       const {expandState,  ereignis1, ereignis1Year, ereignis1Month, ereignis1Day,ereignis1Hour, ereignis1Minute, ereignis1Second, 
         ereignis2, ereignis2Year, ereignis2Month, zeitintervall, ereignis2Day,ereignis2Hour, ereignis2Minute, ereignis2Second, erstellt_von, erstellt_fuer} = this.state;
     return (
-      <div>{console.log('intervall', buchung)}
+      <div>{console.log('intervall', ereignis1, ereignis2)}
         <Accordion TransitionProps={{ unmountOnExit: true }} defaultExpanded={false} expanded={expandState} sx={{backgroundColor:"#5e2e942d", marginLeft: 1, marginRight:1}}>
           <AccordionSummary 
             expandIcon={<ExpandMoreIcon onClick={this.handleExpandState}/>}
