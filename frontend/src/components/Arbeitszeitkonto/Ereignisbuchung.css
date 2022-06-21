@@ -22,3 +22,15 @@
     transition: all 0.2s ease-in-out;
     margin: 0 0.5rem 0 0.5rem
 }
+
+.ereignisContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+}
+
+.ereignis{
+    color: #5e2e94;
+    font-weight: bold;
+}

@@ -109,7 +109,7 @@ export class MyProfile extends Component {
                 <div>
                 <TextField
                   color="secondary"
-                    autoFocus type='text' required
+                    type='text' required
                     id="firstName"
                     label="Vorname"
                     value={firstName ? firstName:user[0].vorname}

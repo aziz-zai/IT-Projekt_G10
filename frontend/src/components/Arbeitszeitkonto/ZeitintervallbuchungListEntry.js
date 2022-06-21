@@ -5,6 +5,10 @@ import { Typography, Accordion, AccordionSummary, AccordionDetails, Grid } from 
 import { Button, ButtonGroup } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
+import './Zeitintervallbuchung.css'
 
 export class ZeitintervallbuchungListEntry extends Component {
 
@@ -295,15 +299,20 @@ componentDidMount() {
             id={`customer${buchung.getID()}accountpanel-header`}
           >
             <Grid container spacing={1} justify='flex-start' alignItems='center'>
+            <Grid item>
+                    <AccessTimeIcon/>
+              </Grid>
               <Grid item>
                 <div class="ereignisBuchungHeader">
-                <Typography variant='body1' sx={{typography: 'heading'}}>{buchung.bezeichnung}: {zeitintervall ? <strong>{zeitintervall.bezeichnung}</strong>:null} &nbsp;&nbsp;
+                <Typography variant='body1' sx={{typography: 'heading', display: 'flex', flexDirection:'row'}}>{zeitintervall ? <strong>{zeitintervall.bezeichnung}:</strong>:null} &nbsp;&nbsp;
                 </Typography>  &nbsp;
                 { ereignis2 ?
-                <Typography variant='body1'><strong>{String(ereignis1Year).padStart(4, "0")}-{String(ereignis1Month).padStart(2, "0")}-{String(ereignis1Day).padStart(2, "0")}</strong> 
-              <strong>{String(ereignis1Hour).padStart(2, "0")}:{String(ereignis1Minute).padStart(2, "0")}:{String(ereignis1Second).padStart(2, "0")}Uhr</strong> bis 
-              <strong>{String(ereignis2Year).padStart(4, "0")}-{String(ereignis2Month).padStart(2, "0")}-{String(ereignis2Day).padStart(2, "0")}</strong> 
-              <strong>{String(ereignis2Hour).padStart(2, "0")}:{String(ereignis2Minute).padStart(2, "0")}:{String(ereignis2Second).padStart(2, "0")}Uhr</strong> </Typography> :null}
+              <div class="intervallContainer">
+              <div class="intervall">{String(ereignis1Year).padStart(4, "0")}-{String(ereignis1Month).padStart(2, "0")}-{String(ereignis1Day).padStart(2, "0")} &nbsp;
+              {String(ereignis1Hour).padStart(2, "0")}:{String(ereignis1Minute).padStart(2, "0")}:{String(ereignis1Second).padStart(2, "0")}</div>&nbsp;bis&nbsp;
+              <div class="intervall">{String(ereignis2Year).padStart(4, "0")}-{String(ereignis2Month).padStart(2, "0")}-{String(ereignis2Day).padStart(2, "0")} &nbsp;
+              {String(ereignis2Hour).padStart(2, "0")}:{String(ereignis2Minute).padStart(2, "0")}:{String(ereignis2Second).padStart(2, "0")}</div>
+              </div> :null}
                </div>
               </Grid>
               <Grid item>
@@ -312,10 +321,10 @@ componentDidMount() {
               <Grid item>
                 <ButtonGroup variant='text' size='small'>
                   <Button color='primary' >
-                    edit
+                  <EditIcon/>
                   </Button>
                   <Button color='secondary' >
-                    delete
+                    <DeleteForeverIcon/>
                   </Button>
                 </ButtonGroup>
               </Grid>
@@ -327,8 +336,9 @@ componentDidMount() {
           </AccordionSummary>
           <AccordionDetails sx={{backgroundColor:"#54377550"}}>
               {erstellt_von ?
-              <div class="ersteller">
+              <div class="erstellerIntervall">
            {erstellt_von[0].vorname}  {erstellt_von[0].nachname}&nbsp;&nbsp;<DoubleArrowIcon sx={{color:"#5e2e94"}}/>&nbsp;&nbsp;{erstellt_fuer[0].vorname}  {erstellt_fuer[0].nachname}</div>:null}
+              {(buchung.bezeichnung == 'Projektarbeit') ? zeitintervall ?<div>Tätigkeitsbeschreibung: {zeitintervall.beschreibung}</div>:null:null}
           </AccordionDetails>
         </Accordion>
       </div>
