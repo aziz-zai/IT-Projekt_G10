@@ -41,6 +41,9 @@ export class SingleProject extends Component {
           deletingInProgress: false,
           loadingError: null,
           deletingError: null,
+          zeitintervall: null,
+          zeitintervallEnde: null,
+          zeitintervallStart: null
         };
     }
     
@@ -159,14 +162,87 @@ export class SingleProject extends Component {
             loadingInProgress: false,
             loadingError: e
           })
-        );
-  
+        )
+        this.setState({
+          loadingInProgress: true,
+          loadingError: null
+        });
+      };
+      
+        getProjektlaufzeit = () => {
+          OneAPI.getAPI().getZeitintervall(this.props.project.laufzeit).then(zeitintervall =>{
+            this.setState({
+              zeitintervall: zeitintervall,
+              loadingInProgress: false, // loading indicator 
+              loadingError: null
+            });
+            this.getProjektlaufzeitAnfang(zeitintervall);
+            this.getProjektlaufzeitEnde(zeitintervall);
+            }).catch(e =>
+              this.setState({ // Reset state with error from catch 
+                loadingInProgress: false,
+                loadingError: e
+              })
+            )
+            this.setState({
+              loadingInProgress: true,
+              loadingError: null
+            });
+          };
+          
+       getProjektlaufzeitAnfang = (zeitintervall) => {
+         OneAPI.getAPI().getEreignis(zeitintervall[0].start).then(zeitintervallStart =>{
+                var StartJahr = 0 
+                var StartMonat = 0
+                var StartTag = 0
+                var Start = 0
+                const zeitintervallDate = new Date(zeitintervallStart[0].zeitpunkt)
+                StartJahr = zeitintervallDate.getFullYear()
+                StartMonat = zeitintervallDate.getMonth()
+                StartTag = zeitintervallDate.getDay()
+                Start = `${String(StartJahr).padStart(4, "0")}-${String(StartMonat).padStart(2, "0")}-${String(StartTag).padStart(2, "0")}` 
+          this.setState({
+             zeitintervallStart: Start,
+             loadingInProgress: false, // loading indicator 
+             loadingError: null
+           })}).catch(e =>
+             this.setState({ // Reset state with error from catch 
+               loadingInProgress: false,
+               loadingError: e
+             })
+           )
+           this.setState({
+            loadingInProgress: true,
+            loadingError: null
+          });
+        };
+           getProjektlaufzeitEnde = (zeitintervall) => {
+            OneAPI.getAPI().getEreignis(zeitintervall[0].ende).then(zeitintervallEnde =>{
+              var EndeJahr = 0 
+              var EndeMonat = 0
+              var EndeTag = 0
+              var Ende = 0
+              const zeitintervallDate = new Date(zeitintervallEnde[0].zeitpunkt)
+              EndeJahr = zeitintervallDate.getFullYear()
+              EndeMonat = zeitintervallDate.getMonth()
+              EndeTag = zeitintervallDate.getDay()
+              Ende = `${String(EndeJahr).padStart(4, "0")}-${String(EndeMonat).padStart(2, "0")}-${String(EndeTag).padStart(2, "0")}`;
+              this.setState({
+                zeitintervallEnde: Ende,
+                loadingInProgress: false, // loading indicator 
+                loadingError: null
+              })}).catch(e =>
+                this.setState({ // Reset state with error from catch 
+                  loadingInProgress: false,
+                  loadingError: e
+                })
+              ) 
       // set loading to true
       this.setState({
         loadingInProgress: true,
         loadingError: null
       });
-    }
+    };
 
 
     textFieldValueChange = (event) => {
@@ -266,23 +342,23 @@ export class SingleProject extends Component {
     this.getProjektleiterByProject();
     this.loadAktivitäten();
     this.getMembersByProject();
+    this.getProjektlaufzeit();
     }
 
   render() {
     const {project, user} = this.props;
     const {openAkt, membership, handleDialogClose, aktivitäten, projektleiter, 
-    isOpen, projektfarbe, loadingInProgress, openMember, projekttitel, projektName, laufZeit, auftragGeber, availableHours} = this.state
-    
+    isOpen, projektfarbe, loadingInProgress, openMember, projekttitel, projektName, laufZeit, auftragGeber, availableHours, zeitintervall, zeitintervallEnde, zeitintervallStart} = this.state
+
     return (
-      <div class="ProjectCardWrapper">
-      <Card onClick = {this.handleDialogOpen}class={projektfarbe}>
+      <div class="ProjectCardWrapper"> 
+      <Card onClick = {this.handleDialogOpen}class={projektfarbe}>{console.log('zeitintervallStart', zeitintervallStart)}
       <CardContent>
         <Typography variant="h5" class={projekttitel} component="div">
           {projektName}
         </Typography>
         <Typography variant="body2"class="ProjektContent" >
           Verfügbare Stunden: {availableHours}h<br/>
-          Deadline: 0{laufZeit}.04.2022<br/>
           Projektleiter: {projektleiter[0] ?
            projektleiter[0].vorname : null}
         </Typography>
@@ -328,16 +404,34 @@ export class SingleProject extends Component {
             </Button>
           </ListItem>
           <ListItem>
+    
           <TextField
             autoFocus type='text' required
             color="secondary"
-            id="laufZeit"
-            label="Projektlaufzeit"
-            value={laufZeit}
+            id="zeitintervallStart"
+            label="Projektlaufzeit Von"
+            value={zeitintervallStart}
+            type="date"
             onChange={this.textFieldValueChange}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            /> &nbsp;&nbsp;
+            <TextField
+            autoFocus type='text' required
+            color="secondary"
+            id="zeitintervallEnde"
+            label="Projektlaufzeit Bis"
+            value={zeitintervallEnde}
+            type="date"
+            onChange={this.textFieldValueChange}
+            InputLabelProps={{
+              shrink: true,
+            }}
             /><Button>
             <Typography class="Akt_btn" onClick={this.openAkt}>Aktivitäten hinzufügen </Typography>
             </Button>
+          
           </ListItem>
           <ListItem>
           <TextField
