@@ -7,7 +7,10 @@ class EreignisbuchungMapper(Mapper):
         super().__init__()
     
     def find_by_key(self, key):
-        """Suchen einer Ereignisbuchung mit vorgegebener ID. Da diese eindeutig ist,
+        """
+        Suchen einer Ereignisbuchung anhand der Ereignisbuchungs-ID.
+        Parameter key = Ereignisbuchungs-ID
+
         """
         result = None
 
@@ -40,8 +43,10 @@ class EreignisbuchungMapper(Mapper):
         return result
     
     def update(self, ereignisbuchung: Ereignisbuchung) -> Ereignisbuchung:
-        """Wiederholtes Schreiben eines Objekts in die Datenbank.
-        :param ereignisbuchung das Objekt, das in die DB geschrieben werden soll
+        """
+        Änderung einer bereits bestehenden Ereignisbuchung.
+        Parameter ereignisbuchung = EreignisbuchungBO, das geändert werden soll
+        
         """
         cursor = self._cnx.cursor()
 
@@ -55,7 +60,11 @@ class EreignisbuchungMapper(Mapper):
         return ereignisbuchung
 
     def insert(self, ereignisbuchung: Ereignisbuchung) -> Ereignisbuchung:
-        """Create ereignisbuchung Object."""
+        """
+        Einfügen einer neuen Ereignisbuchung in die Datenbank.
+        Parameter ereignisbuchung = EreignisbuchungBO, das eingefügt werden soll
+
+        """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM ereignisbuchung")
         tuples = cursor.fetchall()
@@ -85,7 +94,11 @@ class EreignisbuchungMapper(Mapper):
 
 
     def delete(self, ereignisbuchung):
-
+        """
+        Löschen einer Ereignisbuchung aus der Datenbank anhand der Ereignisbuchungs-ID.
+        Parameter ereignisbuchung = Ereignisbuchungs-ID
+        
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM ereignisbuchung WHERE id={}".format(ereignisbuchung.get_id())
