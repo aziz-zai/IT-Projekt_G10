@@ -2,11 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import OneAPI from '../../api/OneAPI'
 import ProjectBO from '../../api/ProjectBO';
-import { Container, TextField, Dialog, ListItem, List, Divider, AppBar, 
-Toolbar, Grid, Card, IconButton, Typography, Slide} from '@mui/material';
+import { Container, TextField, Dialog, ListItem, List, AppBar, 
+Toolbar, Card, IconButton, Typography} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import ContextErrorMessage from '../Dialogs/ContextErrorMessage';
-import LoadingProgress from '../Dialogs/LoadingProgress';
 
 
 export class CreateProject extends Component {
@@ -72,8 +70,6 @@ export class CreateProject extends Component {
     });
   }
 
-
-
 textFieldValueChange = (event) => {
   const value = event.target.value;
 
@@ -91,8 +87,7 @@ textFieldValueChange = (event) => {
 
   render() {
       const {isOpen} = this.props;
-      const {projektName, projektNameValidationFailed, laufZeit, laufZeitValidationFailed,
-      auftragGeber, addingInProgress, auftragGeberValidationFailed, availableHours, availableHoursValidationFailed,} = this.state;
+      const {projektName, laufZeit, auftragGeber, availableHours,} = this.state;
 
     return (
     <div>

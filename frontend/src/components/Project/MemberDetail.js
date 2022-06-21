@@ -43,7 +43,7 @@ export class Membership extends Component {
     }
 
     render() {
-        const {member, memberd} = this.props;
+        const {member} = this.props;
         
     return (
       <Paper variant='outlined' class="papermitarbeiter">
@@ -56,12 +56,6 @@ export class Membership extends Component {
   }
 }
 
-
-const styles = theme => ({
-  root: {
-    width: '100%',
-  }
-});
 
 Membership.propTypes = {
   isOpen: PropTypes.any,

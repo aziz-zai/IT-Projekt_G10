@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {Table, DialogTitle, Dialog, Button, Tooltip, IconButton, Typography, Paper } from '@mui/material';
+import {DialogTitle, Dialog, Button, Tooltip, IconButton, Paper } from '@mui/material';
 import './Project.css'
 import './Aktivitäten.css'
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -91,7 +91,7 @@ class AktivitätenDetail extends Component {
 
     return (
       <div>
-      <Paper onClick={this.openActivityDetails} variant='outlined' class="paperaktivitäten">
+      <Paper onClick={this.openActivityDetails} variant='outlined' className="paperaktivitäten">
         <div><strong>{akt_bezeichnung}</strong></div>
         <div><strong>{akt_dauer}</strong> Tage übrig</div>
         <div><strong>{akt_capacity}</strong>h übrig</div>
@@ -123,15 +123,7 @@ class AktivitätenDetail extends Component {
   }
 }
 
-const styles = theme => ({
-    root: {
-      width: '100%',
-    }
-  });
-
 AktivitätenDetail.propTypes = {
-  classes: PropTypes.object.isRequired,
-  /** The customerID to be rendered */
   akt_dauer: PropTypes.any,
   akt_bezeichnung: PropTypes.any,
   onClose: PropTypes.any,

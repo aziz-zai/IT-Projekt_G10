@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import AktivitätenBO from '../../api/AktivitätenBO';
 import OneAPI from '../../api/OneAPI';
-import { Dialog, Card, TextField, List, ListItem, Divider, } from '@mui/material';
-import { Button, IconButton, DialogContent, DialogTitle, Typography, InputAdornment, MenuItem, DialogActions, Grid } from '@mui/material';
+import { Dialog, Card, TextField, List, ListItem, Divider, IconButton, DialogTitle} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import './Aktivitäten.css'
 
