@@ -1,0 +1,20 @@
+.intervallContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+}
+
+.intervall{
+    color: #5e2e94;
+    font-weight: bold;
+}
+
+.erstellerIntervall{
+    border-bottom: 3px solid #5e2e94;
+    margin-bottom: 0.5rem
+}
+
+.buchungDeleted{
+    margin: 0.5rem 0.5rem 0.5rem 0.5rem;
+}

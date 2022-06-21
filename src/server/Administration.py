@@ -193,6 +193,54 @@ class Administration(object):
         with EreignisbuchungMapper() as mapper:
             return mapper.find_by_key(id)
 
+    def get_soll_ereignisbuchungen_by_user(self, erstellt_für):
+        with EreignisbuchungMapper() as mapper:
+            return mapper.find_soll_ereignisbuchungen_by_user(erstellt_für)
+    
+    def get_soll_ereignisbuchungen_by_zeitspanne(self, erstellt_für, startFilter, endFilter):
+        ereignisbuchungen = self.get_soll_ereignisbuchungen_by_user(erstellt_für)
+        if((startFilter != "null" or "") and (endFilter != "null" or "")):
+            startTime = datetime.strptime(startFilter, "%Y-%m-%dT%H:%M")
+            endTime = datetime.strptime(endFilter, "%Y-%m-%dT%H:%M")
+            ereignisbuchungen_in_time = []
+            for(buchung) in ereignisbuchungen:
+                if(buchung.get_bezeichnung()=='Arbeitsbeginn'):
+                    ereignis = self.get_kommen_by_id(buchung.get_ereignis())
+                elif(buchung.get_bezeichnung()=='Arbeitsende'):
+                    ereignis = self.get_gehen_by_id(buchung.get_ereignis())
+                else:
+                    ereignis = self.get_ereignis_by_id(buchung.get_ereignis())
+                ereignisTime = datetime.strptime(ereignis.get_zeitpunkt(), "%Y-%m-%dT%H:%M")
+                if(startTime <= ereignisTime <= endTime):
+                    ereignisbuchungen_in_time.append(buchung)
+            return ereignisbuchungen_in_time
+        else:
+            return ereignisbuchungen
+
+    def get_ist_eregnisbuchungen_by_user(self, erstellt_für):
+        with EreignisbuchungMapper() as mapper:
+            return mapper.find_ist_ereignisbuchungen_by_user(erstellt_für)
+
+    def get_ist_eregnisbuchungen_by_zeitspanne(self, erstellt_für, startFilter, endFilter):
+        ereignisbuchungen = self.get_ist_eregnisbuchungen_by_user(erstellt_für)
+        if((startFilter != "null" or "") and (endFilter != "null" or "")):
+            startTime = datetime.strptime(startFilter, "%Y-%m-%dT%H:%M")
+            endTime = datetime.strptime(endFilter, "%Y-%m-%dT%H:%M")
+            ereignisbuchungen_in_time = []
+            for(buchung) in ereignisbuchungen:
+                if(buchung.get_bezeichnung()=='Arbeitsbeginn'):
+                    ereignis = self.get_kommen_by_id(buchung.get_ereignis())
+                elif(buchung.get_bezeichnung()=='Arbeitsende'):
+                    ereignis = self.get_gehen_by_id(buchung.get_ereignis())
+                else:
+                    ereignis = self.get_ereignis_by_id(buchung.get_ereignis())
+                ereignisTime = datetime.strptime(ereignis.get_zeitpunkt(), "%Y-%m-%dT%H:%M")
+                if(startTime <= ereignisTime <= endTime):
+                    ereignisbuchungen_in_time.append(buchung)
+            return ereignisbuchungen_in_time
+        else:
+            return ereignisbuchungen
+
     def update_ereignisbuchung(self, ereignisbuchung):
         with EreignisbuchungMapper() as mapper:
             return mapper.update(ereignisbuchung)
@@ -290,22 +338,22 @@ class Administration(object):
             zeitinter = adm.get_projektarbeit_by_id(zeitintervall)
             kommen = adm.get_kommen_by_id(zeitinter.get_start())
             gehen = adm.get_gehen_by_id(zeitinter.get_ende())
-            zeitdifferenz = datetime.strptime(gehen.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S") - datetime.strptime(kommen.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S")
+            zeitdifferenz = datetime.strptime(gehen.get_zeitpunkt(),"%Y-%m-%dT%H:%M") - datetime.strptime(kommen.get_zeitpunkt(),"%Y-%m-%dT%H:%M")
         elif zeitintervall_bez == "Projektlaufzeit":
             zeitinter = adm.get_zeitintervall_by_id(zeitintervall)
             start_ereignis = adm.get_ereignis_by_id(zeitinter.get_start())
             end_ereignis = adm.get_ereignis_by_id(zeitinter.get_ende())
-            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S") - datetime.strptime(start_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S")
+            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M") - datetime.strptime(start_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M")
         elif zeitintervall_bez == "Pause":
             zeitinter = adm.get_pause_by_id(zeitintervall)
             start_ereignis = adm.get_ereignis_by_id(zeitinter.get_start())
             end_ereignis = adm.get_ereignis_by_id(zeitinter.get_ende())
-            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S") - datetime.strptime(start_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S")
+            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M") - datetime.strptime(start_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M")
         elif zeitintervall_bez == "Abwesenheit":
             zeitinter = adm.get_abwesenheit_by_id(zeitintervall)
             start_ereignis = adm.get_ereignis_by_id(zeitinter.get_start())
             end_ereignis = adm.get_ereignis_by_id(zeitinter.get_ende())
-            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S") - datetime.strptime(start_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M:%S")
+            zeitdifferenz = datetime.strptime(end_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M") - datetime.strptime(start_ereignis.get_zeitpunkt(),"%Y-%m-%dT%H:%M")
         zeitdiff_sec = zeitdifferenz.total_seconds()   
         offset_hours = zeitdiff_sec / 3600
         offset_minutes = (offset_hours % 1) * 60
@@ -320,13 +368,83 @@ class Administration(object):
         with ZeitintervallbuchungMapper() as mapper:
             return mapper.find_by_key(id)
 
-    def get_soll_buchungen_by_user(self, erstellt_für):
+    def get_soll_projektarbeit_buchungen_by_user(self, erstellt_für):
+        with ZeitintervallbuchungMapper() as mapper:
+            return mapper.find_soll_projektarbeit_buchungen_by_user(erstellt_für)
+
+    def get_soll_zeitintervallbuchungen_by_user(self, erstellt_für):
         with ZeitintervallbuchungMapper() as mapper:
             return mapper.find_soll_buchungen_by_user(erstellt_für)
+    
+    def get_soll_zeitintervallbuchungen_by_zeitspanne(self, user, startFilter, endFilter):
+        zeitintervallbuchungen = self.get_soll_zeitintervallbuchungen_by_user(user)
+        if((startFilter != "null" or "") and (endFilter != "null" or "")):
+            startTime = datetime.strptime(startFilter, "%Y-%m-%dT%H:%M")
+            endTime = datetime.strptime(endFilter, "%Y-%m-%dT%H:%M")
+            zeitintervallbuchungen_in_time = []
+            for(buchung) in zeitintervallbuchungen:
+                if(buchung.get_bezeichnung()=='Projektarbeit'):
+                    zeitintervall = self.get_projektarbeit_by_id(buchung.get_zeitintervall())
+                    ereignis1 = self.get_kommen_by_id(zeitintervall.get_start())
+                    ereignis2 = self.get_gehen_by_id(zeitintervall.get_ende())
+                elif buchung.get_bezeichnung() == "Projektlaufzeit":
+                    zeitintervall = self.get_zeitintervall_by_id(buchung.get_zeitintervall())
+                    ereignis1 = self.get_ereignis_by_id(zeitintervall.get_start())
+                    ereignis2 = self.get_ereignis_by_id(zeitintervall.get_ende())
+                elif buchung.get_bezeichnung() == "Pause":
+                    zeitintervall = self.get_pause_by_id(buchung.get_zeitintervall())
+                    ereignis1 = self.get_ereignis_by_id(zeitintervall.get_start())
+                    ereignis2 = self.get_ereignis_by_id(zeitintervall.get_ende())
+                elif buchung.get_bezeichnung() == "Abwesenheit":
+                    zeitintervall = self.get_abwesenheit_by_id(buchung.get_zeitintervall())
+                    ereignis1 = self.get_ereignis_by_id(zeitintervall.get_start())
+                    ereignis2 = self.get_ereignis_by_id(zeitintervall.get_ende())
+                ereignis1Time = datetime.strptime(ereignis1.get_zeitpunkt(), "%Y-%m-%dT%H:%M")
+                ereignis2Time = datetime.strptime(ereignis2.get_zeitpunkt(), "%Y-%m-%dT%H:%M")
+                if((startTime <= ereignis1Time <= endTime) and (startTime <= ereignis2Time <= endTime)):
+                    zeitintervallbuchungen_in_time.append(buchung)
+            return zeitintervallbuchungen_in_time
+        else:
+            return zeitintervallbuchungen
+    
+    def get_ist_zeitintervallbuchungen_by_zeitspanne(self, user, startFilter, endFilter):
+        zeitintervallbuchungen = self.get_ist_zeitintervallbuchungen_by_user(user)
+        if((startFilter != "null" or "") and (endFilter != "null" or "")):
+            startTime = datetime.strptime(startFilter, "%Y-%m-%dT%H:%M")
+            endTime = datetime.strptime(endFilter, "%Y-%m-%dT%H:%M")
+            zeitintervallbuchungen_in_time = []
+            for(buchung) in zeitintervallbuchungen:
+                if(buchung.get_bezeichnung()=='Projektarbeit'):
+                    zeitintervall = self.get_projektarbeit_by_id(buchung.get_zeitintervall())
+                    ereignis1 = self.get_kommen_by_id(zeitintervall.get_start())
+                    ereignis2 = self.get_gehen_by_id(zeitintervall.get_ende())
+                elif buchung.get_bezeichnung() == "Projektlaufzeit":
+                    zeitintervall = self.get_zeitintervall_by_id(buchung.get_zeitintervall())
+                    ereignis1 = self.get_ereignis_by_id(zeitintervall.get_start())
+                    ereignis2 = self.get_ereignis_by_id(zeitintervall.get_ende())
+                elif buchung.get_bezeichnung() == "Pause":
+                    zeitintervall = self.get_pause_by_id(buchung.get_zeitintervall())
+                    ereignis1 = self.get_ereignis_by_id(zeitintervall.get_start())
+                    ereignis2 = self.get_ereignis_by_id(zeitintervall.get_ende())
+                elif buchung.get_bezeichnung() == "Abwesenheit":
+                    zeitintervall = self.get_abwesenheit_by_id(buchung.get_zeitintervall())
+                    ereignis1 = self.get_ereignis_by_id(zeitintervall.get_start())
+                    ereignis2 = self.get_ereignis_by_id(zeitintervall.get_ende())
+                ereignis1Time = datetime.strptime(ereignis1.get_zeitpunkt(), "%Y-%m-%dT%H:%M")
+                ereignis2Time = datetime.strptime(ereignis2.get_zeitpunkt(), "%Y-%m-%dT%H:%M")
+                if((startTime <= ereignis1Time <= endTime) and (startTime <= ereignis2Time <= endTime)):
+                    zeitintervallbuchungen_in_time.append(buchung)
+            return zeitintervallbuchungen_in_time
+        else:
+            return zeitintervallbuchungen
 
-    def get_ist_buchungen_by_user(self, user):
+    def get_ist_zeitintervallbuchungen_by_user(self, erstellt_für):
         with ZeitintervallbuchungMapper() as mapper:
-            return mapper.find_ist_buchungen_by_user(user)
+            return mapper.find_ist_buchungen_by_user(erstellt_für)
+
+    def get_ist_projektarbeit_buchungen_by_user(self, erstellt_für):
+        with ZeitintervallbuchungMapper() as mapper:
+            return mapper.find_ist_projektarbeit_buchungen_by_user(erstellt_für)
     
     def get_pause_buchungen_by_user(self, user):
         with ZeitintervallbuchungMapper() as mapper:
@@ -429,7 +547,7 @@ class Administration(object):
     
     def update_arbeitszeitkonto_ist_arbeitsleistung(self, user):
         arbeitszeitkonto = self.get_arbeitszeitkonto_by_userID(user)
-        ist_zeitintervallbuchungen = self.get_ist_buchungen_by_user(user)
+        ist_zeitintervallbuchungen = self.get_ist_projektarbeit_buchungen_by_user(user)
         urlaub_krank_zeitintervallbuchungen = self.get_all_urlaub_krank_buchungen(user)
         pause_zeitintervallbuchungen = self.get_pause_buchungen_by_user(user)
         ist_stunden=0
@@ -453,7 +571,7 @@ class Administration(object):
     def update_arbeitszeitkonto_gleitzeit(self, user):
         arbeitszeitkonto = self.get_arbeitszeitkonto_by_userID(user)
         aktuelle_arbeitsleistung = arbeitszeitkonto.get_arbeitsleistung() 
-        soll_zeitintervallbuchungen = self.get_soll_buchungen_by_user(user)
+        soll_zeitintervallbuchungen = self.get_soll_projektarbeit_buchungen_by_user(user)
 
         soll_stunden=0
         for buchung in soll_zeitintervallbuchungen:
@@ -468,7 +586,8 @@ class Administration(object):
     
     def update_arbeitszeitkonto_abwesenheit(self, user):
         arbeitszeitkonto = self.get_arbeitszeitkonto_by_userID(user)
-        aktuelles_urlaubskonto = arbeitszeitkonto.get_urlaubskonto()
+        benutzer = self.get_user_by_id(user)
+        urlaubskonto = benutzer.get_urlaubstage()
         urlaubs_buchungen = self.get_all_urlaubs_buchungen(user)
 
         urlaubs_stunden=0
@@ -477,7 +596,7 @@ class Administration(object):
         
         gebuchte_urlaubstage = urlaubs_stunden/24
 
-        updated_urlaubskonto = aktuelles_urlaubskonto - gebuchte_urlaubstage
+        updated_urlaubskonto = urlaubskonto - gebuchte_urlaubstage
         arbeitszeitkonto.set_urlaubskonto(updated_urlaubskonto)
         self.update_arbeitszeitkonto(arbeitszeitkonto) 
     
@@ -565,6 +684,13 @@ class Administration(object):
 
         with AbwesenheitMapper() as mapper:             
             return mapper.insert(abwesenheit)
+    def get_abwesenheitsart(self, abwesenheitsart):
+        if(abwesenheitsart == 'Urlaub'):
+            return 1
+        elif(abwesenheitsart == 'Krankheitsausfall'):
+            return 2
+        elif(abwesenheitsart == 'Gleitzeit'):
+            return 3
 
     def get_abwesenheit_by_id(self, id):
         """Den Benutzer mit der gegebenen ID auslesen."""

@@ -47,7 +47,11 @@ class ProjektarbeitMapper(Mapper):
         result = []
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, bezeichnung, beschreibung, start, ende, activity FROM projektarbeit WHERE activity={}".format(activity)
+        command = """SELECT id, timestamp, bezeichnung, beschreibung, start, ende, activity 
+        FROM projektarbeit 
+        WHERE activity={} AND id in (
+            SELECT zeitintervall FROM zeitintervallbuchung 
+            WHERE ist_buchung = false)""".format(activity)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
