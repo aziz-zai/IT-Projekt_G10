@@ -8,9 +8,11 @@ class AktivitätenMapper(Mapper):
         super().__init__()
     
     def find_by_key(self, key):
-        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
         """
+        Suchen einer Aktivität anhand der Aktivitäten-ID.
+        Parameter key = Aktivitäten-ID
 
+        """
         result = None
 
         cursor = self._cnx.cursor()
@@ -41,9 +43,11 @@ class AktivitätenMapper(Mapper):
         return result
 
     def find_all_activties_by_project(self, project: int):
-        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
         """
+        Suchen aller Aktivitäten eines Projektes anhand der Projekt-ID.
+        Parameter project = Projekt-ID
 
+        """
         result = []
 
         cursor = self._cnx.cursor()
@@ -70,7 +74,11 @@ class AktivitätenMapper(Mapper):
 
 
     def insert(self, aktivitäten: Aktivitäten) -> Aktivitäten:
-        """Create activity Object."""
+        """
+        Einfügen einer neuen Aktivität in die Datenbank.
+        Parameter aktivitäten = AktivitätenBO, das eingefügt werden soll
+
+        """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM activity")
         tuples = cursor.fetchall()
@@ -99,9 +107,10 @@ class AktivitätenMapper(Mapper):
         return aktivitäten
     
     def update(self, aktivitäten: Aktivitäten) -> Aktivitäten:
-        """Wiederholtes Schreiben eines Objekts in die Datenbank.
-
-        :param activity das Objekt, das in die DB geschrieben werden soll
+        """
+        Änderung einer bereits bestehenden Aktivität.
+        Parameter aktivitäten = AktivitätenBO, das geändert werden soll
+        
         """
         cursor = self._cnx.cursor()
 
@@ -115,7 +124,11 @@ class AktivitätenMapper(Mapper):
         return aktivitäten
 
     def delete(self, aktivitäten):
-
+        """
+        Löschen einer Aktivität aus der Datenbank anhand der Aktivitäten-ID.
+        Parameter aktivitäten = Aktivitäten-ID
+        
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM activity WHERE id={}".format(aktivitäten.get_id())
