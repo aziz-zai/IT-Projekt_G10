@@ -338,7 +338,6 @@ class ProjektarbeitenOperations(Resource):
         return projektarbeiten
 
     @projectone.marshal_with(projektarbeiten)
-    @secured
     def put(self, id):
         
         adm = Administration()

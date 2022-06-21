@@ -40,7 +40,7 @@ export class Zeiterfassung extends Component {
       stunden: 0,
       minuten: 0,
       sekunden: 0,
-      kommen: new KommenBO(),
+      kommen: null,
       kommenDate: 0,
       projektarbeitIst: null,
       gehen: null,
@@ -49,6 +49,7 @@ export class Zeiterfassung extends Component {
       kommenAlert: false,
       kommenErrorAlert: false,
       gehenAlert: false,
+      gehenErrorAlert: false,
       h: 0,
       m: 0,
       s: 0,
@@ -69,7 +70,7 @@ export class Zeiterfassung extends Component {
       gehenZeit: null,
       pausenBeginnZeit: null,
       pausenEndeZeit: null,
-      pausenAlert: false
+      pausenAlert: false,
     };
   }
 
@@ -339,15 +340,27 @@ export class Zeiterfassung extends Component {
 
 }
 handleGehenClicked = () => {
+  if(this.state.kommen){
   this.addGehenIst();
   this.getProjektarbeitByStart();
   clearInterval(this.interval);
-
+}
+else{
+  this.setState({
+    gehenErrorAlert: true
+  })
+}
 }
 
 handleKommenAlertCLose = () => {
   this.setState({
     kommenAlert: false
+  })
+}
+
+handleGehenErrorAlertCLose = () => {
+  this.setState({
+    gehenErrorAlert: false
   })
 }
 
@@ -420,10 +433,10 @@ dateFilterChanged = (event) => {
     const {projectSelected, aktivitätSelected, project, aktivität, kommenClicked, stunden, minuten, sekunden, kommen, 
       projektarbeitIst, gehen,pausenBeginn, pausenEnde, kommenAlert, kommenErrorAlert, gehenAlert,
     h, m, s, Eh, Em, Es, PBh, PBm, PBs, PEh, PEm, PEs, zeitDifHours, zeitDifMinutes, zeitDifSeconds, projektArbeitBeschreibung, kommenZeit, gehenZeit, 
-    pausenBeginnZeit, pausenEndeZeit, pausenAlert} = this.state;
+    pausenBeginnZeit, pausenEndeZeit, pausenAlert, gehenErrorAlert} = this.state;
     return (
       <div>
-      <div class="selection"> {console.log('gehenZeit', kommenZeit, gehenZeit)}
+      <div class="selection"> {console.log('Error', gehenErrorAlert, kommen)}
          <ProjectSelection user={user} handleSelection={this.handleProjectSelection}/>
         {projectSelected ?
         <div class="selectionItem"> 
@@ -568,6 +581,27 @@ dateFilterChanged = (event) => {
   <DialogActions>
     <Button onClick={this.handleGehenAlertCLose} autoFocus>
       Abschicken
+    </Button>
+  </DialogActions>
+</Dialog></div>
+  : gehenErrorAlert?
+  <div><Dialog
+  open={gehenErrorAlert}
+  onClose={this.handleGehenErrorAlertCLose}
+  aria-labelledby="alert-dialog-title"
+  aria-describedby="alert-dialog-description"
+>
+  <DialogTitle id="alert-dialog-title">
+    Arbeitsende ohne Arbeitsbeginn nicht möglich
+  </DialogTitle>
+  <DialogContent>
+    <DialogContentText id="alert-dialog-description">
+      Eine Arbeitsende Zeiterfassung muss immer zusammen mit einer Arbeitsbeginn Zeiterfassung erfasst werden. Bitte trage erst eine Arbeitsbeginn Zeit ein und erfasse diese.
+    </DialogContentText><br/><br/>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={this.handleGehenErrorAlertCLose} autoFocus>
+      Verstanden
     </Button>
   </DialogActions>
 </Dialog></div>:null}
