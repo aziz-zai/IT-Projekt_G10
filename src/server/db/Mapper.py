@@ -22,7 +22,7 @@ class Mapper (AbstractContextManager, ABC):
             Hierbei handelt es sich also um die Verbindung zwischen Google App Engine und Cloud SQL."""
 
             self._cnx = connector.connect(user='root', password='Endgegner',
-                                          unix_socket='/cloudsql/python-bankprojekt-thies:europe-west3:bank-db-thies',
+                                          unix_socket='/cloudsql/total-biplane-354020:europe-west3:projectone-db',
                                           database='projectone')
         else:
             """Wenn wir hier ankommen, dann handelt sich offenbar um die Ausführung des Codes in einer lokalen Umgebung,

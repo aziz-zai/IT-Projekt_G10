@@ -1,6 +1,6 @@
-Flask==2.1.1
-Flask-Cors==3.0.10
-flask-restx==0.5.1
-mysql-connector-python==8.0.27
-requests
+Flask
+Flask-Cors
+flask-restx
 google-auth
+mysql-connector-python
+requests

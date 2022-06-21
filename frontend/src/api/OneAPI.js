@@ -22,7 +22,7 @@ export default class OneAPI {
 
 
   // Local Python backend
-  #OneServerBaseURL = 'http://localhost:5000/projectone';
+  #OneServerBaseURL = 'https://total-biplane-354020.ey.r.appspot.com/projectone';
 
   // User related
   #getUserGidURL = (google_user_id) => `${this.#OneServerBaseURL}/users-by-gid/${google_user_id}`;
