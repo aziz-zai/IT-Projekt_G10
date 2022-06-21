@@ -10,9 +10,11 @@ class EreignisMapper(Mapper):
         super().__init__()
     
     def find_by_key(self, key):
-        """Suchen eines Ereignises mit vorgegebener ID. Da diese eindeutig ist,
         """
+        Suchen eines Ereignisses anhand der Ereignis-ID.
+        Parameter key = Ereignis-ID
 
+        """
         result = None
 
         cursor = self._cnx.cursor()
@@ -40,28 +42,11 @@ class EreignisMapper(Mapper):
         return result
 
     
-   
-    
-    """def update(self, ereignis: Ereignis) -> Ereignis:
-        Wiederholtes Schreiben eines Objekts in die Datenbank.
-
-        :param ereignis das Objekt, das in die DB geschrieben werden soll
-        
-        cursor = self._cnx.cursor()
-
-        command = "UPDATE ereignis SET timestamp = %s, zeitpunkt = %s, bezeichnung = %s WHERE id = %s"
-        data = (ereignis.timestamp, ereignis.zeitpunkt, ereignis.bezeichnung, ereignis.id)
-        cursor.execute(command, data)
-
-        self._cnx.commit()
-        cursor.close()
-
-        return ereignis
-    """
     def update(self, ereignis: Ereignis) -> Ereignis:
-        """Wiederholtes Schreiben eines Objekts in die Datenbank.
-
-        :param arbeitszeitkonto das Objekt, das in die DB geschrieben werden soll
+        """
+        Änderung eines bereits bestehenden Ereignisses.
+        Parameter ereignis = EreignisBO, das geändert werden soll
+        
         """
         cursor = self._cnx.cursor()
 
@@ -76,7 +61,11 @@ class EreignisMapper(Mapper):
 
 
     def insert(self, ereignis: Ereignis) -> Ereignis:
-        """Create ereignis Object."""
+        """
+        Einfügen eines neuen Ereignisses in die Datenbank.
+        Parameter ereignis = EreignisBO, das eingefügt werden soll
+
+        """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM ereignis")
         tuples = cursor.fetchall()
@@ -99,7 +88,11 @@ class EreignisMapper(Mapper):
 
 
     def delete(self, ereignis):
-
+        """
+        Löschen eines Ereignisses aus der Datenbank anhand der Ereignis-ID.
+        Parameter ereignis = Ereignis-ID
+        
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM ereignis WHERE id={}".format(ereignis.get_id())
