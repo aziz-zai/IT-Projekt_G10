@@ -520,6 +520,60 @@ class ProjectListOperations(Resource):
         project = adm.get_projectlaufzeit_by_id(id)
         return project
 
+@projectone.route('/projektlaufzeitAnfang/<int:user>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectListOperations(Resource):
+    @projectone.marshal_with(ereignis)
+    def post(self, user):
+        adm = Administration()
+
+        proposal = Ereignis()
+        proposal.set_zeitpunkt(api.payload["zeitpunkt"])
+        proposal.set_bezeichnung(api.payload["bezeichnung"])
+
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+        if proposal is not None:
+            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
+            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben. 
+            """
+
+            er = adm.create_ereignis(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
+            adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=False, ereignis=er.get_id() , bezeichnung="Projektanfang")
+            return er, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+
+@projectone.route('/projektlaufzeitEnde/<int:user>/<int:projektAnfang>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class ProjectListOperations(Resource):
+    @projectone.marshal_with(ereignis)
+    def post(self, user, projektAnfang):
+        adm = Administration()
+
+        proposal = Ereignis()
+        proposal.set_zeitpunkt(api.payload["zeitpunkt"])
+        proposal.set_bezeichnung(api.payload["bezeichnung"])
+
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+        if proposal is not None:
+            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
+            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben. 
+            """
+
+            er = adm.create_ereignis(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
+            adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=False, ereignis=er.get_id() , bezeichnung="Projektende")
+
+            zeitintervall = adm.create_zeitintervall("Projektlaufzeit", projektAnfang, er.get_id())
+            adm.create_zeitintervallbuchung(zeitintervall.get_id(), False, user, user,"Projektlaufzeit")
+            return er, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+
+
 """ANCHOR Aktivitäten Views
 """
 
