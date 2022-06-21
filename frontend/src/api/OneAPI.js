@@ -37,6 +37,8 @@ export default class OneAPI {
   #updateProjectURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
   #deleteProjectURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
   #getProjektlaufzeitURL = (id) => `${this.#OneServerBaseURL}/projektlaufzeit/${id}`;
+  #addProjektlaufzeitBeginn = (user) => `${this.#OneServerBaseURL}/projektlaufzeitAnfang/${user}`;
+  #addProjektlaufzeitEnde = (user, projektAnfang) => `${this.#OneServerBaseURL}/projektlaufzeitEnde/${user}/${projektAnfang}`;
 
 
   //Membership related
@@ -70,7 +72,7 @@ export default class OneAPI {
   #addProjektarbeitURL = () => `${this.#OneServerBaseURL}/projektarbeiten`;
   #updateProjektarbeitURL = (id) => `${this.#OneServerBaseURL}/projektarbeiten/${id}`;
   #deleteProjektarbeitURL = (id) => `${this.#OneServerBaseURL}/projektarbeiten/${id}`;
-  #gehenProjektarbeitURL = (id, user) => `${this.#OneServerBaseURL}/projektarbeit/Gehen/${id}/${user}`;
+  
   
 
   //Zeitintervallbuchung related
@@ -244,6 +246,40 @@ export default class OneAPI {
     }).then((responseJSON) => {
       // We always get an array of ProjectBOs.fromJSON, but only need one object
       let responseProjectBO = ProjectBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseProjectBO);
+        })
+    })
+  }
+  addProjektlaufzeitBeginn(ereignisBO, user) {
+    return this.#fetchAdvanced(this.#addProjektlaufzeitBeginn(user),{
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(ereignisBO)
+    }).then((responseJSON) => {
+      // We always get an array of ProjectBOs.fromJSON, but only need one object
+      let responseProjectBO = EreignisBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseProjectBO);
+        })
+    })
+  }
+  addProjektlaufzeitEnde(ereignisBO, user, projektAnfang) {
+    return this.#fetchAdvanced(this.#addProjektlaufzeitEnde(user, projektAnfang),{
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(ereignisBO)
+    }).then((responseJSON) => {
+      // We always get an array of ProjectBOs.fromJSON, but only need one object
+      let responseProjectBO = ZeitintervallBO.fromJSON(responseJSON)[0];
       // 
       return new Promise(function (resolve) {
         resolve(responseProjectBO);

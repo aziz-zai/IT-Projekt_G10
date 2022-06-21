@@ -553,7 +553,7 @@ class ProjectListOperations(Resource):
 @projectone.route('/projektlaufzeitEnde/<int:user>/<int:projektAnfang>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
-    @projectone.marshal_with(ereignis)
+    @projectone.marshal_with(zeitintervall)
     def post(self, user, projektAnfang):
         adm = Administration()
 
@@ -573,7 +573,7 @@ class ProjectListOperations(Resource):
 
             zeitintervall = adm.create_zeitintervall("Projektlaufzeit", projektAnfang, er.get_id())
             adm.create_zeitintervallbuchung(zeitintervall.get_id(), False, user, user,"Projektlaufzeit")
-            return er, 200
+            return zeitintervall, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500

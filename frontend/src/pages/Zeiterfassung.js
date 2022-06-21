@@ -72,6 +72,7 @@ export class Zeiterfassung extends Component {
       pausenEndeZeit: null,
       pausenAlert: false,
     };
+    this.baseState = this.state;
   }
 
   componentDidMount() {
