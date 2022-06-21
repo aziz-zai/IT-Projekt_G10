@@ -262,11 +262,29 @@ export class ZeitintervallbuchungListEntry extends Component {
 
     });
   }
+
+  deleteZeitintervallbuchung = () => {
+    OneAPI.getAPI().deleteZeitintervallbuchung(this.props.buchung.id).then(zeitintervallbuchung =>{
+      this.setState({ // Reset state with error from catch 
+      })
+      if(this.props.istBuchung){
+      this.props.handleZeitintervallbuchungIstDeleted(this.props.buchung)}
+      else{
+        this.props.handleZeitintervallbuchungSollDeleted(this.props.buchung)
+      }}
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+        })
+      );
+    // set loading to true
+    this.setState({
+
+    });
+  }
   handleExpandState = () => {
     this.setState({
         expandState: !this.state.expandState,
   });
-  {console.log('expandState', this.state.expandState)}
   this.getErstelltFuerById();
   this.getErstelltVonById();
   }
@@ -292,7 +310,7 @@ componentDidMount() {
       const {expandState,  ereignis1, ereignis1Year, ereignis1Month, ereignis1Day,ereignis1Hour, ereignis1Minute, ereignis1Second, 
         ereignis2, ereignis2Year, ereignis2Month, zeitintervall, ereignis2Day,ereignis2Hour, ereignis2Minute, ereignis2Second, erstellt_von, erstellt_fuer} = this.state;
     return (
-      <div>{console.log('intervall', ereignis1, ereignis2)}
+      <div>
         <Accordion TransitionProps={{ unmountOnExit: true }} defaultExpanded={false} expanded={expandState} sx={{backgroundColor:"#5e2e942d", marginLeft: 1, marginRight:1}}>
           <AccordionSummary 
             expandIcon={<ExpandMoreIcon onClick={this.handleExpandState}/>}
@@ -323,7 +341,7 @@ componentDidMount() {
                   <Button color='primary' >
                   <EditIcon/>
                   </Button>
-                  <Button color='secondary' >
+                  <Button color='secondary' onClick={this.deleteZeitintervallbuchung}>
                     <DeleteForeverIcon/>
                   </Button>
                 </ButtonGroup>
@@ -348,5 +366,8 @@ componentDidMount() {
 
 ZeitintervallbuchungListEntry.propTypes = {
     buchung: PropTypes.any,
+    handleZeitintervallbuchungDeleted: PropTypes.any,
+    handleZeitintervallbuchungSollDeleted: PropTypes.any,
+    istBuchung: PropTypes.any,
   }
 export default ZeitintervallbuchungListEntry

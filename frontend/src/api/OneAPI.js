@@ -91,8 +91,8 @@ export default class OneAPI {
   #getEreignisbuchungURL = (id) => `${this.#OneServerBaseURL}/ereignisbuchung/${id}`;
   #getEreignisbuchungISTURL = (user, startFilter, endFilter) => `${this.#OneServerBaseURL}/ereignisbuchungen-ist/${user}/${startFilter}/${endFilter}`;
   #getEreignisbuchungSOLLURL = (user, startFilter, endFilter) => `${this.#OneServerBaseURL}/ereignisbuchungen-soll/${user}/${startFilter}/${endFilter}`;
-  #updateEreignisbuchungURL = (id) => `${this.#OneServerBaseURL}/ereignisbuchung/${id}`;
-  #deleteEreignisbuchungURL = (id) => `${this.#OneServerBaseURL}/ereignisbuchung/${id}`;
+  #updateEreignisbuchungURL = (id) => `${this.#OneServerBaseURL}/ereignisbuchungen/${id}`;
+  #deleteEreignisbuchungURL = (id) => `${this.#OneServerBaseURL}/ereignisbuchungen/${id}`;
 
 
   //Ereignis related

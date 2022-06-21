@@ -145,6 +145,25 @@ export class EreignisbuchungListEntry extends Component {
 
     });
   }
+  deleteEreignisbuchung = () => {
+    OneAPI.getAPI().deleteEreignisbuchung(this.props.ereignisbuchung.id).then(buchung =>{
+      this.setState({
+      })
+      if(this.props.istBuchung){
+        this.props.ereignisbuchungIstDeleted(this.props.ereignisbuchung)}
+        else{
+          this.props.ereignisbuchungSollDeleted(this.props.ereignisbuchung)
+        }
+      }).catch(e =>
+        this.setState({ // Reset state with error from catch 
+
+        })
+      );
+    // set loading to true
+    this.setState({
+
+    });
+  }
   handleExpandState = () => {
     this.setState({
         expandState: !this.state.expandState,
@@ -198,7 +217,7 @@ componentDidMount() {
                   <Button color='primary' >
                   <EditIcon/>
                   </Button>
-                  <Button color='secondary' >
+                  <Button color='secondary' onClick={this.deleteEreignisbuchung}>
                     <DeleteForeverIcon/>
                   </Button>
                 </ButtonGroup>
@@ -222,5 +241,8 @@ componentDidMount() {
 
 EreignisbuchungListEntry.propTypes = {
     ereignisbuchung: PropTypes.any,
+    ereignisbuchungSollDeleted: PropTypes.any,
+    ereignisbuchungIstDeleted: PropTypes.any,
+    istBuchung: PropTypes.any,
   }
 export default EreignisbuchungListEntry
