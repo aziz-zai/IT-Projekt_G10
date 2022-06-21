@@ -1,5 +1,9 @@
 from .ZeitintervallBO import Zeitintervall
 
+"""
+Klasse Projektarbeit
+
+"""
 
 class Projektarbeit(Zeitintervall):
     def __init__(self):
@@ -8,21 +12,25 @@ class Projektarbeit(Zeitintervall):
         self._activity = None
 
     def get_beschreibung(self):
+        """Auslesen der Projektarbeit-Beschreibung"""
         return self._beschreibung
 
     def set_beschreibung(self, beschreibung):
+        """Setzen der Projektarbeit-Beschreibung"""
         self._beschreibung = beschreibung
 
     def get_activity(self):
+        """Auslesen der Aktivitäten-ID"""
         return self._activity
 
     def set_activity(self, activity):
+        """Setzen der Aktivitäten-ID"""
         self._activity = activity
 
     
     @staticmethod
     def from_dict(dictionary=dict()):
-        """Umwandeln eines Python dict() in Projektarbeit()."""
+        """Umwandeln eines Python dict() in ein Projektarbeit()."""
         obj = Projektarbeit()
         obj.set_bezeichnung(dictionary["bezeichnung"])
         obj.set_start(dictionary["start"])  

@@ -15,12 +15,6 @@ import ZeitintervallBO from './ZeitintervallBO';
 
 
 
-/**
- * Abstracts the REST interface of the Python backend with convenient access methods.
- * The class is implemented as a singleton. 
- * 
- * @author [Christoph Kunz](https://github.com/christophkunz)
- */
 export default class OneAPI {
 
   // Singelton instance
@@ -53,7 +47,7 @@ export default class OneAPI {
   #getMembershipByUserURL = (id) => `${this.#OneServerBaseURL}/membership-by-user/${id}`;
   #getMembershipByUserAndProjectURL = (id) => `${this.#OneServerBaseURL}/membership-by-user-and-project/${id}`;
   #updateMembershipURL = (id) => `${this.#OneServerBaseURL}/membership/${id}`;
-  #deleteMembershipURL = (id) => `${this.#OneServerBaseURL}/membership/${id}`;
+  #deleteMembershipURL = (user, project) => `${this.#OneServerBaseURL}/membership/${user}/${project}`;
 
   //Abwesenheit related
   #getAbwesenheitURL = (id) => `${this.#OneServerBaseURL}/abwesenheit/${id}`;
@@ -134,9 +128,6 @@ export default class OneAPI {
   #updateZeitintervallURL = (id) => `${this.#OneServerBaseURL}/zeitintervall/${id}`;
   #deleteZeitintervallURL = (id) => `${this.#OneServerBaseURL}/zeitintervall/${id}`;
   
-
-
-
   /** 
    * Get the Singelton instance 
    * 
@@ -391,8 +382,8 @@ export default class OneAPI {
     })
   }
 
-  deleteMembership(membershipBO) {
-    return this.#fetchAdvanced(this.#deleteMembershipURL(membershipBO), {
+  deleteMembership(user, project) {
+    return this.#fetchAdvanced(this.#deleteMembershipURL(user, project), {
       method: 'DELETE'
     }).then((responseJSON) => {
       // We always get an array of MembershipBO.fromJSON
@@ -1069,7 +1060,6 @@ export default class OneAPI {
   /**
    * Pause related
   */
-
 
   getPause(id) {
     return this.#fetchAdvanced(this.#getPauseURL(id)).then((responseJSON) => {

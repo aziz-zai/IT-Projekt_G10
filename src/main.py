@@ -208,20 +208,37 @@ class MembershipOperations(Resource):
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
-@projectone.route('/membership/<int:id>')
+@projectone.route('/membership/<int:user>/<int:project>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 @projectone.param('id', 'Die ID des Membership-Objekts')
 class MembershipByIDOperations(Resource):
     @projectone.marshal_with(membership)
-    def get(self, id):
+    def get(self, user, project):
         """Auslesen eines bestimmten Membership-Objekts.
 
-        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        Das auszulesende Objekt wird durch die ```user``` in dem URI bestimmt.
         """
         adm = Administration()
-        membership = adm.get_membership_by_id(id)
+        membership = adm.get_membership_by_user_and_project(user, project)
         return membership
 
+
+    @projectone.marshal_with(membership)
+    def delete(self, user, project):
+        """Löschen eines bestimmten Membership-Objekts.
+
+        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+
+        mbs = adm.get_membership_by_user_and_project(user, project)
+        adm.delete_membership(mbs)
+        return '', 200
+
+@projectone.route('/membership/<int:id>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des Membership-Objekts')
+class MembershipByIDOperations(Resource):
     @projectone.marshal_with(membership)
     def put(self, id):
 
@@ -237,18 +254,6 @@ class MembershipByIDOperations(Resource):
             return me, 200
         else:
             return '', 500
-
-    @projectone.marshal_with(membership)
-    def delete(self, id):
-        """Löschen eines bestimmten Membership-Objekts.
-
-        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
-        adm = Administration()
-
-        mbs = adm.get_membership_by_id(id)
-        adm.delete_membership(mbs)
-        return '', 200
 
 @projectone.route('/members-by-project/<int:project>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')

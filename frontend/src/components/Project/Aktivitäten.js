@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import AktivitätenBO from '../../api/AktivitätenBO';
 import OneAPI from '../../api/OneAPI';
-import { Dialog, Card, TextField, List, ListItem, Divider, } from '@mui/material';
-import { Button, IconButton, DialogContent, DialogTitle, Typography, InputAdornment, MenuItem, DialogActions, Grid } from '@mui/material';
+import { Dialog, Card, TextField, List, ListItem, Divider, IconButton, DialogTitle} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import './Aktivitäten.css'
 
@@ -22,7 +21,6 @@ export class Aktivitäten extends Component {
         this.baseState = this.state;
     }
 
-    
     addAktivitäten = () => {
         let newAktivität = new AktivitätenBO(this.state.bezeichnung, this.state.dauer, this.state.capacity, this.props.project.id);
         OneAPI.getAPI().addAktivitäten(newAktivität).then(aktivität => {
@@ -82,7 +80,7 @@ export class Aktivitäten extends Component {
           <TextField
             autoFocus type='text' required
             id="bezeichnung"
-            label="bezeichnung"
+            label="Bezeichnung"
             value={bezeichnung}
             onChange={this.textFieldValueChange}
             /> 
@@ -100,7 +98,7 @@ export class Aktivitäten extends Component {
           <TextField
             autoFocus type='text' required
             id="dauer"
-            label="dauer"
+            label="Dauer"
             value={dauer}
             onChange={this.textFieldValueChange}
             />

@@ -2,7 +2,7 @@ import BusinessObject from "./BusinessObject";
 
 
 /**
- * Represents a Ereignis
+ * Represents a Ereignisbuchung
  */
 export default class EreignisbuchungBO extends BusinessObject {
 

@@ -31,11 +31,13 @@ export class Project extends Component {
       }
       projectFormClosed = project => {
         // project is not null and therefore created
+       
         if (project) {
           const newProjectList = [...this.state.project, project];
           this.setState({
             project: newProjectList,
           });
+         
         } else {
           this.setState({
           });
