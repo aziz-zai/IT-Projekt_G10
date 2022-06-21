@@ -9,6 +9,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import './Zeitintervallbuchung.css'
+import ZeitintervallbuchungUpdateForm from './ZeitintervallbuchungUpdateForm'
 
 export class ZeitintervallbuchungListEntry extends Component {
 
@@ -34,6 +35,7 @@ export class ZeitintervallbuchungListEntry extends Component {
         erstellt_fuer: null,
         erstellt_von: null,
         zeitintervall: null,
+        openUpdateForm: false
     };
   }
 
@@ -289,6 +291,17 @@ export class ZeitintervallbuchungListEntry extends Component {
   this.getErstelltVonById();
   }
 
+  ZeitintervallbuchungUpdateFormOpen = () => {
+    this.setState({
+      openUpdateForm: true
+    })
+  }
+
+  ZeitintervallbuchungUpdateFormClosed = () =>{
+    this.setState({
+      openUpdateForm: false
+    })
+  }
 
 componentDidMount() {
   if(this.props.buchung){
@@ -308,7 +321,7 @@ componentDidMount() {
   render() {
       const {buchung} = this.props;
       const {expandState,  ereignis1, ereignis1Year, ereignis1Month, ereignis1Day,ereignis1Hour, ereignis1Minute, ereignis1Second, 
-        ereignis2, ereignis2Year, ereignis2Month, zeitintervall, ereignis2Day,ereignis2Hour, ereignis2Minute, ereignis2Second, erstellt_von, erstellt_fuer} = this.state;
+        ereignis2, ereignis2Year, ereignis2Month, zeitintervall, ereignis2Day,ereignis2Hour, ereignis2Minute, ereignis2Second, erstellt_von, erstellt_fuer, openUpdateForm} = this.state;
     return (
       <div>
         <Accordion TransitionProps={{ unmountOnExit: true }} defaultExpanded={false} expanded={expandState} sx={{backgroundColor:"#5e2e942d", marginLeft: 1, marginRight:1}}>
@@ -338,7 +351,7 @@ componentDidMount() {
               </Grid>
               <Grid item>
                 <ButtonGroup variant='text' size='small'>
-                  <Button color='primary' >
+                  <Button color='primary' onClick={this.ZeitintervallbuchungUpdateFormOpen}>
                   <EditIcon/>
                   </Button>
                   <Button color='secondary' onClick={this.deleteZeitintervallbuchung}>
@@ -359,6 +372,7 @@ componentDidMount() {
               {(buchung.bezeichnung == 'Projektarbeit') ? zeitintervall ?<div>Tätigkeitsbeschreibung: {zeitintervall.beschreibung}</div>:null:null}
           </AccordionDetails>
         </Accordion>
+        <ZeitintervallbuchungUpdateForm show={openUpdateForm} onClose={this.ZeitintervallbuchungUpdateFormClosed}/>
       </div>
     )
   }

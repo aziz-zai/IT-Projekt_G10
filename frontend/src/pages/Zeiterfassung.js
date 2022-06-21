@@ -175,47 +175,7 @@ export class Zeiterfassung extends Component {
     newProjektarbeitIst.setEnde(this.state.gehen.id)
     newProjektarbeitIst.setStart(this.state.kommen.id)
     OneAPI.getAPI().updateProjektarbeit(newProjektarbeitIst, this.state.projektarbeitIst[0].id).then(projektarbeitIst =>{
-    this.setState({
-      project: null,
-      aktivität: null,
-      projektarbeit: null,
-      projectSelected: false,
-      aktivitätSelected: false,
-      kommenClicked: false,
-      stunden: 0,
-      minuten: 0,
-      sekunden: 0,
-      kommen: new KommenBO(),
-      kommenDate: 0,
-      projektarbeitIst: null,
-      gehen: null,
-      pausenBeginn: null,
-      pausenEnde: null,
-      kommenAlert: false,
-      kommenErrorAlert: false,
-      gehenAlert: false,
-      h: 0,
-      m: 0,
-      s: 0,
-      Eh: 0,
-      Em: 0, 
-      Es: 0, 
-      PBh: 0,
-      PBm: 0,
-      PBs: 0, 
-      PEh: 0,
-      PEm: 0,
-      PEs: 0,
-      zeitDifHours: 0,
-      zeitDifMinutes: 0,
-      zeitDifSeconds: 0,
-      projektArbeitBeschreibung: "",
-      kommenZeit: null,
-      gehenZeit: null,
-      pausenBeginnZeit: null,
-      pausenEndeZeit: null,
-      pausenAlert: false
-    })
+    this.setState(this.baseState)
     }
      ).catch(e =>
       console.log('projektarbeitIstfail', newProjektarbeitIst)
@@ -368,47 +328,7 @@ handleGehenAlertCLose = () => {
   this.updateProjektarbeit()
 }
 handlepausenAlertCLose = () => {
-  this.setState({
-    project: null,
-      aktivität: null,
-      projektarbeit: null,
-      projectSelected: false,
-      aktivitätSelected: false,
-      kommenClicked: false,
-      stunden: 0,
-      minuten: 0,
-      sekunden: 0,
-      kommen: new KommenBO(),
-      kommenDate: 0,
-      projektarbeitIst: null,
-      gehen: null,
-      pausenBeginn: null,
-      pausenEnde: null,
-      kommenAlert: false,
-      kommenErrorAlert: false,
-      gehenAlert: false,
-      h: 0,
-      m: 0,
-      s: 0,
-      Eh: 0,
-      Em: 0, 
-      Es: 0, 
-      PBh: 0,
-      PBm: 0,
-      PBs: 0, 
-      PEh: 0,
-      PEm: 0,
-      PEs: 0,
-      zeitDifHours: 0,
-      zeitDifMinutes: 0,
-      zeitDifSeconds: 0,
-      projektArbeitBeschreibung: "",
-      kommenZeit: null,
-      gehenZeit: null,
-      pausenBeginnZeit: null,
-      pausenEndeZeit: null,
-      pausenAlert: false
-  })
+  this.setState(this.baseState)
 }
 handleKommenErrorAlertCLose = () => {
   this.setState({

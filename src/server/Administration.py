@@ -683,6 +683,13 @@ class Administration(object):
 
         with AbwesenheitMapper() as mapper:             
             return mapper.insert(abwesenheit)
+    def get_abwesenheitsart(self, abwesenheitsart):
+        if(abwesenheitsart == 'Urlaub'):
+            return 1
+        elif(abwesenheitsart == 'Krank'):
+            return 2
+        elif(abwesenheitsart == 'Gleitzeit'):
+            return 3
 
     def get_abwesenheit_by_id(self, id):
         """Den Benutzer mit der gegebenen ID auslesen."""

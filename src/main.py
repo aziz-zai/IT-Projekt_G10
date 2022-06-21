@@ -1258,17 +1258,19 @@ class EreignisOperations(Resource):
         adm.delete_ereignis(erid)
         return '', 200
 
-@projectone.route('/abwesenheit')
+@projectone.route('/abwesenheitBeginn/<int:user>/<string:abwesenheitsart>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class AbwesenheitListOperations(Resource):
 
-    @projectone.marshal_with(abwesenheit, code=200)
-    @projectone.expect(abwesenheit)  # Wir erwarten ein User-Objekt von Client-Seite.
-    def post(self):
+    @projectone.marshal_with(ereignis, code=200)
+    @projectone.expect(ereignis)  # Wir erwarten ein User-Objekt von Client-Seite.
+    def post(self, user, abwesenheitsart):
   
         adm = Administration()
 
-        proposal = Abwesenheit.from_dict(api.payload)
+        proposal = Ereignis()
+        proposal.set_zeitpunkt(api.payload["zeitpunkt"])
+        proposal.set_bezeichnung(api.payload["bezeichnung"])
 
         """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
@@ -1276,8 +1278,41 @@ class AbwesenheitListOperations(Resource):
             eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
             wird auch dem Client zurückgegeben. 
             """
-            a = adm.create_abwesenheit(proposal.get_start(), proposal.get_ende(), proposal.get_abwesenheitsart(), proposal.get_bezeichnung())
-            return a, 200
+            er = adm.create_ereignis(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
+            adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=True, ereignis=er.get_id() , bezeichnung=abwesenheitsart)
+            return er, 200
+        else:
+            # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
+            return '', 500
+
+@projectone.route('/abwesenheitEnde/<int:abwesenheitsBeginn>/<int:user>/<string:abwesenheitsart>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+class AbwesenheitListOperations(Resource):
+
+    @projectone.marshal_with(ereignis, code=200)
+    @projectone.expect(ereignis)  # Wir erwarten ein User-Objekt von Client-Seite.
+    def post(self, user, abwesenheitsart, abwesenheitsBeginn):
+  
+        adm = Administration()
+
+        proposal = Ereignis()
+        proposal.set_zeitpunkt(api.payload["zeitpunkt"])
+        proposal.set_bezeichnung(api.payload["bezeichnung"])
+
+        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
+        if proposal is not None:
+            """ Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
+            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und 
+            wird auch dem Client zurückgegeben. 
+            """
+            er = adm.create_ereignis(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
+            adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=True, ereignis=er.get_id() , bezeichnung=abwesenheitsart)
+            abwesenheit = adm.create_abwesenheit(abwesenheitsBeginn, er.get_id() , adm.get_abwesenheitsart(abwesenheitsart), abwesenheitsart)
+            adm.create_zeitintervallbuchung(abwesenheit.get_id(), True, user, user,"Abwesenheit")
+
+            adm.update_arbeitszeitkonto_ist_arbeitsleistung(user)
+            adm.update_arbeitszeitkonto_gleitzeit(user)
+            return er, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
