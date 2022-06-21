@@ -15,7 +15,6 @@ class MembershipMapper(Mapper):
         """
         Suchen eines Membership-Eintrags anhand der Membership-ID.
         Parameter key = Membership-ID
-
         """
 
         result = None
@@ -48,7 +47,6 @@ class MembershipMapper(Mapper):
             """
             Suchen eines Memberships anhand der Projekt-ID.
             Parameter project = Projekt-ID
-
             """
             result = []
 
@@ -81,7 +79,6 @@ class MembershipMapper(Mapper):
             """
             Suchen eines Projektleiters anhand der Projekt-ID.
             Parameter project = Projekt-ID
-
             """
             result = None
 
@@ -118,7 +115,6 @@ class MembershipMapper(Mapper):
             """
             Suchen eines Memberships anhand der User-ID.
             Parameter user = User-ID
-
             """
             result = []
 
@@ -152,7 +148,6 @@ class MembershipMapper(Mapper):
             Suchen eines Memberships anhand der User-ID und der Projekt-ID.
             Parameter user = User-ID
             Parameter project = Projekt-ID
-
             """
         
             result=None
@@ -184,7 +179,6 @@ class MembershipMapper(Mapper):
         """
         Änderung eines bereits bestehenden Memberships.
         Parameter membership = MembershipBO, das geändert werden soll
-        
         """
         cursor = self._cnx.cursor()
 
@@ -202,7 +196,6 @@ class MembershipMapper(Mapper):
         """
         Einfügen eines neuen Memberships in die Datenbank.
         Parameter membership = MembershipBO, das eingefügt werden soll
-
         """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM membership")
@@ -229,7 +222,6 @@ class MembershipMapper(Mapper):
         """
         Löschen eines Memberships aus der Datenbank anhand der Membership-ID.
         Parameter membership = Membership-ID
-        
         """
         cursor = self._cnx.cursor()
 
