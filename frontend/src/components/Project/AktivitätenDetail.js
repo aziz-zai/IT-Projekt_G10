@@ -91,7 +91,7 @@ class AktivitätenDetail extends Component {
 
     return (
       <div>
-      <Paper onClick={this.openActivityDetails} variant='outlined' className="paperaktivitäten">
+      <Paper onClick={this.openActivityDetails} variant='outlined' class="paperaktivitäten">
         <div><strong>{akt_bezeichnung}</strong></div>
         <div><strong>{akt_dauer}</strong> Tage übrig</div>
         <div><strong>{akt_capacity}</strong>h übrig</div>
