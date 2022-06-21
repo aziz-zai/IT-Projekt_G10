@@ -1,5 +1,9 @@
 from .BusinessObject import BusinessObject
 
+"""
+Klasse Ereignis
+
+"""
 
 class Ereignis(BusinessObject):
     def __init__(self):
@@ -8,15 +12,19 @@ class Ereignis(BusinessObject):
         self._bezeichnung = None
         
     def get_zeitpunkt (self):
+        """Auslesen des Ereignis-Zeitpunktes"""
         return self._zeitpunkt 
     
-    def set_zeitpunkt(self, zeitpunkt ):
+    def set_zeitpunkt(self, zeitpunkt):
+        """Setzen des Ereignis-Zeitpunktes"""
         self._zeitpunkt  = zeitpunkt 
     
     def get_bezeichnung(self):
+        """Auslesen der Bezeichnung des Ereignisses"""
         return self._bezeichnung
     
-    def set_bezeichnung(self, bezeichnung ):
+    def set_bezeichnung(self, bezeichnung):
+        """Setzen der Bezeichnung des Ereignisses"""
         self._bezeichnung  = bezeichnung        
 
     def __str__(self):
@@ -26,7 +34,7 @@ class Ereignis(BusinessObject):
     
     @staticmethod
     def from_dict(dictionary=dict()):
-        """Umwandeln eines Python dict() in Ereignis()."""
+        """Umwandeln eines Python dict() in ein Ereignis()."""
         obj = Ereignis()
         obj.set_zeitpunkt(dictionary["zeitpunkt"])
         obj.set_bezeichnung(dictionary["bezeichnung"])

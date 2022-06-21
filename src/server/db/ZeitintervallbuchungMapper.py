@@ -108,7 +108,7 @@ class ZeitintervallbuchungMapper(Mapper):
         cursor = self._cnx.cursor()
         command = """SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung,zeitintervall, bezeichnung, zeitdifferenz 
         FROM projectone.zeitintervallbuchung
-        WHERE erstellt_für={} AND erstellt_von={} AND ist_buchung=FALSE 
+        WHERE (erstellt_für={} OR erstellt_von={}) AND ist_buchung=FALSE 
         order by timestamp desc
         """.format(user, user)
         cursor.execute(command)
@@ -139,7 +139,7 @@ class ZeitintervallbuchungMapper(Mapper):
         cursor = self._cnx.cursor()
         command = """SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung,zeitintervall, bezeichnung, zeitdifferenz 
         FROM projectone.zeitintervallbuchung
-        WHERE erstellt_für={} AND erstellt_von={} AND ist_buchung=TRUE
+        WHERE (erstellt_für={} OR erstellt_von={}) AND ist_buchung=TRUE
         order by timestamp desc
         """.format(user, user)
         cursor.execute(command)

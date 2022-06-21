@@ -5,6 +5,11 @@ import { Typography, Accordion, AccordionSummary, AccordionDetails, Grid } from 
 import { Button, ButtonGroup } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
+import './Zeitintervallbuchung.css'
+import ZeitintervallbuchungUpdateForm from './ZeitintervallbuchungUpdateForm'
 
 export class ZeitintervallbuchungListEntry extends Component {
 
@@ -29,12 +34,13 @@ export class ZeitintervallbuchungListEntry extends Component {
         ereignis2Second: null,
         erstellt_fuer: null,
         erstellt_von: null,
-        projektarbeit: null
+        zeitintervall: null,
+        openUpdateForm: false
     };
   }
 
-  getKommenById = () => {
-    OneAPI.getAPI().getKommen(this.props.buchung.start).then(kommen =>{
+  getKommenById = (zeitintervall) => {
+    OneAPI.getAPI().getKommen(zeitintervall.start).then(kommen =>{
         const ereignisZeitpunkt = new Date(kommen[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
         const month = ereignisZeitpunkt.getMonth()
@@ -61,8 +67,8 @@ export class ZeitintervallbuchungListEntry extends Component {
     });
   }
 
-  getGehenById = () => {
-    OneAPI.getAPI().getGehen(this.props.buchung.ende).then(gehen =>{
+  getGehenById = (zeitintervall) => {
+    OneAPI.getAPI().getGehen(zeitintervall.ende).then(gehen =>{
         const ereignisZeitpunkt = new Date(gehen[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
         const month = ereignisZeitpunkt.getMonth()
@@ -88,8 +94,8 @@ export class ZeitintervallbuchungListEntry extends Component {
 
     });
   }
-  getEreignis1ById = () => {
-    OneAPI.getAPI().getEreignis(this.props.buchung.start).then(ereignis =>{
+  getEreignis1ById = (zeitintervall) => {
+    OneAPI.getAPI().getEreignis(zeitintervall.start).then(ereignis =>{
         const ereignisZeitpunkt = new Date(ereignis[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
         const month = ereignisZeitpunkt.getMonth()
@@ -117,8 +123,8 @@ export class ZeitintervallbuchungListEntry extends Component {
     });
   }
 
-  getEreignis2ById = () => {
-    OneAPI.getAPI().getEreignis(this.props.buchung.ende).then(ereignis =>{
+  getEreignis2ById = (zeitintervall) => {
+    OneAPI.getAPI().getEreignis(zeitintervall.ende).then(ereignis =>{
         const ereignisZeitpunkt = new Date(ereignis[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
         const month = ereignisZeitpunkt.getMonth()
@@ -178,23 +184,144 @@ export class ZeitintervallbuchungListEntry extends Component {
 
     });
   }
+
+  getProjektlaufzeit = () => {
+    OneAPI.getAPI().getZeitintervall(this.props.buchung.zeitintervall).then(zeitintervall =>{
+      this.setState({
+        zeitintervall: zeitintervall[0],
+      })
+        return zeitintervall}
+      ).then(zeitintervall=>{
+        this.getEreignis1ById(zeitintervall[0]);
+        this.getEreignis2ById(zeitintervall[0])
+      }).catch(e =>
+        this.setState({ // Reset state with error from catch 
+
+        })
+      );
+    // set loading to true
+    this.setState({
+
+    });
+  }
+
+  getProjektarbeit = () => {
+    OneAPI.getAPI().getProjektarbeit(this.props.buchung.zeitintervall).then(zeitintervall =>{
+      this.setState({
+        zeitintervall: zeitintervall[0],
+      })
+        return zeitintervall}
+      ).then(zeitintervall => {
+        this.getKommenById(zeitintervall[0]);
+        this.getGehenById(zeitintervall[0])
+      }).catch(e =>
+        this.setState({ // Reset state with error from catch 
+
+        })
+      );
+    // set loading to true
+    this.setState({
+
+    });
+  }
+
+  getAbwesenheit = () => {
+    OneAPI.getAPI().getAbwesenheit(this.props.buchung.zeitintervall).then(zeitintervall =>{
+      this.setState({
+        zeitintervall: zeitintervall[0],
+      })
+      return zeitintervall}
+      ).then(zeitintervall=>{
+        this.getEreignis1ById(zeitintervall[0]);
+        this.getEreignis2ById(zeitintervall[0])
+      }).catch(e =>
+        this.setState({ // Reset state with error from catch 
+
+        })
+      );
+    // set loading to true
+    this.setState({
+
+    });
+  }
+
+  getPause = () => {
+    OneAPI.getAPI().getPause(this.props.buchung.zeitintervall).then(zeitintervall =>{
+      this.setState({
+        zeitintervall: zeitintervall[0],
+      })
+      return zeitintervall}
+      ).then(zeitintervall=>{
+        this.getEreignis1ById(zeitintervall[0]);
+        this.getEreignis2ById(zeitintervall[0])
+      }).catch(e =>
+        this.setState({ // Reset state with error from catch 
+
+        })
+      );
+    // set loading to true
+    this.setState({
+
+    });
+  }
+
+  deleteZeitintervallbuchung = () => {
+    OneAPI.getAPI().deleteZeitintervallbuchung(this.props.buchung.id).then(zeitintervallbuchung =>{
+      this.setState({ // Reset state with error from catch 
+      })
+      if(this.props.istBuchung){
+      this.props.handleZeitintervallbuchungIstDeleted(this.props.buchung)}
+      else{
+        this.props.handleZeitintervallbuchungSollDeleted(this.props.buchung)
+      }}
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+        })
+      );
+    // set loading to true
+    this.setState({
+
+    });
+  }
   handleExpandState = () => {
     this.setState({
         expandState: !this.state.expandState,
   });
-  {console.log('expandState', this.state.expandState)}
   this.getErstelltFuerById();
   this.getErstelltVonById();
   }
 
+  ZeitintervallbuchungUpdateFormOpen = () => {
+    this.setState({
+      openUpdateForm: true
+    })
+  }
+
+  ZeitintervallbuchungUpdateFormClosed = () =>{
+    this.setState({
+      openUpdateForm: false
+    })
+  }
 
 componentDidMount() {
-    
+  if(this.props.buchung){
+    if(this.props.buchung.bezeichnung == 'Projektlaufzeit'){
+      this.getProjektlaufzeit();
+    }
+    else if(this.props.buchung.bezeichnung == 'Projektarbeit'){
+      this.getProjektarbeit();
+    }
+    else if(this.props.buchung.bezeichnung == 'Abwesenheit'){
+      this.getAbwesenheit();
+    }
+    else if(this.props.buchung.bezeichnung == 'Pause'){
+      this.getPause();
+    }}
 }
   render() {
       const {buchung} = this.props;
       const {expandState,  ereignis1, ereignis1Year, ereignis1Month, ereignis1Day,ereignis1Hour, ereignis1Minute, ereignis1Second, 
-        ereignis2, ereignis2Year, ereignis2Month, ereignis2Day,ereignis2Hour, ereignis2Minute, ereignis2Second, erstellt_von, erstellt_fuer} = this.state;
+        ereignis2, ereignis2Year, ereignis2Month, zeitintervall, ereignis2Day,ereignis2Hour, ereignis2Minute, ereignis2Second, erstellt_von, erstellt_fuer, openUpdateForm} = this.state;
     return (
       <div>
         <Accordion TransitionProps={{ unmountOnExit: true }} defaultExpanded={false} expanded={expandState} sx={{backgroundColor:"#5e2e942d", marginLeft: 1, marginRight:1}}>
@@ -203,15 +330,20 @@ componentDidMount() {
             id={`customer${buchung.getID()}accountpanel-header`}
           >
             <Grid container spacing={1} justify='flex-start' alignItems='center'>
+            <Grid item>
+                    <AccessTimeIcon/>
+              </Grid>
               <Grid item>
                 <div class="ereignisBuchungHeader">
-                <Typography variant='body1' sx={{typography: 'heading'}}>{buchung.bezeichnung}: &nbsp;&nbsp;
+                <Typography variant='body1' sx={{typography: 'heading', display: 'flex', flexDirection:'row'}}>{zeitintervall ? <strong>{zeitintervall.bezeichnung}:</strong>:null} &nbsp;&nbsp;
                 </Typography>  &nbsp;
                 { ereignis2 ?
-                <Typography variant='body1'><strong>{String(ereignis1Year).padStart(4, "0")}-{String(ereignis1Month).padStart(2, "0")}-{String(ereignis1Day).padStart(2, "0")}</strong> 
-              <strong>{String(ereignis1Hour).padStart(2, "0")}:{String(ereignis1Minute).padStart(2, "0")}:{String(ereignis1Second).padStart(2, "0")}Uhr</strong> bis 
-              <strong>{String(ereignis2Year).padStart(4, "0")}-{String(ereignis2Month).padStart(2, "0")}-{String(ereignis2Day).padStart(2, "0")}</strong> 
-              <strong>{String(ereignis2Hour).padStart(2, "0")}:{String(ereignis2Minute).padStart(2, "0")}:{String(ereignis2Second).padStart(2, "0")}Uhr</strong> </Typography> :null}
+              <div class="intervallContainer">
+              <div class="intervall">{String(ereignis1Year).padStart(4, "0")}-{String(ereignis1Month).padStart(2, "0")}-{String(ereignis1Day).padStart(2, "0")} &nbsp;
+              {String(ereignis1Hour).padStart(2, "0")}:{String(ereignis1Minute).padStart(2, "0")}:{String(ereignis1Second).padStart(2, "0")}</div>&nbsp;bis&nbsp;
+              <div class="intervall">{String(ereignis2Year).padStart(4, "0")}-{String(ereignis2Month).padStart(2, "0")}-{String(ereignis2Day).padStart(2, "0")} &nbsp;
+              {String(ereignis2Hour).padStart(2, "0")}:{String(ereignis2Minute).padStart(2, "0")}:{String(ereignis2Second).padStart(2, "0")}</div>
+              </div> :null}
                </div>
               </Grid>
               <Grid item>
@@ -219,11 +351,11 @@ componentDidMount() {
               </Grid>
               <Grid item>
                 <ButtonGroup variant='text' size='small'>
-                  <Button color='primary' >
-                    edit
+                  <Button color='primary' onClick={this.ZeitintervallbuchungUpdateFormOpen}>
+                  <EditIcon/>
                   </Button>
-                  <Button color='secondary' >
-                    delete
+                  <Button color='secondary' onClick={this.deleteZeitintervallbuchung}>
+                    <DeleteForeverIcon/>
                   </Button>
                 </ButtonGroup>
               </Grid>
@@ -235,10 +367,12 @@ componentDidMount() {
           </AccordionSummary>
           <AccordionDetails sx={{backgroundColor:"#54377550"}}>
               {erstellt_von ?
-              <div class="ersteller">
+              <div class="erstellerIntervall">
            {erstellt_von[0].vorname}  {erstellt_von[0].nachname}&nbsp;&nbsp;<DoubleArrowIcon sx={{color:"#5e2e94"}}/>&nbsp;&nbsp;{erstellt_fuer[0].vorname}  {erstellt_fuer[0].nachname}</div>:null}
+              {(buchung.bezeichnung == 'Projektarbeit') ? zeitintervall ?<div>Tätigkeitsbeschreibung: {zeitintervall.beschreibung}</div>:null:null}
           </AccordionDetails>
         </Accordion>
+        <ZeitintervallbuchungUpdateForm show={openUpdateForm} onClose={this.ZeitintervallbuchungUpdateFormClosed}/>
       </div>
     )
   }
@@ -246,5 +380,8 @@ componentDidMount() {
 
 ZeitintervallbuchungListEntry.propTypes = {
     buchung: PropTypes.any,
+    handleZeitintervallbuchungDeleted: PropTypes.any,
+    handleZeitintervallbuchungSollDeleted: PropTypes.any,
+    istBuchung: PropTypes.any,
   }
 export default ZeitintervallbuchungListEntry

@@ -6,6 +6,9 @@ import { Button, ButtonGroup } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import './Ereignisbuchung.css'
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
+import TimerIcon from '@mui/icons-material/Timer';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
 
 export class EreignisbuchungListEntry extends Component {
 
@@ -142,6 +145,25 @@ export class EreignisbuchungListEntry extends Component {
 
     });
   }
+  deleteEreignisbuchung = () => {
+    OneAPI.getAPI().deleteEreignisbuchung(this.props.ereignisbuchung.id).then(buchung =>{
+      this.setState({
+      })
+      if(this.props.istBuchung){
+        this.props.ereignisbuchungIstDeleted(this.props.ereignisbuchung)}
+        else{
+          this.props.ereignisbuchungSollDeleted(this.props.ereignisbuchung)
+        }
+      }).catch(e =>
+        this.setState({ // Reset state with error from catch 
+
+        })
+      );
+    // set loading to true
+    this.setState({
+
+    });
+  }
   handleExpandState = () => {
     this.setState({
         expandState: !this.state.expandState,
@@ -174,13 +196,17 @@ componentDidMount() {
             id={`customer${ereignisbuchung.getID()}accountpanel-header`}
           >
             <Grid container spacing={1} justify='flex-start' alignItems='center'>
+            <Grid item>
+                    <TimerIcon/>
+              </Grid>
               <Grid item>
                 <div class="ereignisBuchungHeader">
-                <Typography variant='body1' sx={{typography: 'heading'}}>{ereignisbuchung.bezeichnung}: &nbsp;&nbsp;
+                <Typography variant='body1' sx={{typography: 'heading'}}><strong>{ereignisbuchung.bezeichnung}:</strong> &nbsp;&nbsp;
                 </Typography>  &nbsp;
                 { ereignis ?
-                <Typography variant='body1'><strong>{String(ereignisYear).padStart(4, "0")}-{String(ereignisMonth).padStart(2, "0")}-{String(ereignisDay).padStart(2, "0")}</strong> &nbsp; um &nbsp;
-              <strong>{String(ereignisHour).padStart(2, "0")}:{String(ereignisMinute).padStart(2, "0")}:{String(ereignisSecond).padStart(2, "0")}Uhr</strong> </Typography> :null}
+                <div class="ereignisContainer">
+                <div class="ereignis">{String(ereignisYear).padStart(4, "0")}-{String(ereignisMonth).padStart(2, "0")}-{String(ereignisDay).padStart(2, "0")}</div>&nbsp; um &nbsp;
+              <div class="ereignis">{String(ereignisHour).padStart(2, "0")}:{String(ereignisMinute).padStart(2, "0")}:{String(ereignisSecond).padStart(2, "0")}Uhr</div></div>:null}
                </div>
               </Grid>
               <Grid item>
@@ -189,10 +215,10 @@ componentDidMount() {
               <Grid item>
                 <ButtonGroup variant='text' size='small'>
                   <Button color='primary' >
-                    edit
+                  <EditIcon/>
                   </Button>
-                  <Button color='secondary' >
-                    delete
+                  <Button color='secondary' onClick={this.deleteEreignisbuchung}>
+                    <DeleteForeverIcon/>
                   </Button>
                 </ButtonGroup>
               </Grid>
@@ -215,5 +241,8 @@ componentDidMount() {
 
 EreignisbuchungListEntry.propTypes = {
     ereignisbuchung: PropTypes.any,
+    ereignisbuchungSollDeleted: PropTypes.any,
+    ereignisbuchungIstDeleted: PropTypes.any,
+    istBuchung: PropTypes.any,
   }
 export default EreignisbuchungListEntry

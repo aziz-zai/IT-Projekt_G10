@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import './Ereignisbuchung.css'
 import OneAPI from '../../api/OneAPI';
 import EreignisbuchungListEntry from './EreignisbuchungListEntry'
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 
 export class Ereignisbuchung extends Component {
 
@@ -11,7 +13,9 @@ export class Ereignisbuchung extends Component {
         super(props);
     this.state = {
         ereignisbuchungen: [],
-        ereignisbuchungenSoll: []
+        ereignisbuchungenSoll: [],
+        deletedIstTrue: false,
+        deletedSollTrue: false
     };
   }
   getEreignisbuchungIST = () => {
@@ -46,25 +50,59 @@ export class Ereignisbuchung extends Component {
     });
   }
 
+  EreignisbuchungIstDeleted = (deletedBuchung) => {
+    this.setState({
+      ereignisbuchungen: this.state.ereignisbuchungen.filter(buchung => buchung.id != deletedBuchung.id),
+      deletedIstTrue: true
+    })
+  }
+  EreignisbuchungSollDeleted = (deletedBuchung) => {
+    this.setState({
+      ereignisbuchungenSoll: this.state.ereignisbuchungenSoll.filter(buchung => buchung.id != deletedBuchung.id),
+      deletedSollTrue: true
+    })
+  }
+
+  handleDeletedIstClose = () => {
+    this.setState({
+      deletedIstTrue: false
+    })
+  }
+  handleDeletedSollClose = () => {
+    this.setState({
+      deletedSollTrue: false
+    })
+  }
+
 componentDidMount() {
 this.getEreignisbuchungIST()
 this.getEreignisbuchungSOLL()
 }
   render() {
       const {istBuchung} = this.props;
-      const {ereignisbuchungen, ereignisbuchungenSoll} = this.state;
+      const {ereignisbuchungen, ereignisbuchungenSoll, deletedSollTrue, deletedIstTrue} = this.state;
     return (
       <div>
         {istBuchung ?
         <div>
           <button onClick={this.getEreignisbuchungIST} class="filterBtn">Suche</button>
+          <div class="buchungDeleted" >
+                     {deletedIstTrue ?
+              <Stack sx={{ width: '100%' }} spacing={2}>
+                      <Alert onClose={this.handleDeletedIstClose}>Buchung erfolgreich gelöscht!</Alert>
+              </Stack>:null}</div>
             {ereignisbuchungen ?
-            ereignisbuchungen.map(ereignisbuchung => <EreignisbuchungListEntry key={ereignisbuchung.getID()} ereignisbuchung={ereignisbuchung}/>):null}
+            ereignisbuchungen.map(ereignisbuchung => <EreignisbuchungListEntry key={ereignisbuchung.getID()} ereignisbuchung={ereignisbuchung} istBuchung={true} ereignisbuchungIstDeleted={this.EreignisbuchungIstDeleted}/>):null}
         </div>
         : <div>
           <button onClick={this.getEreignisbuchungSOLL} class="filterBtn">Suche</button>
+          <div class="buchungDeleted" >
+                     {deletedSollTrue ?
+              <Stack sx={{ width: '100%' }} spacing={2}>
+                      <Alert onClose={this.handleDeletedSollClose}>Buchung erfolgreich gelöscht!</Alert>
+              </Stack>:null}</div>
             {ereignisbuchungenSoll ?
-            ereignisbuchungenSoll.map(ereignisbuchung => <EreignisbuchungListEntry key={ereignisbuchung.getID()} ereignisbuchung={ereignisbuchung}/>):null}
+            ereignisbuchungenSoll.map(ereignisbuchung => <EreignisbuchungListEntry key={ereignisbuchung.getID()} ereignisbuchung={ereignisbuchung} istBuchung={true} ereignisbuchungSollDeleted={this.EreignisbuchungIstDeleted}/> ):null}
           </div>}
       </div>
     )

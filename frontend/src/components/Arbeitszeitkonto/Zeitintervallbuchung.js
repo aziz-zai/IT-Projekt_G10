@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import './Zeitintervallbuchung.css'
 import OneAPI from '../../api/OneAPI';
 import ZeitintervallbuchungListEntry from './ZeitintervallbuchungListEntry'
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 export class Zeitintervallbuchung extends Component {
 
     // Init state
@@ -10,7 +12,9 @@ export class Zeitintervallbuchung extends Component {
         super(props);
     this.state = {
       zeitintervallbuchungIst:[],
-      zeitintervallbuchungSoll: []
+      zeitintervallbuchungSoll: [],
+      deletedIstTrue: false,
+      deletedSollTrue: false,
     };
   }
 
@@ -46,6 +50,31 @@ export class Zeitintervallbuchung extends Component {
     });
   }
 
+  ZeitintervallbuchungIstDeleted = (deletedBuchung) => {
+    this.setState({
+      zeitintervallbuchungIst: this.state.zeitintervallbuchungIst.filter(buchung => buchung.id != deletedBuchung.id),
+      deletedIstTrue: true
+    })
+    console.log('deletedBuchung', deletedBuchung, this.state.zeitintervallbuchungIst)
+  }
+  ZeitintervallbuchungSollDeleted = (deletedBuchung) => {
+    this.setState({
+      zeitintervallbuchungSoll: this.state.zeitintervallbuchungSoll.filter(buchung => buchung.id != deletedBuchung.id),
+      deletedSollTrue: true
+    })
+  }
+
+  handleDeletedIstClose = () => {
+    this.setState({
+      deletedIstTrue: false
+    })
+  }
+  handleDeletedSollClose = () => {
+    this.setState({
+      deletedSollTrue: false
+    })
+  }
+
 componentDidMount() {
 this.getZeitintervallbuchungIst()
 this.getZeitintervallbuchungSoll()
@@ -53,19 +82,28 @@ this.getZeitintervallbuchungSoll()
 
   render() {
       const {istBuchung} = this.props;
-      const {zeitintervallbuchungIst, zeitintervallbuchungSoll} = this.state;
+      const {zeitintervallbuchungIst, zeitintervallbuchungSoll, deletedSollTrue, deletedIstTrue} = this.state;
     return (
       <div >
           {istBuchung ?
         <div>
-          <button onClick={this.getZeitintervallbuchungIst} class="filterBtn">Suche</button>
+          <button onClick={this.getZeitintervallbuchungIst} class="filterBtn">Suche</button><div class="buchungDeleted">
+                     {deletedIstTrue ?
+              <Stack sx={{ width: '100%' }} spacing={2}>
+                      <Alert onClose={this.handleDeletedIstClose}>Buchung erfolgreich gelöscht!</Alert>
+              </Stack>:null}</div>
             {zeitintervallbuchungIst ?
-            zeitintervallbuchungIst.map(buchung => <ZeitintervallbuchungListEntry key={buchung.getID()} buchung={buchung}/>):null}
+            zeitintervallbuchungIst.map(buchung => <ZeitintervallbuchungListEntry key={buchung.getID()} buchung={buchung} istBuchung={true} handleZeitintervallbuchungIstDeleted={this.ZeitintervallbuchungIstDeleted}/>):null}
         </div>
         : <div>
           <button onClick={this.getZeitintervallbuchungSoll} class="filterBtn">Suche</button>
+          <div class="buchungDeleted" >
+                     {deletedSollTrue ?
+              <Stack sx={{ width: '100%' }} spacing={2}>
+                      <Alert onClose={this.handleDeletedSollClose}>Buchung erfolgreich gelöscht!</Alert>
+              </Stack>:null}</div>
             {zeitintervallbuchungSoll ?
-            zeitintervallbuchungSoll.map(buchung => <ZeitintervallbuchungListEntry key={buchung.getID()} buchung={buchung}/>):null}
+            zeitintervallbuchungSoll.map(buchung => <ZeitintervallbuchungListEntry key={buchung.getID()} buchung={buchung} istBuchung={false} handleZeitintervallbuchungSollDeleted={this.ZeitintervallbuchungSollDeleted}/>):null}
           </div>}
       </div>
     )

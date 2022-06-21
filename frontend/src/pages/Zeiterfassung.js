@@ -40,7 +40,7 @@ export class Zeiterfassung extends Component {
       stunden: 0,
       minuten: 0,
       sekunden: 0,
-      kommen: new KommenBO(),
+      kommen: null,
       kommenDate: 0,
       projektarbeitIst: null,
       gehen: null,
@@ -49,6 +49,7 @@ export class Zeiterfassung extends Component {
       kommenAlert: false,
       kommenErrorAlert: false,
       gehenAlert: false,
+      gehenErrorAlert: false,
       h: 0,
       m: 0,
       s: 0,
@@ -69,8 +70,9 @@ export class Zeiterfassung extends Component {
       gehenZeit: null,
       pausenBeginnZeit: null,
       pausenEndeZeit: null,
-      pausenAlert: false
+      pausenAlert: false,
     };
+    this.baseState = this.state;
   }
 
   componentDidMount() {
@@ -174,47 +176,7 @@ export class Zeiterfassung extends Component {
     newProjektarbeitIst.setEnde(this.state.gehen.id)
     newProjektarbeitIst.setStart(this.state.kommen.id)
     OneAPI.getAPI().updateProjektarbeit(newProjektarbeitIst, this.state.projektarbeitIst[0].id).then(projektarbeitIst =>{
-    this.setState({
-      project: null,
-      aktivität: null,
-      projektarbeit: null,
-      projectSelected: false,
-      aktivitätSelected: false,
-      kommenClicked: false,
-      stunden: 0,
-      minuten: 0,
-      sekunden: 0,
-      kommen: new KommenBO(),
-      kommenDate: 0,
-      projektarbeitIst: null,
-      gehen: null,
-      pausenBeginn: null,
-      pausenEnde: null,
-      kommenAlert: false,
-      kommenErrorAlert: false,
-      gehenAlert: false,
-      h: 0,
-      m: 0,
-      s: 0,
-      Eh: 0,
-      Em: 0, 
-      Es: 0, 
-      PBh: 0,
-      PBm: 0,
-      PBs: 0, 
-      PEh: 0,
-      PEm: 0,
-      PEs: 0,
-      zeitDifHours: 0,
-      zeitDifMinutes: 0,
-      zeitDifSeconds: 0,
-      projektArbeitBeschreibung: "",
-      kommenZeit: null,
-      gehenZeit: null,
-      pausenBeginnZeit: null,
-      pausenEndeZeit: null,
-      pausenAlert: false
-    })
+    this.setState(this.baseState)
     }
      ).catch(e =>
       console.log('projektarbeitIstfail', newProjektarbeitIst)
@@ -339,10 +301,16 @@ export class Zeiterfassung extends Component {
 
 }
 handleGehenClicked = () => {
+  if(this.state.kommen){
   this.addGehenIst();
   this.getProjektarbeitByStart();
   clearInterval(this.interval);
-
+}
+else{
+  this.setState({
+    gehenErrorAlert: true
+  })
+}
 }
 
 handleKommenAlertCLose = () => {
@@ -351,51 +319,17 @@ handleKommenAlertCLose = () => {
   })
 }
 
+handleGehenErrorAlertCLose = () => {
+  this.setState({
+    gehenErrorAlert: false
+  })
+}
+
 handleGehenAlertCLose = () => {
   this.updateProjektarbeit()
 }
 handlepausenAlertCLose = () => {
-  this.setState({
-    project: null,
-      aktivität: null,
-      projektarbeit: null,
-      projectSelected: false,
-      aktivitätSelected: false,
-      kommenClicked: false,
-      stunden: 0,
-      minuten: 0,
-      sekunden: 0,
-      kommen: new KommenBO(),
-      kommenDate: 0,
-      projektarbeitIst: null,
-      gehen: null,
-      pausenBeginn: null,
-      pausenEnde: null,
-      kommenAlert: false,
-      kommenErrorAlert: false,
-      gehenAlert: false,
-      h: 0,
-      m: 0,
-      s: 0,
-      Eh: 0,
-      Em: 0, 
-      Es: 0, 
-      PBh: 0,
-      PBm: 0,
-      PBs: 0, 
-      PEh: 0,
-      PEm: 0,
-      PEs: 0,
-      zeitDifHours: 0,
-      zeitDifMinutes: 0,
-      zeitDifSeconds: 0,
-      projektArbeitBeschreibung: "",
-      kommenZeit: null,
-      gehenZeit: null,
-      pausenBeginnZeit: null,
-      pausenEndeZeit: null,
-      pausenAlert: false
-  })
+  this.setState(this.baseState)
 }
 handleKommenErrorAlertCLose = () => {
   this.setState({
@@ -420,10 +354,10 @@ dateFilterChanged = (event) => {
     const {projectSelected, aktivitätSelected, project, aktivität, kommenClicked, stunden, minuten, sekunden, kommen, 
       projektarbeitIst, gehen,pausenBeginn, pausenEnde, kommenAlert, kommenErrorAlert, gehenAlert,
     h, m, s, Eh, Em, Es, PBh, PBm, PBs, PEh, PEm, PEs, zeitDifHours, zeitDifMinutes, zeitDifSeconds, projektArbeitBeschreibung, kommenZeit, gehenZeit, 
-    pausenBeginnZeit, pausenEndeZeit, pausenAlert} = this.state;
+    pausenBeginnZeit, pausenEndeZeit, pausenAlert, gehenErrorAlert} = this.state;
     return (
       <div>
-      <div class="selection"> {console.log('gehenZeit', kommenZeit, gehenZeit)}
+      <div class="selection"> {console.log('Error', gehenErrorAlert, kommen)}
          <ProjectSelection user={user} handleSelection={this.handleProjectSelection}/>
         {projectSelected ?
         <div class="selectionItem"> 
@@ -568,6 +502,27 @@ dateFilterChanged = (event) => {
   <DialogActions>
     <Button onClick={this.handleGehenAlertCLose} autoFocus>
       Abschicken
+    </Button>
+  </DialogActions>
+</Dialog></div>
+  : gehenErrorAlert?
+  <div><Dialog
+  open={gehenErrorAlert}
+  onClose={this.handleGehenErrorAlertCLose}
+  aria-labelledby="alert-dialog-title"
+  aria-describedby="alert-dialog-description"
+>
+  <DialogTitle id="alert-dialog-title">
+    Arbeitsende ohne Arbeitsbeginn nicht möglich
+  </DialogTitle>
+  <DialogContent>
+    <DialogContentText id="alert-dialog-description">
+      Eine Arbeitsende Zeiterfassung muss immer zusammen mit einer Arbeitsbeginn Zeiterfassung erfasst werden. Bitte trage erst eine Arbeitsbeginn Zeit ein und erfasse diese.
+    </DialogContentText><br/><br/>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={this.handleGehenErrorAlertCLose} autoFocus>
+      Verstanden
     </Button>
   </DialogActions>
 </Dialog></div>:null}

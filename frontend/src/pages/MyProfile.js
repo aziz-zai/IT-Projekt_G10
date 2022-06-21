@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import './MyProfile.css'
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
-import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 
 export class MyProfile extends Component {
@@ -109,7 +108,7 @@ export class MyProfile extends Component {
                 <div>
                 <TextField
                   color="secondary"
-                    autoFocus type='text' required
+                    type='text' required
                     id="firstName"
                     label="Vorname"
                     value={firstName ? firstName:user[0].vorname}
@@ -125,7 +124,7 @@ export class MyProfile extends Component {
               </div><div class="success">
                      {success ?
               <Stack sx={{ width: '100%' }} spacing={2}>
-                      <Alert onClose={this.handleClose}>Porfil Daten erfolgreich gespeichert!</Alert>
+                      <Alert onClose={this.handleClose}>Profil Daten erfolgreich gespeichert!</Alert>
               </Stack>:null}</div>
               <div class="saveBtnWrapper">
                   <button onClick={this.updateUser}class="saveBtn">Speichern</button>

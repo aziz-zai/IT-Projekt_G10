@@ -1,7 +1,7 @@
 import EreignisBO from './EreignisBO';
 
 /**
- * Represents a Project
+ * Represents a Gehen Ereignis
  */
 export default class GehenBO extends EreignisBO {
 

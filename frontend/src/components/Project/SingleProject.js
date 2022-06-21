@@ -1,17 +1,16 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { TextField, List, AppBar, ListItem, Dialog, 
-IconButton, Container, Toolbar, CardContent, CardActions, Card, Typography} from '@mui/material';
+IconButton, Button, Container, Toolbar, CardContent, CardActions, Card, Typography} from '@mui/material';
 import './Project.css'
 import CloseIcon from '@mui/icons-material/Close';
 import OneAPI from '../../api/OneAPI';
 import ProjectBO from '../../api/ProjectBO';
 import Aktivitäten from './Aktivitäten';
 import AktivitätenDetail from './AktivitätenDetail';
-import Projektarbeit from './Projektarbeit';
 import LoadingProgress from '../Dialogs/LoadingProgress'
 import MemberList from './MemberList';
-import Membership from './Membership'
+import MemberDetail from './MemberDetail'
 
 export class SingleProject extends Component {
     constructor(props) {
@@ -39,12 +38,19 @@ export class SingleProject extends Component {
           membership: [],
           aktivitäten: [],
           loadingInProgress: false,
+          deletingInProgress: false,
+          loadingError: null,
+          deletingError: null,
+          zeitintervall: null,
+          zeitintervallEnde: null,
+          zeitintervallStart: null
         };
     }
-
+    
     getProjektleiterByProject = () => {
       OneAPI.getAPI().getProjektleiterByProject(this.props.project.id).then(projektleiter =>
         this.handleProjektfarbe(projektleiter)
+        
         ).catch(e =>
           this.setState({ // Reset state with error from catch 
             projektleiter: null,
@@ -102,19 +108,28 @@ export class SingleProject extends Component {
     }
 
     deleteProject = () => {
-      OneAPI.getAPI().deleteProject(this.props.project.id).then(() => {         //delete Person
-        this.setState({    
-          isOpen: false           // no error message
-        });this.props.handleProjectDelete()
+      OneAPI.getAPI().deleteProject(this.props.project.getID()).then(() => {
+        this.setState({  // Set new state when AccountBOs have been fetched
+          deletingInProgress: false, // loading indicator 
+          deletingError: null,
+          isOpen: false
+        })
+        // console.log(account);
+        this.props.handleProjectDelete(this.props.project);  // call the parent with the deleted customer
       }).catch(e =>
-        this.setState({          // show error message
+        this.setState({ // Reset state with error from catch 
+          deletingInProgress: false,
+          deletingError: e
         })
       );
+  
       // set loading to true
       this.setState({
-                     // disable error message
+        deletingInProgress: true,
+        deletingError: null
       });
     }
+
 
     loadAktivitäten = () => {
       OneAPI.getAPI().getAktivitätenByProjectId(this.props.project.id).then(aktivitäten =>
@@ -147,14 +162,87 @@ export class SingleProject extends Component {
             loadingInProgress: false,
             loadingError: e
           })
-        );
-  
+        )
+        this.setState({
+          loadingInProgress: true,
+          loadingError: null
+        });
+      };
+      
+        getProjektlaufzeit = () => {
+          OneAPI.getAPI().getZeitintervall(this.props.project.laufzeit).then(zeitintervall =>{
+            this.setState({
+              zeitintervall: zeitintervall,
+              loadingInProgress: false, // loading indicator 
+              loadingError: null
+            });
+            this.getProjektlaufzeitAnfang(zeitintervall);
+            this.getProjektlaufzeitEnde(zeitintervall);
+            }).catch(e =>
+              this.setState({ // Reset state with error from catch 
+                loadingInProgress: false,
+                loadingError: e
+              })
+            )
+            this.setState({
+              loadingInProgress: true,
+              loadingError: null
+            });
+          };
+          
+       getProjektlaufzeitAnfang = (zeitintervall) => {
+         OneAPI.getAPI().getEreignis(zeitintervall[0].start).then(zeitintervallStart =>{
+                var StartJahr = 0 
+                var StartMonat = 0
+                var StartTag = 0
+                var Start = 0
+                const zeitintervallDate = new Date(zeitintervallStart[0].zeitpunkt)
+                StartJahr = zeitintervallDate.getFullYear()
+                StartMonat = zeitintervallDate.getMonth()
+                StartTag = zeitintervallDate.getDay()
+                Start = `${String(StartJahr).padStart(4, "0")}-${String(StartMonat).padStart(2, "0")}-${String(StartTag).padStart(2, "0")}` 
+          this.setState({
+             zeitintervallStart: Start,
+             loadingInProgress: false, // loading indicator 
+             loadingError: null
+           })}).catch(e =>
+             this.setState({ // Reset state with error from catch 
+               loadingInProgress: false,
+               loadingError: e
+             })
+           )
+           this.setState({
+            loadingInProgress: true,
+            loadingError: null
+          });
+        };
+           getProjektlaufzeitEnde = (zeitintervall) => {
+            OneAPI.getAPI().getEreignis(zeitintervall[0].ende).then(zeitintervallEnde =>{
+              var EndeJahr = 0 
+              var EndeMonat = 0
+              var EndeTag = 0
+              var Ende = 0
+              const zeitintervallDate = new Date(zeitintervallEnde[0].zeitpunkt)
+              EndeJahr = zeitintervallDate.getFullYear()
+              EndeMonat = zeitintervallDate.getMonth()
+              EndeTag = zeitintervallDate.getDay()
+              Ende = `${String(EndeJahr).padStart(4, "0")}-${String(EndeMonat).padStart(2, "0")}-${String(EndeTag).padStart(2, "0")}`;
+              this.setState({
+                zeitintervallEnde: Ende,
+                loadingInProgress: false, // loading indicator 
+                loadingError: null
+              })}).catch(e =>
+                this.setState({ // Reset state with error from catch 
+                  loadingInProgress: false,
+                  loadingError: e
+                })
+              ) 
       // set loading to true
       this.setState({
         loadingInProgress: true,
         loadingError: null
       });
-    }
+    };
 
 
     textFieldValueChange = (event) => {
@@ -189,17 +277,6 @@ export class SingleProject extends Component {
       });
     }
 
-    openProArb = () => {
-      this.setState({
-        openProArb: true
-      });
-    }
-
-    closeProArb = () => {
-      this.setState({
-        openProArb: false
-      });
-    }
 
     openMember = () => {
       this.setState({
@@ -237,9 +314,9 @@ export class SingleProject extends Component {
     addAktvität = aktivität => {
       // project is not null and therefore created
       if (aktivität) {
-        const newAktivitätshipList = [...this.state.aktivitäten, aktivität];
+        const newAktivitätenList = [...this.state.aktivitäten, aktivität];
         this.setState({
-          aktivitäten: newAktivitätshipList,
+          aktivitäten: newAktivitätenList,
         });
       } else {
         this.setState({
@@ -247,28 +324,41 @@ export class SingleProject extends Component {
       }
     }
 
+    aktivitätDeleted = aktivität => {
+      const newAktivitätenList = this.state.aktivitäten.filter(aktivitätFromState => aktivitätFromState.getID() !== aktivität);
+      this.setState({
+        aktivitäten: newAktivitätenList
+      });
+    }
+
+    memberDeleted = member => {
+      const newMemberList = this.state.membership.filter(memberFromState => memberFromState.getID() !== member);
+      this.setState({
+        membership: newMemberList
+      });
+    }
 
     componentDidMount() {
     this.getProjektleiterByProject();
     this.loadAktivitäten();
     this.getMembersByProject();
+    this.getProjektlaufzeit();
     }
 
   render() {
-    const {project, user, projektarbeit} = this.props;
-    const {openAkt, membership, openProArb, handleDialogClose, aktivitäten, projektleiter, 
-    isOpen, projektfarbe, loadingInProgress, openMember, projekttitel, projektName, laufZeit, auftragGeber, availableHours} = this.state
-    
+    const {project, user} = this.props;
+    const {openAkt, membership, handleDialogClose, aktivitäten, projektleiter, 
+    isOpen, projektfarbe, loadingInProgress, openMember, projekttitel, projektName, laufZeit, auftragGeber, availableHours, zeitintervall, zeitintervallEnde, zeitintervallStart} = this.state
+
     return (
-      <div class="ProjectCardWrapper">
-      <Card onClick = {this.handleDialogOpen}class={projektfarbe}>
+      <div class="ProjectCardWrapper"> 
+      <Card onClick = {this.handleDialogOpen}class={projektfarbe}>{console.log('zeitintervallStart', zeitintervallStart)}
       <CardContent>
         <Typography variant="h5" class={projekttitel} component="div">
           {projektName}
         </Typography>
         <Typography variant="body2"class="ProjektContent" >
           Verfügbare Stunden: {availableHours}h<br/>
-          Deadline: 0{laufZeit}.04.2022<br/>
           Projektleiter: {projektleiter[0] ?
            projektleiter[0].vorname : null}
         </Typography>
@@ -295,33 +385,58 @@ export class SingleProject extends Component {
             <button onClick={this.deleteProject} class="saveBtn">Löschen</button>
           </Toolbar>
         </AppBar>
-        <Container> 
+        <Container class="containerproject"> 
         <Typography class="überschriftakt" component="h2" variant="h6" color="black" gutterBottom>
         Projekt
         </Typography>
         <Card class="Projektdetails">
-        <List>
+          <List>
           <ListItem>
           <TextField
             autoFocus type='text' required
+            color="secondary"
             id="projektName"
             label="Projektname"
             value={projektName}
             onChange={this.textFieldValueChange}
-            /> 
+            />  <Button>
+            <Typography class="Mit_btn" onClick={this.openMember}>Mitarbeiter hinzufügen </Typography>
+            </Button>
           </ListItem>
           <ListItem>
+    
           <TextField
             autoFocus type='text' required
-            id="laufZeit"
-            label="Projektlaufzeit"
-            value={laufZeit}
+            color="secondary"
+            id="zeitintervallStart"
+            label="Projektlaufzeit Von"
+            value={zeitintervallStart}
+            type="date"
             onChange={this.textFieldValueChange}
-            />
+            InputLabelProps={{
+              shrink: true,
+            }}
+            /> &nbsp;&nbsp;
+            <TextField
+            autoFocus type='text' required
+            color="secondary"
+            id="zeitintervallEnde"
+            label="Projektlaufzeit Bis"
+            value={zeitintervallEnde}
+            type="date"
+            onChange={this.textFieldValueChange}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            /><Button>
+            <Typography class="Akt_btn" onClick={this.openAkt}>Aktivitäten hinzufügen </Typography>
+            </Button>
+          
           </ListItem>
           <ListItem>
           <TextField
             autoFocus type='text' required
+            color="secondary"
             id="auftragGeber"
             label="Auftraggeber"
             value={auftragGeber}
@@ -331,15 +446,16 @@ export class SingleProject extends Component {
           <ListItem>
           <TextField
             autoFocus type='text' required
+            color="secondary"
             id="availableHours"
             label="Verfügbare Stunden"
             value={availableHours}
             onChange={this.textFieldValueChange}
             />
           </ListItem>
-          <button class="AktBtn" onClick={this.openAkt}> Aktivität hinzufügen</button>
           <Aktivitäten isOpen={openAkt} onClose={this.closeAkt} project={project} handleClose={this.addAktvität}>
             </Aktivitäten>
+            <LoadingProgress show={loadingInProgress} />
         </List>
         </Card>
         </Container>
@@ -350,11 +466,9 @@ export class SingleProject extends Component {
         </Typography> 
           {
             aktivitäten.map(aktivität => <AktivitätenDetail key={aktivität.getID()} 
-            akt_bezeichnung={aktivität.getBezeichnung()} akt_dauer={aktivität.getDauer()} akt_capacity={aktivität.getCapacity()}/>)
-          }{console.log('akti', aktivitäten)}
-        <button class="ProArbBtn" onClick={this.openProArb}> Projektarbeit hinzufügen</button>
-          <Projektarbeit isOpen={openProArb} onClose={this.closeProArb} Projektarbeit={projektarbeit}>
-            </Projektarbeit>
+            aktivitätDeleted={this.aktivitätDeleted} aktivität={aktivität.getID()} akt_bezeichnung={aktivität.getBezeichnung()} akt_dauer={aktivität.getDauer()} 
+            akt_capacity={aktivität.getCapacity()}/>)
+          }
             <LoadingProgress show={loadingInProgress} />
       </div>
       </Container>
@@ -364,13 +478,12 @@ export class SingleProject extends Component {
         Projektmitarbeiter
         </Typography> 
         {
-            membership.map(member => <Membership key={member.id} 
-            member={member}/>)
-         
+            membership.map(member => <MemberDetail key={member.id}
+            member={member} project={project.id} memberDeleted={this.memberDeleted}/> )
           }
-        <button class="addMemberBtn" onClick={this.openMember}>Mitarbeiter hinzufügen</button>
           <MemberList isOpen={openMember} onClose={this.closeMember} user={user} project={project} handleNewMember={this.handleNewMember}>
-          </MemberList>         
+          </MemberList>  
+          <LoadingProgress show={loadingInProgress} />
       </div>
       </Container>
       </Dialog>

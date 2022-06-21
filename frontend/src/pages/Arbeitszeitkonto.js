@@ -10,6 +10,7 @@ import FormLabel from '@mui/material/FormLabel';
 import Ereignisbuchung from '../components/Arbeitszeitkonto/Ereignisbuchung';
 import Zeitintervallbuchung from '../components/Arbeitszeitkonto/Zeitintervallbuchung';
 import TextField from '@mui/material/TextField';
+import Abwesenheit from '../components/Arbeitszeitkonto/Abwesenheit'
 
 export class Arbeitszeitkonto extends Component {
 
@@ -21,7 +22,8 @@ export class Arbeitszeitkonto extends Component {
       zeitintervallbuchungSelected: true,
       startFilter: null,
       endFilter: null,
-      istBuchung: true
+      istBuchung: true,
+      openAbwesenheit: false
 
     };
   }
@@ -81,12 +83,22 @@ handleSollSelected = () => {
 });
 
 }
+openAbwesenheit = () => {
+  this.setState({
+    openAbwesenheit: true
+  })
+}
 
+handleAbwesenheitClose = () => {
+  this.setState({
+    openAbwesenheit: false
+  })
+}
 componentDidMount(){
   this.loadArbeitszeitkonto();
 }
   render() {
-    const {arbeitszeitKonto, ereignisbuchungSelected, zeitintervallbuchungSelected, startFilter, endFilter, istBuchung} = this.state;
+    const {arbeitszeitKonto, ereignisbuchungSelected, zeitintervallbuchungSelected, startFilter, endFilter, istBuchung, openAbwesenheit} = this.state;
     const {user} = this.props;
     return (
       <div>
@@ -96,7 +108,8 @@ componentDidMount(){
        <div class="azkHeaderItem">Urlaubskonto: <strong>{arbeitszeitKonto[0].urlaubskonto} </strong>Tage</div>
        <div class="azkHeaderItem">Gleitzeit: <strong>{arbeitszeitKonto[0].gleitzeit}</strong> Stunden</div>
        </div>:null}
-       <button class="abwesenheitBtn"> Abwesenheit </button>
+       <button class="abwesenheitBtn" onClick={this.openAbwesenheit}> Abwesenheit </button>
+       <Abwesenheit show={openAbwesenheit} onClose={this.handleAbwesenheitClose} user={user}/>
        <div class="buchungContainer">
          <div class="buchungHeader">
            <div class="buchungFilter"><FormControl>
@@ -144,6 +157,7 @@ componentDidMount(){
          </div>
        </div>
       </div>
+      
     )
   }
 }
