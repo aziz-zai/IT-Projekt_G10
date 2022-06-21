@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import './MyProfile.css'
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
-import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 
 export class MyProfile extends Component {
@@ -108,12 +107,14 @@ export class MyProfile extends Component {
             <div class="ProfileContent">   
                 <div>
                 <TextField
-                    autoFocus type='text' required
+                  color="secondary"
+                    type='text' required
                     id="firstName"
                     label="Vorname"
                     value={firstName ? firstName:user[0].vorname}
                     onChange={this.textFieldValueChange}
                     /></div> &nbsp; <div><TextField
+                    color="secondary"
                     type='text' required
                     id="lastName"
                     label="Nachname"
