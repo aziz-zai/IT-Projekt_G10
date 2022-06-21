@@ -1,14 +1,13 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { TextField, List, AppBar, ListItem, Dialog, 
-IconButton, Button, Box, ButtonGroup, Container, Toolbar, CardContent, CardActions, Card, Typography} from '@mui/material';
+IconButton, Button, Container, Toolbar, CardContent, CardActions, Card, Typography} from '@mui/material';
 import './Project.css'
 import CloseIcon from '@mui/icons-material/Close';
 import OneAPI from '../../api/OneAPI';
 import ProjectBO from '../../api/ProjectBO';
 import Aktivitäten from './Aktivitäten';
 import AktivitätenDetail from './AktivitätenDetail';
-import Projektarbeit from './Projektarbeit';
 import LoadingProgress from '../Dialogs/LoadingProgress'
 import MemberList from './MemberList';
 import MemberDetail from './MemberDetail'
@@ -202,17 +201,6 @@ export class SingleProject extends Component {
       });
     }
 
-    openProArb = () => {
-      this.setState({
-        openProArb: true
-      });
-    }
-
-    closeProArb = () => {
-      this.setState({
-        openProArb: false
-      });
-    }
 
     openMember = () => {
       this.setState({
@@ -281,8 +269,8 @@ export class SingleProject extends Component {
     }
 
   render() {
-    const {project, user, projektarbeit} = this.props;
-    const {openAkt, membership, openProArb, handleDialogClose, aktivitäten, projektleiter, 
+    const {project, user} = this.props;
+    const {openAkt, membership, handleDialogClose, aktivitäten, projektleiter, 
     isOpen, projektfarbe, loadingInProgress, openMember, projekttitel, projektName, laufZeit, auftragGeber, availableHours} = this.state
     
     return (

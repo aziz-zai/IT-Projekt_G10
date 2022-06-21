@@ -68,10 +68,12 @@
 }
 
 .navLink:hover{
-    border-bottom: 3px solid #e3caff;
+    border-bottom: 3px solid #e7caf8;
+    color: rgb(254, 238, 255);
 }
 .navLink:active{
-    border-bottom: 3px solid #e3caff;
+    border-bottom: 3px solid #e7caf8;
+    color: white;
 }
 .Profile{
     display: flex;

@@ -11,8 +11,8 @@ class ArbeitszeitkontoMapper(Mapper):
 
     def find_all(self):
         """
-        Auslesen aller Arbeitszeitkonten aus der Datenbank
-        :return Alle Arbeitszeitkonto-Objekte im System
+        Suchen aller Arbeitszeitkonten
+
         """
         result = []
 
@@ -41,9 +41,11 @@ class ArbeitszeitkontoMapper(Mapper):
         return result
     
     def find_by_key(self, key):
-        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
         """
+        Suchen eines Arbeitszeitkontos anhand der Arbeitszeitkonto-ID.
+        Parameter key = Arbeitszeitkonto-ID
 
+        """
         result = None
 
         cursor = self._cnx.cursor()
@@ -74,12 +76,10 @@ class ArbeitszeitkontoMapper(Mapper):
         return result
 
     def find_arbeitszeitkonto_by_userID(self, user: int):
-        """Suchen eines Benutzers mit vorgegebener Google ID. Da diese eindeutig ist,
-        wird genau ein Objekt zurückgegeben.
+        """
+        Suchen eines Arbeitszeitkontos anhand der User-ID.
+        Parameter user = User-ID
 
-        :param google_user_id die Google ID des gesuchten Users.
-        :return User-Objekt, das die übergebene Google ID besitzt,
-            None bei nicht vorhandenem DB-Tupel.
         """
         result = None
 
@@ -111,9 +111,10 @@ class ArbeitszeitkontoMapper(Mapper):
         return result
 
     def update(self, arbeitszeitkonto: Arbeitszeitkonto) -> Arbeitszeitkonto:
-        """Wiederholtes Schreiben eines Objekts in die Datenbank.
-
-        :param arbeitszeitkonto das Objekt, das in die DB geschrieben werden soll
+        """
+        Änderung eines bereits bestehenden Arbeitszeitkontos.
+        Parameter arbeitszeitkonto = ArbeitszeitkontoBO, das geändert werden soll
+        
         """
         cursor = self._cnx.cursor()
 
@@ -128,7 +129,11 @@ class ArbeitszeitkontoMapper(Mapper):
 
 
     def insert(self, arbeitszeitkonto: Arbeitszeitkonto) -> Arbeitszeitkonto:
-        """Create arbeitszeitkonto Object."""
+        """
+        Einfügen eines neuen Arbeitszeitkontos in die Datenbank.
+        Parameter arbeitszeitkonto = ArbeitszeitkontoBO, das eingefügt werden soll
+
+        """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM arbeitszeitkonto ")
         tuples = cursor.fetchall()
@@ -154,7 +159,11 @@ class ArbeitszeitkontoMapper(Mapper):
         return arbeitszeitkonto
 
     def delete(self, arbeitszeitkonto):
-
+        """
+        Löschen eines Arbeitszeitkontos aus der Datenbank anhand der Arbeitszeitkonto-ID.
+        Parameter arbeitszeitkonto = Arbeitszeitkonto-ID
+        
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM arbeitszeitkonto WHERE id={}".format(arbeitszeitkonto.get_id())

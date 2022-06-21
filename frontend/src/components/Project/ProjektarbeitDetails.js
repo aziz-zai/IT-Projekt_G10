@@ -4,11 +4,9 @@ import {Paper, Button} from '@mui/material';
 import './Aktivitäten.css'
 import './Project.css'
 import DeleteIcon from '@mui/icons-material/Delete';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import OneAPI from '../../api/OneAPI';
 
-
-export class Membership extends Component {
+export class ProjektarbeitDetails extends Component {
     constructor(props) {
         super(props);
       
@@ -16,19 +14,21 @@ export class Membership extends Component {
         this.state = {
           deletingInProgress: false,
           deletingError: null,
+          loadingInProgress: false,
+          loadingError: null,
         };
          // save this state for canceling
         this.baseState = this.state;
     }
 
-    deleteMember = () => {
-      OneAPI.getAPI().deleteMembership(this.props.member.id, this.props.project).then(() => {
+    deleteProjektarbeit = () => {
+      OneAPI.getAPI().deleteProjektarbeit(this.projektarbeiten.id).then(() => {
         this.setState({  // Set new state when AccountBOs have been fetched
           deletingInProgress: false, // loading indicator 
           deletingError: null
         })
         // console.log(account);
-        this.props.memberDeleted(this.props.member.id);  // call the parent with the deleted customer
+        this.props.projektarbeitDeleted(this.projektarbeiten.id);  // call the parent with the deleted customer
       }).catch(e =>
         this.setState({ // Reset state with error from catch 
           deletingInProgress: false,
@@ -38,32 +38,40 @@ export class Membership extends Component {
       // set loading to true
       this.setState({
         deletingInProgress: true,
-        deletingError: null
+        deletingError: null,
       });
     }
+   
 
     render() {
-        const {member} = this.props;
-        
+        const {proarb_bes, proarb_bez} = this.props;
+        const {projektarbeiten} = this.state;
+
     return (
       <Paper variant='outlined' class="papermitarbeiter">
-        <AccountCircleIcon/>      
-        {member.vorname} {member.nachname}
-        <Button><DeleteIcon onClick={this.deleteMember} color="secondary"/>
+        {proarb_bes} {proarb_bez}
+        <Button><DeleteIcon onClick={this.deleteProjektarbeit} color="secondary"/>
           </Button>    
+          {console.log("proarb", projektarbeiten)}
       </Paper>
     );
   }
 }
 
+const styles = theme => ({
+  root: {
+    width: '100%',
+  }
+});
 
-Membership.propTypes = {
+ProjektarbeitDetails.propTypes = {
   isOpen: PropTypes.any,
   onClose: PropTypes.any,
   classes: PropTypes.any,
   project: PropTypes.any,
-  member: PropTypes.any,
-  memberDeleted: PropTypes.any,
+  aktivität: PropTypes.any,
+  proarb_bez: PropTypes.any,
+  proarb_bes: PropTypes.any
 };
 
-export default Membership;
+export default ProjektarbeitDetails;
