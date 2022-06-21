@@ -57,7 +57,8 @@ export default class OneAPI {
 
   //Abwesenheit related
   #getAbwesenheitURL = (id) => `${this.#OneServerBaseURL}/abwesenheit/${id}`;
-  #addAbwesenheitURL = () => `${this.#OneServerBaseURL}/abwesenheit`;
+  #addAbwesenheitBeginnURL = (user, abwesenheitsart) => `${this.#OneServerBaseURL}/abwesenheitBeginn/${user}/${abwesenheitsart}`;
+  #addAbwesenheitEndeURL = (abwesenheitsBeginn, user, abwesenheitsart) => `${this.#OneServerBaseURL}/abwesenheitEnde/${abwesenheitsBeginn}/${user}/${abwesenheitsart}`;
   #updateAbwesenheitURL = (id) => `${this.#OneServerBaseURL}/abwesenheit/${id}`;
   #deleteAbwesenheitURL = (id) => `${this.#OneServerBaseURL}/abwesenheit/${id}`;
 
@@ -803,8 +804,8 @@ export default class OneAPI {
     })
   }
 
-  addAbwesenheit(abwesenheitBO) {
-    return this.#fetchAdvanced(this.#addAbwesenheitURL(), {
+  addAbwesenheitBeginn(abwesenheitBO, user, abwesenheitsart) {
+    return this.#fetchAdvanced(this.#addAbwesenheitBeginnURL(user, abwesenheitsart), {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -812,7 +813,24 @@ export default class OneAPI {
       },body: JSON.stringify(abwesenheitBO)
     }).then((responseJSON) => {
       // We always get an array of ProjectBOs.fromJSON, but only need one object
-      let responseAbwesenheitBO = AbwesenheitBO.fromJSON(responseJSON)[0];
+      let responseAbwesenheitBO = EreignisBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseAbwesenheitBO);
+        })
+    })
+  }
+
+  addAbwesenheitEnde(abwesenheitBO, abwesenheitBeginn, user, abwesenheitsart) {
+    return this.#fetchAdvanced(this.#addAbwesenheitEndeURL(abwesenheitBeginn, user, abwesenheitsart), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },body: JSON.stringify(abwesenheitBO)
+    }).then((responseJSON) => {
+      // We always get an array of ProjectBOs.fromJSON, but only need one object
+      let responseAbwesenheitBO = EreignisBO.fromJSON(responseJSON)[0];
       // 
       return new Promise(function (resolve) {
         resolve(responseAbwesenheitBO);

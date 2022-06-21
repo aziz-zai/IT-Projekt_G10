@@ -109,7 +109,7 @@ componentDidMount(){
        <div class="azkHeaderItem">Gleitzeit: <strong>{arbeitszeitKonto[0].gleitzeit}</strong> Stunden</div>
        </div>:null}
        <button class="abwesenheitBtn" onClick={this.openAbwesenheit}> Abwesenheit </button>
-       <Abwesenheit show={openAbwesenheit} onClose={this.handleAbwesenheitClose}/>
+       <Abwesenheit show={openAbwesenheit} onClose={this.handleAbwesenheitClose} user={user}/>
        <div class="buchungContainer">
          <div class="buchungHeader">
            <div class="buchungFilter"><FormControl>

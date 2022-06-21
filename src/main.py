@@ -1279,7 +1279,7 @@ class AbwesenheitListOperations(Resource):
             wird auch dem Client zurückgegeben. 
             """
             er = adm.create_ereignis(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
-            adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=True, ereignis=er.get_id() , bezeichnung=abwesenheitsart)
+            adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=True, ereignis=er.get_id() , bezeichnung=abwesenheitsart + "" +"Beginn")
             return er, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -1306,12 +1306,13 @@ class AbwesenheitListOperations(Resource):
             wird auch dem Client zurückgegeben. 
             """
             er = adm.create_ereignis(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
-            adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=True, ereignis=er.get_id() , bezeichnung=abwesenheitsart)
+            adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=True, ereignis=er.get_id() , bezeichnung=abwesenheitsart + "" +"Ende")
             abwesenheit = adm.create_abwesenheit(abwesenheitsBeginn, er.get_id() , adm.get_abwesenheitsart(abwesenheitsart), abwesenheitsart)
             adm.create_zeitintervallbuchung(abwesenheit.get_id(), True, user, user,"Abwesenheit")
 
             adm.update_arbeitszeitkonto_ist_arbeitsleistung(user)
             adm.update_arbeitszeitkonto_gleitzeit(user)
+            adm.update_arbeitszeitkonto_abwesenheit(user)
             return er, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.

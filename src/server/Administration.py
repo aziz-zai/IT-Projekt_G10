@@ -586,7 +586,8 @@ class Administration(object):
     
     def update_arbeitszeitkonto_abwesenheit(self, user):
         arbeitszeitkonto = self.get_arbeitszeitkonto_by_userID(user)
-        aktuelles_urlaubskonto = arbeitszeitkonto.get_urlaubskonto()
+        benutzer = self.get_user_by_id(user)
+        urlaubskonto = benutzer.get_urlaubstage()
         urlaubs_buchungen = self.get_all_urlaubs_buchungen(user)
 
         urlaubs_stunden=0
@@ -595,7 +596,7 @@ class Administration(object):
         
         gebuchte_urlaubstage = urlaubs_stunden/24
 
-        updated_urlaubskonto = aktuelles_urlaubskonto - gebuchte_urlaubstage
+        updated_urlaubskonto = urlaubskonto - gebuchte_urlaubstage
         arbeitszeitkonto.set_urlaubskonto(updated_urlaubskonto)
         self.update_arbeitszeitkonto(arbeitszeitkonto) 
     
@@ -686,7 +687,7 @@ class Administration(object):
     def get_abwesenheitsart(self, abwesenheitsart):
         if(abwesenheitsart == 'Urlaub'):
             return 1
-        elif(abwesenheitsart == 'Krank'):
+        elif(abwesenheitsart == 'Krankheitsausfall'):
             return 2
         elif(abwesenheitsart == 'Gleitzeit'):
             return 3
