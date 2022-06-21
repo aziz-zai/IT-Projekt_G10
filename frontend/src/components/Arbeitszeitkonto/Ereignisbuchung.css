@@ -1,0 +1,40 @@
+.ereignisBuchungHeader{
+    display: flex;
+    flex-direction: row;
+}
+
+.ersteller{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.filterBtn{
+    border-radius: 10px;
+    background: #5e2e94;
+    white-space: nowrap;
+    padding: 10px 30px;
+    color:#fff;
+    font-size: 1rem;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    margin: 0 0.5rem 0 0.5rem
+}
+
+.ereignisContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+}
+
+.ereignis{
+    color: #5e2e94;
+    font-weight: bold;
+}
+
+.buchungDeleted{
+    margin: 0.5rem 0.5rem 0.5rem 0.5rem;
+}

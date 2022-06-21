@@ -26,12 +26,6 @@ export class Pause extends Component {
         this.props.handlePauseClicked();
 }
 
-handlePauseDone= () => {
-  this.setState({
-      pauseClicked: false
-  });
-  this.props.handlePauseDone();
-}
 
   render() {
     const {beginn, ende} = this.props;
@@ -50,13 +44,9 @@ handlePauseDone= () => {
           <div class="pause">{String(Bh).padStart(2, "0")}:{String(Bm).padStart(2, "0")}:{String(Bs).padStart(2, "0")} - 
           {ende? <div>{String(Eh).padStart(2, "0")}:{String(Em).padStart(2, "0")}:{String(Es).padStart(2, "0")}</div>:null} </div>:null}
         <div class="BtnPauseWrapper">
-            {pauseClicked ?
-            <IconButton onClick={this.handlePauseDone}>
-            <EjectIcon sx={{ fontSize: 100, color: "orange", transform: "rotate(90deg)" }}/>
-            </IconButton>:
             <IconButton onClick={this.handlePauseClicked}>
             <PauseIcon sx={{ fontSize: 100, color: "orange" }} />
-            </IconButton>}
+            </IconButton>
         </div>
         <h5 class="BtnPauseText">Pause</h5>
     </div>
@@ -68,7 +58,6 @@ Pause.propTypes = {
   handleSelection: PropTypes.any,
   user: PropTypes.any,
   handlePauseClicked: PropTypes.any,
-  handlePauseDone: PropTypes.any,
   beginn: PropTypes.any,
   ende: PropTypes.any,
 }

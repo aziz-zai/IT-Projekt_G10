@@ -43,7 +43,7 @@ class ZeitintervallbuchungMapper(Mapper):
 
         return result
         
-    def find_soll_buchungen_by_user(self, erstellt_für):
+    def find_soll_projektarbeit_buchungen_by_user(self, erstellt_für):
         """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
         """
         cursor = self._cnx.cursor()
@@ -73,7 +73,7 @@ class ZeitintervallbuchungMapper(Mapper):
 
         return result
     
-    def find_ist_buchungen_by_user(self, user):
+    def find_ist_projektarbeit_buchungen_by_user(self, user):
         """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
         """
         cursor = self._cnx.cursor()
@@ -81,6 +81,67 @@ class ZeitintervallbuchungMapper(Mapper):
         FROM projectone.zeitintervallbuchung
         WHERE erstellt_für={} AND ist_buchung=TRUE AND bezeichnung='Projektarbeit'
         """.format(user)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+        result= []  
+
+        
+        for (id, timestamp, erstellt_von, erstellt_für, ist_buchung, zeitintervall, bezeichnung, zeitdifferenz) in tuples:
+            zeitintervallbuchung = Zeitintervallbuchung()
+            zeitintervallbuchung.set_id(id)
+            zeitintervallbuchung.set_timestamp(timestamp)
+            zeitintervallbuchung.set_erstellt_von(erstellt_von)
+            zeitintervallbuchung.set_erstellt_für(erstellt_für)
+            zeitintervallbuchung.set_ist_buchung(ist_buchung)
+            zeitintervallbuchung.set_zeitintervall(zeitintervall)
+            zeitintervallbuchung.set_bezeichnung(bezeichnung)
+            zeitintervallbuchung.set_zeitdifferenz(zeitdifferenz)
+            result.append(zeitintervallbuchung)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+    def find_soll_buchungen_by_user(self, user):
+        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
+        """
+        cursor = self._cnx.cursor()
+        command = """SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung,zeitintervall, bezeichnung, zeitdifferenz 
+        FROM projectone.zeitintervallbuchung
+        WHERE (erstellt_für={} OR erstellt_von={}) AND ist_buchung=FALSE 
+        order by timestamp desc
+        """.format(user, user)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+        result= []  
+
+        
+        for (id, timestamp, erstellt_von, erstellt_für, ist_buchung, zeitintervall, bezeichnung, zeitdifferenz) in tuples:
+            zeitintervallbuchung = Zeitintervallbuchung()
+            zeitintervallbuchung.set_id(id)
+            zeitintervallbuchung.set_timestamp(timestamp)
+            zeitintervallbuchung.set_erstellt_von(erstellt_von)
+            zeitintervallbuchung.set_erstellt_für(erstellt_für)
+            zeitintervallbuchung.set_ist_buchung(ist_buchung)
+            zeitintervallbuchung.set_zeitintervall(zeitintervall)
+            zeitintervallbuchung.set_bezeichnung(bezeichnung)
+            zeitintervallbuchung.set_zeitdifferenz(zeitdifferenz)
+            result.append(zeitintervallbuchung)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+    
+    def find_ist_buchungen_by_user(self, user):
+        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
+        """
+        cursor = self._cnx.cursor()
+        command = """SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung,zeitintervall, bezeichnung, zeitdifferenz 
+        FROM projectone.zeitintervallbuchung
+        WHERE (erstellt_für={} OR erstellt_von={}) AND ist_buchung=TRUE
+        order by timestamp desc
+        """.format(user, user)
         cursor.execute(command)
         tuples = cursor.fetchall()
         result= []  
