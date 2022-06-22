@@ -399,9 +399,7 @@ export class SingleProject extends Component {
             label="Projektname"
             value={projektName}
             onChange={this.textFieldValueChange}
-            />  <Button>
-            <Typography class="Mit_btn" onClick={this.openMember}>Mitarbeiter hinzufügen </Typography>
-            </Button>
+            /> 
           </ListItem>
           <ListItem>
     
@@ -428,10 +426,7 @@ export class SingleProject extends Component {
             InputLabelProps={{
               shrink: true,
             }}
-            /><Button>
-            <Typography class="Akt_btn" onClick={this.openAkt}>Aktivitäten hinzufügen </Typography>
-            </Button>
-          
+            />
           </ListItem>
           <ListItem>
           <TextField
@@ -453,26 +448,31 @@ export class SingleProject extends Component {
             onChange={this.textFieldValueChange}
             />
           </ListItem>
+          <ListItem>
+          <Button class="Akt_btn" onClick={this.openAkt}>
+            Aktivitäten hinzufügen
+            </Button>
+            <Button onClick={this.openMember} class="Mit_btn">
+            Mitarbeiter hinzufügen 
+            </Button>
+          </ListItem>
           <Aktivitäten isOpen={openAkt} onClose={this.closeAkt} project={project} handleClose={this.addAktvität}>
             </Aktivitäten>
             <LoadingProgress show={loadingInProgress} />
         </List>
         </Card>
         </Container>
-        <Container>
-        <div >
+        <div>
         <Typography class="überschriftakt" component="h2" variant="h6" color="black" gutterBottom>
         Aktivitäten
         </Typography> 
           {
             aktivitäten.map(aktivität => <AktivitätenDetail key={aktivität.getID()} 
             aktivitätDeleted={this.aktivitätDeleted} aktivität={aktivität.getID()} akt_bezeichnung={aktivität.getBezeichnung()} akt_dauer={aktivität.getDauer()} 
-            akt_capacity={aktivität.getCapacity()}/>)
+            akt_capacity={aktivität.getCapacity()} user={user}/>)
           }
             <LoadingProgress show={loadingInProgress} />
-      </div>
-      </Container>
-      <Container>
+        </div>
       <div >
       <Typography class="überschriftakt" component="h2" variant="h6" color="black" gutterBottom>
         Projektmitarbeiter
@@ -485,7 +485,6 @@ export class SingleProject extends Component {
           </MemberList>  
           <LoadingProgress show={loadingInProgress} />
       </div>
-      </Container>
       </Dialog>
       </CardActions>
       </CardContent>

@@ -872,6 +872,32 @@ class EreignisbuchungenOperations(Resource):
         adm = Administration()
         ereignisbuchungen = adm.get_ist_eregnisbuchungen_by_zeitspanne(erstellt_fuer, startFilter, endeFilter)
         return ereignisbuchungen
+@projectone.route('/projektereignis-ist/<int:erstellt_fuer>/<string:startFilter>/<string:endeFilter>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des Ereignisbuchung-Objekts')
+class EreignisbuchungenOperations(Resource):
+    @projectone.marshal_with(ereignisbuchungen)
+
+    def get(self, erstellt_fuer,startFilter, endeFilter):
+        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts.
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        ereignisbuchungen = adm.get_ist_projektereignis_by_zeitspanne(erstellt_fuer, startFilter, endeFilter)
+        return ereignisbuchungen
+@projectone.route('/projektereignis-soll/<int:erstellt_fuer>/<string:startFilter>/<string:endeFilter>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des Ereignisbuchung-Objekts')
+class EreignisbuchungenOperations(Resource):
+    @projectone.marshal_with(ereignisbuchungen)
+
+    def get(self, erstellt_fuer,startFilter, endeFilter):
+        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts.
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        ereignisbuchungen = adm.get_soll_projektereignis_by_zeitspanne(erstellt_fuer, startFilter, endeFilter)
+        return ereignisbuchungen
 
 """ANCHOR Gehen Views
 """
@@ -1207,6 +1233,32 @@ class ZeitintervallbuchungOperations(Resource):
         """
         adm = Administration()
         zeitintervallbuchung = adm.get_ist_zeitintervallbuchungen_by_zeitspanne(erstellt_fuer, startFilter, endeFilter)
+        return zeitintervallbuchung
+
+@projectone.route('/projektarbeitbuchung-ist/<int:erstellt_fuer>/<string:startFilter>/<string:endeFilter>/<int:activity>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des zeitintervallbuchung-user-Objekts')
+class ZeitintervallbuchungOperations(Resource):
+    @projectone.marshal_with(zeitintervallbuchung)
+    def get(self, erstellt_fuer, startFilter, endeFilter, activity):
+        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts.
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        zeitintervallbuchung = adm.get_ist_projektarbeitbuchungen_by_zeitspanne(erstellt_fuer, startFilter, endeFilter, activity)
+        return zeitintervallbuchung
+
+@projectone.route('/projektarbeitbuchung-soll/<int:erstellt_fuer>/<string:startFilter>/<string:endeFilter>/<int:activity>')
+@projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
+@projectone.param('id', 'Die ID des zeitintervallbuchung-user-Objekts')
+class ZeitintervallbuchungOperations(Resource):
+    @projectone.marshal_with(zeitintervallbuchung)
+    def get(self, erstellt_fuer, startFilter, endeFilter, activity):
+        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts.
+        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
+        """
+        adm = Administration()
+        zeitintervallbuchung = adm.get_soll_projektarbeitbuchungen_by_zeitspanne(erstellt_fuer, startFilter, endeFilter, activity)
         return zeitintervallbuchung
 
 @projectone.route('/pausenBeginn/<int:user>')

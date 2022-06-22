@@ -189,7 +189,7 @@ textFieldValueChange = (event) => {
             InputLabelProps={{
               shrink: true,
             }}
-            />
+            /> &nbsp;&nbsp;
             <TextField
             autoFocus type='text' required
             color="secondary"
