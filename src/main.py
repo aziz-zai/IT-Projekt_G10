@@ -34,7 +34,7 @@ from server.bo.AbwesenheitBO import Abwesenheit
 """
 Instanzieren von Flask. Am Ende dieser Datei erfolgt dann erst der 'Start' von Flask.
 """
-app = Flask(__name__, static_folder='../build', static_url_path='/')
+app = Flask(__name__)
 
 """
 Alle Ressourcen mit dem Präfix /bank für **Cross-Origin Resource Sharing** (CORS) freigeben.
