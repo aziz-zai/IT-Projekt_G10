@@ -146,13 +146,11 @@ class AktivitätenDetail extends Component {
           </Button>
       </Paper>
        {openActivity?
-      <Dialog open={openActivity} onClose={this.closeActivityDetails} maxWidth='md' fullWidth>
+      <Dialog open={openActivity} onClose={this.closeActivityDetails} maxWidth='md' fullWidth sx={{overflow:"scroll", maxHeight: "100vh"}}>
         <DialogTitle id='form-dialog-title'>Aktivitätendetails
     <IconButton sx={{ position: 'absolute', right: 1, top: 1, color: 'grey[500]' }} onClick={this.closeActivityDetails}>
        <CloseIcon />
     </IconButton></DialogTitle>
-    
-    <Card>
       <List>
         <ListItem>
           <Tooltip title="Projektarbeit hinzufügen">
@@ -209,8 +207,6 @@ class AktivitätenDetail extends Component {
        </div>
       </ListItem>
       </List>
-      </Card>
-    
   </Dialog>:null}
 
   </div>
