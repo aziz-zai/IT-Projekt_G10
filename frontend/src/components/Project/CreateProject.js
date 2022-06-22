@@ -77,7 +77,7 @@ export class CreateProject extends Component {
   addProjektlaufzeitAnfang = () => {
     let zeitpunkt = this.state.projektlaufzeitAnfang + "T00:00"
     let newProjektlaufzeitEreignis = new EreignisBO(zeitpunkt, "Projektanfang" );
-    OneAPI.getAPI().addProjektlaufzeitBeginn(newProjektlaufzeitEreignis, this.props.user[0].id).then(ereignis => {
+    OneAPI.getAPI().addProjektlaufzeitBeginn(newProjektlaufzeitEreignis, this.props.user[0].id, this.state.projektName).then(ereignis => {
       // Backend call sucessfull
       // reinit the dialogs state for a new empty project
        // call the parent with the project object from backend
@@ -99,7 +99,7 @@ export class CreateProject extends Component {
 addProjektlaufzeitEnde = (ereignis) => {
   let zeitpunkt = this.state.projektlaufzeitAnfang + "T00:00"
   let newProjektlaufzeitEreignis = new EreignisBO(zeitpunkt, "Projektende" );
-  OneAPI.getAPI().addProjektlaufzeitEnde(newProjektlaufzeitEreignis, this.props.user[0].id, ereignis.id).then(zeitintervall => {
+  OneAPI.getAPI().addProjektlaufzeitEnde(newProjektlaufzeitEreignis, this.props.user[0].id, ereignis.id, this.state.projektName).then(zeitintervall => {
     // Backend call sucessfull
     // reinit the dialogs state for a new empty project
      // call the parent with the project object from backend

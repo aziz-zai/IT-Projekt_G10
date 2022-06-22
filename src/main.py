@@ -525,11 +525,11 @@ class ProjectListOperations(Resource):
         project = adm.get_projectlaufzeit_by_id(id)
         return project
 
-@projectone.route('/projektlaufzeitAnfang/<int:user>')
+@projectone.route('/projektlaufzeitAnfang/<int:user>/<string:bezeichnung>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
     @projectone.marshal_with(ereignis)
-    def post(self, user):
+    def post(self, user, bezeichnung):
         adm = Administration()
 
         proposal = Ereignis()
@@ -544,17 +544,17 @@ class ProjectListOperations(Resource):
             """
 
             er = adm.create_ereignis(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
-            adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=False, ereignis=er.get_id() , bezeichnung="Projektanfang")
+            adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=False, ereignis=er.get_id() , bezeichnung="Projektanfang "+bezeichnung)
             return er, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
             return '', 500
 
-@projectone.route('/projektlaufzeitEnde/<int:user>/<int:projektAnfang>')
+@projectone.route('/projektlaufzeitEnde/<int:user>/<int:projektAnfang>/<string:bezeichnung>')
 @projectone.response(500, 'Falls es zu einem Server-seitigen Fehler kommt.')
 class ProjectListOperations(Resource):
     @projectone.marshal_with(zeitintervall)
-    def post(self, user, projektAnfang):
+    def post(self, user, projektAnfang, bezeichnung):
         adm = Administration()
 
         proposal = Ereignis()
@@ -569,9 +569,9 @@ class ProjectListOperations(Resource):
             """
 
             er = adm.create_ereignis(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
-            adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=False, ereignis=er.get_id() , bezeichnung="Projektende")
+            adm.create_ereignisbuchung(erstellt_von=user, erstellt_für=user, ist_buchung=False, ereignis=er.get_id() , bezeichnung="Projektende "+bezeichnung)
 
-            zeitintervall = adm.create_zeitintervall("Projektlaufzeit", projektAnfang, er.get_id())
+            zeitintervall = adm.create_zeitintervall("Projektlaufzeit "+bezeichnung, projektAnfang, er.get_id())
             adm.create_zeitintervallbuchung(zeitintervall.get_id(), False, user, user,"Projektlaufzeit")
             return zeitintervall, 200
         else:

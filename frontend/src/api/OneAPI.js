@@ -37,8 +37,8 @@ export default class OneAPI {
   #updateProjectURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
   #deleteProjectURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
   #getProjektlaufzeitURL = (id) => `${this.#OneServerBaseURL}/projektlaufzeit/${id}`;
-  #addProjektlaufzeitBeginn = (user) => `${this.#OneServerBaseURL}/projektlaufzeitAnfang/${user}`;
-  #addProjektlaufzeitEnde = (user, projektAnfang) => `${this.#OneServerBaseURL}/projektlaufzeitEnde/${user}/${projektAnfang}`;
+  #addProjektlaufzeitBeginn = (user, bezeichnung) => `${this.#OneServerBaseURL}/projektlaufzeitAnfang/${user}/${bezeichnung}`;
+  #addProjektlaufzeitEnde = (user, projektAnfang, bezeichnung) => `${this.#OneServerBaseURL}/projektlaufzeitEnde/${user}/${projektAnfang}/${bezeichnung}`;
 
 
   //Membership related
@@ -252,8 +252,8 @@ export default class OneAPI {
         })
     })
   }
-  addProjektlaufzeitBeginn(ereignisBO, user) {
-    return this.#fetchAdvanced(this.#addProjektlaufzeitBeginn(user),{
+  addProjektlaufzeitBeginn(ereignisBO, user, bezeichnung) {
+    return this.#fetchAdvanced(this.#addProjektlaufzeitBeginn(user, bezeichnung),{
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain',
@@ -269,8 +269,8 @@ export default class OneAPI {
         })
     })
   }
-  addProjektlaufzeitEnde(ereignisBO, user, projektAnfang) {
-    return this.#fetchAdvanced(this.#addProjektlaufzeitEnde(user, projektAnfang),{
+  addProjektlaufzeitEnde(ereignisBO, user, projektAnfang, bezeichnung) {
+    return this.#fetchAdvanced(this.#addProjektlaufzeitEnde(user, projektAnfang, bezeichnung),{
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain',
