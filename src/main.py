@@ -34,7 +34,7 @@ from server.bo.AbwesenheitBO import Abwesenheit
 """
 Instanzieren von Flask. Am Ende dieser Datei erfolgt dann erst der 'Start' von Flask.
 """
-app = Flask(__name__)
+app = Flask(__name__, static_folder="./build", static_url_path='/')
 
 """
 Alle Ressourcen mit dem Präfix /bank für **Cross-Origin Resource Sharing** (CORS) freigeben.
@@ -189,6 +189,21 @@ zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
 """
 """ SECTION Views 
 """
+app.config['ERROR_404_HELP'] = False
+
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
+
+@app.errorhandler(404)
+def handle_404(e):
+    if request.path.startswith('/projectone'):
+        return "Fehler", 404
+    else:
+        return redirect(url_for('index'))
+
+
+
 """ANCHOR Membership Views
 """
 @projectone.route('/membership')

@@ -162,7 +162,7 @@ handleOpenStateChange = () => {
 							:
 							<LogIn  onLogIn={this.handleSignIn} />
 						}/>
-						<Route path={process.env.PUBLIC_URL + '/'} element={
+						<Route path={process.env.PUBLIC_URL + '/*'} element={
 							currentUser ?
 							<Navigate replace to={process.env.PUBLIC_URL + '/MeinProfil'} />
 							:
