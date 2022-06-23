@@ -49,6 +49,21 @@ Allerdings würde dies dann eine Missbrauch Tür und Tor öffnen, so dass es rat
 """
 CORS(app, resources=r'/projectone/*', supports_credentials=True)
 
+app.config['ERROR_404_HELP'] = False
+
+
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
+
+@app.errorhandler(404)
+def handle_404(e):
+    if request.path.startswith('/projectone'):
+        return "Fehler", 404
+    else:
+        return redirect(url_for('index'))
+
+
 """
 In dem folgenden Abschnitt bauen wir ein Modell auf, das die Datenstruktur beschreibt, 
 auf deren Basis Clients und Server Daten austauschen. Grundlage hierfür ist das Package flask-restx. 
@@ -190,19 +205,6 @@ zeitintervallbuchung = api.inherit('Zeitintervallbuchung', buchung, {
 """
 """ SECTION Views 
 """
-app.config['ERROR_404_HELP'] = False
-
-@app.route('/')
-def index():
-    return app.send_static_file('index.html')
-
-@app.errorhandler(404)
-def handle_404(e):
-    if request.path.startswith('/projectone'):
-        return "Fehler", 404
-    else:
-        return redirect(url_for('index'))
-
 
 
 """ANCHOR Membership Views
