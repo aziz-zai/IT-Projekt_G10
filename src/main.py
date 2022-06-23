@@ -1,5 +1,6 @@
 # Unser Service basiert auf Flask
 from flask import Flask
+from flask import request, redirect, url_for
 # Auf Flask aufbauend nutzen wir RestX
 from flask_restx import Api, Resource, fields
 # Wir benutzen noch eine Flask-Erweiterung für Cross-Origin Resource Sharing
