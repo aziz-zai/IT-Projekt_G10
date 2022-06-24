@@ -78,3 +78,10 @@ Commands of use:
 npm run build
 gcloud app deploy
 ```
+# Routing on Google Cloud
+We decided to use a micro service architecture with seperate services for all applications.<br>
+This allows us to deploy changes to the services individually and we make use of the cloud native scaling capabilities Google provides us with.<br>
+Using the dispatch.yaml we redirected routing to the services on a subdomain level.<br>
+This results in the following 3 URLs:<br>
+
+#hier unsere URLs
