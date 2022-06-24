@@ -17,3 +17,10 @@ cd /frontend
 npm install 
 npm start
 ```
+# Backend - Python / Flask
+We advise you to set up a [python virtual enviroment](https://docs.python.org/3.7/tutorial/venv.html), to keep python clean. <br>
+This codes is tested under python version 3.9 <br>
+All code is located under /src. <br>
+To run the application on your own device, clone the repo. <br>
+Activate your virtual enviroment, via the activate script.
+Install the requirements inside requirements.txt & run the application by launching main.py <br>
