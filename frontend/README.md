@@ -64,3 +64,17 @@ Commands of use:
 ```
 gcloud app deploy
 ```
+
+# Deployment on Google Cloud - Frontend
+Google App Engine Standard Envoirnment is on NodeJS 16.15.1 <br>
+See .yaml file for extra config.
+React requires an extra build step to generate static files for deployment, which are located in a seperate folder. <br>
+This needs to be done after every change to the js files.
+
+To update deployed version of the fronentd code see commands below.<br>
+Navigate to /frontend and run the commands below:
+Commands of use:
+```
+npm run build
+gcloud app deploy
+```
