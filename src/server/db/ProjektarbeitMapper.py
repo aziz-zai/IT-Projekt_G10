@@ -8,7 +8,10 @@ class ProjektarbeitMapper(Mapper):
         super().__init__()
     
     def find_by_key(self, key):
-        """Suchen einer Projektarbeit mit vorgegebener Projekt ID, da diese eindeutig ist"""
+        """
+        Suchen einer Projektarbeit anhand der Projektarbeit-ID.
+        Parameter key = Projektarbeit-ID
+        """
 
         result = None
 
@@ -41,8 +44,9 @@ class ProjektarbeitMapper(Mapper):
         return result
 
     def find_by_activity_id(self, activity):
-        """Suchen einer Projektarbeit anhand der Aktivitäten-ID. Da diese eindeutig ist,
-        wird genau ein Objekt zurückgegeben.
+        """
+        Suchen einer Projektarbeit anhand der Aktivitäten-ID. 
+        Parameter activity = Aktivitäten-ID
         """
         result = []
 
@@ -74,8 +78,9 @@ class ProjektarbeitMapper(Mapper):
         return result
 
     def find_by_start(self, start):
-        """Suchen einer Projektarbeit anhand der Aktivitäten-ID. Da diese eindeutig ist,
-        wird genau ein Objekt zurückgegeben.
+        """
+        Suchen einer Projektarbeit anhand des Starts.
+        Parameter start = Kommen-ID
         """
         result = None
 
@@ -108,7 +113,10 @@ class ProjektarbeitMapper(Mapper):
         return result
 
     def insert(self, projektarbeit: Projektarbeit) -> Projektarbeit:
-        """Create projektarbeit Object"""
+        """
+        Einfügen einer Projektarbeit in die Datenbank.
+        Parameter projektarbeit = ProjektarbeitBO, das eingefügt werden soll
+        """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM projektarbeit")
         tuples = cursor.fetchall()
@@ -137,6 +145,11 @@ class ProjektarbeitMapper(Mapper):
         return projektarbeit
     
     def update(self, projektarbeit: Projektarbeit) -> Projektarbeit:
+        """
+        Änderung einer bereits bestehenden Projektarbeit.
+        Parameter projektarbeit = ProjektarbeitBO, das geändert werden soll
+        """
+        
         cursor = self._cnx.cursor()
 
         command = "UPDATE projektarbeit SET timestamp=%s, bezeichnung=%s, beschreibung=%s, start=%s, ende=%s, activity=%s WHERE id=%s"
@@ -149,7 +162,10 @@ class ProjektarbeitMapper(Mapper):
         return projektarbeit
 
     def delete(self, projektarbeit):
-
+        """
+        Löschen einer Projektarbeit aus der Datenbank anhand der Projektarbeit-ID.
+        Parameter projektarbeit = Projektarbeit-ID
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM projektarbeit WHERE id={}".format(projektarbeit.get_id())
