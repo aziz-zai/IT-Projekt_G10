@@ -39,7 +39,7 @@ python main.py
     See Google Documentation for install methods.
     Connection String for Proxy to get secure access to the Google Environment:
     ```
-    ./cloud_sql_proxy -instances=sw-praktikum-gruppe-1-ss2020:europe-west3:swpraktikum-sql=tcp:3306
+    ./cloud_sql_proxy - #hier schreiben
     ```
     This method will only work, if we assign you to the project team and grant you access.
 - Docker:
@@ -49,3 +49,8 @@ python main.py
     - Change the connection parameter inside the src/mapper.py to fit your envoirnment
 
 Depending on the configuration you chose, you need to update the connection string inside the mapper.py / ShoppingAPI.js  
+
+
+# Deployment - Google Cloud Plattform
+Our live version is hosted using the Google App Engine.
+For the deployment the routes need to be changed from localhost to the deployment url. #Hier unsere URL
