@@ -54,3 +54,13 @@ Depending on the configuration you chose, you need to update the connection stri
 # Deployment - Google Cloud Plattform
 Our live version is hosted using the Google App Engine.
 For the deployment the routes need to be changed from localhost to the deployment url. #Hier unsere URL
+
+# Deployment on Google Cloud - Backend
+Google App Engine Standard Envoirnment is on Python Version 3.9 <br>
+Google Cloud SQL is on MySQL, access is provided via sqlconnector. <br>
+See .yaml for extra config. <br>/
+Navigate to /src and run the command below<br>
+Commands of use:
+```
+gcloud app deploy
+```
