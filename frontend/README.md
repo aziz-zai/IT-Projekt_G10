@@ -24,3 +24,28 @@ All code is located under /src. <br>
 To run the application on your own device, clone the repo. <br>
 Activate your virtual enviroment, via the activate script.
 Install the requirements inside requirements.txt & run the application by launching main.py <br>
+
+```
+cd /src
+pip install -r requirements.txt     
+python main.py    
+```
+# Database - MySQL
+- MySQL Community Server 8.0.28:
+    - Download the latest Community server for your OS from here https://dev.mysql.com/downloads/mysql/
+    - Setup the database and import our database dump
+- Google Cloud SQL:
+    This requires the Google Cloud SDK & Google Cloud Proxy.
+    See Google Documentation for install methods.
+    Connection String for Proxy to get secure access to the Google Environment:
+    ```
+    ./cloud_sql_proxy -instances=sw-praktikum-gruppe-1-ss2020:europe-west3:swpraktikum-sql=tcp:3306
+    ```
+    This method will only work, if we assign you to the project team and grant you access.
+- Docker:
+    - This method requires Docker and Docker-compose
+    - Run the docker-compose up inside the /db directory. 
+    - Connect to the phpmyadmin dashboard under your localhost and import the database dump
+    - Change the connection parameter inside the src/mapper.py to fit your envoirnment
+
+Depending on the configuration you chose, you need to update the connection string inside the mapper.py / ShoppingAPI.js  
