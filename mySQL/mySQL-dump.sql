@@ -95,7 +95,7 @@ DROP TABLE IF EXISTS `projektarbeit`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `projektarbeit` (
   `id`INT(11) NOT NULL DEFAULT '0',
-  `timestamp`timestamp NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT 0,
   `bezeichnung` varchar(110) NOT NULL DEFAULT '',/* bezeichnung wäre "projektarbeit" */
   `beschreibung` varchar(110) NOT NULL DEFAULT '',/* beschreibung wäre "Datei erstellt"*/
   `start` int(11) NOT NULL DEFAULT '0',
@@ -110,7 +110,7 @@ DROP TABLE IF EXISTS `zeitintervallbuchung`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `zeitintervallbuchung` (
   `id`INT(11) NOT NULL DEFAULT '0',
-  `timestamp`timestamp NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT 0,
   `erstellt_von` int(11) NOT NULL DEFAULT '0', /* Benutzer Fremdschlüssel*/
   `erstellt_für` int(11) NOT NULL DEFAULT '0', /* Arbeitszeitkonto Fremdschlüssel*/
   `ist_buchung` boolean, 
@@ -126,7 +126,7 @@ DROP TABLE IF EXISTS `ereignisbuchung`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ereignisbuchung` (
   `id`INT(11) NOT NULL DEFAULT '0',
-  `timestamp`timestamp NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT 0,
   `erstellt_von` int(11) NOT NULL DEFAULT '0', /* Benutzer Fremdschlüssel*/
   `erstellt_für` int(11) NOT NULL DEFAULT '0', /* Arbeitszeitkonto Fremdschlüssel*/
   `ist_buchung` boolean, 
@@ -141,8 +141,8 @@ DROP TABLE IF EXISTS `ereignis`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ereignis` (
   `id`INT(11) NOT NULL DEFAULT '0',
-  `timestamp`timestamp NOT NULL DEFAULT '0',
-  `zeitpunkt` datetime NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT 0,
+  `zeitpunkt` varchar(110) NOT NULL DEFAULT '',
   `bezeichnung` varchar(110) NOT NULL DEFAULT '',/* bezeichnung wäre "kommen" */
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
@@ -154,7 +154,7 @@ DROP TABLE IF EXISTS `pause`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `pause` (
   `id`INT(11) NOT NULL DEFAULT '0',
-  `timestamp`timestamp NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT 0,
   `bezeichnung` varchar(110) NOT NULL DEFAULT '',/* bezeichnung wäre "pause" */
   `start` int NOT NULL DEFAULT '0',
   `ende` int NOT NULL DEFAULT '0',
@@ -167,7 +167,7 @@ DROP TABLE IF EXISTS `abwesenheit`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `abwesenheit` (
   `id`INT(11) NOT NULL DEFAULT '0',
-  `timestamp`timestamp NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT 0,
   `abwesenheitsart` int NOT NULL DEFAULT '0',
   `start` int NOT NULL DEFAULT '0',
   `ende` int NOT NULL DEFAULT '0',
@@ -181,7 +181,7 @@ DROP TABLE IF EXISTS `zeitintervall`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `zeitintervall` (
   `id`INT(11) NOT NULL DEFAULT '0',
-  `timestamp`timestamp NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT 0,
   `start` int NOT NULL DEFAULT '0',
   `ende` int NOT NULL DEFAULT '0',
   `bezeichnung` varchar(110) NOT NULL DEFAULT '',
@@ -194,8 +194,8 @@ DROP TABLE IF EXISTS `kommen`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `kommen` (
   `id`INT(11) NOT NULL DEFAULT '0',
-  `timestamp`timestamp NOT NULL DEFAULT '0',
-  `zeitpunkt` datetime NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT 0,
+  `zeitpunkt` varchar(110) NOT NULL DEFAULT '',
   `bezeichnung` varchar(110) NOT NULL DEFAULT '',/* bezeichnung wäre "kommen" */
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;
@@ -206,8 +206,8 @@ DROP TABLE IF EXISTS `gehen`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `gehen` (
   `id`INT(11) NOT NULL DEFAULT '0',
-  `timestamp`timestamp NOT NULL DEFAULT '0',
-  `zeitpunkt` datetime NOT NULL DEFAULT '0',
+  `timestamp`timestamp NOT NULL DEFAULT 0,
+  `zeitpunkt` varchar(110) NOT NULL DEFAULT '',
   `bezeichnung` varchar(110) NOT NULL DEFAULT '',/* bezeichnung wäre "gehen" */
   PRIMARY KEY(`id`)
 ) ENGINE= InnoDB DEFAULT CHARSET=utf8;

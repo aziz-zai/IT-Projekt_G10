@@ -151,7 +151,6 @@ handleOpenStateChange = () => {
     const { currentUser, user } = this.state;
 		return (
         <>
-		{console.log('user', user)}
 				<Router>
 				<SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={currentUser}/>
          		<NavBar toggle={this.handleOpenStateChange} user={currentUser} nav="navBlack"/>
@@ -171,7 +170,7 @@ handleOpenStateChange = () => {
 						}/>
                   		<Route path="/MeineProjekte" element={<Secured user={currentUser}><Home Cuser={currentUser} user={user}/></Secured>} />
                   		<Route path="/MeinProfil" element={<Secured user={currentUser}><MyProfile Cuser={currentUser} user={user}  /></Secured>} />
-                  		<Route path="/Arbeitszeitkonto" element={<Secured user={currentUser}><Arbeitszeitkonto Cuser={currentUser} user={user} /></Secured>} />
+                  		<Route path="/Arbeitszeitkonto" element={<Secured user={currentUser}><Arbeitszeitkonto user={user} /></Secured>} />
                   		<Route path="/Zeiterfassung" element={<Secured user={currentUser}><Zeiterfassung Cuser={currentUser} user={user} /></Secured>} />
 				  		</Route>
 					</Routes>

@@ -1,15 +1,16 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { TextField, List, AppBar, ListItem, Divider, Dialog, 
-IconButton, Toolbar, CardContent, CardActions, Card, Typography} from '@mui/material';
+import { TextField, List, AppBar, ListItem, Dialog, 
+IconButton, Button, Container, Toolbar, CardContent, CardActions, Card, Typography} from '@mui/material';
 import './Project.css'
 import CloseIcon from '@mui/icons-material/Close';
 import OneAPI from '../../api/OneAPI';
 import ProjectBO from '../../api/ProjectBO';
 import Aktivitäten from './Aktivitäten';
 import AktivitätenDetail from './AktivitätenDetail';
-import Projektarbeit from './Projektarbeit';
-import { withStyles } from '@mui/styles';
+import LoadingProgress from '../Dialogs/LoadingProgress'
+import MemberList from './MemberList';
+import MemberDetail from './MemberDetail'
 
 export class SingleProject extends Component {
     constructor(props) {
@@ -33,13 +34,20 @@ export class SingleProject extends Component {
           availableHours: ah,
           openAkt: false,
           openProArb: false,
-          aktivitäten: []
+          openMember: false,
+          membership: [],
+          aktivitäten: [],
+          loadingInProgress: false,
+          deletingInProgress: false,
+          loadingError: null,
+          deletingError: null,
         };
     }
-
+    
     getProjektleiterByProject = () => {
       OneAPI.getAPI().getProjektleiterByProject(this.props.project.id).then(projektleiter =>
         this.handleProjektfarbe(projektleiter)
+        
         ).catch(e =>
           this.setState({ // Reset state with error from catch 
             projektleiter: null,
@@ -96,6 +104,30 @@ export class SingleProject extends Component {
       });
     }
 
+    deleteProject = () => {
+      OneAPI.getAPI().deleteProject(this.props.project.getID()).then(() => {
+        this.setState({  // Set new state when AccountBOs have been fetched
+          deletingInProgress: false, // loading indicator 
+          deletingError: null,
+          isOpen: false
+        })
+        // console.log(account);
+        this.props.handleProjectDelete(this.props.project);  // call the parent with the deleted customer
+      }).catch(e =>
+        this.setState({ // Reset state with error from catch 
+          deletingInProgress: false,
+          deletingError: e
+        })
+      );
+  
+      // set loading to true
+      this.setState({
+        deletingInProgress: true,
+        deletingError: null
+      });
+    }
+
+
     loadAktivitäten = () => {
       OneAPI.getAPI().getAktivitätenByProjectId(this.props.project.id).then(aktivitäten =>
         this.setState({
@@ -115,6 +147,27 @@ export class SingleProject extends Component {
         loadingError: null
       });
     }
+
+    getMembersByProject = () => {
+      OneAPI.getAPI().getMembersByProject(this.props.project.id).then(membership =>
+        this.setState({
+          membership: membership,
+          loadingInProgress: false, // loading indicator 
+          loadingError: null
+        })).catch(e =>
+          this.setState({ // Reset state with error from catch 
+            loadingInProgress: false,
+            loadingError: e
+          })
+        );
+  
+      // set loading to true
+      this.setState({
+        loadingInProgress: true,
+        loadingError: null
+      });
+    }
+
 
     textFieldValueChange = (event) => {
       const value = event.target.value;
@@ -148,15 +201,16 @@ export class SingleProject extends Component {
       });
     }
 
-    openProArb = () => {
+
+    openMember = () => {
       this.setState({
-        openProArb: true
+        openMember: true
       });
     }
 
-    closeProArb = () => {
+    closeMember = () => {
       this.setState({
-        openProArb: false
+        openMember: false
       });
     }
 
@@ -164,23 +218,64 @@ export class SingleProject extends Component {
       this.setState({
         isOpen: false
       });
-      console.log("Hier")
+
     }
 
+
+    handleNewMember = member => {
+      // project is not null and therefore created
+      if (member) {
+        const newMembershipList = [...this.state.membership, member];
+        this.setState({
+          membership: newMembershipList,
+        });
+      } else {
+        this.setState({
+        });
+      }
+    }
+
+    addAktvität = aktivität => {
+      // project is not null and therefore created
+      if (aktivität) {
+        const newAktivitätenList = [...this.state.aktivitäten, aktivität];
+        this.setState({
+          aktivitäten: newAktivitätenList,
+        });
+      } else {
+        this.setState({
+        });
+      }
+    }
+
+    aktivitätDeleted = aktivität => {
+      const newAktivitätenList = this.state.aktivitäten.filter(aktivitätFromState => aktivitätFromState.getID() !== aktivität);
+      this.setState({
+        aktivitäten: newAktivitätenList
+      });
+    }
+
+    memberDeleted = member => {
+      const newMemberList = this.state.membership.filter(memberFromState => memberFromState.getID() !== member);
+      this.setState({
+        membership: newMemberList
+      });
+    }
 
     componentDidMount() {
     this.getProjektleiterByProject();
     this.loadAktivitäten();
-
+    this.getMembersByProject();
     }
 
   render() {
-    const {project, classes, projektarbeit} = this.props;
-    const {openAkt, openProArb, handleDialogClose, aktivitäten, projektleiter, isOpen, projektfarbe, projekttitel, projektName, laufZeit, auftragGeber, availableHours} = this.state
+    const {project, user} = this.props;
+    const {openAkt, membership, handleDialogClose, aktivitäten, projektleiter, 
+    isOpen, projektfarbe, loadingInProgress, openMember, projekttitel, projektName, laufZeit, auftragGeber, availableHours} = this.state
     
     return (
       <div class="ProjectCardWrapper">
-        <Card onClick = {this.handleDialogOpen}class={projektfarbe}>
+      <Card onClick = {this.handleDialogOpen}class={projektfarbe}>
       <CardContent>
         <Typography variant="h5" class={projekttitel} component="div">
           {projektName}
@@ -211,31 +306,43 @@ export class SingleProject extends Component {
               Projektdetails
             </Typography>
             <button onClick={this.updateProject} class="saveBtn">Speichern</button>
+            <button onClick={this.deleteProject} class="saveBtn">Löschen</button>
           </Toolbar>
         </AppBar>
-        <List>
+        <Container class="containerproject"> 
+        <Typography class="überschriftakt" component="h2" variant="h6" color="black" gutterBottom>
+        Projekt
+        </Typography>
+        <Card class="Projektdetails">
+          <List>
           <ListItem>
           <TextField
             autoFocus type='text' required
-            
+            color="secondary"
             id="projektName"
             label="Projektname"
             value={projektName}
             onChange={this.textFieldValueChange}
-            /> 
+            />  <Button>
+            <Typography class="Mit_btn" onClick={this.openMember}>Mitarbeiter hinzufügen </Typography>
+            </Button>
           </ListItem>
           <ListItem>
           <TextField
             autoFocus type='text' required
+            color="secondary"
             id="laufZeit"
             label="Projektlaufzeit"
             value={laufZeit}
             onChange={this.textFieldValueChange}
-            />
+            /><Button>
+            <Typography class="Akt_btn" onClick={this.openAkt}>Aktivitäten hinzufügen </Typography>
+            </Button>
           </ListItem>
           <ListItem>
           <TextField
             autoFocus type='text' required
+            color="secondary"
             id="auftragGeber"
             label="Auftraggeber"
             value={auftragGeber}
@@ -245,51 +352,62 @@ export class SingleProject extends Component {
           <ListItem>
           <TextField
             autoFocus type='text' required
+            color="secondary"
             id="availableHours"
             label="Verfügbare Stunden"
             value={availableHours}
             onChange={this.textFieldValueChange}
             />
           </ListItem>
-          <Divider />
-          <button class="AktBtn" onClick={this.openAkt}> Aktivität hinzufügen</button>
-          <Aktivitäten isOpen={openAkt} onClose={this.closeAkt} project={project}>
+          <Aktivitäten isOpen={openAkt} onClose={this.closeAkt} project={project} handleClose={this.addAktvität}>
             </Aktivitäten>
+            <LoadingProgress show={loadingInProgress} />
         </List>
+        </Card>
+        </Container>
+        <Container>
         <div >
-        <Typography variant='h6'>
-        Aktivtäten:
+        <Typography class="überschriftakt" component="h2" variant="h6" color="black" gutterBottom>
+        Aktivitäten
         </Typography> 
           {
             aktivitäten.map(aktivität => <AktivitätenDetail key={aktivität.getID()} 
-            akt_bezeichnung={aktivität.getBezeichnung()} akt_dauer={aktivität.getDauer()} akt_capacity={aktivität.getCapacity()}/>)
+            aktivitätDeleted={this.aktivitätDeleted} aktivität={aktivität.getID()} akt_bezeichnung={aktivität.getBezeichnung()} akt_dauer={aktivität.getDauer()} 
+            akt_capacity={aktivität.getCapacity()}/>)
           }
-        <button class="ProArbBtn" onClick={this.openProArb}> Projektarbeit hinzufügen</button>
-          <Projektarbeit isOpen={openProArb} onClose={this.closeProArb} Projektarbeit={projektarbeit}>
-            </Projektarbeit>
+            <LoadingProgress show={loadingInProgress} />
       </div>
+      </Container>
+      <Container>
+      <div >
+      <Typography class="überschriftakt" component="h2" variant="h6" color="black" gutterBottom>
+        Projektmitarbeiter
+        </Typography> 
+        {
+            membership.map(member => <MemberDetail key={member.id}
+            member={member} project={project.id} memberDeleted={this.memberDeleted}/> )
+          }
+          <MemberList isOpen={openMember} onClose={this.closeMember} user={user} project={project} handleNewMember={this.handleNewMember}>
+          </MemberList>  
+          <LoadingProgress show={loadingInProgress} />
+      </div>
+      </Container>
       </Dialog>
       </CardActions>
       </CardContent>
-      </Card>
-      
+      </Card> 
       </div>
     )
   }
 }
-const styles = theme => ({
-  testa: {
-    width: '100%',
-  }
-});
 
 SingleProject.propTypes = {
     project: PropTypes.any,
     user: PropTypes.any,
     isOpen: PropTypes.any,
-    classes: PropTypes.object.isRequired,
-    projektarbeit: PropTypes.any
+    projektarbeit: PropTypes.any,
+    handleProjectDelete: PropTypes.any
   }
 
 
-export default withStyles(styles)(SingleProject);
+export default SingleProject;

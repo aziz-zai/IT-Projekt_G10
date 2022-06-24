@@ -12,7 +12,9 @@ class MembershipMapper(Mapper):
         super().__init__()
     
     def find_by_key(self, key):
-        """Suchen eines Membership-Eintrags mit vorgegebener Membership ID. Da diese eindeutig ist,
+        """
+        Suchen eines Membership-Eintrags anhand der Membership-ID.
+        Parameter key = Membership-ID
         """
 
         result = None
@@ -42,7 +44,10 @@ class MembershipMapper(Mapper):
         return result
 
     def find_members_by_project(self, project: int):
-            """Gets Membership by id 'project'."""
+            """
+            Suchen eines Memberships anhand der Projekt-ID.
+            Parameter project = Projekt-ID
+            """
             result = []
 
             cursor = self._cnx.cursor()
@@ -71,7 +76,10 @@ class MembershipMapper(Mapper):
             return result
 
     def find_projektleiter_by_project(self, project: int):
-            """Gets Membership by id 'project'."""
+            """
+            Suchen eines Projektleiters anhand der Projekt-ID.
+            Parameter project = Projekt-ID
+            """
             result = None
 
             cursor = self._cnx.cursor()
@@ -104,7 +112,10 @@ class MembershipMapper(Mapper):
             return result
 
     def find_by_user(self, user: int):
-            """Gets Membership by id 'user'."""
+            """
+            Suchen eines Memberships anhand der User-ID.
+            Parameter user = User-ID
+            """
             result = []
 
             cursor = self._cnx.cursor()
@@ -133,7 +144,11 @@ class MembershipMapper(Mapper):
             return result
 
     def find_by_user_and_project(self, user: int, project: int):
-            """Gets Membership by id 'user' and 'project'."""
+            """
+            Suchen eines Memberships anhand der User-ID und der Projekt-ID.
+            Parameter user = User-ID
+            Parameter project = Projekt-ID
+            """
         
             result=None
             cursor = self._cnx.cursor()
@@ -161,9 +176,9 @@ class MembershipMapper(Mapper):
             return result
 
     def update(self, membership: Membership) -> Membership:
-        """Wiederholtes Schreiben eines Objekts in die Datenbank.
-
-        :param membership das Objekt, das in die DB geschrieben werden soll
+        """
+        Änderung eines bereits bestehenden Memberships.
+        Parameter membership = MembershipBO, das geändert werden soll
         """
         cursor = self._cnx.cursor()
 
@@ -178,7 +193,10 @@ class MembershipMapper(Mapper):
 
 
     def insert(self, membership: Membership) -> Membership:
-        """Create Membership Object."""
+        """
+        Einfügen eines neuen Memberships in die Datenbank.
+        Parameter membership = MembershipBO, das eingefügt werden soll
+        """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM membership")
         tuples = cursor.fetchall()
@@ -201,7 +219,10 @@ class MembershipMapper(Mapper):
         return membership
 
     def delete(self, membership):
-
+        """
+        Löschen eines Memberships aus der Datenbank anhand der Membership-ID.
+        Parameter membership = Membership-ID
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM membership WHERE id={}".format(membership.get_id())

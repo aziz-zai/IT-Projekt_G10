@@ -1,5 +1,9 @@
 import ZeitintervallBO from './ZeitintervallBO'
 
+ /*
+  * Implementieren des Abwesenheit BusinessObject für das Frontend.
+  * Einfache Methoden zum setzen der Klassenvariablen, wie im Backend..
+  */
 export default class AbwesenheitBO extends ZeitintervallBO {
 
   constructor(aAbwesenheitsart) {
@@ -7,11 +11,6 @@ export default class AbwesenheitBO extends ZeitintervallBO {
     this.abwesenheitsart = aAbwesenheitsart
   }
 
-  /**
-   * Sets a new firstname.
-   * 
-   * @param {String} aAbwesenheitsart - the new firstname of this CustomerBO.
-   */
   setAbwesenheitsart(aAbwesenheitsart) {
     this.abwesenheitsart = aAbwesenheitsart;
   }
@@ -20,6 +19,7 @@ export default class AbwesenheitBO extends ZeitintervallBO {
     return this.abwesenheitsart;
   }
 
+ // Gibt ein Array aus AbwesenheitBOs von einer gegebenen JSON Struktur zurück
   static fromJSON(abwesenheit) {
     let result = [];
 

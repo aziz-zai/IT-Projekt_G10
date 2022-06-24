@@ -1,5 +1,9 @@
 from .ZeitintervallBO import Zeitintervall
 
+"""
+Klasse Abwesenheit
+
+"""
 
 class Abwesenheit(Zeitintervall):
     def __init__(self):
@@ -8,15 +12,19 @@ class Abwesenheit(Zeitintervall):
         self._bezeichnung = None
 
     def get_abwesenheitsart(self):
+        """Auslesen der Abwesenheitsart"""
         return self._abwesenheitsart
     
     def set_abwesenheitsart(self, abwesenheitsart):
+        """Setzen der Abwesenheitsart"""
         self._abwesenheitsart = abwesenheitsart
 
     def get_bezeichnung(self):
+        """Auslesen der Bezeichnung"""
         return self._bezeichnung
 
     def set_bezeichnung(self, bezeichnung):
+        """Setzen der Bezeichnung"""
         self._bezeichnung = bezeichnung
 
     def __str__(self):
@@ -26,7 +34,7 @@ class Abwesenheit(Zeitintervall):
 
     @staticmethod
     def from_dict(dictionary=dict()):
-        """Umwandeln eines Python dict() in Abweseneheit()."""
+        """Umwandeln eines Python dict() in eine Abweseneheit()."""
         obj = Abwesenheit()
         obj.set_abwesenheitsart(dictionary["abwesenheitsart"])
         obj.set_start(dictionary["start"])  

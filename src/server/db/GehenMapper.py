@@ -8,9 +8,11 @@ class GehenMapper(Mapper):
         super().__init__()
     
     def find_by_key(self, key):
-        """Suchen eines Gehen-Eintrags mit vorgegebener Gehen ID. Da diese eindeutig ist,
         """
+        Suchen eines Gehen-Eintrags anhand der Gehen-ID.
+        Parameter key = Gehen-ID
 
+        """
         result = None
 
         cursor = self._cnx.cursor()
@@ -39,9 +41,10 @@ class GehenMapper(Mapper):
 
     
     def update(self, gehen: Gehen) -> Gehen:
-        """Wiederholtes Schreiben eines Objekts in die Datenbank.
-
-        :param gehen das Objekt, das in die DB geschrieben werden soll
+        """
+        Änderung eines bereits bestehenden Gehen-Eintrags.
+        Parameter gehen = GehenBO, das geändert werden soll
+        
         """
         cursor = self._cnx.cursor()
 
@@ -56,7 +59,11 @@ class GehenMapper(Mapper):
 
 
     def insert(self, gehen: Gehen) -> Gehen:
-        """Create gehen Object."""
+        """
+        Einfügen eines neuen Gehen-Eintrags in die Datenbank.
+        Parameter gehen = GehenBO, das eingefügt werden soll
+
+        """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM gehen")
         tuples = cursor.fetchall()
@@ -82,6 +89,11 @@ class GehenMapper(Mapper):
         return gehen
 
     def delete(self, gehen):
+        """
+        Löschen eines Gehen-Eintrags aus der Datenbank anhand der Gehen-ID.
+        Parameter gehen = Gehen-ID
+        
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM gehen WHERE id={}".format(gehen.get_id())

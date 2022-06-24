@@ -1,5 +1,9 @@
 import BusinessObject from './BusinessObject';
 
+/**
+ * Represents a Zeitintervall
+ */
+
 export default class ZeitintervallBO extends BusinessObject {
 
     constructor(aStart, aEnde, aBezeichnung) {

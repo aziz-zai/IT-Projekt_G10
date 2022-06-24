@@ -1,7 +1,7 @@
 import BusinessObject from './BusinessObject';
 
 /**
- * Represents a customer of the bank.
+ * Represents a Zeitintervallbuchung
  */
 export default class ZeitintervallbuchungBO extends BusinessObject {
 

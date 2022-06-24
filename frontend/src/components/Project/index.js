@@ -31,16 +31,26 @@ export class Project extends Component {
       }
       projectFormClosed = project => {
         // project is not null and therefore created
+       
         if (project) {
           const newProjectList = [...this.state.project, project];
           this.setState({
             project: newProjectList,
           });
+         
         } else {
           this.setState({
           });
         }
       }
+
+      projectDeleted = project => {
+        const newProjectList = this.state.project.filter(projectFromState => projectFromState.getID() !== project.getID());
+        this.setState({
+          project: newProjectList
+        });
+      }
+  
       componentDidMount() {
         this.getMembershipByUser()
       }
@@ -55,7 +65,7 @@ export class Project extends Component {
        {project ?
         project.map((project, index) => (
           <Grid item xs={1} sm={2} md={1.7} xl={1.5} key={index}>
-            <SingleProject project={project} user={user[0].id} />
+            <SingleProject handleProjectDelete={this.projectDeleted} project={project} user={user[0].id} />
           </Grid>)):
           null}
   <Grid item xs={1} sm={2} md={1.7} xl={1.5}>

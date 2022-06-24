@@ -18,15 +18,23 @@ export class Gehen extends Component {
 
   componentDidMount() {
   }
-
+  handleGehenClicked = () => {
+    this.props.handleClick()
+}
 
   render() {
-    const {user} = this.props;
-    const {selectedProject, project} = this.state;
+    const { date} = this.props;
+    const {} = this.state;
+    const time = new Date(date);
+    const h = time.getHours(); 
+    const m = time.getMinutes(); 
+    const s = time.getSeconds(); 
     return (
         <div class="BtnGehenContainer">
+          {date?
+          <div class="endTime">{String(h).padStart(2, "0")}:{String(m).padStart(2, "0")}:{String(s).padStart(2, "0")}</div>:null} 
         <div class="BtnGehenWrapper">
-            <IconButton>
+            <IconButton onClick={this.handleGehenClicked}>
             <CallMissedOutgoingIcon sx={{ fontSize: 100, color: "red" }} />
             </IconButton>
         </div>
@@ -37,8 +45,9 @@ export class Gehen extends Component {
 }
 
 Gehen.propTypes = {
-  handleSelection: PropTypes.any,
-  user: PropTypes.any
+  handleClick: PropTypes.any,
+  user: PropTypes.any,
+  date: PropTypes.any
 }
 
 export default Gehen

@@ -8,9 +8,11 @@ class AktivitätenMapper(Mapper):
         super().__init__()
     
     def find_by_key(self, key):
-        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
         """
+        Suchen einer Aktivität anhand der Aktivitäten-ID.
+        Parameter key = Aktivitäten-ID
 
+        """
         result = None
 
         cursor = self._cnx.cursor()
@@ -41,18 +43,20 @@ class AktivitätenMapper(Mapper):
         return result
 
     def find_all_activties_by_project(self, project: int):
-        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
         """
+        Suchen aller Aktivitäten eines Projektes anhand der Projekt-ID.
+        Parameter project = Projekt-ID
 
-        result = None
+        """
+        result = []
 
         cursor = self._cnx.cursor()
         command = "SELECT id, timestamp, bezeichnung, dauer, capacity, project FROM activity WHERE project={}".format(project)
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        try:
-            (id, timestamp, bezeichnung, dauer, capacity, project) = tuples[0]
+        
+        for(id, timestamp, bezeichnung, dauer, capacity, project) in tuples:
             aktivitäten = Aktivitäten()
             aktivitäten.set_id(id),
             aktivitäten.set_timestamp(timestamp),
@@ -61,11 +65,7 @@ class AktivitätenMapper(Mapper):
             aktivitäten.set_capacity(capacity),
             aktivitäten.set_project(project)
 
-            result = aktivitäten
-        except IndexError:
-            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
-            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
-            result = None
+            result.append(aktivitäten)
 
         self._cnx.commit()
         cursor.close()
@@ -74,7 +74,11 @@ class AktivitätenMapper(Mapper):
 
 
     def insert(self, aktivitäten: Aktivitäten) -> Aktivitäten:
-        """Create activity Object."""
+        """
+        Einfügen einer neuen Aktivität in die Datenbank.
+        Parameter aktivitäten = AktivitätenBO, das eingefügt werden soll
+
+        """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM activity")
         tuples = cursor.fetchall()
@@ -103,9 +107,10 @@ class AktivitätenMapper(Mapper):
         return aktivitäten
     
     def update(self, aktivitäten: Aktivitäten) -> Aktivitäten:
-        """Wiederholtes Schreiben eines Objekts in die Datenbank.
-
-        :param activity das Objekt, das in die DB geschrieben werden soll
+        """
+        Änderung einer bereits bestehenden Aktivität.
+        Parameter aktivitäten = AktivitätenBO, das geändert werden soll
+        
         """
         cursor = self._cnx.cursor()
 
@@ -119,7 +124,11 @@ class AktivitätenMapper(Mapper):
         return aktivitäten
 
     def delete(self, aktivitäten):
-
+        """
+        Löschen einer Aktivität aus der Datenbank anhand der Aktivitäten-ID.
+        Parameter aktivitäten = Aktivitäten-ID
+        
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM activity WHERE id={}".format(aktivitäten.get_id())

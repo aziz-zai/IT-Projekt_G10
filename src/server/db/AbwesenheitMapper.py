@@ -8,9 +8,11 @@ class AbwesenheitMapper(Mapper):
         super().__init__()
     
     def find_by_key(self, key):
-        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
         """
+        Suchen einer Abwesenheit anhand der Abwesenheits-ID.
+        Parameter key = Abwesenheits-ID
 
+        """
         result = None
 
         cursor = self._cnx.cursor()
@@ -42,7 +44,11 @@ class AbwesenheitMapper(Mapper):
     
     
     def insert(self, abwesenheit: Abwesenheit) -> Abwesenheit:
-        """Create Abwesenheit Object."""
+        """
+        Einfügen einer neuen Abwesenheit in die Datenbank.
+        Parameter abwesenheit = AbwesenheitsBO, das eingefügt werden soll
+
+        """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM abwesenheit")
         tuples = cursor.fetchall()
@@ -66,9 +72,10 @@ class AbwesenheitMapper(Mapper):
         return abwesenheit
     
     def update(self, abwesenheit: Abwesenheit) -> Abwesenheit:
-        """Wiederholtes Schreiben eines Objekts in die Datenbank.
-
-        :param abwesenheit das Objekt, das in die DB geschrieben werden soll
+        """
+        Änderung einer bereits bestehenden Abwesenheit.
+        Parameter abwesenheit = AbwesenheitsBO, das geändert werden soll
+        
         """
         cursor = self._cnx.cursor()
 
@@ -82,7 +89,11 @@ class AbwesenheitMapper(Mapper):
         return abwesenheit
 
     def delete(self, abwesenheit):
-
+        """
+        Löschen einer Abwesenheit aus der Datenbank anhand der Abwesenheits-ID.
+        Parameter abwesenheit = Abwesenheits-ID
+        
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM abwesenheit WHERE id={}".format(abwesenheit.get_id())

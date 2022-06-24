@@ -23,10 +23,16 @@ export class Kommen extends Component {
 
 
   render() {
-    const {} = this.props;
+    const {date} = this.props;
     const {} = this.state;
+    const time = new Date(date);
+    const h = time.getHours(); 
+    const m = time.getMinutes(); 
+    const s = time.getSeconds(); 
     return (
       <div class="BtnKommenContainer">
+                {date?
+          <div class="startTime">{String(h).padStart(2, "0")}:{String(m).padStart(2, "0")}:{String(s).padStart(2, "0")}</div>:null} 
         <div class="BtnKommenWrapper">
             <IconButton onClick={this.handleKommenClicked}>
             <PlayForWorkIcon sx={{ fontSize: 100, color: "green" }} />
@@ -40,6 +46,7 @@ export class Kommen extends Component {
 
 Kommen.propTypes = {
   handleClick: PropTypes.any,
+  date: PropTypes.any
 
 }
 

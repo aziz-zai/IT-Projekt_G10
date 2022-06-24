@@ -1,7 +1,7 @@
 import BusinessObject from './BusinessObject';
 
 /**
- * Represents a Project
+ * Represents a Membership
  */
 export default class MembershipBO extends BusinessObject {
 

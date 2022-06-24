@@ -47,7 +47,11 @@ export class ProjektarbeitenSelection extends Component {
   handleChange = (event) => {
     this.setState({
       selectedProjektarbeit: event.target.value
-    })
+    });
+    setTimeout(() => {
+      if(this.state.selectedProjektarbeit){
+    this.props.handleSelection(this.state.selectedProjektarbeit);
+  }}, 300);
 	}
 
 
@@ -67,12 +71,13 @@ export class ProjektarbeitenSelection extends Component {
             name: 'projektarbeiten',
             id: 'uncontrolled-native',
           }}
+          onChange={this.handleChange}
         >
           <option value={0}></option>
            {projektarbeiten ?
-          projektarbeiten.map((projektarbeit, index) => <option value={projektarbeit.id}>{projektarbeit.bezeichnung}</option>)
+          projektarbeiten.map((projektarbeit, index) => <option value={projektarbeit.bezeichnung}>{projektarbeit.bezeichnung}</option>)
           :null}
-        </NativeSelect>{console.log('acti', this.props.aktivität)}
+        </NativeSelect>
       </FormControl>
         </div>
     </div>
@@ -81,7 +86,8 @@ export class ProjektarbeitenSelection extends Component {
 }
 
 ProjektarbeitenSelection.propTypes = {
-  aktivität: PropTypes.any
+  aktivität: PropTypes.any,
+  handleSelection: PropTypes.any
 }
 
 export default ProjektarbeitenSelection

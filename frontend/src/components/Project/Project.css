@@ -35,17 +35,17 @@
 }
 
 .ProjectCard:hover{
-    transform: scale(1.2);
+    transform: scale(1.1);
     transition: all 0.2s ease-in-out;
     cursor:pointer;
 }
 .ProjectCard-PL:hover{
-    transform: scale(1.2);
+    transform: scale(1.1);
     transition: all 0.2s ease-in-out;
     cursor:pointer;
 }
 .AddProjectCard:hover{
-    transform: scale(1.2);
+    transform: scale(1.1);
     transition: all 0.2s ease-in-out;
     cursor:pointer;
 }
@@ -55,15 +55,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: 0.5rem;
+    margin-left: 2rem;
     margin-right: 0.5rem;
 }
 
-
-
 .ProjektTitel{
 font-weight: bold;
-font-size: 1.5rem;
+font-size: 1.3rem;
 display: flex;
 justify-content: center;
 border-bottom: 1.5px solid #5e2e94;
@@ -72,7 +70,7 @@ margin-bottom: 1rem;
 
 .ProjektTitel-PL{
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     display: flex;
     justify-content: center;
     border-bottom: 1.5px solid white;
@@ -100,6 +98,12 @@ margin-bottom: 1rem;
     transition: all 0.2s ease-in-out;
 }
 
+.learnBtn:hover{
+    transform: scale(1.1);
+    transition: all 0.2s ease-in-out;
+    cursor:pointer;
+}
+
 .learnBtnWrapper{
     display: flex;
     justify-content: center;
@@ -120,7 +124,26 @@ margin-bottom: 1rem;
     color: white
 }
 
-.AktBtn{
+.membersDisplay{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem
+}
+
+.Projektdetails{
+    justify-content: center;
+    border: solid rgb(55, 53, 53);
+    border-radius: 12px;
+    margin-top: 10px;
+    background-color: rgb(255, 253, 255);
+}
+
+.überschriftakt{
+    margin-top: 25px;
+}
+
+.addMemberBtn{
     border-radius: 50px;
     background: #5e2e94;
     white-space: nowrap;
@@ -134,20 +157,86 @@ margin-bottom: 1rem;
     justify-content: center;
     align-items: center;
     transition: all 0.2s ease-in-out;
+    margin-top: 10px;
+    margin-left: 50%;
+}
+
+.Akt_btn{
+    width: 230px;
+    height: 38px;
+    font-size: small;
+    color: white;
+    background: #7e55ae;
+    border-radius: 20px;
+    white-space: nowrap;
+    padding: 0.5rem 0.5rem;
+    margin-top: 0px;
+    margin-left: 40px;   
+    margin-bottom: 30px;
+    margin-right: 30px;
+
+}
+
+.Akt_btn:hover{
+    transform: scale(1.02);
+    transition: all 0.2s ease-in-out;
+    cursor:pointer;
+}
+
+.Mit_btn{
+    width: 230px;
+    height: 38px;
+    font-size: small;
+    color: white;
+    background: #7e55ae;
+    border-radius: 20px;
+    white-space: nowrap;
+    padding: 0.5rem 0.5rem;
+    margin-top: 30px;
+    margin-left: 40px;
+}
+
+.Mit_btn:hover{
+    transform: scale(1.02);
+    transition: all 0.2s ease-in-out;
+    cursor:pointer;
+}
+
+.containerproject{
+    width:fit-content;
+    margin-left: 30px;
+}
+
+.papermitarbeiter{
+    width: 60%;
+    background-color:#dbc7f2;
+    color: black;
+    font-size: large;
+    padding: 0.5em 1em;
+    margin-top: 7px; 
+    display: flex; 
+    border-radius: 40px;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.paperaktivitäten{
+    width: 60%;
+    color:#5e2e94;
+    background-color:#dbc7f2;
+    color: black;
+    font-size: large;
+    padding: 0.1em 1em;
+    margin-top: 7px; 
+    display: flex; 
+    border-radius: 40px;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
 }
 
 .ProArbBtn{
-    border-radius: 50px;
-    background: #5e2e94;
-    white-space: nowrap;
-    padding: 0.5rem 1rem;
-    color:#fff;
-    font-size: 0.8em;
-    outline: none;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.2s ease-in-out;
+    width: 22px;
+    margin-left: auto;
 }

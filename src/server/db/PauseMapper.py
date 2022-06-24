@@ -7,7 +7,10 @@ class PauseMapper(Mapper):
         super().__init__()
     
     def find_by_key(self, key):
-        """Suchen eines Projektes mit vorgegebener Pausen ID, da diese eindeutig ist"""
+        """
+        Suchen eines Pause-Eintrags anhand der Pausen-ID.
+        Parameter key = Pausen-ID
+        """
 
         result = None
 
@@ -36,10 +39,47 @@ class PauseMapper(Mapper):
         cursor.close()
 
         return result
+
+    def find_by_beginn(self, beginn):
+        """
+        Suchen eines Pause-Eintrags anhand des Beginns.
+        Parameter beginn = Pausenbeginn?
+        """
+
+        result = None
+
+        cursor = self._cnx.cursor()
+        command = "SELECT id, timestamp, bezeichnung, start, ende FROM pause WHERE start={}".format(beginn)
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+
+        try:
+            (id, timestamp, bezeichnung, start, ende) = tuples[0]
+            pause = Pause()
+            pause.set_id(id)
+            pause.set_timestamp(timestamp)
+            pause.set_bezeichnung(bezeichnung)
+            pause.set_start(start)
+            pause.set_ende(ende)
+
+            result = pause
+
+        except IndexError:
+            """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
+            keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
+            result = None
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
         
 
     def insert(self, pause: Pause) -> Pause:
-        """Create pause Object"""
+        """
+        Einfügen eines neuen Pausen-Eintrags in die Datenbank.
+        Parameter pause = PauseBO, das eingefügt werden soll
+        """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM pause")
         tuples = cursor.fetchall()
@@ -66,9 +106,9 @@ class PauseMapper(Mapper):
         return pause
     
     def update(self, pause: Pause) -> Pause:
-        """Wiederholtes Schreiben eines Objekts in die Datenbank.
-
-        :param activity das Objekt, das in die DB geschrieben werden soll
+        """
+        Änderung eines bereits bestehenden Pausen-Eintrags.
+        Parameter pause = PauseBO, das geändert werden soll
         """
         cursor = self._cnx.cursor()
 
@@ -82,7 +122,10 @@ class PauseMapper(Mapper):
         return pause
 
     def delete(self, pause):
-
+        """
+        Löschen eines Pausen-Eintrags aus der Datenbank anhand der Pausen-ID.
+        Parameter pause = Pausen-ID
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM pause WHERE id={}".format(pause.get_id())

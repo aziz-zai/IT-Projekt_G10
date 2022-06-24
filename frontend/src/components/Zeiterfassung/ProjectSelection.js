@@ -55,7 +55,7 @@ export class ProjectSelection extends Component {
     const {selectedProject, project} = this.state;
     return (
       <div>
-        <div>{console.log('projcselec', project)}
+        <div>
       <FormControl sx={{ m: 1, minWidth: 150 }}>
         <InputLabel variant="standard" htmlFor="uncontrolled-native">
           Projekt

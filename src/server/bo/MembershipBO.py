@@ -1,5 +1,10 @@
 from .BusinessObject import BusinessObject
 
+"""
+Klasse Membership
+
+"""
+
 class Membership(BusinessObject):
     def __init__(self):
         super().__init__()
@@ -8,21 +13,27 @@ class Membership(BusinessObject):
         self._projektleiter = None
 
     def get_user(self):
+        """Auslesen der User-ID"""
         return self._user
 
     def set_user(self, user):
+        """Setzen der User-ID"""
         self._user = user
 
     def get_project(self):
+        """Auslesen der Projekt-ID"""
         return self._project
 
     def set_project(self, project):
+        """Setzen der Projekt-ID"""
         self._project = project
 
     def get_projektleiter(self):
+        """Auslesen des Projektleiters"""
         return self._projektleiter
 
     def set_projektleiter(self, projektleiter):
+        """Setzen des Projektleiters"""
         self._projektleiter = projektleiter
 
 
@@ -33,7 +44,7 @@ class Membership(BusinessObject):
 
     @staticmethod
     def from_dict(dictionary=dict()):
-        """Umwandeln eines Python dict() in Membership()."""
+        """Umwandeln eines Python dict() in ein Membership()."""
         obj = Membership()
         obj.set_user(dictionary["user"])
         obj.set_project(dictionary["project"])  

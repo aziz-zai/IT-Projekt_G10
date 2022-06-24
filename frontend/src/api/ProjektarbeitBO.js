@@ -1,7 +1,7 @@
 import ZeitintervallBO from './ZeitintervallBO';
 
 /**
- * Represents a Project
+ * Represents a Projektarbeit
  */
 export default class ProjektarbeitBO extends ZeitintervallBO {
 

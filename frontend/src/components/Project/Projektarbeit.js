@@ -7,8 +7,6 @@ import { Button, IconButton, DialogContent, DialogTitle, Typography, InputAdornm
 import CloseIcon from '@mui/icons-material/Close';
 import './Aktivitäten.css'
 
-
-
 export class Projektarbeit extends Component {
     constructor(props) {
         super(props);
@@ -64,7 +62,7 @@ export class Projektarbeit extends Component {
       });
     }
 
-
+ 
   textFieldValueChange = (event) => {
     const value = event.target.value;
 

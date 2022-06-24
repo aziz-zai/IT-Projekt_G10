@@ -20,31 +20,33 @@ export class Pause extends Component {
   componentDidMount() {
   }
   handlePauseClicked = () => {
-    if(this.state.pauseClicked == true){
-        this.setState({
-            pauseClicked: false
-        });
-    }
-    else{
         this.setState({
             pauseClicked: true
         });
-    }
+        this.props.handlePauseClicked();
 }
 
+
   render() {
-    const {user} = this.props;
+    const {beginn, ende} = this.props;
     const {pauseClicked} = this.state;
+    const beginnTime = new Date(beginn);
+    const Bh = beginnTime.getHours(); 
+    const Bm = beginnTime.getMinutes(); 
+    const Bs = beginnTime.getSeconds(); 
+    const endeTime = new Date(ende);
+    const Eh = endeTime.getHours(); 
+    const Em = endeTime.getMinutes(); 
+    const Es = endeTime.getSeconds(); 
     return (
-        <div onClick={this.handlePauseClicked} class="BtnPauseContainer">
+        <div  class="BtnPauseContainer">
+          {beginn?
+          <div class="pause">{String(Bh).padStart(2, "0")}:{String(Bm).padStart(2, "0")}:{String(Bs).padStart(2, "0")} - 
+          {ende? <div>{String(Eh).padStart(2, "0")}:{String(Em).padStart(2, "0")}:{String(Es).padStart(2, "0")}</div>:null} </div>:null}
         <div class="BtnPauseWrapper">
-            {pauseClicked ?
-            <IconButton>
-            <EjectIcon sx={{ fontSize: 100, color: "orange", transform: "rotate(90deg)" }}/>
-            </IconButton>:
-            <IconButton>
+            <IconButton onClick={this.handlePauseClicked}>
             <PauseIcon sx={{ fontSize: 100, color: "orange" }} />
-            </IconButton>}
+            </IconButton>
         </div>
         <h5 class="BtnPauseText">Pause</h5>
     </div>
@@ -54,7 +56,10 @@ export class Pause extends Component {
 
 Pause.propTypes = {
   handleSelection: PropTypes.any,
-  user: PropTypes.any
+  user: PropTypes.any,
+  handlePauseClicked: PropTypes.any,
+  beginn: PropTypes.any,
+  ende: PropTypes.any,
 }
 
 export default Pause

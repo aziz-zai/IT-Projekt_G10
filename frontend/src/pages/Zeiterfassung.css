@@ -22,7 +22,7 @@
 }
 
 .zeitWrapper{
-    width: min-content;
+    width: max-content;
     border: 2px solid #ccc;
     border-radius: 1rem;
     box-shadow: #5e2e94 0px 3px 8px;
