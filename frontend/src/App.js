@@ -151,20 +151,30 @@ handleOpenStateChange = () => {
     const { currentUser, user } = this.state;
 		return (
         <>
-				<Router>
+				<Router>{ user ? console.log('usertest', user[0].vorname):null}
 				<SideBar toggle={this.handleOpenStateChange} Open={this.state.Open} user={currentUser}/>
          		<NavBar toggle={this.handleOpenStateChange} user={currentUser} nav="navBlack"/>
 					<Routes>
 						<Route>
 						<Route path={process.env.PUBLIC_URL + '/'} element={
 							currentUser ?
-							<Navigate replace to={process.env.PUBLIC_URL + '/MeinProfil'} />
+							user ?
+							(user[0].vorname == "") ?
+									<Navigate replace to={process.env.PUBLIC_URL + '/MeinProfil'} />
+									:
+									<Navigate replace to={process.env.PUBLIC_URL + '/MeineProjekte'} />
+								:null
 							:
 							<LogIn  onLogIn={this.handleSignIn} />
 						}/>
 						<Route path={process.env.PUBLIC_URL + '/'} element={
 							currentUser ?
-							<Navigate replace to={process.env.PUBLIC_URL + '/MeinProfil'} />
+							user ?
+							(user[0].vorname  == "") ?
+									<Navigate replace to={process.env.PUBLIC_URL + '/MeinProfil'} />
+									:
+									<Navigate replace to={process.env.PUBLIC_URL + '/MeineProjekte'} />
+								:null
 							:
 							<LogIn  onLogIn={this.handleSignIn} />
 						}/>

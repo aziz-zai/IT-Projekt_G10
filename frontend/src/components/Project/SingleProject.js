@@ -388,7 +388,7 @@ export class SingleProject extends Component {
     var sollZeitdifferenz = null
     zeitintervallbuchungSoll.map(buchung => sollZeitdifferenz += parseFloat(buchung.zeitdifferenz)) 
     return (
-      <div class="ProjectCardWrapper"> {console.log('test', zeitintervallbuchungIst, zeitintervallbuchungSoll)}
+      <div class="ProjectCardWrapper"> 
       <Card onClick = {this.handleDialogOpen}class={projektfarbe}>
       <CardContent>
         <Typography variant="h5" class={projekttitel} component="div">
