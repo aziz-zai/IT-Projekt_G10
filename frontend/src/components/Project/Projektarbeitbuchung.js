@@ -22,7 +22,6 @@ export class Projektarbeitbuchung extends Component {
     OneAPI.getAPI().getProjektarbeitbuchungIst(this.props.user, this.props.startFilter, this.props.endFilter, this.props.activityid).then(buchungen =>
       this.setState({
         zeitintervallbuchungIst: buchungen,
-    
       })
       ).catch(e =>
         this.setState({ // Reset state with error from catch 
@@ -30,7 +29,6 @@ export class Projektarbeitbuchung extends Component {
       );
     // set loading to true
     this.setState({
-
     });
   }
 
@@ -38,7 +36,7 @@ export class Projektarbeitbuchung extends Component {
     OneAPI.getAPI().getProjektarbeitbuchungSoll(this.props.user, this.props.startFilter, this.props.endFilter, this.props.activityid).then(buchungen =>
       this.setState({
         zeitintervallbuchungSoll: buchungen,
-    
+        
       })
       ).catch(e =>
         this.setState({ // Reset state with error from catch 
@@ -83,11 +81,18 @@ this.getZeitintervallbuchungSoll()
   render() {
       const {istBuchung, user} = this.props;
       const {zeitintervallbuchungIst, zeitintervallbuchungSoll, deletedSollTrue, deletedIstTrue} = this.state;
+      var IstZeitdifferenz = null
+      zeitintervallbuchungIst.map(buchung => IstZeitdifferenz += parseFloat(buchung.zeitdifferenz)) 
+      var sollZeitdifferenz = null
+      zeitintervallbuchungSoll.map(buchung => sollZeitdifferenz += parseFloat(buchung.zeitdifferenz)) 
     return (
-      <div > {console.log('user', user)}
+      <div > 
           {istBuchung ?
         <div>
-          <button onClick={this.getZeitintervallbuchungIst} class="filterBtn">Suche</button><div class="buchungDeleted">
+         <div> <button onClick={this.getZeitintervallbuchungIst} class="filterBtn">Suche</button>
+           {IstZeitdifferenz ? <div class="gesamt"> Gesamtstunden IST: <strong>{IstZeitdifferenz.toFixed(2)}h</strong></div>:null}</div>
+          
+          <div class="buchungDeleted">
                      {deletedIstTrue ?
               <Stack sx={{ width: '100%' }} spacing={2}>
                       <Alert onClose={this.handleDeletedIstClose}>Buchung erfolgreich gelöscht!</Alert>
@@ -96,7 +101,9 @@ this.getZeitintervallbuchungSoll()
             zeitintervallbuchungIst.map(buchung => <ProjektarbeitbuchungListEntry key={buchung.getID()} buchung={buchung} istBuchung={true} handleZeitintervallbuchungIstDeleted={this.ZeitintervallbuchungIstDeleted}/>):null}
         </div>
         : <div>
+          <div>
           <button onClick={this.getZeitintervallbuchungSoll} class="filterBtn">Suche</button>
+          {sollZeitdifferenz ? <div class="gesamt"> Gesamtstunden SOLL: <strong>{sollZeitdifferenz.toFixed(2)}h</strong></div>:null}</div>
           <div class="buchungDeleted" >
                      {deletedSollTrue ?
               <Stack sx={{ width: '100%' }} spacing={2}>

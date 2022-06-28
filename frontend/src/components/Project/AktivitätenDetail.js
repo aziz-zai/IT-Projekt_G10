@@ -15,7 +15,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
-import Projektarbeitereignis from './Projektarbeitereignis';
 import Projektarbeitbuchung from './Projektarbeitbuchung';
 
 
@@ -30,8 +29,6 @@ class AktivitätenDetail extends Component {
       deletingError: null,
       openActivity: false,
       projektarbeiten: [],
-      ereignisbuchungSelected: false,
-      zeitintervallbuchungSelected: true,
       startFilter: null,
       endFilter: null,
       istBuchung: true,
@@ -196,13 +193,10 @@ class AktivitätenDetail extends Component {
     </FormControl></div>
          </div>
          <div class="buchungSelection">
-           <div class="selectionItem1"><button class={zeitintervallbuchungSelected ? "selectionBtn" : "selectionBtnAlt"} onClick={this.handleZeitintervallbuchung}>Zeitintervallbuchungen</button></div>
-           <div class="selectionItem2"><button class={ereignisbuchungSelected ? "selectionBtn" : "selectionBtnAlt"} onClick={this.handleEreignisbuchung}>Ereignisbuchungen</button></div>
+           <div class="selectionItem1"><button class="selectionBtn" onClick={this.handleZeitintervallbuchung}>Zeitintervallbuchungen</button></div>
          </div>
          <div class="buchungen">
-           {zeitintervallbuchungSelected ?
            <Projektarbeitbuchung istBuchung={istBuchung} startFilter={startFilter} endFilter={endFilter} user={user} activityid={aktivität}/>
-          : <Projektarbeitereignis istBuchung={istBuchung} startFilter={startFilter} endFilter={endFilter} user={user}/>}
          </div>
        </div>
       </ListItem>
