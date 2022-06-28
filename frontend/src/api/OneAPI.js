@@ -84,6 +84,8 @@ export default class OneAPI {
   #getZeitintervallbuchungIstURL = (user, startFilter, endFilter) => `${this.#OneServerBaseURL}/zeitintervallbuchung-ist/${user}/${startFilter}/${endFilter}`;
   #getProjektarbeitbuchungIstURL = (user, startFilter, endFilter, activity) => `${this.#OneServerBaseURL}/projektarbeitbuchung-ist/${user}/${startFilter}/${endFilter}/${activity}`;
   #getProjektarbeitbuchungSollURL = (user, startFilter, endFilter, activity) => `${this.#OneServerBaseURL}/projektarbeitbuchung-soll/${user}/${startFilter}/${endFilter}/${activity}`;
+  #getProjektarbeitbuchungByProjectSollURL = (user, project) => `${this.#OneServerBaseURL}/zeitintervallbuchung-soll-by-akt/${user}/${project}`;
+  #getProjektarbeitbuchungByProjectIstURL = (user, project) => `${this.#OneServerBaseURL}/zeitintervallbuchung-ist-by-akt/${user}/${project}`;
 
   //Ereignisbuchung related
   #addEreignisbuchungURL = () => `${this.#OneServerBaseURL}/ereignisbuchung`;
@@ -579,6 +581,26 @@ export default class OneAPI {
   }
   getProjektarbeitbuchungSoll(user, startFilter, endFilter, activity) {
     return this.#fetchAdvanced(this.#getProjektarbeitbuchungSollURL(user, startFilter, endFilter, activity)).then((responseJSON) => {
+      let zeitintervallbuchungBOs = ZeitintervallbuchungBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(zeitintervallbuchungBOs);
+      })
+    })
+  }
+
+  getProjektarbeitbuchungByProjectSoll(user, project) {
+    return this.#fetchAdvanced(this.#getProjektarbeitbuchungByProjectSollURL(user,project)).then((responseJSON) => {
+      let zeitintervallbuchungBOs = ZeitintervallbuchungBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(zeitintervallbuchungBOs);
+      })
+    })
+  }
+
+  getProjektarbeitbuchungByProjectIst(user, project) {
+    return this.#fetchAdvanced(this.#getProjektarbeitbuchungByProjectIstURL(user, project)).then((responseJSON) => {
       let zeitintervallbuchungBOs = ZeitintervallbuchungBO.fromJSON(responseJSON);
       // console.info(customerBOs);
       return new Promise(function (resolve) {

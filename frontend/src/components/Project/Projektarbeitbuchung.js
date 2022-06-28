@@ -53,7 +53,6 @@ export class Projektarbeitbuchung extends Component {
       zeitintervallbuchungIst: this.state.zeitintervallbuchungIst.filter(buchung => buchung.id != deletedBuchung.id),
       deletedIstTrue: true
     })
-    console.log('deletedBuchung', deletedBuchung, this.state.zeitintervallbuchungIst)
   }
   ZeitintervallbuchungSollDeleted = (deletedBuchung) => {
     this.setState({

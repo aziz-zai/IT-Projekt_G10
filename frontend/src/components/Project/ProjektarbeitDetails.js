@@ -52,7 +52,6 @@ export class ProjektarbeitDetails extends Component {
         {proarb_bes} {proarb_bez}
         <Button><DeleteIcon onClick={this.deleteProjektarbeit} color="secondary"/>
           </Button>    
-          {console.log("proarb", projektarbeiten)}
       </Paper>
     );
   }
