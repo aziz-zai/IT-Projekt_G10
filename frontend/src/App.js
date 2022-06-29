@@ -158,13 +158,23 @@ handleOpenStateChange = () => {
 						<Route>
 						<Route path={process.env.PUBLIC_URL + '/'} element={
 							currentUser ?
-							<Navigate replace to={process.env.PUBLIC_URL + '/MeinProfil'} />
+							user ?
+							(user[0].vorname == "") ?
+									<Navigate replace to={process.env.PUBLIC_URL + '/MeinProfil'} />
+									:
+									<Navigate replace to={process.env.PUBLIC_URL + '/MeineProjekte'} />
+								:null
 							:
 							<LogIn  onLogIn={this.handleSignIn} />
 						}/>
 						<Route path={process.env.PUBLIC_URL + '/'} element={
 							currentUser ?
-							<Navigate replace to={process.env.PUBLIC_URL + '/MeinProfil'} />
+							user ?
+							(user[0].vorname  == "") ?
+									<Navigate replace to={process.env.PUBLIC_URL + '/MeinProfil'} />
+									:
+									<Navigate replace to={process.env.PUBLIC_URL + '/MeineProjekte'} />
+								:null
 							:
 							<LogIn  onLogIn={this.handleSignIn} />
 						}/>

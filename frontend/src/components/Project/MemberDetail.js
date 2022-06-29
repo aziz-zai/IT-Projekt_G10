@@ -43,12 +43,12 @@ export class Membership extends Component {
     }
 
     render() {
-        const {member} = this.props;
+        const {member, istStunden, sollStunden} = this.props;
         
     return (
       <Paper variant='outlined' class="papermitarbeiter">
         <AccountCircleIcon/>      
-        {member.vorname} {member.nachname}
+        {member.vorname} {member.nachname} &nbsp;&nbsp; <strong>IST: {istStunden}</strong> &nbsp; <strong>SOLL: {sollStunden}</strong>
         <Button><DeleteIcon onClick={this.deleteMember} color="secondary"/>
           </Button>    
       </Paper>
@@ -64,6 +64,8 @@ Membership.propTypes = {
   project: PropTypes.any,
   member: PropTypes.any,
   memberDeleted: PropTypes.any,
+  istStunden: PropTypes.any,
+  sollStunden: PropTypes.any
 };
 
 export default Membership;

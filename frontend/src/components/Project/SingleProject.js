@@ -43,7 +43,9 @@ export class SingleProject extends Component {
           deletingError: null,
           zeitintervall: null,
           zeitintervallEnde: null,
-          zeitintervallStart: null
+          zeitintervallStart: null,
+          zeitintervallbuchungIst: [],
+          zeitintervallbuchungSoll: [],
         };
     }
     
@@ -54,6 +56,34 @@ export class SingleProject extends Component {
         ).catch(e =>
           this.setState({ // Reset state with error from catch 
             projektleiter: null,
+          })
+        );
+      // set loading to true
+      this.setState({
+      });
+    }
+
+    getProjektarbeitbuchungByProjectIst = () => {
+      OneAPI.getAPI().getProjektarbeitbuchungByProjectIst(this.props.user, this.props.project.id).then(zeitintervallbuchung =>
+        this.setState({
+          zeitintervallbuchungIst: zeitintervallbuchung
+        })
+        ).catch(e =>
+          this.setState({ // Reset state with error from catch 
+          })
+        );
+      // set loading to true
+      this.setState({
+      });
+    }
+
+    getProjektarbeitbuchungByProjectSoll = () => {
+      OneAPI.getAPI().getProjektarbeitbuchungByProjectSoll(this.props.user, this.props.project.id).then(zeitintervallbuchung =>
+        this.setState({
+          zeitintervallbuchungSoll: zeitintervallbuchung
+        })
+        ).catch(e =>
+          this.setState({ // Reset state with error from catch 
           })
         );
       // set loading to true
@@ -216,6 +246,7 @@ export class SingleProject extends Component {
             loadingError: null
           });
         };
+
            getProjektlaufzeitEnde = (zeitintervall) => {
             OneAPI.getAPI().getEreignis(zeitintervall[0].ende).then(zeitintervallEnde =>{
               var EndeJahr = 0 
@@ -343,16 +374,22 @@ export class SingleProject extends Component {
     this.loadAktivitäten();
     this.getMembersByProject();
     this.getProjektlaufzeit();
+    this.getProjektarbeitbuchungByProjectSoll();
+    this.getProjektarbeitbuchungByProjectIst();
     }
 
   render() {
     const {project, user} = this.props;
     const {openAkt, membership, handleDialogClose, aktivitäten, projektleiter, 
-    isOpen, projektfarbe, loadingInProgress, openMember, projekttitel, projektName, laufZeit, auftragGeber, availableHours, zeitintervall, zeitintervallEnde, zeitintervallStart} = this.state
-
+    isOpen, projektfarbe, loadingInProgress, openMember, projekttitel, projektName, laufZeit, auftragGeber, availableHours, 
+    zeitintervall, zeitintervallEnde, zeitintervallStart, zeitintervallbuchungIst, zeitintervallbuchungSoll} = this.state
+    var IstZeitdifferenz = null
+    zeitintervallbuchungIst.map(buchung => IstZeitdifferenz += parseFloat(buchung.zeitdifferenz))
+    var sollZeitdifferenz = null
+    zeitintervallbuchungSoll.map(buchung => sollZeitdifferenz += parseFloat(buchung.zeitdifferenz)) 
     return (
       <div class="ProjectCardWrapper"> 
-      <Card onClick = {this.handleDialogOpen}class={projektfarbe}>{console.log('zeitintervallStart', zeitintervallStart)}
+      <Card onClick = {this.handleDialogOpen}class={projektfarbe}>
       <CardContent>
         <Typography variant="h5" class={projekttitel} component="div">
           {projektName}
@@ -479,7 +516,7 @@ export class SingleProject extends Component {
         </Typography> 
         {
             membership.map(member => <MemberDetail key={member.id}
-            member={member} project={project.id} memberDeleted={this.memberDeleted}/> )
+            member={member} project={project.id} memberDeleted={this.memberDeleted} istStunden={IstZeitdifferenz} sollStunden={sollZeitdifferenz}/> )
           }
           <MemberList isOpen={openMember} onClose={this.closeMember} user={user} project={project} handleNewMember={this.handleNewMember}>
           </MemberList>  

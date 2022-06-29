@@ -347,7 +347,7 @@ componentDidMount() {
                </div>
               </Grid>
               <Grid item>
-                    {buchung.ist_buchung ?<Typography sx={{color: "green"}}> IST</Typography>:<Typography sx={{color: "red"}}> SOLL</Typography>}
+                    {buchung.ist_buchung ?<Typography sx={{color: "green"}}> IST: {buchung.zeitdifferenz}h</Typography>:<Typography sx={{color: "red"}}> SOLL: {buchung.zeitdifferenz}h</Typography>}
               </Grid>
               <Grid item>
                 <ButtonGroup variant='text' size='small'>
