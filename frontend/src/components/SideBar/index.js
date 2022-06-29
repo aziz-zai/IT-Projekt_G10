@@ -19,7 +19,8 @@ export class SideBar extends Component {
 		this.props.toggle()
 	}
     
-  render() {
+  render() { 
+    const {user, dbuser} = this.props;
     return (
         <>
       <div className={this.props.Open}>
@@ -28,7 +29,7 @@ export class SideBar extends Component {
             </div>
             <div className="SideBarWrapper">
                 <div className="SideBarProfile">
-                <ProfileDropDown user={this.props.user} Ahorizontol='center' Avertical='center' Thorizontol='right' Tvertical='top'/>
+                <ProfileDropDown user={this.props.user} dbuser={dbuser} Ahorizontol='center' Avertical='center' Thorizontol='right' Tvertical='top'/>
                 </div>
                 <div className="SideBarMenu">
                     <Link to='/MeineProjekte' onClick={this.handleOpenStateChange} className="SideBarLink">Projekte</Link>
@@ -46,6 +47,7 @@ SideBar.propTypes = {
     toggle: PropTypes.any,
     Open: PropTypes.any,
     user: PropTypes.object,
+    dbuser: PropTypes.any
 }
 
 export default SideBar
