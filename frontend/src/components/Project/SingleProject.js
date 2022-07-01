@@ -6,6 +6,7 @@ import './Project.css'
 import CloseIcon from '@mui/icons-material/Close';
 import OneAPI from '../../api/OneAPI';
 import ProjectBO from '../../api/ProjectBO';
+import EreignisBO from '../../api/EreignisBO';
 import Aktivitäten from './Aktivitäten';
 import AktivitätenDetail from './AktivitätenDetail';
 import LoadingProgress from '../Dialogs/LoadingProgress'
@@ -42,8 +43,10 @@ export class SingleProject extends Component {
           loadingError: null,
           deletingError: null,
           zeitintervall: null,
-          zeitintervallEnde: null,
+          zeitintervallEndeTime: null,
+          zeitintervallStartTime: null,
           zeitintervallStart: null,
+          zeitintervallEnde: null,
           zeitintervallbuchungIst: [],
           zeitintervallbuchungSoll: [],
         };
@@ -104,6 +107,8 @@ export class SingleProject extends Component {
     }
 
     updateProject = () => {
+      this.updateLaufzeitEnde();
+      this.updateLaufzeitStart();
       // clone the original project, in case the backend call fails
       let updatedProject = Object.assign(new ProjectBO(), this.props.project);
       // set the new attributes from our dialog
@@ -220,19 +225,24 @@ export class SingleProject extends Component {
             });
           };
           
+      transformProjektlaufzeitDate = (zeitintervall) => {
+        var Jahr = 0 
+        var Monat = 0
+        var Tag = 0
+        var dateFormat = 0
+        const zeitintervallDate = new Date(zeitintervall.zeitpunkt)
+        Jahr = zeitintervallDate.getFullYear()
+        Monat = zeitintervallDate.getMonth() + 1
+        Tag = zeitintervallDate.getDate()
+        dateFormat = `${String(Jahr).padStart(4, "0")}-${String(Monat).padStart(2, "0")}-${String(Tag).padStart(2, "0")}` 
+        return dateFormat
+      }
        getProjektlaufzeitAnfang = (zeitintervall) => {
          OneAPI.getAPI().getEreignis(zeitintervall[0].start).then(zeitintervallStart =>{
-                var StartJahr = 0 
-                var StartMonat = 0
-                var StartTag = 0
-                var Start = 0
-                const zeitintervallDate = new Date(zeitintervallStart[0].zeitpunkt)
-                StartJahr = zeitintervallDate.getFullYear()
-                StartMonat = zeitintervallDate.getMonth()
-                StartTag = zeitintervallDate.getDay()
-                Start = `${String(StartJahr).padStart(4, "0")}-${String(StartMonat).padStart(2, "0")}-${String(StartTag).padStart(2, "0")}` 
+                const Start = this.transformProjektlaufzeitDate(zeitintervallStart[0])
           this.setState({
-             zeitintervallStart: Start,
+             zeitintervallStartTime: Start,
+             zeitintervallStart: zeitintervallStart[0],
              loadingInProgress: false, // loading indicator 
              loadingError: null
            })}).catch(e =>
@@ -249,17 +259,10 @@ export class SingleProject extends Component {
 
            getProjektlaufzeitEnde = (zeitintervall) => {
             OneAPI.getAPI().getEreignis(zeitintervall[0].ende).then(zeitintervallEnde =>{
-              var EndeJahr = 0 
-              var EndeMonat = 0
-              var EndeTag = 0
-              var Ende = 0
-              const zeitintervallDate = new Date(zeitintervallEnde[0].zeitpunkt)
-              EndeJahr = zeitintervallDate.getFullYear()
-              EndeMonat = zeitintervallDate.getMonth()
-              EndeTag = zeitintervallDate.getDay()
-              Ende = `${String(EndeJahr).padStart(4, "0")}-${String(EndeMonat).padStart(2, "0")}-${String(EndeTag).padStart(2, "0")}`;
+              const Ende = this.transformProjektlaufzeitDate(zeitintervallEnde[0])
               this.setState({
-                zeitintervallEnde: Ende,
+                zeitintervallEndeTime: Ende,
+                zeitintervallEnde: zeitintervallEnde[0],
                 loadingInProgress: false, // loading indicator 
                 loadingError: null
               })}).catch(e =>
@@ -274,7 +277,51 @@ export class SingleProject extends Component {
         loadingError: null
       });
     };
-
+    updateLaufzeitStart = () => {
+      let zeitpunkt = this.state.zeitintervallStartTime + "T00:00"
+      let updatedEreignis = Object.assign(new EreignisBO(), this.state.zeitintervallStart);
+      updatedEreignis.setZeitpunkt(zeitpunkt)
+      OneAPI.getAPI().updateEreignis(updatedEreignis).then(zeitintervallStart =>{
+        const Start = this.transformProjektlaufzeitDate(zeitintervallStart[0])
+        this.setState({
+          zeitintervallStartTime: Start,
+          zeitintervallStart: zeitintervallStart[0],
+          loadingInProgress: false, // loading indicator 
+          loadingError: null
+        })}).catch(e =>
+          this.setState({ // Reset state with error from catch 
+            loadingInProgress: false,
+            loadingError: e
+          })
+        )
+        this.setState({
+          loadingInProgress: true,
+          loadingError: null
+        });
+        };
+        updateLaufzeitEnde = () => {
+          let zeitpunkt = this.state.zeitintervallEndeTime + "T00:00"
+          let updatedEreignis = Object.assign(new EreignisBO(), this.state.zeitintervallEnde);
+          updatedEreignis.setZeitpunkt(zeitpunkt)
+          OneAPI.getAPI().updateEreignis(updatedEreignis).then(zeitintervallEnde =>{
+            const Ende = this.transformProjektlaufzeitDate(zeitintervallEnde[0])
+            this.setState({
+              zeitintervallEndeTime: Ende,
+              zeitintervallEnde: zeitintervallEnde[0],
+              loadingInProgress: false, // loading indicator 
+              loadingError: null
+            })}).catch(e =>
+              this.setState({ // Reset state with error from catch 
+                loadingInProgress: false,
+                loadingError: e
+              })
+            ) 
+// set loading to true
+this.setState({
+  loadingInProgress: true,
+  loadingError: null
+});
+};
 
     textFieldValueChange = (event) => {
       const value = event.target.value;
@@ -382,7 +429,7 @@ export class SingleProject extends Component {
     const {project, user} = this.props;
     const {openAkt, membership, handleDialogClose, aktivitäten, projektleiter, 
     isOpen, projektfarbe, loadingInProgress, openMember, projekttitel, projektName, laufZeit, auftragGeber, availableHours, 
-    zeitintervall, zeitintervallEnde, zeitintervallStart, zeitintervallbuchungIst, zeitintervallbuchungSoll} = this.state
+    zeitintervall, zeitintervallEndeTime, zeitintervallStartTime, zeitintervallbuchungIst, zeitintervallbuchungSoll} = this.state
     var IstZeitdifferenz = null
     zeitintervallbuchungIst.map(buchung => IstZeitdifferenz += parseFloat(buchung.zeitdifferenz))
     var sollZeitdifferenz = null
@@ -443,9 +490,9 @@ export class SingleProject extends Component {
           <TextField
             autoFocus type='text' required
             color="secondary"
-            id="zeitintervallStart"
+            id="zeitintervallStartTime"
             label="Projektlaufzeit Von"
-            value={zeitintervallStart}
+            value={zeitintervallStartTime}
             type="date"
             onChange={this.textFieldValueChange}
             InputLabelProps={{
@@ -455,9 +502,9 @@ export class SingleProject extends Component {
             <TextField
             autoFocus type='text' required
             color="secondary"
-            id="zeitintervallEnde"
+            id="zeitintervallEndeTime"
             label="Projektlaufzeit Bis"
-            value={zeitintervallEnde}
+            value={zeitintervallEndeTime}
             type="date"
             onChange={this.textFieldValueChange}
             InputLabelProps={{

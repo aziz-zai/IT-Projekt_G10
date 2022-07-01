@@ -1368,11 +1368,9 @@ class EreignisOperations(Resource):
         """
         adm = Administration()
         proposal = Ereignis()
-        zeitpunkt_js_string = api.payload["zeitpunkt"]
-        zeitpunkt_py_date = datetime.strptime(zeitpunkt_js_string, '%Y-%m-%d %H:%M:%S')
-        zeitpunkt_py_string = zeitpunkt_py_date.strftime("%Y-%m-%dT%H:%M:%S")
-        proposal.set_zeitpunkt(zeitpunkt_py_string)
+        proposal.set_zeitpunkt(api.payload["zeitpunkt"])
         proposal.set_bezeichnung(api.payload["bezeichnung"])
+        
 
         if proposal is not None:
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
