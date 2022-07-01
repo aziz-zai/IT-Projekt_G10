@@ -29,6 +29,7 @@ export class SingleProject extends Component {
           projektleiter: [],
           projektfarbe: "ProjectCard",
           projekttitel: "ProjektTitel",
+          projektleiterIsUser: false,
           projektName: pn,
           laufZeit: lz,
           auftragGeber: ag,
@@ -54,7 +55,7 @@ export class SingleProject extends Component {
     
     getProjektleiterByProject = () => {
       OneAPI.getAPI().getProjektleiterByProject(this.props.project.id).then(projektleiter =>
-        this.handleProjektfarbe(projektleiter)
+        this.handleProjektleiterCheck(projektleiter)
         
         ).catch(e =>
           this.setState({ // Reset state with error from catch 
@@ -94,11 +95,12 @@ export class SingleProject extends Component {
       });
     }
 
-    handleProjektfarbe = (projektleiter) => {
+    handleProjektleiterCheck = (projektleiter) => {
       if(projektleiter[0].id === this.props.user){
         this.setState({
           projektfarbe:"ProjectCard-PL",
-          projekttitel:"ProjektTitel-PL"
+          projekttitel:"ProjektTitel-PL",
+          projektleiterIsUser: true
         })
       }
       this.setState({
@@ -429,7 +431,7 @@ this.setState({
     const {project, user} = this.props;
     const {openAkt, membership, handleDialogClose, aktivitäten, projektleiter, 
     isOpen, projektfarbe, loadingInProgress, openMember, projekttitel, projektName, laufZeit, auftragGeber, availableHours, 
-    zeitintervall, zeitintervallEndeTime, zeitintervallStartTime, zeitintervallbuchungIst, zeitintervallbuchungSoll} = this.state
+    zeitintervall, zeitintervallEndeTime, zeitintervallStartTime, zeitintervallbuchungIst, zeitintervallbuchungSoll, projektleiterIsUser} = this.state
     var IstZeitdifferenz = null
     zeitintervallbuchungIst.map(buchung => IstZeitdifferenz += parseFloat(buchung.zeitdifferenz))
     var sollZeitdifferenz = null
@@ -474,6 +476,7 @@ this.setState({
         Projekt
         </Typography>
         <Card class="Projektdetails">
+          {projektleiterIsUser ? 
           <List>
           <ListItem>
           <TextField
@@ -544,6 +547,74 @@ this.setState({
             </Aktivitäten>
             <LoadingProgress show={loadingInProgress} />
         </List>
+        :
+        <List>
+          <ListItem>
+          <TextField
+            disabled
+            type='text' required
+            color="secondary"
+            id="projektName"
+            label="Projektname"
+            value={projektName}
+            onChange={this.textFieldValueChange}
+            /> 
+          </ListItem>
+          <ListItem>
+    
+          <TextField
+            disabled
+            type='text' required
+            color="secondary"
+            id="zeitintervallStartTime"
+            label="Projektlaufzeit Von"
+            value={zeitintervallStartTime}
+            type="date"
+            onChange={this.textFieldValueChange}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            /> &nbsp;&nbsp;
+            <TextField
+            disabled
+            type='text' required
+            color="secondary"
+            id="zeitintervallEndeTime"
+            label="Projektlaufzeit Bis"
+            value={zeitintervallEndeTime}
+            type="date"
+            onChange={this.textFieldValueChange}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            />
+          </ListItem>
+          <ListItem>
+          <TextField
+            disabled
+            type='text' required
+            color="secondary"
+            id="auftragGeber"
+            label="Auftraggeber"
+            value={auftragGeber}
+            onChange={this.textFieldValueChange}
+            />
+          </ListItem>
+          <ListItem>
+          <TextField
+            disabled
+            type='text' required
+            color="secondary"
+            id="availableHours"
+            label="Verfügbare Stunden"
+            value={availableHours}
+            onChange={this.textFieldValueChange}
+            />
+          </ListItem>
+          <Aktivitäten isOpen={openAkt} onClose={this.closeAkt} project={project} handleClose={this.addAktvität}>
+            </Aktivitäten>
+            <LoadingProgress show={loadingInProgress} />
+        </List>}
         </Card>
         </Container>
         <div>
