@@ -5,8 +5,10 @@ import EreignisBO from './EreignisBO';
  */
 export default class GehenBO extends EreignisBO {
 
-  constructor() {
+  constructor(aZeitpunkt, aBezeichnung) {
     super();
+    this.zeitpunkt = aZeitpunkt;
+    this.bezeichnung = aBezeichnung;
   }
 
   

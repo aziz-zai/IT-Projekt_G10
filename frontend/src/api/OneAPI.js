@@ -104,7 +104,7 @@ export default class OneAPI {
   
   //Kommen related
   #addKommenIstURL = (user, projektarbeit, kommenZeit) => `${this.#OneServerBaseURL}/kommen-ist/${user}/${projektarbeit}/${kommenZeit}`;
-  #addKommenSollURL = (erstellt_von, erstellt_fuer, projektarbeit) => `${this.#OneServerBaseURL}/kommen-soll/${erstellt_von}/${erstellt_fuer}/${projektarbeit}`;
+  #addKommenSollURL = (erstellt_von, erstellt_fuer) => `${this.#OneServerBaseURL}/kommen-soll/${erstellt_von}/${erstellt_fuer}`;
   #getKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
   #updateKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
   #deleteKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
@@ -112,7 +112,7 @@ export default class OneAPI {
   //Gehen related
   #getGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
   #addGehenIstURL = (projektarbeitid, user, activity, gehenZeit) => `${this.#OneServerBaseURL}/gehen-ist/${projektarbeitid}/${user}/${activity}/${gehenZeit}`;
-  #addGehenSollURL = (projektarbeitid, erstellt_von, erstellt_fuer, activity) => `${this.#OneServerBaseURL}/gehen-soll/${projektarbeitid}/${erstellt_von}/${erstellt_fuer}/${activity}`;
+  #addGehenSollURL = (kommen, erstellt_von, erstellt_fuer, activity, projektarbeit) => `${this.#OneServerBaseURL}/gehen-soll/${kommen}/${erstellt_von}/${erstellt_fuer}/${activity}/${projektarbeit}`;
   #updateGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
   #deleteGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
 
@@ -748,6 +748,23 @@ export default class OneAPI {
         })
     })
   }
+  addGehenSoll(gehenBO, kommen, erstelltVon, erstelltFuer, aktivität, projektarbeit) {
+    return this.#fetchAdvanced(this.#addGehenSollURL(kommen, erstelltVon, erstelltFuer, aktivität, projektarbeit), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(gehenBO)
+    }).then((responseJSON) => {
+      // We always get an array of ProjectBOs.fromJSON, but only need one object
+      let responseGehenBO = GehenBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseGehenBO);
+        })
+    })
+  }
    
   updateGehen(gehenBO) {
     return this.#fetchAdvanced(this.#updateGehenURL(gehenBO.getID()), {
@@ -802,8 +819,8 @@ export default class OneAPI {
     })
   }
 
-  addKommenSoll(kommenBO, erstellt_von, erstellt_fuer, projektarbeit) {
-    return this.#fetchAdvanced(this.#addKommenSollURL(erstellt_von, erstellt_fuer, projektarbeit ), {
+  addKommenSoll(kommenBO, erstellt_von, erstellt_fuer) {
+    return this.#fetchAdvanced(this.#addKommenSollURL(erstellt_von, erstellt_fuer), {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain',

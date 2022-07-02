@@ -137,6 +137,16 @@ margin-bottom: 1rem;
     background-color: rgb(255, 253, 255);
 }
 
+.projektzeit{
+    display: flex;
+    flex-direction: row;
+}
+
+.addBtnFmly{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
 .überschriftakt{
     margin-top: 1rem;
 }
@@ -200,3 +210,14 @@ margin-bottom: 1rem;
     width:fit-content;
     margin-left: 30px;
 }
+
+@media screen and (max-width: 600px){
+    .projektzeit{
+        flex-direction: column;
+    }
+    .addBtnFmly{
+        flex-direction: column;
+    }
+}
+
+

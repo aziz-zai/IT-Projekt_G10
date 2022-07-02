@@ -16,6 +16,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Projektarbeitbuchung from './Projektarbeitbuchung';
+import CreateProjektarbeit from './CreateProjektarbeit';
 
 
 class AktivitätenDetail extends Component {
@@ -32,6 +33,7 @@ class AktivitätenDetail extends Component {
       startFilter: null,
       endFilter: null,
       istBuchung: true,
+      openCreateProjektarbeit: false
     };
   }
 
@@ -50,6 +52,18 @@ class AktivitätenDetail extends Component {
   closeActivityDetails = () => {
     this.setState({
       openActivity: false
+    });
+  }
+
+  openCreateProjektarbeit= () => {
+    this.setState({
+      openCreateProjektarbeit: true
+    });
+  }
+
+  closeCreateProjektarbeit= () => {
+    this.setState({
+      openCreateProjektarbeit: false
     });
   }
 
@@ -136,8 +150,8 @@ class AktivitätenDetail extends Component {
 
   /** Renders the component */
   render() {
-    const {akt_dauer, akt_bezeichnung, akt_capacity, user, aktivität, projektleiter} = this.props;
-    const {openActivity, projektarbeiten, endFilter, startFilter, istBuchung, zeitintervallbuchungSelected, ereignisbuchungSelected} = this.state;
+    const {akt_dauer, akt_bezeichnung, akt_capacity, user, aktivität, projektleiter, project} = this.props;
+    const {openActivity, endFilter, startFilter, istBuchung, openCreateProjektarbeit} = this.state;
 
     return (
       <div>
@@ -158,10 +172,9 @@ class AktivitätenDetail extends Component {
       <List>
         <ListItem>
           <Tooltip title="Projektarbeit hinzufügen">
-          <Button size="large" startIcon={<AddBoxIcon/>}/>
+          <Button size="large" onClick={this.openCreateProjektarbeit}startIcon={<AddBoxIcon/>}>Projektarbeit hinzufügen</Button>
         </Tooltip>
         </ListItem>
-
         <ListItem>
         <div class="buchungContainer">
          <div class="buchungHeader">
@@ -209,7 +222,7 @@ class AktivitätenDetail extends Component {
       </ListItem>
       </List>
   </Dialog>:null}
-
+  <CreateProjektarbeit handleClose={this.closeCreateProjektarbeit} show={openCreateProjektarbeit} project={project} user={user} activity={aktivität}/>
   </div>
     );
   }
@@ -224,6 +237,7 @@ AktivitätenDetail.propTypes = {
   aktivitätDeleted: PropTypes.any,
   user: PropTypes.any,
   projektleiter: PropTypes.any,
+  project: PropTypes.any,
 }
 
 export default AktivitätenDetail;

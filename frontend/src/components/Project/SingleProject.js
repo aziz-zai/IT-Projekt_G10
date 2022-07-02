@@ -499,7 +499,7 @@ this.setState({
             /> 
           </ListItem>
           <ListItem>
-    
+            <div class="projektzeit">
           <TextField
             type='text' required
             color="secondary"
@@ -523,7 +523,7 @@ this.setState({
             InputLabelProps={{
               shrink: true,
             }}
-            />
+            /></div>
           </ListItem>
           <ListItem>
           <TextField
@@ -546,12 +546,14 @@ this.setState({
             />
           </ListItem>
           <ListItem>
+            <div class="addBtnFmly">
           <Button class="Akt_btn" onClick={this.openAkt}>
             Aktivitäten hinzufügen
             </Button>
             <Button onClick={this.openMember} class="Mit_btn">
             Mitarbeiter hinzufügen 
             </Button>
+            </div>
           </ListItem>
           <Aktivitäten isOpen={openAkt} onClose={this.closeAkt} project={project} handleClose={this.addAktvität}>
             </Aktivitäten>
@@ -632,7 +634,7 @@ this.setState({
         Aktivitäten
         </Typography> 
           {
-            aktivitäten.map(aktivität => <AktivitätenDetail key={aktivität.getID()} 
+            aktivitäten.map(aktivität => <AktivitätenDetail key={aktivität.getID()} project={project} 
             aktivitätDeleted={this.aktivitätDeleted} aktivität={aktivität.getID()} akt_bezeichnung={aktivität.getBezeichnung()} akt_dauer={aktivität.getDauer()} 
             akt_capacity={aktivität.getCapacity()} user={user} projektleiter={projektleiterIsUser ? true:false}/>)
           }

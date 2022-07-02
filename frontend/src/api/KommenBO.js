@@ -5,13 +5,11 @@ import EreignisBO from './EreignisBO';
  */
 export default class KommenBO extends EreignisBO {
 
-  constructor() {
+  constructor(aZeitpunkt, aBezeichnung) {
     super();
-    
+    this.zeitpunkt = aZeitpunkt;
+    this.bezeichnung = aBezeichnung;
   }
-
-  
-  
   static fromJSON(kommen) {
     let result = [];
 
