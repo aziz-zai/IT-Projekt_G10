@@ -36,9 +36,15 @@ class AktivitätenDetail extends Component {
   }
 
   openActivityDetails = () => {
+    if(this.props.projektleiter){
     this.setState({
       openActivity: true
-    });
+    });}
+    else{
+      this.setState({
+        openActivity: false
+      });
+    }
   }
 
   closeActivityDetails = () => {
@@ -130,7 +136,7 @@ class AktivitätenDetail extends Component {
 
   /** Renders the component */
   render() {
-    const {akt_dauer, akt_bezeichnung, akt_capacity, user, aktivität} = this.props;
+    const {akt_dauer, akt_bezeichnung, akt_capacity, user, aktivität, projektleiter} = this.props;
     const {openActivity, projektarbeiten, endFilter, startFilter, istBuchung, zeitintervallbuchungSelected, ereignisbuchungSelected} = this.state;
 
     return (
@@ -139,8 +145,9 @@ class AktivitätenDetail extends Component {
         <div><strong>{akt_bezeichnung}</strong></div>
         <div><strong>{akt_dauer}</strong> Tage übrig</div>
         <div><strong>{akt_capacity}</strong>h übrig</div>
+        {projektleiter ? 
         <Button><DeleteIcon onClick={this.deleteAktivität} color="secondary"/>
-          </Button>
+          </Button>:null}
       </Paper>
        {openActivity?
       <Dialog open={openActivity} onClose={this.closeActivityDetails} maxWidth='md' fullWidth sx={{overflow:"scroll", maxHeight: "100vh"}}>
@@ -216,6 +223,7 @@ AktivitätenDetail.propTypes = {
   aktivität: PropTypes.any,
   aktivitätDeleted: PropTypes.any,
   user: PropTypes.any,
+  projektleiter: PropTypes.any,
 }
 
 export default AktivitätenDetail;

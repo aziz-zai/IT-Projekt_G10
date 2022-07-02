@@ -4,6 +4,8 @@ import { TextField, List, AppBar, ListItem, Dialog,
 IconButton, Button, Container, Toolbar, CardContent, CardActions, Card, Typography} from '@mui/material';
 import './Project.css'
 import CloseIcon from '@mui/icons-material/Close';
+import SaveIcon from '@mui/icons-material/Save';
+import DeleteIcon from '@mui/icons-material/Delete';
 import OneAPI from '../../api/OneAPI';
 import ProjectBO from '../../api/ProjectBO';
 import EreignisBO from '../../api/EreignisBO';
@@ -370,13 +372,6 @@ this.setState({
       });
     }
 
-    handleDialogClose = () => {
-      this.setState({
-        isOpen: false
-      });
-
-    }
-
 
     handleNewMember = member => {
       // project is not null and therefore created
@@ -429,12 +424,12 @@ this.setState({
 
   render() {
     const {project, user} = this.props;
-    const {openAkt, membership, handleDialogClose, aktivitäten, projektleiter, 
+    const {openAkt, membership, aktivitäten, projektleiter, 
     isOpen, projektfarbe, loadingInProgress, openMember, projekttitel, projektName, laufZeit, auftragGeber, availableHours, 
     zeitintervall, zeitintervallEndeTime, zeitintervallStartTime, zeitintervallbuchungIst, zeitintervallbuchungSoll, projektleiterIsUser} = this.state
-    var IstZeitdifferenz = null
+    var IstZeitdifferenz = 0
     zeitintervallbuchungIst.map(buchung => IstZeitdifferenz += parseFloat(buchung.zeitdifferenz))
-    var sollZeitdifferenz = null
+    var sollZeitdifferenz = 0
     zeitintervallbuchungSoll.map(buchung => sollZeitdifferenz += parseFloat(buchung.zeitdifferenz)) 
     return (
       <div class="ProjectCardWrapper"> 
@@ -453,22 +448,37 @@ this.setState({
         <Dialog
         fullScreen
         open={isOpen}
+        onClose={this.updateProject}
       >
         <AppBar class="AppBar" sx={{ position: 'relative' }}>
           <Toolbar>
             <IconButton
               edge="start"
               color="inherit"
-              onClick = {handleDialogClose}
+              onClick = {this.updateProject}
               aria-label="close"
             >
-              <CloseIcon />
+              <CloseIcon/>
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Projektdetails
             </Typography>
-            <button onClick={this.updateProject} class="saveBtn">Speichern</button>
-            <button onClick={this.deleteProject} class="saveBtn">Löschen</button>
+            {projektleiterIsUser ? 
+            <>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick = {this.updateProject}
+            >
+              <SaveIcon/>
+            </IconButton> &nbsp;&nbsp;
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick = {this.deleteProject}
+            >
+              <DeleteIcon/>
+            </IconButton></>:null}
           </Toolbar>
         </AppBar>
         <Container class="containerproject"> 
@@ -480,7 +490,7 @@ this.setState({
           <List>
           <ListItem>
           <TextField
-            autoFocus type='text' required
+            type='text' required
             color="secondary"
             id="projektName"
             label="Projektname"
@@ -491,7 +501,7 @@ this.setState({
           <ListItem>
     
           <TextField
-            autoFocus type='text' required
+            type='text' required
             color="secondary"
             id="zeitintervallStartTime"
             label="Projektlaufzeit Von"
@@ -503,7 +513,7 @@ this.setState({
             }}
             /> &nbsp;&nbsp;
             <TextField
-            autoFocus type='text' required
+            type='text' required
             color="secondary"
             id="zeitintervallEndeTime"
             label="Projektlaufzeit Bis"
@@ -517,7 +527,7 @@ this.setState({
           </ListItem>
           <ListItem>
           <TextField
-            autoFocus type='text' required
+            type='text' required
             color="secondary"
             id="auftragGeber"
             label="Auftraggeber"
@@ -527,7 +537,7 @@ this.setState({
           </ListItem>
           <ListItem>
           <TextField
-            autoFocus type='text' required
+            type='text' required
             color="secondary"
             id="availableHours"
             label="Verfügbare Stunden"
@@ -624,7 +634,7 @@ this.setState({
           {
             aktivitäten.map(aktivität => <AktivitätenDetail key={aktivität.getID()} 
             aktivitätDeleted={this.aktivitätDeleted} aktivität={aktivität.getID()} akt_bezeichnung={aktivität.getBezeichnung()} akt_dauer={aktivität.getDauer()} 
-            akt_capacity={aktivität.getCapacity()} user={user}/>)
+            akt_capacity={aktivität.getCapacity()} user={user} projektleiter={projektleiterIsUser ? true:false}/>)
           }
             <LoadingProgress show={loadingInProgress} />
         </div>
@@ -634,7 +644,8 @@ this.setState({
         </Typography> 
         {
             membership.map(member => <MemberDetail key={member.id}
-            member={member} project={project.id} memberDeleted={this.memberDeleted} istStunden={IstZeitdifferenz} sollStunden={sollZeitdifferenz}/> )
+            member={member} project={project.id} memberDeleted={this.memberDeleted} istStunden={IstZeitdifferenz} sollStunden={sollZeitdifferenz}
+            projektleiter={projektleiterIsUser ? true:false}/> )
           }
           <MemberList isOpen={openMember} onClose={this.closeMember} user={user} project={project} handleNewMember={this.handleNewMember}>
           </MemberList>  

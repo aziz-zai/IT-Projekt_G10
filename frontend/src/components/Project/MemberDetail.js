@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {Paper, Button} from '@mui/material';
-import './Aktivitäten.css'
-import './Project.css'
+import './Membership.css'
 import DeleteIcon from '@mui/icons-material/Delete';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import OneAPI from '../../api/OneAPI';
@@ -43,14 +42,15 @@ export class Membership extends Component {
     }
 
     render() {
-        const {member, istStunden, sollStunden} = this.props;
+        const {member, istStunden, sollStunden, projektleiter} = this.props;
         
     return (
       <Paper variant='outlined' class="papermitarbeiter">
         <AccountCircleIcon/>      
-        {member.vorname} {member.nachname} &nbsp;&nbsp; <strong>IST: {istStunden}</strong> &nbsp; <strong>SOLL: {sollStunden}</strong>
-        <Button><DeleteIcon onClick={this.deleteMember} color="secondary"/>
-          </Button>    
+        {member.vorname} {member.nachname} &nbsp;&nbsp; <strong>IST: {String(istStunden).padStart(2, "0")}h</strong> &nbsp; <strong>SOLL: {String(sollStunden).padStart(2, "0")}h</strong>
+        
+        {projektleiter ?<Button><DeleteIcon onClick={this.deleteMember} color="secondary"/>
+          </Button>   :null}
       </Paper>
     );
   }
@@ -65,7 +65,8 @@ Membership.propTypes = {
   member: PropTypes.any,
   memberDeleted: PropTypes.any,
   istStunden: PropTypes.any,
-  sollStunden: PropTypes.any
+  sollStunden: PropTypes.any,
+  projektleiter: PropTypes.any
 };
 
 export default Membership;
