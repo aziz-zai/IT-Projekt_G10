@@ -929,8 +929,8 @@ export default class OneAPI {
     });
   }
 
-  updateGehen(gehenBO) {
-    return this.#fetchAdvanced(this.#updateGehenURL(gehenBO.getID()), {
+  updateGehen(gehenBO, id) {
+    return this.#fetchAdvanced(this.#updateGehenURL(id), {
       method: "PUT",
       headers: {
         Accept: "application/json, text/plain",
@@ -1014,8 +1014,8 @@ export default class OneAPI {
     });
   }
 
-  updateKommen(kommenBO) {
-    return this.#fetchAdvanced(this.#updateKommenURL(kommenBO.getID()), {
+  updateKommen(kommenBO, id) {
+    return this.#fetchAdvanced(this.#updateKommenURL(id), {
       method: "PUT",
       headers: {
         Accept: "application/json, text/plain",

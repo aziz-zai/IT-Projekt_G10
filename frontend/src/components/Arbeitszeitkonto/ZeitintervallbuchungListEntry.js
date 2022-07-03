@@ -42,8 +42,8 @@ export class ZeitintervallbuchungListEntry extends Component {
     };
   }
 
-  getKommenById = (zeitintervall) => {
-    OneAPI.getAPI().getKommen(zeitintervall.start).then(kommen =>{
+  getKommenById = (ereignisID) => {
+    OneAPI.getAPI().getKommen(ereignisID).then(kommen =>{
         const ereignisZeitpunkt = new Date(kommen[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
         const month = ereignisZeitpunkt.getMonth()
@@ -71,8 +71,8 @@ export class ZeitintervallbuchungListEntry extends Component {
     });
   }
 
-  getGehenById = (zeitintervall) => {
-    OneAPI.getAPI().getGehen(zeitintervall.ende).then(gehen =>{
+  getGehenById = (ereignisID) => {
+    OneAPI.getAPI().getGehen(ereignisID).then(gehen =>{
         const ereignisZeitpunkt = new Date(gehen[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
         const month = ereignisZeitpunkt.getMonth()
@@ -99,8 +99,8 @@ export class ZeitintervallbuchungListEntry extends Component {
       loading: true
     });
   }
-  getEreignis1ById = (zeitintervall) => {
-    OneAPI.getAPI().getEreignis(zeitintervall.start).then(ereignis =>{
+  getEreignis1ById = (ereignisID) => {
+    OneAPI.getAPI().getEreignis(ereignisID).then(ereignis =>{
         const ereignisZeitpunkt = new Date(ereignis[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
         const month = ereignisZeitpunkt.getMonth()
@@ -129,8 +129,8 @@ export class ZeitintervallbuchungListEntry extends Component {
     });
   }
 
-  getEreignis2ById = (zeitintervall) => {
-    OneAPI.getAPI().getEreignis(zeitintervall.ende).then(ereignis =>{
+  getEreignis2ById = (ereignisID) => {
+    OneAPI.getAPI().getEreignis(ereignisID).then(ereignis =>{
         const ereignisZeitpunkt = new Date(ereignis[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
         const month = ereignisZeitpunkt.getMonth()
@@ -219,8 +219,8 @@ export class ZeitintervallbuchungListEntry extends Component {
       })
         return zeitintervall}
       ).then(zeitintervall => {
-        this.getKommenById(zeitintervall[0]);
-        this.getGehenById(zeitintervall[0])
+        this.getKommenById(zeitintervall[0].start);
+        this.getGehenById(zeitintervall[0].ende)
       }).catch(e =>
         this.setState({ // Reset state with error from catch 
 
@@ -239,8 +239,8 @@ export class ZeitintervallbuchungListEntry extends Component {
       })
       return zeitintervall}
       ).then(zeitintervall=>{
-        this.getEreignis1ById(zeitintervall[0]);
-        this.getEreignis2ById(zeitintervall[0])
+        this.getEreignis1ById(zeitintervall[0].start);
+        this.getEreignis2ById(zeitintervall[0].ende)
       }).catch(e =>
         this.setState({ // Reset state with error from catch 
 
@@ -306,6 +306,40 @@ export class ZeitintervallbuchungListEntry extends Component {
 
   ZeitintervallbuchungUpdateFormClosed = () =>{
     this.setState({
+      openUpdateForm: false
+    })
+  }
+  saveProjektarbeit = (obj) =>{
+    this.setState({
+      zeitintervall: obj,
+      openUpdateForm: false
+    })
+  }
+  saveEreignis1 = (obj) =>{
+    this.getEreignis1ById(obj.id)
+    this.setState({
+      ereignis1: obj,
+      openUpdateForm: false
+    })
+  }
+  saveEreignis2 = (obj) =>{
+    this.getEreignis2ById(obj.id)
+    this.setState({
+      ereignis2: obj,
+      openUpdateForm: false
+    })
+  }
+  saveKommen = (obj) =>{
+    this.getKommenById(obj.id)
+    this.setState({
+      ereignis1: obj,
+      openUpdateForm: false
+    })
+  }
+  saveGehen = (obj) =>{
+    this.getGehenById(obj.id)
+    this.setState({
+      ereignis2: obj,
       openUpdateForm: false
     })
   }
@@ -382,7 +416,9 @@ componentDidMount() {
               {(buchung.bezeichnung == 'Projektarbeit') ? zeitintervall ?<div>Tätigkeitsbeschreibung: {zeitintervall.beschreibung}</div>:null:null}
           </AccordionDetails>
         </Accordion>
-        <ZeitintervallbuchungUpdateForm buchung={buchung} zeitintervall={zeitintervall} ereignis1={ereignis1} ereignis2={ereignis2} show={openUpdateForm} onClose={this.ZeitintervallbuchungUpdateFormClosed}/>
+        <ZeitintervallbuchungUpdateForm buchung={buchung} zeitintervall={zeitintervall} ereignis1={ereignis1} ereignis2={ereignis2} show={openUpdateForm} 
+        onClose={this.ZeitintervallbuchungUpdateFormClosed} saveProjektarbeit={this.saveProjektarbeit} saveKommen={this.saveKommen} saveGehen={this.saveGehen}
+        saveEreignis1={this.saveEreignis1} saveEreignis2={this.saveEreignis2}/>
       </div>
     )
   }

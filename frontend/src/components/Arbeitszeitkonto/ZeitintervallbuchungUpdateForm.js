@@ -32,11 +32,9 @@ handleFormClosed = () => {
 updateProjektarbeit = () => {
   let newProjektarbeit = Object.assign(new ProjektarbeitBO(), this.props.zeitintervall);
   newProjektarbeit.setBezeichnung(this.state.zeitintervallBezeichnung)
-  newProjektarbeit.setBeschreibgun(this.state.projektarbeitBeschreibung)
+  newProjektarbeit.setBeschreibung(this.state.projektarbeitBeschreibung)
   OneAPI.getAPI().updateProjektarbeit(newProjektarbeit, this.props.zeitintervall.id).then(projektarbeit =>
-    this.setState({
-
-    })
+    this.props.saveProjektarbeit(projektarbeit)
     ).catch(e =>
       this.setState({ // Reset state with error from catch 
 
@@ -47,14 +45,67 @@ updateProjektarbeit = () => {
 
   });
 }
+
+updateKommen = () => {
+  let newKommen = Object.assign(new KommenBO(), this.props.ereignis1);
+  newKommen.setZeitpunkt(this.state.zeitintervallBeginn)
+  OneAPI.getAPI().updateKommen(newKommen, this.props.ereignis1.id).then(kommen =>
+    this.props.saveKommen(kommen)
+    ).catch(e =>
+      this.setState({ // Reset state with error from catch 
+
+      }),
+    );
+  // set loading to true
+  this.setState({
+
+  });
+}
+updateGehen = () => {
+  let newGehen = Object.assign(new GehenBO(), this.props.ereignis2);
+  newGehen.setZeitpunkt(this.state.zeitintervallEnde)
+  OneAPI.getAPI().updateGehen(newGehen, this.props.ereignis2.id).then(gehen =>
+    this.props.saveGehen(gehen)
+    ).catch(e =>
+      this.setState({ // Reset state with error from catch 
+
+      }),
+    );
+  // set loading to true
+  this.setState({
+
+  });
+}
+
+updateEreignis = (zeitpunkt, obj, isEreignis1) => {
+  let newEreignis = Object.assign(new EreignisBO(), obj);
+  newEreignis.setZeitpunkt(zeitpunkt)
+  OneAPI.getAPI().updateKommen(newEreignis, obj.id).then(ereignis =>{
+    if(isEreignis1){
+    this.props.saveEreignis1(ereignis)
+    }
+    else{this.props.saveEreignis2(ereignis)}
+  }).catch(e =>
+      this.setState({ // Reset state with error from catch 
+
+      }),
+    );
+  // set loading to true
+  this.setState({
+
+  });
+}
+
 handleUpdate = () => {
   if(this.props.buchung.bezeichnung == "Projektarbeit"){
     this.updateProjektarbeit();
     this.updateKommen();
     this.updateGehen();
   }
-  this.updateEreignis1();
-  this.updateEreignis2();
+  else{
+  this.updateEreignis(this.state.zeitintervallBeginn, this.props.ereignis1, true);
+  this.updateEreignis(this.state.zeitintervallEnde, this.props.ereignis2, false);
+} 
 }
 
 dateFilterChanged = (event) => {
@@ -97,7 +148,7 @@ componentDidMount = () => {
   projektarbeitBeschreibung: bs,
   loading: false
   })
-  }, 5000);
+  }, 3000);
 }
   render() {
       const {show} = this.props;
@@ -185,6 +236,10 @@ ZeitintervallbuchungUpdateForm.propTypes = {
    ereignis2: PropTypes.any,
    buchung: PropTypes.any,
    zeitintervall: PropTypes.any,
-
+   saveProjektarbeit: PropTypes.any,
+   saveKommen: PropTypes.any,
+   saveGehen: PropTypes.any,
+   saveEreignis1: PropTypes.any,
+   saveEreignis2: PropTypes.any,
   }
 export default ZeitintervallbuchungUpdateForm
