@@ -1182,14 +1182,14 @@ export default class OneAPI {
     });
   }
 
-  updateAktivitäten(id) {
+  updateAktivitäten(aktvitätBO, id) {
     return this.#fetchAdvanced(this.#updateAktivitätenURL(id), {
       method: "PUT",
       headers: {
         Accept: "application/json, text/plain",
         "Content-type": "application/json",
       },
-      body: JSON.stringify(id),
+      body: JSON.stringify(aktvitätBO),
     }).then((responseJSON) => {
       // We always get an array of CustomerBOs.fromJSON
       let responseAktivitätenBO = AktivitätenBO.fromJSON(responseJSON)[0];

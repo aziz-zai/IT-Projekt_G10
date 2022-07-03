@@ -635,8 +635,7 @@ this.setState({
         </Typography> 
           {
             aktivitäten.map(aktivität => <AktivitätenDetail key={aktivität.getID()} project={project} 
-            aktivitätDeleted={this.aktivitätDeleted} aktivität={aktivität.getID()} akt_bezeichnung={aktivität.getBezeichnung()} akt_dauer={aktivität.getDauer()} 
-            akt_capacity={aktivität.getCapacity()} user={user} projektleiter={projektleiterIsUser ? true:false}/>)
+            aktivitätDeleted={this.aktivitätDeleted} aktivität={aktivität}  user={user} projektleiter={projektleiterIsUser ? true:false}/>)
           }
             <LoadingProgress show={loadingInProgress} />
         </div>
