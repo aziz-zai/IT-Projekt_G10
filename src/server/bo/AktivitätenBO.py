@@ -1,7 +1,7 @@
 from .BusinessObject import BusinessObject
 
 """
-Klasse Aktivitäten
+Klasse Aktivitäten mit einfachen Methoden zum setzen der Klassenvariablen
 
 """
 
@@ -59,7 +59,7 @@ class Aktivitäten(BusinessObject):
 
     @staticmethod
     def from_dict(dictionary=dict()):
-        """Umwandeln eines Python dict() in eine Aktivitäten()."""
+        """Umwandeln eines Python dict() in eine Aktivität()."""
         obj = Aktivitäten()
         obj.set_bezeichnung(dictionary["bezeichnung"])
         obj.set_capacity(dictionary["capacity"])

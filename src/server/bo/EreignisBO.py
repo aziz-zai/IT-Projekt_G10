@@ -1,8 +1,7 @@
 from .BusinessObject import BusinessObject
 
 """
-Klasse Ereignis
-
+Klasse Ereignis mit einfachen Methoden zum setzen der Klassenvariablen
 """
 
 

@@ -1,7 +1,7 @@
 from .BusinessObject import BusinessObject
 
 """
-Klasse Membership
+Klasse Membership mit einfachen Methoden zum Setzen der Klassenvariablen
 
 """
 

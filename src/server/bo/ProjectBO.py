@@ -1,7 +1,7 @@
 from .BusinessObject import BusinessObject
 
 """
-Klasse Projekt
+Klasse Projekt mit einfachen Methoden zum Setzen der Klassenvariablen
 
 """
 

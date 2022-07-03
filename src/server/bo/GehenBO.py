@@ -1,7 +1,7 @@
 from .EreignisBO import Ereignis
 
 """
-Klasse Gehen
+Subklasse Gehen von Ereignis
 
 """
 
