@@ -1,7 +1,7 @@
 from .BusinessObject import BusinessObject
 
 """
-Klasse User
+Klasse User mit einfachen Methoden zum Setzen der Klassenvariablen
 
 """
 

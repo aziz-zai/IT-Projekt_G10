@@ -86,7 +86,7 @@ class AbwesenheitMapper(Mapper):
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE abwesenheit SET timestamp=%s, start=%s, ende=%s, abwesenheitsart=%s, bezeichnung=%s  WHERE id=%s"
+        command = "UPDATE abwesenheit SET timestamp=%s, start=%s, ende=%s, abwesenheitsart=%s, bezeichnung=%s WHERE id=%s"
         data = (
             abwesenheit.get_timestamp(),
             abwesenheit.get_id(),

@@ -12,9 +12,9 @@ from .bo.UserBO import User
 from .bo.ProjectBO import Project
 from server.bo.AktivitätenBO import Aktivitäten
 from server.bo.ArbeitszeitkontoBO import Arbeitszeitkonto
-
 from server.db.ZeitintervallMapper import ZeitintervallMapper
 from server.db.MembershipMapper import MembershipMapper
+
 from .db.AktivitätenMapper import AktivitätenMapper
 from .db.UserMapper import UserMapper
 from .db.ProjectMapper import ProjectMapper
