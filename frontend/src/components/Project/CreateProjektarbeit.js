@@ -70,7 +70,6 @@ class CreateProjektarbeit extends Component {
 
       addGehenSoll = (kommen) => {
           let newGehen = new GehenBO(this.state.projektarbeitEnde, "Arbeitsende")
-          console.log('gehen', newGehen, kommen.id, this.props.user, this.state.erstelltFuer, this.props.activity, this.state.projektArbeitBezeichnung)
         OneAPI.getAPI().addGehenSoll(newGehen, kommen.id, this.props.user, this.state.erstelltFuer, this.props.activity, this.state.projektArbeitBezeichnung ).then(gehen =>
           this.setState({
             loadingInProgress: false, // loading indicator 
@@ -135,7 +134,7 @@ class CreateProjektarbeit extends Component {
     </IconButton></DialogTitle>
     {success ?
               <Stack sx={{ width: '100%' }} spacing={2}>
-                      <Alert onClose={this.handleClose}>Profil Daten erfolgreich gespeichert!</Alert>
+                      <Alert onClose={this.handleClose}>Projektarbeit erfolgreich erstellt!</Alert>
               </Stack>:null}
         <DialogContent>
         <DialogContentText id="alert-dialog-erstelltfürinput">

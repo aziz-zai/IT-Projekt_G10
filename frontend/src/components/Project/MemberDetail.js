@@ -47,7 +47,7 @@ export class Membership extends Component {
     return (
       <Paper variant='outlined' class="papermitarbeiter">
         <AccountCircleIcon/>      
-        {member.vorname} {member.nachname} &nbsp;&nbsp; <strong>IST: {String(istStunden).padStart(2, "0")}h</strong> &nbsp; <strong>SOLL: {String(sollStunden).padStart(2, "0")}h</strong>
+        {member.vorname} {member.nachname} &nbsp;&nbsp; <strong>IST: {String(istStunden).padStart(1, "0")}h</strong> &nbsp; <strong>SOLL: {String(sollStunden).padStart(1, "0")}h</strong>
         
         {projektleiter ?<Button><DeleteIcon onClick={this.deleteMember} color="secondary"/>
           </Button>   :null}
