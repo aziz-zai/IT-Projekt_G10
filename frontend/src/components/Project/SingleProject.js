@@ -645,7 +645,7 @@ this.setState({
         Projektmitarbeiter
         </Typography> 
         {
-            membership.map(member => <MemberDetail key={member.id}
+            membership.map(member => <MemberDetail key={member.id} istBuchungen={zeitintervallbuchungIst} sollBuchungen={zeitintervallbuchungSoll}
             member={member} project={project.id} memberDeleted={this.memberDeleted} istStunden={IstZeitdifferenz} sollStunden={sollZeitdifferenz}
             projektleiter={projektleiterIsUser ? true:false}/> )
           }

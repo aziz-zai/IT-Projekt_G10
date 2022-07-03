@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {DialogTitle, Dialog, Button, Tooltip, IconButton, Paper } from '@mui/material';
+import {DialogTitle, Dialog, Button, Tooltip, IconButton, Paper, ButtonGroup } from '@mui/material';
 import './Project.css'
 import './Aktivitäten.css'
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
 import OneAPI from '../../api/OneAPI';
 import ProjektarbeitDetails from './ProjektarbeitDetails';
 import { Card, List, ListItem } from '@material-ui/core';
@@ -160,8 +161,13 @@ class AktivitätenDetail extends Component {
         <div><strong>{akt_dauer}</strong> Tage übrig</div>
         <div><strong>{akt_capacity}</strong>h übrig</div>
         {projektleiter ? 
+        <ButtonGroup>
+          <Button>
+            <EditIcon onClick={this.updateA}/>
+          </Button>
         <Button><DeleteIcon onClick={this.deleteAktivität} color="secondary"/>
-          </Button>:null}
+          </Button>
+          </ButtonGroup>:null}
       </Paper>
        {openActivity?
       <Dialog open={openActivity} onClose={this.closeActivityDetails} maxWidth='md' fullWidth sx={{overflow:"scroll", maxHeight: "100vh"}}>

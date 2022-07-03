@@ -315,6 +315,7 @@ export class ZeitintervallbuchungListEntry extends Component {
       zeitintervall: obj,
       openUpdateForm: false
     })
+    this.props.saveBuchung(obj, this.props.istBuchung)
   }
   saveBuchung = (obj) =>{
     this.setState({

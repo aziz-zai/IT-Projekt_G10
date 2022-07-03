@@ -55,7 +55,7 @@ class MembershipMapper(Mapper):
             SELECT id, timestamp, vorname, nachname, email, benutzername, google_user_id from projectone.user
             WHERE id IN(
                 SELECT user from projectone.membership
-                WHERE project={} AND projektleiter=FALSE)""".format(
+                WHERE project={})""".format(
             project
         )
         cursor.execute(command)

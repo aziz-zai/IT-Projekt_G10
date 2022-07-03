@@ -280,10 +280,10 @@ class Administration(object):
         with ProjektarbeitMapper() as mapper:
             return mapper.find_by_key(id)
 
-    def get_projektarbeit_by_activity_id(self, activity):
+    def get_projektarbeit_by_activity_id(self, activity, user):
         """Die Projektarbeit anhand der Aktivitäten ID auslesen"""
         with ProjektarbeitMapper() as mapper:
-            return mapper.find_by_activity_id(activity)
+            return mapper.find_by_activity_id(activity, user)
 
     def get_projektarbeit_by_start(self, start):
         """Die Projektarbeit anhand der Aktivitäten ID auslesen"""

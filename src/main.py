@@ -556,18 +556,18 @@ class ProjektarbeitenOperations(Resource):
         return "", 200
 
 
-@projectone.route("/projektarbeiten-activity/<int:activity>")
+@projectone.route("/projektarbeiten-activity/<int:activity>/<int:user>")
 @projectone.response(500, "Falls es zu einem Server-seitigen Fehler kommt.")
 @projectone.param("id", "Die ID des Projektarbeit-Objekts")
 class ProjektarbeitenByActivityIdOperations(Resource):
     @projectone.marshal_with(projektarbeiten)
-    def get(self, activity):
+    def get(self, activity, user):
         """Auslesen eines bestimmten Projektarbeit-Objekts anhand der Aktivitäten-ID.
 
         Das auszulesende Objekt wird durch die ```Activity-ID``` in dem URI bestimmt.
         """
         adm = Administration()
-        projektarbeitenac = adm.get_projektarbeit_by_activity_id(activity)
+        projektarbeitenac = adm.get_projektarbeit_by_activity_id(activity, user)
         return projektarbeitenac
 
 

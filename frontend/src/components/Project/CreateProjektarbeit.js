@@ -46,7 +46,6 @@ class CreateProjektarbeit extends Component {
         };
       addKommenSoll = () => {
           let newKommen = new KommenBO(this.state.projektarbeitAnfang, "Arbeitsbeginn")
-          console.log('newkommen', newKommen)
         OneAPI.getAPI().addKommenSoll(newKommen, this.props.user, this.state.erstelltFuer).then(kommen =>{
           this.setState({
             kommen: kommen,
@@ -141,7 +140,7 @@ class CreateProjektarbeit extends Component {
         <FormControl sx={{ m: 1, minWidth: 120 }}>
         <InputLabel variant="standard" htmlFor="uncontrolled-native">
         Für
-        </InputLabel>{console.log('erstellt', erstelltFuer)}
+        </InputLabel>
         <NativeSelect
           defaultValue={erstelltFuer}
           inputProps={{

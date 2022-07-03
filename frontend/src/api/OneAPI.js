@@ -83,8 +83,8 @@ export default class OneAPI {
   //Projektarbeit related
   #getProjektarbeitURL = (id) =>
     `${this.#OneServerBaseURL}/projektarbeiten/${id}`;
-  #getProjektarbeitByActivityURL = (activity) =>
-    `${this.#OneServerBaseURL}/projektarbeiten-activity/${activity}`;
+  #getProjektarbeitByActivityURL = (activity, user) =>
+    `${this.#OneServerBaseURL}/projektarbeiten-activity/${activity}/${user}`;
   #getProjektarbeitByStartURL = (start) =>
     `${this.#OneServerBaseURL}/projektarbeit-by-start/${start}`;
   #addProjektarbeitURL = () => `${this.#OneServerBaseURL}/projektarbeiten`;
@@ -549,9 +549,9 @@ export default class OneAPI {
     );
   }
 
-  getProjektarbeitByActivity(activity) {
+  getProjektarbeitByActivity(activity, user) {
     return this.#fetchAdvanced(
-      this.#getProjektarbeitByActivityURL(activity)
+      this.#getProjektarbeitByActivityURL(activity, user)
     ).then((responseJSON) => {
       let projektarbeitenBOs = ProjektarbeitBO.fromJSON(responseJSON);
       // console.info(customerBOs);
