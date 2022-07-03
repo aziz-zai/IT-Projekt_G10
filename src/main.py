@@ -1239,8 +1239,6 @@ class GehenSollListOperations(Resource):
             adm.create_zeitintervallbuchung(
                 proarb.get_id(), False, erstellt_von, erstellt_fuer, "Projektarbeit"
             )
-
-            adm.update_arbeitszeitkonto_gleitzeit(erstellt_fuer)
             return g, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
