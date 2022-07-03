@@ -17,8 +17,8 @@ export default class OneAPI {
   // Singelton instance
   static #api = null;
 
-  // Local Python backend
-  #OneServerBaseURL = "http://localhost:5000/projectone";
+  // Backend URL
+  #OneServerBaseURL = "/projectone";
 
   // User related
   #getUserGidURL = (google_user_id) =>

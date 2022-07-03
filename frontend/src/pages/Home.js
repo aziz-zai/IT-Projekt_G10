@@ -9,7 +9,6 @@ import SideBar from '../components/SideBar'
 import Project from '../components/Project'
 import { getTabsUtilityClass } from '@mui/material';
 import MyProfile from './MyProfile';
-import Test from '../components/Test';
 
 
 export class Home extends Component {
@@ -28,7 +27,6 @@ export class Home extends Component {
  
   }
 
-  /** gets the balance for this account */
 
 
   render() {

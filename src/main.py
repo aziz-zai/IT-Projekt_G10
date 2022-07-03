@@ -1,6 +1,6 @@
 # Unser Service basiert auf Flask
 from flask import Flask
-
+from flask import request, redirect, url_for
 # Auf Flask aufbauend nutzen wir RestX
 from flask_restx import Api, Resource, fields
 
@@ -35,7 +35,7 @@ from SecurityDecorator import secured
 """
 Instanzieren von Flask. Am Ende dieser Datei erfolgt dann erst der 'Start' von Flask.
 """
-app = Flask(__name__)
+app = Flask(__name__, static_folder="./build", static_url_path='/')
 
 """
 Alle Ressourcen mit dem Präfix /projectone für **Cross-Origin Resource Sharing** (CORS) freigeben.
@@ -43,6 +43,19 @@ Diese eine Zeile setzt die Installation des Package flask-cors voraus.
 """
 CORS(app, resources=r"/projectone/*", supports_credentials=True)
 
+app.config['ERROR_404_HELP'] = False
+
+
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
+
+@app.errorhandler(404)
+def handle_404(e):
+    if request.path.startswith('/projectone'):
+        return "Fehler", 404
+    else:
+        return redirect(url_for('index'))
 """
 In dem folgenden Abschnitt bauen wir ein Modell auf, das die Datenstruktur beschreibt, 
 auf deren Basis Clients und Server Daten austauschen. Grundlage hierfür ist das Package flask-restx. 

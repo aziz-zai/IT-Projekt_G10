@@ -79,8 +79,6 @@ export class Zeiterfassung extends Component {
   
   }
 
-  /** gets the balance for this account */
-
   addKommenIst = () => {
     OneAPI.getAPI().addKommenIst(this.props.user[0].id, this.state.projektarbeit, this.state.kommenZeit).then(kommen =>
       this.setState({

@@ -24,7 +24,7 @@ class Mapper(AbstractContextManager, ABC):
             self._cnx = connector.connect(
                 user="root",
                 password="Endgegner",
-                unix_socket="/cloudsql/python-bankprojekt-thies:europe-west3:bank-db-thies",
+                unix_socket='/cloudsql/total-biplane-354020:europe-west3:projectone-db',
                 database="projectone",
             )
         else:
