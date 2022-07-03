@@ -17,6 +17,8 @@ export class Ereignisbuchung extends Component {
       deletedSollTrue: false,
     };
   }
+
+  //Alle Ereignisbuchungen die Ist Buchungen sind
   getEreignisbuchungIST = () => {
     OneAPI.getAPI()
       .getEreignisbuchungIST(
@@ -38,6 +40,7 @@ export class Ereignisbuchung extends Component {
     this.setState({});
   };
 
+    //Alle Ereignisbuchungen die soll Buchungen sind
   getEreignisbuchungSOLL = () => {
     OneAPI.getAPI()
       .getEreignisbuchungSOLL(
@@ -59,6 +62,7 @@ export class Ereignisbuchung extends Component {
     this.setState({});
   };
 
+  //Lösche ein Ist Ereignisbuchung und filter das array 
   EreignisbuchungIstDeleted = (deletedBuchung) => {
     this.setState({
       ereignisbuchungen: this.state.ereignisbuchungen.filter(
@@ -67,6 +71,7 @@ export class Ereignisbuchung extends Component {
       deletedIstTrue: true,
     });
   };
+    //Lösche ein Soll Ereignisbuchung und filter das array 
   EreignisbuchungSollDeleted = (deletedBuchung) => {
     this.setState({
       ereignisbuchungenSoll: this.state.ereignisbuchungenSoll.filter(

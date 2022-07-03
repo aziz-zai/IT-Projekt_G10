@@ -43,6 +43,7 @@ export class ZeitintervallbuchungListEntry extends Component {
     };
   }
 
+  //Hole das KommenBO mit der ereignisID von dem Zeitintervall Start
   getKommenById = (ereignisID) => {
     OneAPI.getAPI().getKommen(ereignisID).then(kommen =>{
         const ereignisZeitpunkt = new Date(kommen[0].zeitpunkt)
@@ -72,6 +73,7 @@ export class ZeitintervallbuchungListEntry extends Component {
     });
   }
 
+    //Hole das GehenBO mit der ereignisID von dem Zeitintervall Ende
   getGehenById = (ereignisID) => {
     OneAPI.getAPI().getGehen(ereignisID).then(gehen =>{
         const ereignisZeitpunkt = new Date(gehen[0].zeitpunkt)
@@ -100,6 +102,8 @@ export class ZeitintervallbuchungListEntry extends Component {
       loading: true
     });
   }
+
+  //Hole das EreignisBO mit der ereignisID von dem Zeitintervall Start
   getEreignis1ById = (ereignisID) => {
     OneAPI.getAPI().getEreignis(ereignisID).then(ereignis =>{
         const ereignisZeitpunkt = new Date(ereignis[0].zeitpunkt)
@@ -129,7 +133,7 @@ export class ZeitintervallbuchungListEntry extends Component {
       loading: true
     });
   }
-
+  //Hole das KommenBO mit der ereignisID von dem Zeitintervall Ende
   getEreignis2ById = (ereignisID) => {
     OneAPI.getAPI().getEreignis(ereignisID).then(ereignis =>{
         const ereignisZeitpunkt = new Date(ereignis[0].zeitpunkt)
@@ -160,6 +164,7 @@ export class ZeitintervallbuchungListEntry extends Component {
     });
   }
 
+  // Erstellt Für User finden durch buchung
   getErstelltFuerById = () => {
     OneAPI.getAPI().getUser(this.props.buchung.erstellt_für).then(user =>
       this.setState({
@@ -177,6 +182,7 @@ export class ZeitintervallbuchungListEntry extends Component {
     });
   }
 
+  // Erstellt von user finden durch Buchung
   getErstelltVonById = () => {
     OneAPI.getAPI().getUser(this.props.buchung.erstellt_von).then(user =>
       this.setState({
@@ -193,6 +199,7 @@ export class ZeitintervallbuchungListEntry extends Component {
     });
   }
 
+//Projektlaufzeit Zeitintervall getten durch buchung 
   getProjektlaufzeit = () => {
     OneAPI.getAPI().getZeitintervall(this.props.buchung.zeitintervall).then(zeitintervall =>{
       this.setState({
@@ -213,6 +220,7 @@ export class ZeitintervallbuchungListEntry extends Component {
     });
   }
 
+  // Projektarbeit getten durch buchung
   getProjektarbeit = () => {
     OneAPI.getAPI().getProjektarbeit(this.props.buchung.zeitintervall).then(zeitintervall =>{
       this.setState({
@@ -233,6 +241,7 @@ export class ZeitintervallbuchungListEntry extends Component {
     });
   }
 
+  //Abwesenheit getten durch buchung
   getAbwesenheit = () => {
     OneAPI.getAPI().getAbwesenheit(this.props.buchung.zeitintervall).then(zeitintervall =>{
       this.setState({
@@ -253,6 +262,7 @@ export class ZeitintervallbuchungListEntry extends Component {
     });
   }
 
+  //Pause getten durch buchung
   getPause = () => {
     OneAPI.getAPI().getPause(this.props.buchung.zeitintervall).then(zeitintervall =>{
       this.setState({
@@ -273,6 +283,7 @@ export class ZeitintervallbuchungListEntry extends Component {
     });
   }
 
+  //Buchung löschen
   deleteZeitintervallbuchung = () => {
     OneAPI.getAPI().deleteZeitintervallbuchung(this.props.buchung.id).then(zeitintervallbuchung =>{
       this.setState({ // Reset state with error from catch 

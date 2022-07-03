@@ -24,12 +24,12 @@ export class Membership extends Component {
 
     deleteMember = () => {
       OneAPI.getAPI().deleteMembership(this.props.member.id, this.props.project).then(() => {
-        this.setState({  // Set new state when AccountBOs have been fetched
+        this.setState({  // Set new state when MemberBO have been fetched
           deletingInProgress: false, // loading indicator 
           deletingError: null
         })
         // console.log(account);
-        this.props.memberDeleted(this.props.member.id);  // call the parent with the deleted customer
+        this.props.memberDeleted(this.props.member.id);  // call the parent with the deleted member
       }).catch(e =>
         this.setState({ // Reset state with error from catch 
           deletingInProgress: false,

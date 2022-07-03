@@ -13,9 +13,9 @@ export default class ZeitintervallBO extends BusinessObject {
   }
 
   /**
-   * Sets a new firstname.
+   * Sets a new Start.
    *
-   * @param {String} aStart - the new firstname of this CustomerBO.
+   * @param {String} aStart - the new Start of this Zeitintervall.
    */
 
   setBezeichnung(aBezeichnung) {

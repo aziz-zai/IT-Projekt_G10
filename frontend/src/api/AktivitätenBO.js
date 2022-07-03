@@ -14,9 +14,9 @@ export default class AktivitätenBO extends BusinessObject {
   }
 
   /**
-   * Sets a new firstname.
+   * Sets a new aBezeichnung.
    *
-   * @param {String} aBezeichnung - the new firstname of this CustomerBO.
+   * @param {String} aBezeichnung - the new aBezeichnung of this AktivitätBO.
    */
   setBezeichnung(aBezeichnung) {
     this.bezeichnung = aBezeichnung;

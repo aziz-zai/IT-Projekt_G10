@@ -43,6 +43,7 @@ export class Abwesenheit extends Component {
     });
   };
 
+//schau ob die Abwesenheit Ein Ende oder kein Ende haben soll
   handleAbwesenheitOhneEndeChecked = () => {
     if (this.state.abwesenheitOhneEnde) {
       this.setState({
@@ -57,7 +58,8 @@ export class Abwesenheit extends Component {
     }
   };
 
-  addAbwesenheitsEnde = (ereignis) => {
+  //Erzeuge Abwesenheits Endereignis
+  addAbwesenheitsEnde = (ereignis) => { 
     let zeitpunkt =
       this.state.abwesenheitsart == "Gleitzeit"
         ? this.state.abwesenheitsZeit2
@@ -84,6 +86,9 @@ export class Abwesenheit extends Component {
     // set loading to true
     this.setState({});
   };
+
+  
+  //Erzeuge Abwesenheits Startereignis
   addAbwesenheitsBeginn = () => {
     let zeitpunkt =
       this.state.abwesenheitsart == "Gleitzeit"

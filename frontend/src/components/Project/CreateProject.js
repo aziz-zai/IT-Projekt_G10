@@ -74,6 +74,7 @@ export class CreateProject extends Component {
     });
   }
 
+  //ProjektlaufzeitBeginn hinzuüfen dem Projekt
   addProjektlaufzeitAnfang = () => {
     let zeitpunkt = this.state.projektlaufzeitAnfang + "T00:00"
     let newProjektlaufzeitEreignis = new EreignisBO(zeitpunkt, "Projektanfang" );
@@ -96,6 +97,7 @@ export class CreateProject extends Component {
   });
 }
 
+//Projektlaufzeit Ende dem Projekt hinzuüfne
 addProjektlaufzeitEnde = (ereignis) => {
   let zeitpunkt = this.state.projektlaufzeitAnfang + "T00:00"
   let newProjektlaufzeitEreignis = new EreignisBO(zeitpunkt, "Projektende" );

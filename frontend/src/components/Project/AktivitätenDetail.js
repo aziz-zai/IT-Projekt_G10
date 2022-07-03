@@ -78,6 +78,7 @@ class AktivitätenDetail extends Component {
     });
   }
 
+  //Aktivität updaten
   updateAktivität = () => {
     let newAktivität = new AktivitätenBO(this.state.bezeichnung,this.state.dauer, this.state.kapazität,this.props.project.id)
     OneAPI.getAPI().updateAktivitäten(newAktivität, this.props.aktivität.id).then(aktivität =>
@@ -95,6 +96,7 @@ class AktivitätenDetail extends Component {
     });
 }
 
+//Aktvität deleten
   deleteAktivität = () => {
     OneAPI.getAPI().deleteAktivitäten(this.props.aktivität.id).then(() => {
       this.setState({  // Set new state when AccountBOs have been fetched

@@ -239,7 +239,6 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#getUserGidURL(google_user_id)).then(
       (responseJSON) => {
         let usersBOs = UserBO.fromJSON(responseJSON);
-        // console.info(customerBOs);
         return new Promise(function (resolve) {
           resolve(usersBOs);
         });
@@ -250,7 +249,6 @@ export default class OneAPI {
   getUser(id) {
     return this.#fetchAdvanced(this.#getUserURL(id)).then((responseJSON) => {
       let usersBOs = UserBO.fromJSON(responseJSON);
-      // console.info(customerBOs);
       return new Promise(function (resolve) {
         resolve(usersBOs);
       });
@@ -262,7 +260,6 @@ export default class OneAPI {
       this.#getPotentialMembersURL(user, project)
     ).then((responseJSON) => {
       let usersBOs = UserBO.fromJSON(responseJSON);
-      // console.info(customerBOs);
       return new Promise(function (resolve) {
         resolve(usersBOs);
       });
@@ -278,7 +275,7 @@ export default class OneAPI {
       },
       body: JSON.stringify(userBO),
     }).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON
+      // We always get an array of UserBO.fromJSON
       let responseUserBO = UserBO.fromJSON(responseJSON)[0];
       //
       return new Promise(function (resolve) {
@@ -291,9 +288,8 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#deleteUserURL(id), {
       method: "DELETE",
     }).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON
+      // We always get an array of UserBO.fromJSON
       let responseUserBO = UserBO.fromJSON(responseJSON)[0];
-      // console.info(accountBOs);
       return new Promise(function (resolve) {
         resolve(responseUserBO);
       });
@@ -308,7 +304,6 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#getProjectsURL(id)).then(
       (responseJSON) => {
         let projectsBOs = ProjectBO.fromJSON(responseJSON);
-        // console.info(customerBOs);
         return new Promise(function (resolve) {
           resolve(projectsBOs);
         });
@@ -383,7 +378,7 @@ export default class OneAPI {
       },
       body: JSON.stringify(projectBO),
     }).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON
+      // We always get an array of ProjectBOs.fromJSON
       let responseProjectBO = ProjectBO.fromJSON(responseJSON)[0];
       //
       return new Promise(function (resolve) {
@@ -396,7 +391,6 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#getProjektlaufzeitURL(id)).then(
       (responseJSON) => {
         let projectsBOs = ProjectBO.fromJSON(responseJSON);
-        // console.info(customerBOs);
         return new Promise(function (resolve) {
           resolve(projectsBOs);
         });
@@ -408,9 +402,7 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#deleteProjectURL(id), {
       method: "DELETE",
     }).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON
       let responseProjectBO = ProjectBO.fromJSON(responseJSON)[0];
-      // console.info(accountBOs);
       return new Promise(function (resolve) {
         resolve(responseProjectBO);
       });
@@ -425,7 +417,6 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#getMembershipURL(id)).then(
       (responseJSON) => {
         let membershipBOs = MembershipBO.fromJSON(responseJSON);
-        // console.info(customerBOs);
         return new Promise(function (resolve) {
           resolve(membershipBOs);
         });
@@ -437,7 +428,6 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#getMembersByProjectURL(project)).then(
       (responseJSON) => {
         let membershipBOs = UserBO.fromJSON(responseJSON);
-        // console.info(customerBOs);
         return new Promise(function (resolve) {
           resolve(membershipBOs);
         });
@@ -450,7 +440,6 @@ export default class OneAPI {
       this.#getProjektleiterByProjectURL(project)
     ).then((responseJSON) => {
       let membershipBOs = UserBO.fromJSON(responseJSON);
-      // console.info(customerBOs);
       return new Promise(function (resolve) {
         resolve(membershipBOs);
       });
@@ -461,7 +450,6 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#getMembershipByUserURL(user)).then(
       (responseJSON) => {
         let projectBOs = ProjectBO.fromJSON(responseJSON);
-        // console.info(customerBOs);
         return new Promise(function (resolve) {
           resolve(projectBOs);
         });
@@ -474,7 +462,6 @@ export default class OneAPI {
       this.#getMembershipByUserAndProjectURL(user, project)
     ).then((responseJSON) => {
       let membershipBOs = ProjectBO.fromJSON(responseJSON);
-      // console.info(customerBOs);
       return new Promise(function (resolve) {
         resolve(membershipBOs);
       });
@@ -490,9 +477,7 @@ export default class OneAPI {
       },
       body: JSON.stringify(membershipBO),
     }).then((responseJSON) => {
-      // We always get an array of ProjectBOs.fromJSON, but only need one object
       let responseMembershipBO = MembershipBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseMembershipBO);
       });
@@ -511,9 +496,7 @@ export default class OneAPI {
         body: JSON.stringify(membershipBO),
       }
     ).then((responseJSON) => {
-      // We always get an array of MembershipBOs.fromJSON
       let responseMembershipBO = MembershipBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseMembershipBO);
       });
@@ -524,9 +507,7 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#deleteMembershipURL(user, project), {
       method: "DELETE",
     }).then((responseJSON) => {
-      // We always get an array of MembershipBO.fromJSON
       let responseMembershipBO = MembershipBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseMembershipBO);
       });
@@ -541,7 +522,6 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#getProjektarbeitURL(id)).then(
       (responseJSON) => {
         let projektarbeitenBOs = ProjektarbeitBO.fromJSON(responseJSON);
-        // console.info(customerBOs);
         return new Promise(function (resolve) {
           resolve(projektarbeitenBOs);
         });
@@ -554,7 +534,6 @@ export default class OneAPI {
       this.#getProjektarbeitByActivityURL(activity, user)
     ).then((responseJSON) => {
       let projektarbeitenBOs = ProjektarbeitBO.fromJSON(responseJSON);
-      // console.info(customerBOs);
       return new Promise(function (resolve) {
         resolve(projektarbeitenBOs);
       });
@@ -565,7 +544,6 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#getProjektarbeitByStartURL(start)).then(
       (responseJSON) => {
         let projektarbeitenBOs = ProjektarbeitBO.fromJSON(responseJSON);
-        // console.info(customerBOs);
         return new Promise(function (resolve) {
           resolve(projektarbeitenBOs);
         });
@@ -582,9 +560,7 @@ export default class OneAPI {
       },
       body: JSON.stringify(projektarbeitBO),
     }).then((responseJSON) => {
-      // We always get an array of ProjektarbeitBO.fromJSON, but only need one object
       let responseProjektarbeitBO = ProjektarbeitBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseProjektarbeitBO);
       });
@@ -600,9 +576,7 @@ export default class OneAPI {
       },
       body: JSON.stringify(projektarbeitBO),
     }).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON
       let responseProjektarbeitBO = ProjektarbeitBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseProjektarbeitBO);
       });
@@ -621,9 +595,7 @@ export default class OneAPI {
         body: JSON.stringify(projektarbeitBO),
       }
     ).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON
       let responseProjektarbeitBO = ProjektarbeitBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseProjektarbeitBO);
       });
@@ -634,9 +606,7 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#deleteProjektarbeitURL(id), {
       method: "DELETE",
     }).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON
       let responseProjektarbeitBO = ProjektarbeitBO.fromJSON(responseJSON)[0];
-      // console.info(accountBOs);
       return new Promise(function (resolve) {
         resolve(responseProjektarbeitBO);
       });
@@ -652,7 +622,6 @@ export default class OneAPI {
       (responseJSON) => {
         let zeitintervallbuchungBOs =
           ZeitintervallbuchungBO.fromJSON(responseJSON);
-        // console.info(customerBOs);
         return new Promise(function (resolve) {
           resolve(zeitintervallbuchungBOs);
         });
@@ -666,7 +635,6 @@ export default class OneAPI {
     ).then((responseJSON) => {
       let zeitintervallbuchungBOs =
         ZeitintervallbuchungBO.fromJSON(responseJSON);
-      // console.info(customerBOs);
       return new Promise(function (resolve) {
         resolve(zeitintervallbuchungBOs);
       });
@@ -679,7 +647,6 @@ export default class OneAPI {
     ).then((responseJSON) => {
       let zeitintervallbuchungBOs =
         ZeitintervallbuchungBO.fromJSON(responseJSON);
-      // console.info(customerBOs);
       return new Promise(function (resolve) {
         resolve(zeitintervallbuchungBOs);
       });
@@ -696,7 +663,6 @@ export default class OneAPI {
     ).then((responseJSON) => {
       let zeitintervallbuchungBOs =
         ZeitintervallbuchungBO.fromJSON(responseJSON);
-      // console.info(customerBOs);
       return new Promise(function (resolve) {
         resolve(zeitintervallbuchungBOs);
       });
@@ -713,7 +679,6 @@ export default class OneAPI {
     ).then((responseJSON) => {
       let zeitintervallbuchungBOs =
         ZeitintervallbuchungBO.fromJSON(responseJSON);
-      // console.info(customerBOs);
       return new Promise(function (resolve) {
         resolve(zeitintervallbuchungBOs);
       });
@@ -726,7 +691,6 @@ export default class OneAPI {
     ).then((responseJSON) => {
       let zeitintervallbuchungBOs =
         ZeitintervallbuchungBO.fromJSON(responseJSON);
-      // console.info(customerBOs);
       return new Promise(function (resolve) {
         resolve(zeitintervallbuchungBOs);
       });
@@ -739,7 +703,6 @@ export default class OneAPI {
     ).then((responseJSON) => {
       let zeitintervallbuchungBOs =
         ZeitintervallbuchungBO.fromJSON(responseJSON);
-      // console.info(customerBOs);
       return new Promise(function (resolve) {
         resolve(zeitintervallbuchungBOs);
       });
@@ -755,7 +718,6 @@ export default class OneAPI {
       },
       body: JSON.stringify(zeitintervallbuchungBO),
     }).then((responseJSON) => {
-      // We always get an array of ProjectBOs.fromJSON, but only need one object
       let responseZeitintervallbuchungBO =
         ZeitintervallbuchungBO.fromJSON(responseJSON)[0];
       //
@@ -777,7 +739,6 @@ export default class OneAPI {
         body: JSON.stringify(zeitintervallbuchungBO),
       }
     ).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON
       let responseZeitintervallbuchungBO =
         ZeitintervallbuchungBO.fromJSON(responseJSON)[0];
       //
@@ -791,10 +752,8 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#deleteZeitintervallbuchungURL(id), {
       method: "DELETE",
     }).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON
       let responseZeitintervallbuchungBO =
         ZeitintervallbuchungBO.fromJSON(responseJSON)[0];
-      // console.info(accountBOs);
       return new Promise(function (resolve) {
         resolve(responseZeitintervallbuchungBO);
       });
@@ -813,9 +772,7 @@ export default class OneAPI {
       },
       body: JSON.stringify(ereignisBO),
     }).then((responseJSON) => {
-      // We always get an array of EreignisBOs.fromJSON, but only need one object
       let responseEreignisBO = EreignisBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseEreignisBO);
       });
@@ -842,9 +799,7 @@ export default class OneAPI {
       },
       body: JSON.stringify(ereignisBO),
     }).then((responseJSON) => {
-      // We always get an array of EreignisBOs.fromJSON
       let responseEreignisBO = EreignisBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseEreignisBO);
       });
@@ -855,7 +810,6 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#deleteEreignisURL(id), {
       method: "DELETE",
     }).then((responseJSON) => {
-      // We always get an array of EreignisBOs.fromJSON
       let responseEreignisBO = EreignisBO.fromJSON(responseJSON)[0];
       return new Promise(function (resolve) {
         resolve(responseEreignisBO);
@@ -869,7 +823,6 @@ export default class OneAPI {
   getGehen(id) {
     return this.#fetchAdvanced(this.#getGehenURL(id)).then((responseJSON) => {
       let gehenBOs = GehenBO.fromJSON(responseJSON);
-      // console.info(customerBOs);
       return new Promise(function (resolve) {
         resolve(gehenBOs);
       });
@@ -887,9 +840,7 @@ export default class OneAPI {
         },
       }
     ).then((responseJSON) => {
-      // We always get an array of ProjectBOs.fromJSON, but only need one object
       let responseGehenBO = GehenBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseGehenBO);
       });
@@ -920,9 +871,7 @@ export default class OneAPI {
         body: JSON.stringify(gehenBO),
       }
     ).then((responseJSON) => {
-      // We always get an array of ProjectBOs.fromJSON, but only need one object
       let responseGehenBO = GehenBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseGehenBO);
       });
@@ -938,9 +887,7 @@ export default class OneAPI {
       },
       body: JSON.stringify(gehenBO),
     }).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON
       let responseGehenBO = GehenBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseGehenBO);
       });
@@ -951,9 +898,7 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#deleteGehenURL(id), {
       method: "DELETE",
     }).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON
       let responseGehenBO = GehenBO.fromJSON(responseJSON)[0];
-      // console.info(accountBOs);
       return new Promise(function (resolve) {
         resolve(responseGehenBO);
       });
@@ -975,9 +920,7 @@ export default class OneAPI {
         },
       }
     ).then((responseJSON) => {
-      // We always get an array of EreignisBOs.fromJSON, but only need one object
       let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseKommenBO);
       });
@@ -996,9 +939,7 @@ export default class OneAPI {
         body: JSON.stringify(kommenBO),
       }
     ).then((responseJSON) => {
-      // We always get an array of EreignisBOs.fromJSON, but only need one object
       let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseKommenBO);
       });
@@ -1023,9 +964,7 @@ export default class OneAPI {
       },
       body: JSON.stringify(kommenBO),
     }).then((responseJSON) => {
-      // We always get an array of EreignisBOs.fromJSON
       let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseKommenBO);
       });
@@ -1036,7 +975,6 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#deleteKommenURL(id), {
       method: "DELETE",
     }).then((responseJSON) => {
-      // We always get an array of EreignisBOs.fromJSON
       let responseKommenBO = KommenBO.fromJSON(responseJSON)[0];
       return new Promise(function (resolve) {
         resolve(responseKommenBO);
@@ -1052,7 +990,6 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#getAbwesenheitURL(id)).then(
       (responseJSON) => {
         let abwesenheitBOs = AktivitätenBO.fromJSON(responseJSON);
-        // console.info(customerBOs);
         return new Promise(function (resolve) {
           resolve(abwesenheitBOs);
         });
@@ -1072,9 +1009,7 @@ export default class OneAPI {
         body: JSON.stringify(abwesenheitBO),
       }
     ).then((responseJSON) => {
-      // We always get an array of ProjectBOs.fromJSON, but only need one object
       let responseAbwesenheitBO = EreignisBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseAbwesenheitBO);
       });
@@ -1093,9 +1028,7 @@ export default class OneAPI {
         body: JSON.stringify(abwesenheitBO),
       }
     ).then((responseJSON) => {
-      // We always get an array of ProjectBOs.fromJSON, but only need one object
       let responseAbwesenheitBO = EreignisBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseAbwesenheitBO);
       });
@@ -1114,9 +1047,7 @@ export default class OneAPI {
         body: JSON.stringify(abwesenheitBO),
       }
     ).then((responseJSON) => {
-      // We always get an array of AbwesenheitBO.fromJSON
       let responseAbwesenheitBO = AbwesenheitBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseAbwesenheitBO);
       });
@@ -1127,9 +1058,7 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#deleteAbwesenheitURL(id), {
       method: "DELETE",
     }).then((responseJSON) => {
-      // We always get an array of Abwesenheit.fromJSON
       let responseAbwesenheitBO = AbwesenheitBO.fromJSON(responseJSON)[0];
-      // console.info(accountBOs);
       return new Promise(function (resolve) {
         resolve(responseAbwesenheitBO);
       });
@@ -1144,7 +1073,6 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#getAktivitätenByIdURL(id)).then(
       (responseJSON) => {
         let aktivitätenBOs = AktivitätenBO.fromJSON(responseJSON);
-        // console.info(customerBOs);
         return new Promise(function (resolve) {
           resolve(aktivitätenBOs);
         });
@@ -1157,7 +1085,6 @@ export default class OneAPI {
       this.#getAktivitätenByProjectIdURL(project)
     ).then((responseJSON) => {
       let aktivitätenBOs = AktivitätenBO.fromJSON(responseJSON);
-      // console.info(customerBOs);
       return new Promise(function (resolve) {
         resolve(aktivitätenBOs);
       });
@@ -1173,9 +1100,7 @@ export default class OneAPI {
       },
       body: JSON.stringify(aktivitätenBO),
     }).then((responseJSON) => {
-      // We always get an array of ProjectBOs.fromJSON, but only need one object
       let responseAktivitätenBO = AktivitätenBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseAktivitätenBO);
       });
@@ -1191,9 +1116,7 @@ export default class OneAPI {
       },
       body: JSON.stringify(aktvitätBO),
     }).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON
       let responseAktivitätenBO = AktivitätenBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseAktivitätenBO);
       });
@@ -1204,9 +1127,7 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#deleteAktivitätenURL(id), {
       method: "DELETE",
     }).then((responseJSON) => {
-      // We always get an array of CustomerBOs.fromJSON
       let responseAktivitätenBO = AktivitätenBO.fromJSON(responseJSON)[0];
-      // console.info(accountBOs);
       return new Promise(function (resolve) {
         resolve(responseAktivitätenBO);
       });
@@ -1226,7 +1147,6 @@ export default class OneAPI {
       },
       body: JSON.stringify(ereignisbuchungBO),
     }).then((responseJSON) => {
-      // We always get an array of EreignisbuchungBOs.fromJSON, but only need one object
       let responseEreignisbuchungBO =
         EreignisbuchungBO.fromJSON(responseJSON)[0];
       //
@@ -1295,7 +1215,6 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#deleteEreignisbuchungURL(id), {
       method: "DELETE",
     }).then((responseJSON) => {
-      // We always get an array of EreignisbuchungBOs.fromJSON
       let responseEreignisbuchungBO =
         EreignisbuchungBO.fromJSON(responseJSON)[0];
       return new Promise(function (resolve) {
@@ -1312,7 +1231,6 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#getArbeitszeitkontoURL(user)).then(
       (responseJSON) => {
         let arbeitszeitkontoBOs = ArbeitszeitkontoBO.fromJSON(responseJSON);
-        // console.info(customerBOs);
         return new Promise(function (resolve) {
           resolve(arbeitszeitkontoBOs);
         });
@@ -1332,10 +1250,8 @@ export default class OneAPI {
         body: JSON.stringify(arbeitszeitkontoBO),
       }
     ).then((responseJSON) => {
-      // We always get an array of ArbeitszeitkontoBOs.fromJSON
       let responseArbeitszeitkontoBO =
         ArbeitszeitkontoBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseArbeitszeitkontoBO);
       });
@@ -1349,10 +1265,8 @@ export default class OneAPI {
         method: "DELETE",
       }
     ).then((responseJSON) => {
-      // We always get an array of ArbeitszeitkontoBO.fromJSON
       let responseArbeitszeitkontoBO =
         ArbeitszeitkontoBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseArbeitszeitkontoBO);
       });
@@ -1366,7 +1280,6 @@ export default class OneAPI {
   getPause(id) {
     return this.#fetchAdvanced(this.#getPauseURL(id)).then((responseJSON) => {
       let pauseBOs = PauseBO.fromJSON(responseJSON);
-      // console.info(customerBOs);
       return new Promise(function (resolve) {
         resolve(pauseBOs);
       });
@@ -1382,9 +1295,7 @@ export default class OneAPI {
       },
       body: JSON.stringify(pauseBO),
     }).then((responseJSON) => {
-      // We always get an array of ArbeitszeitkontoBOs.fromJSON
       let responsePauseBO = PauseBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responsePauseBO);
       });
@@ -1395,9 +1306,7 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#deletePauseURL(pauseBO), {
       method: "DELETE",
     }).then((responseJSON) => {
-      // We always get an array of ArbeitszeitkontoBO.fromJSON
       let responsePauseBO = PauseBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responsePauseBO);
       });
@@ -1417,10 +1326,8 @@ export default class OneAPI {
       },
       body: JSON.stringify(zeitintervallBO),
     }).then((responseJSON) => {
-      // We always get an array of ArbeitszeitkontoBOs.fromJSON, but only need one object
       let responseZeitintervallBO =
         ZeitintervallbuchungBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseZeitintervallBO);
       });
@@ -1431,7 +1338,6 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#getZeitintervallURL(id)).then(
       (responseJSON) => {
         let zeitintervallBOs = ZeitintervallBO.fromJSON(responseJSON);
-        // console.info(customerBOs);
         return new Promise(function (resolve) {
           resolve(zeitintervallBOs);
         });
@@ -1451,9 +1357,7 @@ export default class OneAPI {
         body: JSON.stringify(zeitintervallBO),
       }
     ).then((responseJSON) => {
-      // We always get an array of ArbeitszeitkontoBOs.fromJSON
       let responseZeitintervallBO = ZeitintervallBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseZeitintervallBO);
       });
@@ -1464,9 +1368,7 @@ export default class OneAPI {
     return this.#fetchAdvanced(this.#deleteZeitintervallURL(zeitintervallBO), {
       method: "DELETE",
     }).then((responseJSON) => {
-      // We always get an array of ArbeitszeitkontoBO.fromJSON
       let responseZeitintervallBO = ZeitintervallBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responseZeitintervallBO);
       });
@@ -1482,9 +1384,7 @@ export default class OneAPI {
       },
       body: JSON.stringify(pauseBO),
     }).then((responseJSON) => {
-      // We always get an array of ArbeitszeitkontoBOs.fromJSON, but only need one object
       let responsePauseBO = PauseBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responsePauseBO);
       });
@@ -1500,9 +1400,7 @@ export default class OneAPI {
       },
       body: JSON.stringify(pauseBO),
     }).then((responseJSON) => {
-      // We always get an array of ArbeitszeitkontoBOs.fromJSON, but only need one object
       let responsePauseBO = PauseBO.fromJSON(responseJSON)[0];
-      //
       return new Promise(function (resolve) {
         resolve(responsePauseBO);
       });

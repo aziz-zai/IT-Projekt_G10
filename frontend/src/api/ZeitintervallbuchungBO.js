@@ -5,10 +5,10 @@ import BusinessObject from "./BusinessObject";
  */
 export default class ZeitintervallbuchungBO extends BusinessObject {
   /**
-   * Constructs a CustomerBO object with a given firstname and lastname.
+   * Constructs a Zeitintervallbuchung object.
    *
-   * @param {String} aZeitdifferenz - the Vorname of this CustomerBO.
-   * @param {String} aZeitintervall - the Vorname of this CustomerBO.
+   * @param {String} aZeitdifferenz -Attribut of Zeitintervallbuchung.
+   * @param {String} aZeitintervall -Attribut of Zeitintervallbuchung.
    */
   constructor(aErstelltVon, aErstelltFuer, aIstBuchung, aBezeichnung, aZeitdifferenz, aZeitintervall) {
     super();
@@ -21,23 +21,19 @@ export default class ZeitintervallbuchungBO extends BusinessObject {
   }
 
   /**
-   * Sets a new firstname.
+   * Sets a new aZeitdifferenz.
    *
-   * @param {String} aZeitdifferenz - the new firstname of this CustomerBO.
+   * @param {String} aZeitdifferenz - the new aZeitdifferenz of this Zeitintervallbuchung.
    */
   setZeitdifferenz(aZeitdifferenz) {
     this.zeitdifferenz = aZeitdifferenz;
   }
-    /**
-   * Gets the firstname.
-   */
+  
      getZeitdifferenz() {
       return this.zeitdifferenz;
     }
 
-  /**
-   * Gets the firstname.
-   */
+ 
   getBezeichnung() {
     return this.bezeichnung;
   }
@@ -45,9 +41,7 @@ export default class ZeitintervallbuchungBO extends BusinessObject {
     this.bezeichnung = aBezeichnung;
   }
 
-  /**
-   * Gets the firstname.
-   */
+
   getErstelltVon() {
     return this.erstellt_von;
   }
@@ -55,9 +49,7 @@ export default class ZeitintervallbuchungBO extends BusinessObject {
     this.erstellt_von = aErstelltVon;
   }
 
-  /**
-   * Gets the firstname.
-   */
+  
   getErstelltFuer() {
     return this.erstellt_für;
   }
@@ -65,9 +57,7 @@ export default class ZeitintervallbuchungBO extends BusinessObject {
     this.erstellt_für = aErstelltFuer;
   }
 
-  /**
-   * Gets the firstname.
-   */
+
   getistBuchung() {
     return this.ist_buchung;
   }
@@ -76,23 +66,21 @@ export default class ZeitintervallbuchungBO extends BusinessObject {
   }
 
   /**
-   * Sets a new lastname.
+   * Sets a new aZeitintervall.
    *
-   * @param {*} aZeitintervall - the new lastname of this CustomerBO.
+   * @param {*} aZeitintervall - the new aZeitintervall of this ZeintervallbuchungBO.
    */
   setZeitintervall(aZeitintervall) {
     this.zeitintervall = aZeitintervall;
   }
 
-  /**
-   * Gets the Nachname.
-   */
+
   getZeitintervall() {
     return this.zeitintervall;
   }
 
   /**
-   * Returns an Array of CustomerBOs from a given JSON structure.
+   * Returns an Array of ZeitintervallbuchungBO from a given JSON structure.
    */
   static fromJSON(zeitintervallbuchung) {
     let result = [];

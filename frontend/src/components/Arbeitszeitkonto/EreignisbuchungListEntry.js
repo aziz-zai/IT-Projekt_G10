@@ -36,6 +36,7 @@ export class EreignisbuchungListEntry extends Component {
     };
   }
 
+  // Hole das Kommen der ereignisbuchung
   getKommenById = () => {
     OneAPI.getAPI()
       .getKommen(this.props.ereignisbuchung.ereignis)
@@ -67,6 +68,8 @@ export class EreignisbuchungListEntry extends Component {
     this.setState({loading: true});
   };
 
+  
+  // Hole das Gehen der ereignisbuchung
   getGehenById = () => {
     OneAPI.getAPI()
       .getGehen(this.props.ereignisbuchung.ereignis)
@@ -97,6 +100,8 @@ export class EreignisbuchungListEntry extends Component {
     // set loading to true
     this.setState({loading: true});
   };
+  
+  // Hole das Ereignis der ereignisbuchung
   getEreignisById = () => {
     OneAPI.getAPI()
       .getEreignis(this.props.ereignisbuchung.ereignis)
@@ -128,6 +133,7 @@ export class EreignisbuchungListEntry extends Component {
     this.setState({loading: true});
   };
 
+  //Hole User für den du das erstellt hast
   getErstelltFuerById = () => {
     OneAPI.getAPI()
       .getUser(this.props.ereignisbuchung.erstellt_für)
@@ -146,6 +152,8 @@ export class EreignisbuchungListEntry extends Component {
     this.setState({loading: true});
   };
 
+  
+  // Hole User von dem das erstellt wurde
   getErstelltVonById = () => {
     OneAPI.getAPI()
       .getUser(this.props.ereignisbuchung.erstellt_von)
@@ -163,6 +171,9 @@ export class EreignisbuchungListEntry extends Component {
     // set loading to true
     this.setState({loading: true});
   };
+
+  
+  // Lösche die Ereignisbuchung
   deleteEreignisbuchung = () => {
     OneAPI.getAPI()
       .deleteEreignisbuchung(this.props.ereignisbuchung.id)

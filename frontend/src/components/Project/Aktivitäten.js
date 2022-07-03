@@ -21,6 +21,7 @@ export class Aktivitäten extends Component {
         this.baseState = this.state;
     }
 
+    //Aktivität hinzuügen
     addAktivitäten = () => {
         let newAktivität = new AktivitätenBO(this.state.bezeichnung, this.state.dauer, this.state.capacity, this.props.project.id);
         OneAPI.getAPI().addAktivitäten(newAktivität).then(aktivität => {
@@ -42,6 +43,7 @@ export class Aktivitäten extends Component {
       });
   }
 
+  //Text eingabe updaten
   textFieldValueChange = (event) => {
     const value = event.target.value;
 
@@ -90,6 +92,7 @@ export class Aktivitäten extends Component {
             autoFocus type='text' required
             id="capacity"
             label="Kapazität"
+            placeholder="Kapazität in Stunden"
             value={capacity}
             onChange={this.textFieldValueChange}
             />
@@ -99,6 +102,7 @@ export class Aktivitäten extends Component {
             autoFocus type='text' required
             id="dauer"
             label="Dauer"
+            placeholder="Dauer in Tagen"
             value={dauer}
             onChange={this.textFieldValueChange}
             />
