@@ -372,7 +372,7 @@ componentDidMount() {
               {(buchung.bezeichnung == 'Projektarbeit') ? zeitintervall ?<div>Tätigkeitsbeschreibung: {zeitintervall.beschreibung}</div>:null:null}
           </AccordionDetails>
         </Accordion>
-        <ZeitintervallbuchungUpdateForm show={openUpdateForm} onClose={this.ZeitintervallbuchungUpdateFormClosed}/>
+        <ZeitintervallbuchungUpdateForm buchung={buchung} zeitintervall={zeitintervall} ereignis1={ereignis1} ereignis2={ereignis2} show={openUpdateForm} onClose={this.ZeitintervallbuchungUpdateFormClosed}/>
       </div>
     )
   }
