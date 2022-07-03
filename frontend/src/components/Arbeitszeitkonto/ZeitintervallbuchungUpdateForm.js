@@ -30,7 +30,7 @@ handleFormClosed = () => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          Zeitintervallbuchung aktualisieren
+          Zeitintervallbuchung bearbeiten
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -39,7 +39,7 @@ handleFormClosed = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={this.handleFormClosed} autoFocus>
-            Verstanden
+            Speichern
           </Button>
         </DialogActions>
       </Dialog>:null

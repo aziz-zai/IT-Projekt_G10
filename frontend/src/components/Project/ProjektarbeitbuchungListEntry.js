@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import OneAPI from '../../api/OneAPI';
+import OneAPI from '../../api/OneAPI'
 import { Typography, Accordion, AccordionSummary, AccordionDetails, Grid } from '@mui/material';
 import { Button, ButtonGroup } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -8,10 +8,9 @@ import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
-import './Zeitintervallbuchung.css'
-import ZeitintervallbuchungUpdateForm from './ZeitintervallbuchungUpdateForm'
+import '../Arbeitszeitkonto/Zeitintervallbuchung.css'
 
-export class ZeitintervallbuchungListEntry extends Component {
+export class ProjektarbeitbuchungListEntry extends Component {
 
     // Init state
     constructor(props) {
@@ -291,17 +290,6 @@ export class ZeitintervallbuchungListEntry extends Component {
   this.getErstelltVonById();
   }
 
-  ZeitintervallbuchungUpdateFormOpen = () => {
-    this.setState({
-      openUpdateForm: true
-    })
-  }
-
-  ZeitintervallbuchungUpdateFormClosed = () =>{
-    this.setState({
-      openUpdateForm: false
-    })
-  }
 
 componentDidMount() {
   if(this.props.buchung){
@@ -347,17 +335,7 @@ componentDidMount() {
                </div>
               </Grid>
               <Grid item>
-                    {buchung.ist_buchung ?<Typography sx={{color: "green"}}> IST: {buchung.zeitdifferenz}h</Typography>:<Typography sx={{color: "red"}}> SOLL: {buchung.zeitdifferenz}h</Typography>}
-              </Grid>
-              <Grid item>
-                <ButtonGroup variant='text' size='small'>
-                  <Button color='primary' onClick={this.ZeitintervallbuchungUpdateFormOpen}>
-                  <EditIcon/>
-                  </Button>
-                  <Button color='secondary' onClick={this.deleteZeitintervallbuchung}>
-                    <DeleteForeverIcon/>
-                  </Button>
-                </ButtonGroup>
+                    {buchung.ist_buchung ?<Typography sx={{color: "green"}}> IST</Typography>:<Typography sx={{color: "red"}}> SOLL</Typography>}
               </Grid>
               <Grid item xs />
               <Grid item>
@@ -372,16 +350,15 @@ componentDidMount() {
               {(buchung.bezeichnung == 'Projektarbeit') ? zeitintervall ?<div>Tätigkeitsbeschreibung: {zeitintervall.beschreibung}</div>:null:null}
           </AccordionDetails>
         </Accordion>
-        <ZeitintervallbuchungUpdateForm show={openUpdateForm} onClose={this.ZeitintervallbuchungUpdateFormClosed}/>
       </div>
     )
   }
 }
 
-ZeitintervallbuchungListEntry.propTypes = {
+ProjektarbeitbuchungListEntry.propTypes = {
     buchung: PropTypes.any,
     handleZeitintervallbuchungDeleted: PropTypes.any,
     handleZeitintervallbuchungSollDeleted: PropTypes.any,
     istBuchung: PropTypes.any,
   }
-export default ZeitintervallbuchungListEntry
+export default ProjektarbeitbuchungListEntry

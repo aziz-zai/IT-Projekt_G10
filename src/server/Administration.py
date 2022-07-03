@@ -376,6 +376,46 @@ class Administration(object):
         with ZeitintervallbuchungMapper() as mapper:
             return mapper.find_soll_buchungen_by_user(erstellt_für)
     
+    def get_soll_projektarbeitbuchungen_by_zeitspanne(self, user, startFilter, endFilter, activity):
+        zeitintervallbuchungen = self.get_soll_zeitintervallbuchungen_by_zeitspanne(user, startFilter, endFilter)
+        result=[]
+        for buchung in zeitintervallbuchungen:
+            projektarbeit = self.get_projektarbeit_by_id(buchung.get_zeitintervall())
+            if ((buchung.get_bezeichnung() == 'Projektarbeit') and (projektarbeit.get_activity() == activity)):
+                result.append(buchung)
+        return result
+
+    def get_ist_projektarbeitbuchungen_by_zeitspanne(self, user, startFilter, endFilter, activity):
+        zeitintervallbuchungen = self.get_ist_zeitintervallbuchungen_by_zeitspanne(user, startFilter, endFilter)
+        result=[]
+        for buchung in zeitintervallbuchungen:
+            projektarbeit = self.get_projektarbeit_by_id(buchung.get_zeitintervall())
+            if ((buchung.get_bezeichnung() == 'Projektarbeit') and (projektarbeit.get_activity() == activity)):
+                result.append(buchung)
+        return result
+
+    def get_ist_buchungen_by_project(self, user, project):
+        buchungen_of_user = self.get_ist_zeitintervallbuchungen_by_user(user)
+        result = []
+        for buchung in buchungen_of_user:
+            if (buchung.get_bezeichnung() == 'Projektarbeit'):
+                projektarbeit = self.get_projektarbeit_by_id(buchung.get_zeitintervall())
+                aktivität = self.get_aktivitäten_by_id(projektarbeit.get_activity())
+                if (aktivität.get_project() == project):
+                    result.append(buchung)
+        return result
+
+    def get_soll_buchungen_by_project(self, user, project):
+        buchungen_of_user = self.get_soll_zeitintervallbuchungen_by_user(user)
+        result = []
+        for buchung in buchungen_of_user:
+            if (buchung.get_bezeichnung() == 'Projektarbeit'):
+                projektarbeit = self.get_projektarbeit_by_id(buchung.get_zeitintervall())
+                aktivität = self.get_aktivitäten_by_id(projektarbeit.get_activity())
+                if (aktivität.get_project() == project):
+                    result.append(buchung)
+        return result
+    
     def get_soll_zeitintervallbuchungen_by_zeitspanne(self, user, startFilter, endFilter):
         zeitintervallbuchungen = self.get_soll_zeitintervallbuchungen_by_user(user)
         if((startFilter != "null" or "") and (endFilter != "null" or "")):

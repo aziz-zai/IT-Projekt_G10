@@ -18,3 +18,8 @@
 .buchungDeleted{
     margin: 0.5rem 0.5rem 0.5rem 0.5rem;
 }
+
+.gesamt{
+    margin-left: 0.5rem;
+    margin-top: 0.5rem;
+}

@@ -19,7 +19,7 @@ export class NavBar extends Component {
 		this.props.toggle()
 	}
   render() {
-      const {user, toggle} = this.props
+      const {user, dbuser, toggle} = this.props
     return (
         <div className={this.state.nav}>
         <div className="navContainer">
@@ -37,7 +37,7 @@ export class NavBar extends Component {
                 <li className="navItem">
                     <Link to='/Arbeitszeitkonto' className="navLink">Arbeitszeitkonto</Link>
                 </li>
-                <ProfileDropDown user={user} Ahorizontol='center' Avertical='center' Thorizontol='right' Tvertical='top'/>
+                <ProfileDropDown user={user} dbuser={dbuser} Ahorizontol='center' Avertical='center' Thorizontol='right' Tvertical='top'/>
             </ul>
         </div>
         
@@ -55,6 +55,7 @@ NavBar.propTypes = {
 	nav: PropTypes.string,
     user: PropTypes.object,
     toggle: PropTypes.any,
+    dbuser: PropTypes.any
 }
 
 export default NavBar

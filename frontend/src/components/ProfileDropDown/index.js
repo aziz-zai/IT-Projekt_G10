@@ -1,19 +1,49 @@
 import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
-import { Popover, IconButton, Avatar, ClickAwayListener, withStyles, Typography, Paper, Button, Grid, Divider } from '@material-ui/core';
+import { Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions, Popover, IconButton, 
+Avatar, ClickAwayListener, Typography, Paper, Button, Grid, Divider } from '@mui/material';
 import firebase from 'firebase/compat/app';
 import firebasConfig from '../../firebaseconfig'
 import {Link} from 'react-router-dom'
+import OneAPI from '../../api/OneAPI';
 import './ProfileDropDown.css'
 import LogoutIcon from '@mui/icons-material/Logout';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import CloseIcon from '@mui/icons-material/Close';
+import ContextErrorMessage from '../Dialogs/ContextErrorMessage';
+import LoadingProgress from '../Dialogs/LoadingProgress';
 export class ProfileDropDown extends Component {
     #avatarButtonRef = createRef();
     constructor(props) {
         super(props);
         this.state = {
             open: false,
+            deleteDialog: false,
+            deletingInProgress: false,
+            deletingError: null
         }
+    }
+
+    deleteProfile = () => {
+      OneAPI.getAPI().deleteUser(this.props.dbuser[0].id).then(dbuser => {
+        this.setState({
+          deletingInProgress: false,              // disable loading indicator  
+          deletingError: null                     // no error message
+        });
+        this.handleSignOutButtonClicked();  // call the parent with the deleted user
+      }).catch(e =>
+        this.setState({
+          deletingInProgress: false,              // disable loading indicator 
+          deletingError: e                        // show error message
+        })
+      );
+  
+      // set loading to true
+      this.setState({
+        deletingInProgress: true,                 // show loading indicator
+        deletingError: null                       // disable error message
+      });
     }
 
     handleAvatarButtonClick = () => {
@@ -21,6 +51,18 @@ export class ProfileDropDown extends Component {
           open: !this.state.open
         });
       }
+    
+    openDeleteDialog = () => {
+      this.setState({
+        deleteDialog: true
+      });
+    }
+
+    closeDeleteDialog = () => {
+      this.setState({
+        deleteDialog: false
+      });
+    }
     
       /** 
        * Handles click events from the ClickAwayListener.
@@ -46,8 +88,8 @@ export class ProfileDropDown extends Component {
     
 
     render() {
-        const { classes, user } = this.props;
-        const { open } = this.state;
+        const { user, dbuser} = this.props;
+        const { open, deleteDialog, deletingError, deletingInProgress } = this.state;
     
         return (
           user ?
@@ -83,12 +125,45 @@ export class ProfileDropDown extends Component {
                       <Grid item>
                       <Button color='error' startIcon={<LogoutIcon/>}onClick={this.handleSignOutButtonClicked}>Logout</Button>
                       </Grid>
-                    </Grid>                  
+                    </Grid>   
+                    <Grid container justifyContent='center'>
+                      <Grid item>
+                      <Button color='error' startIcon={<PersonRemoveIcon/>}onClick={this.openDeleteDialog}>Profil Löschen</Button>
+                      </Grid>
+                    </Grid>                
                   </Paper>
                 </ClickAwayListener>
               </Popover>
+              {deleteDialog?
+              <Dialog open={deleteDialog}>
+                {console.log("delete", deleteDialog)}
+                <DialogTitle id='delete-dialog-title'>Profil löschen                 
+                {console.log("user.id?", this.props.dbuser)}
+
+            <IconButton sx={{ position: 'absolute', right: 1, top: 1, color: 'grey[500]' }} onClick={this.closeDeleteDialog}>
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Möchtest du wirklich dein Profil löschen?
+            </DialogContentText>
+            <LoadingProgress show={deletingInProgress} />
+            <ContextErrorMessage error={deletingError} contextErrorMsg={`Dein Profil konnte nicht gelöscht werden.`}
+              onReload={this.deleteUser} />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.closeDeleteDialog} color='secondary'>
+              Abbrechen
+            </Button>
+            <Button variant='contained' onClick={this.deleteProfile} color='primary'>
+              Löschen
+            </Button>
+          </DialogActions>
+              </Dialog>
+    :null}
             </div>
-            : null
+            :null
         )
         
       }
@@ -101,6 +176,7 @@ ProfileDropDown.propTypes = {
     Avertical: PropTypes.string,
     Thorizontol: PropTypes.string,
     Tvertical: PropTypes.string,
+    dbuser: PropTypes.any
 
 }
 

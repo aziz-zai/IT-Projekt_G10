@@ -37,6 +37,8 @@ export default class OneAPI {
   #updateProjectURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
   #deleteProjectURL = (id) => `${this.#OneServerBaseURL}/projects/${id}`;
   #getProjektlaufzeitURL = (id) => `${this.#OneServerBaseURL}/projektlaufzeit/${id}`;
+  #addProjektlaufzeitBeginn = (user, bezeichnung) => `${this.#OneServerBaseURL}/projektlaufzeitAnfang/${user}/${bezeichnung}`;
+  #addProjektlaufzeitEnde = (user, projektAnfang, bezeichnung) => `${this.#OneServerBaseURL}/projektlaufzeitEnde/${user}/${projektAnfang}/${bezeichnung}`;
 
 
   //Membership related
@@ -70,7 +72,7 @@ export default class OneAPI {
   #addProjektarbeitURL = () => `${this.#OneServerBaseURL}/projektarbeiten`;
   #updateProjektarbeitURL = (id) => `${this.#OneServerBaseURL}/projektarbeiten/${id}`;
   #deleteProjektarbeitURL = (id) => `${this.#OneServerBaseURL}/projektarbeiten/${id}`;
-  #gehenProjektarbeitURL = (id, user) => `${this.#OneServerBaseURL}/projektarbeit/Gehen/${id}/${user}`;
+  
   
 
   //Zeitintervallbuchung related
@@ -80,6 +82,10 @@ export default class OneAPI {
   #deleteZeitintervallbuchungURL = (id) => `${this.#OneServerBaseURL}/zeitintervallbuchung/${id}`;
   #getZeitintervallbuchungSollURL = (user, startFilter, endFilter) => `${this.#OneServerBaseURL}/zeitintervallbuchung-soll/${user}/${startFilter}/${endFilter}`;
   #getZeitintervallbuchungIstURL = (user, startFilter, endFilter) => `${this.#OneServerBaseURL}/zeitintervallbuchung-ist/${user}/${startFilter}/${endFilter}`;
+  #getProjektarbeitbuchungIstURL = (user, startFilter, endFilter, activity) => `${this.#OneServerBaseURL}/projektarbeitbuchung-ist/${user}/${startFilter}/${endFilter}/${activity}`;
+  #getProjektarbeitbuchungSollURL = (user, startFilter, endFilter, activity) => `${this.#OneServerBaseURL}/projektarbeitbuchung-soll/${user}/${startFilter}/${endFilter}/${activity}`;
+  #getProjektarbeitbuchungByProjectSollURL = (user, project) => `${this.#OneServerBaseURL}/zeitintervallbuchung-soll-by-akt/${user}/${project}`;
+  #getProjektarbeitbuchungByProjectIstURL = (user, project) => `${this.#OneServerBaseURL}/zeitintervallbuchung-ist-by-akt/${user}/${project}`;
 
   //Ereignisbuchung related
   #addEreignisbuchungURL = () => `${this.#OneServerBaseURL}/ereignisbuchung`;
@@ -98,7 +104,7 @@ export default class OneAPI {
   
   //Kommen related
   #addKommenIstURL = (user, projektarbeit, kommenZeit) => `${this.#OneServerBaseURL}/kommen-ist/${user}/${projektarbeit}/${kommenZeit}`;
-  #addKommenSollURL = (erstellt_von, erstellt_fuer, projektarbeit) => `${this.#OneServerBaseURL}/kommen-soll/${erstellt_von}/${erstellt_fuer}/${projektarbeit}`;
+  #addKommenSollURL = (erstellt_von, erstellt_fuer) => `${this.#OneServerBaseURL}/kommen-soll/${erstellt_von}/${erstellt_fuer}`;
   #getKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
   #updateKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
   #deleteKommenURL = (id) => `${this.#OneServerBaseURL}/kommen/${id}`;
@@ -106,7 +112,7 @@ export default class OneAPI {
   //Gehen related
   #getGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
   #addGehenIstURL = (projektarbeitid, user, activity, gehenZeit) => `${this.#OneServerBaseURL}/gehen-ist/${projektarbeitid}/${user}/${activity}/${gehenZeit}`;
-  #addGehenSollURL = (projektarbeitid, erstellt_von, erstellt_fuer, activity) => `${this.#OneServerBaseURL}/gehen-soll/${projektarbeitid}/${erstellt_von}/${erstellt_fuer}/${activity}`;
+  #addGehenSollURL = (kommen, erstellt_von, erstellt_fuer, activity, projektarbeit) => `${this.#OneServerBaseURL}/gehen-soll/${kommen}/${erstellt_von}/${erstellt_fuer}/${activity}/${projektarbeit}`;
   #updateGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
   #deleteGehenURL = (id) => `${this.#OneServerBaseURL}/gehen/${id}`;
 
@@ -244,6 +250,40 @@ export default class OneAPI {
     }).then((responseJSON) => {
       // We always get an array of ProjectBOs.fromJSON, but only need one object
       let responseProjectBO = ProjectBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseProjectBO);
+        })
+    })
+  }
+  addProjektlaufzeitBeginn(ereignisBO, user, bezeichnung) {
+    return this.#fetchAdvanced(this.#addProjektlaufzeitBeginn(user, bezeichnung),{
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(ereignisBO)
+    }).then((responseJSON) => {
+      // We always get an array of ProjectBOs.fromJSON, but only need one object
+      let responseProjectBO = EreignisBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseProjectBO);
+        })
+    })
+  }
+  addProjektlaufzeitEnde(ereignisBO, user, projektAnfang, bezeichnung) {
+    return this.#fetchAdvanced(this.#addProjektlaufzeitEnde(user, projektAnfang, bezeichnung),{
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(ereignisBO)
+    }).then((responseJSON) => {
+      // We always get an array of ProjectBOs.fromJSON, but only need one object
+      let responseProjectBO = ZeitintervallBO.fromJSON(responseJSON)[0];
       // 
       return new Promise(function (resolve) {
         resolve(responseProjectBO);
@@ -530,6 +570,44 @@ export default class OneAPI {
       })
     })
   }
+  getProjektarbeitbuchungIst(user, startFilter, endFilter, activity) {
+    return this.#fetchAdvanced(this.#getProjektarbeitbuchungIstURL(user, startFilter, endFilter, activity)).then((responseJSON) => {
+      let zeitintervallbuchungBOs = ZeitintervallbuchungBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(zeitintervallbuchungBOs);
+      })
+    })
+  }
+  getProjektarbeitbuchungSoll(user, startFilter, endFilter, activity) {
+    return this.#fetchAdvanced(this.#getProjektarbeitbuchungSollURL(user, startFilter, endFilter, activity)).then((responseJSON) => {
+      let zeitintervallbuchungBOs = ZeitintervallbuchungBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(zeitintervallbuchungBOs);
+      })
+    })
+  }
+
+  getProjektarbeitbuchungByProjectSoll(user, project) {
+    return this.#fetchAdvanced(this.#getProjektarbeitbuchungByProjectSollURL(user,project)).then((responseJSON) => {
+      let zeitintervallbuchungBOs = ZeitintervallbuchungBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(zeitintervallbuchungBOs);
+      })
+    })
+  }
+
+  getProjektarbeitbuchungByProjectIst(user, project) {
+    return this.#fetchAdvanced(this.#getProjektarbeitbuchungByProjectIstURL(user, project)).then((responseJSON) => {
+      let zeitintervallbuchungBOs = ZeitintervallbuchungBO.fromJSON(responseJSON);
+      // console.info(customerBOs);
+      return new Promise(function (resolve) {
+        resolve(zeitintervallbuchungBOs);
+      })
+    })
+  }
 
   addZeitintervallbuchung(zeitintervallbuchungBO) {
     return this.#fetchAdvanced(this.#addZeitintervallbuchungURL(), {
@@ -670,6 +748,23 @@ export default class OneAPI {
         })
     })
   }
+  addGehenSoll(gehenBO, kommen, erstelltVon, erstelltFuer, aktivität, projektarbeit) {
+    return this.#fetchAdvanced(this.#addGehenSollURL(kommen, erstelltVon, erstelltFuer, aktivität, projektarbeit), {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(gehenBO)
+    }).then((responseJSON) => {
+      // We always get an array of ProjectBOs.fromJSON, but only need one object
+      let responseGehenBO = GehenBO.fromJSON(responseJSON)[0];
+      // 
+      return new Promise(function (resolve) {
+        resolve(responseGehenBO);
+        })
+    })
+  }
    
   updateGehen(gehenBO) {
     return this.#fetchAdvanced(this.#updateGehenURL(gehenBO.getID()), {
@@ -724,8 +819,8 @@ export default class OneAPI {
     })
   }
 
-  addKommenSoll(kommenBO, erstellt_von, erstellt_fuer, projektarbeit) {
-    return this.#fetchAdvanced(this.#addKommenSollURL(erstellt_von, erstellt_fuer, projektarbeit ), {
+  addKommenSoll(kommenBO, erstellt_von, erstellt_fuer) {
+    return this.#fetchAdvanced(this.#addKommenSollURL(erstellt_von, erstellt_fuer), {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain',

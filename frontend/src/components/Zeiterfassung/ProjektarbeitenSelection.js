@@ -27,7 +27,7 @@ export class ProjektarbeitenSelection extends Component {
   loadProjektarbeiten = () => {
     OneAPI.getAPI().getProjektarbeitByActivity(this.props.aktivität).then(projektarbeiten =>
       this.setState({
-        projektarbeiten: projektarbeiten,
+        projektarbeiten: projektarbeiten.map(projektarbeit => {return projektarbeit.bezeichnung}),
         loadingInProgress: false, // loading indicator 
         loadingError: null
       })).catch(e =>
@@ -58,6 +58,9 @@ export class ProjektarbeitenSelection extends Component {
   render() {
     const {Cuser, user} = this.props;
     const {projektarbeiten} = this.state;
+    var uniqProjektarbeiten = projektarbeiten.filter(function (value, index, array) { 
+      return array.indexOf(value) === index;
+    });
     return (
       <div>
         <div>
@@ -73,9 +76,9 @@ export class ProjektarbeitenSelection extends Component {
           }}
           onChange={this.handleChange}
         >
-          <option value={0}></option>
-           {projektarbeiten ?
-          projektarbeiten.map((projektarbeit, index) => <option value={projektarbeit.bezeichnung}>{projektarbeit.bezeichnung}</option>)
+          <option value={0}></option>{console.log('test',uniqProjektarbeiten )}
+           {uniqProjektarbeiten ?
+          uniqProjektarbeiten.map((projektarbeit, index) => <option value={projektarbeit}>{projektarbeit}</option>)
           :null}
         </NativeSelect>
       </FormControl>

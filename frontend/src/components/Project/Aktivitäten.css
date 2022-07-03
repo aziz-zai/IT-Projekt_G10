@@ -25,3 +25,35 @@
     margin-right: 5rem;
     font-size: 1.4rem
 }
+
+.paperaktivitäten{
+    width: 60%;
+    color:#5e2e94;
+    background-color:#dbc7f2;
+    color: black;
+    font-size: large;
+    padding: 0.1em 1em;
+    margin-top: 7px; 
+    display: flex; 
+    border-radius: 40px;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.ProArbBtn{
+    width: 22px;
+    margin-left: auto;
+}
+
+.paperaktivitäten:hover{
+    transform: scale(1.02);
+    transition: all 0.2s ease-in-out;
+    cursor:pointer;
+}
+
+@media screen and (max-width: 800px){
+    .paperaktivitäten{
+        width: 100%;
+    }
+}

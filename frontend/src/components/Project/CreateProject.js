@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import OneAPI from '../../api/OneAPI'
 import ProjectBO from '../../api/ProjectBO';
+import EreignisBO from '../../api/EreignisBO';
 import { Container, TextField, Dialog, ListItem, List, AppBar, 
 Toolbar, Card, IconButton, Typography} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -44,14 +45,17 @@ export class CreateProject extends Component {
       bezeichnung: bz,
       dauer: da,
       capacity: ca,
-      project: pr
+      project: pr,
+      projektlaufzeitAnfang: null,
+      projektlaufzeitEnde:null
+
     };
     // save this state for canceling
     this.baseState = this.state;
   }
 
-    addProject = () => {
-      let newProject = new ProjectBO(this.state.projektName, this.state.laufZeit, this.state.auftragGeber, this.state.availableHours);
+    addProject = (zeitintervall) => {
+      let newProject = new ProjectBO(this.state.projektName, zeitintervall, this.state.auftragGeber, this.state.availableHours);
       OneAPI.getAPI().addProject(newProject, this.props.user[0].id).then(project => {
         // Backend call sucessfull
         // reinit the dialogs state for a new empty project
@@ -70,6 +74,52 @@ export class CreateProject extends Component {
     });
   }
 
+  addProjektlaufzeitAnfang = () => {
+    let zeitpunkt = this.state.projektlaufzeitAnfang + "T00:00"
+    let newProjektlaufzeitEreignis = new EreignisBO(zeitpunkt, "Projektanfang" );
+    OneAPI.getAPI().addProjektlaufzeitBeginn(newProjektlaufzeitEreignis, this.props.user[0].id, this.state.projektName).then(ereignis => {
+      // Backend call sucessfull
+      // reinit the dialogs state for a new empty project
+       // call the parent with the project object from backend
+       
+      this.addProjektlaufzeitEnde(ereignis)
+    }).catch(e =>
+      this.setState({
+        updatingInProgress: false,    // disable loading indicator 
+        updatingError: e              // show error message
+      })
+    );
+  // set loading to true
+  this.setState({
+    updatingInProgress: true,       // show loading indicator
+    updatingError: null             // disable error message
+  });
+}
+
+addProjektlaufzeitEnde = (ereignis) => {
+  let zeitpunkt = this.state.projektlaufzeitAnfang + "T00:00"
+  let newProjektlaufzeitEreignis = new EreignisBO(zeitpunkt, "Projektende" );
+  OneAPI.getAPI().addProjektlaufzeitEnde(newProjektlaufzeitEreignis, this.props.user[0].id, ereignis.id, this.state.projektName).then(zeitintervall => {
+    // Backend call sucessfull
+    // reinit the dialogs state for a new empty project
+     // call the parent with the project object from backend
+     this.setState({
+      laufZeit: zeitintervall.id
+    });
+     this.addProject(zeitintervall.id)
+  }).catch(e =>
+    this.setState({
+      updatingInProgress: false,    // disable loading indicator 
+      updatingError: e              // show error message
+    })
+  );
+// set loading to true
+this.setState({
+  updatingInProgress: true,       // show loading indicator
+  updatingError: null             // disable error message
+});
+}
+
 textFieldValueChange = (event) => {
   const value = event.target.value;
 
@@ -87,7 +137,7 @@ textFieldValueChange = (event) => {
 
   render() {
       const {isOpen} = this.props;
-      const {projektName, laufZeit, auftragGeber, availableHours,} = this.state;
+      const {projektName, laufZeit, auftragGeber, availableHours, projektlaufzeitAnfang, projektlaufzeitEnde} = this.state;
 
     return (
     <div>
@@ -108,7 +158,7 @@ textFieldValueChange = (event) => {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Projekt anlegen
             </Typography>
-            <button onClick={this.addProject} class="saveBtn"> Speichern </button>
+            <button onClick={this.addProjektlaufzeitAnfang} class="saveBtn"> Speichern </button>
           </Toolbar>
         </AppBar>
         <Container class="containerproject"> 
@@ -131,10 +181,26 @@ textFieldValueChange = (event) => {
           <TextField
             autoFocus type='text' required
             color="secondary"
-            id="laufZeit"
-            label="Projektlaufzeit"
-            value={laufZeit}
+            id="projektlaufzeitAnfang"
+            label="Projektlaufzeit Von"
+            value={projektlaufzeitAnfang}
+            type="date"
             onChange={this.textFieldValueChange}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            /> &nbsp;&nbsp;
+            <TextField
+            autoFocus type='text' required
+            color="secondary"
+            id="projektlaufzeitEnde"
+            label="Projektlaufzeit Bis"
+            value={projektlaufzeitEnde}
+            type="date"
+            onChange={this.textFieldValueChange}
+            InputLabelProps={{
+              shrink: true,
+            }}
             />
           </ListItem>
           <ListItem>
