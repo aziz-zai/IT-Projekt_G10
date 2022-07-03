@@ -1,14 +1,16 @@
-import ZeitintervallBO from './ZeitintervallBO';
+import ZeitintervallBO from "./ZeitintervallBO";
 
 /**
  * Represents a Projektarbeit
  */
 export default class ProjektarbeitBO extends ZeitintervallBO {
-
-  constructor(aBeschreibung, aActivity) {
+  constructor(aBeschreibung, aActivity, aStart, aEnde, aBezeichnung) {
     super();
     this.beschreibung = aBeschreibung;
     this.activity = aActivity;
+    this.start = aStart;
+    this.ende = aEnde;
+    this.bezeichnung = aBezeichnung;
   }
 
   setBeschreibung(aBeschreibung) {
@@ -34,7 +36,7 @@ export default class ProjektarbeitBO extends ZeitintervallBO {
       projektarbeiten.forEach((p) => {
         Object.setPrototypeOf(p, ProjektarbeitBO.prototype);
         result.push(p);
-      })
+      });
     } else {
       // Es handelt sich offenbar um ein singuläres Objekt
       let p = projektarbeiten;

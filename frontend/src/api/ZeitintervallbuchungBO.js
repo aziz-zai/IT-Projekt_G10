@@ -1,13 +1,12 @@
-import BusinessObject from './BusinessObject';
+import BusinessObject from "./BusinessObject";
 
 /**
  * Represents a Zeitintervallbuchung
  */
 export default class ZeitintervallbuchungBO extends BusinessObject {
-
   /**
    * Constructs a CustomerBO object with a given firstname and lastname.
-   * 
+   *
    * @param {String} aZeitdifferenz - the Vorname of this CustomerBO.
    * @param {String} aZeitintervall - the Vorname of this CustomerBO.
    */
@@ -19,7 +18,7 @@ export default class ZeitintervallbuchungBO extends BusinessObject {
 
   /**
    * Sets a new firstname.
-   * 
+   *
    * @param {String} aZeitdifferenz - the new firstname of this CustomerBO.
    */
   setZeitdifferenz(aZeitdifferenz) {
@@ -35,7 +34,7 @@ export default class ZeitintervallbuchungBO extends BusinessObject {
 
   /**
    * Sets a new lastname.
-   * 
+   *
    * @param {*} aZeitintervall - the new lastname of this CustomerBO.
    */
   setZeitintervall(aZeitintervall) {
@@ -49,17 +48,17 @@ export default class ZeitintervallbuchungBO extends BusinessObject {
     return this.zeitintervall;
   }
 
-  /** 
+  /**
    * Returns an Array of CustomerBOs from a given JSON structure.
    */
   static fromJSON(zeitintervallbuchung) {
     let result = [];
 
     if (Array.isArray(zeitintervallbuchung)) {
-        zeitintervallbuchung.forEach((z) => {
+      zeitintervallbuchung.forEach((z) => {
         Object.setPrototypeOf(z, ZeitintervallbuchungBO.prototype);
         result.push(z);
-      })
+      });
     } else {
       // Es handelt sich offenbar um ein singuläres Objekt
       let z = zeitintervallbuchung;

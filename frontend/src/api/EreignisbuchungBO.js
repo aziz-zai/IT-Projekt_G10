@@ -1,11 +1,9 @@
 import BusinessObject from "./BusinessObject";
 
-
 /**
  * Represents a Ereignisbuchung
  */
 export default class EreignisbuchungBO extends BusinessObject {
-
   constructor(aErstellt_von, aErstellt_für, aIst_buchung, aEreignis) {
     super();
     this.erstellt_von = aErstellt_von;
@@ -16,19 +14,18 @@ export default class EreignisbuchungBO extends BusinessObject {
 
   /**
    * Sets a new Ereignisbuchung.
-   * 
+   *
    * @param {Integer} aErstellt_von - the new erstellt_von of this EreignisbuchungBO.
    * @param {Integer} aErstellt_für
    * @param {Boolean} aIst_buchung
    * @param {Integer} aEreignis
-   * 
+   *
    */
 
   setErstellt_von(aErstellt_von) {
     this.erstellt_von = aErstellt_von;
   }
 
- 
   getErstellt_von() {
     return this.erstellt_von;
   }
@@ -45,7 +42,6 @@ export default class EreignisbuchungBO extends BusinessObject {
     this.ist_buchung = aIst_buchung;
   }
 
- 
   getIst_buchung() {
     return this.ist_buchung;
   }
@@ -57,7 +53,7 @@ export default class EreignisbuchungBO extends BusinessObject {
   getEreignis() {
     return this.ereignis;
   }
-  
+
   static fromJSON(ereignisbuchung) {
     let result = [];
 
@@ -65,7 +61,7 @@ export default class EreignisbuchungBO extends BusinessObject {
       ereignisbuchung.forEach((er) => {
         Object.setPrototypeOf(er, EreignisbuchungBO.prototype);
         result.push(er);
-      })
+      });
     } else {
       // Es handelt sich offenbar um ein singuläres Objekt
       let er = ereignisbuchung;

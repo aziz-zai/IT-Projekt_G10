@@ -1,13 +1,12 @@
-import BusinessObject from './BusinessObject';
+import BusinessObject from "./BusinessObject";
 
 /**
  * Represents a User
  */
 export default class UserBO extends BusinessObject {
-
   /**
    * Constructs a CustomerBO object with a given firstname and lastname.
-   * 
+   *
    * @param {String} aVorname - the Vorname of this CustomerBO.
    * @param {String} aNachname - the Vorname of this CustomerBO.
    * @param {String} aBenutzername - the Vorname of this CustomerBO.
@@ -15,7 +14,14 @@ export default class UserBO extends BusinessObject {
    * @param {String} aGoogleUserId - the Vorname of this CustomerBO.
    * @param {String} aUrlaubstage - the Vorname of this CustomerBO.
    */
-  constructor(aVorname, aNachname, aBenutzername, aEmail, aGoogleUserId, aUrlaubstage) {
+  constructor(
+    aVorname,
+    aNachname,
+    aBenutzername,
+    aEmail,
+    aGoogleUserId,
+    aUrlaubstage
+  ) {
     super();
     this.vorname = aVorname;
     this.nachname = aNachname;
@@ -27,7 +33,7 @@ export default class UserBO extends BusinessObject {
 
   /**
    * Sets a new firstname.
-   * 
+   *
    * @param {String} aVorname - the new firstname of this CustomerBO.
    */
   setVorname(aVorname) {
@@ -43,7 +49,7 @@ export default class UserBO extends BusinessObject {
 
   /**
    * Sets a new lastname.
-   * 
+   *
    * @param {*} aNachname - the new lastname of this CustomerBO.
    */
   setNachname(aNachname) {
@@ -101,8 +107,7 @@ export default class UserBO extends BusinessObject {
     return this.google_user_id;
   }
 
-
-  /** 
+  /**
    * Returns an Array of CustomerBOs from a given JSON structure.
    */
   static fromJSON(users) {
@@ -112,7 +117,7 @@ export default class UserBO extends BusinessObject {
       users.forEach((u) => {
         Object.setPrototypeOf(u, UserBO.prototype);
         result.push(u);
-      })
+      });
     } else {
       // Es handelt sich offenbar um ein singuläres Objekt
       let u = users;

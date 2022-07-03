@@ -1,10 +1,9 @@
-import EreignisBO from './EreignisBO';
+import EreignisBO from "./EreignisBO";
 
 /**
  * Represents a Kommen Ereignis
  */
 export default class KommenBO extends EreignisBO {
-
   constructor(aZeitpunkt, aBezeichnung) {
     super();
     this.zeitpunkt = aZeitpunkt;
@@ -17,7 +16,7 @@ export default class KommenBO extends EreignisBO {
       kommen.forEach((k) => {
         Object.setPrototypeOf(k, KommenBO.prototype);
         result.push(k);
-      })
+      });
     } else {
       // Es handelt sich offenbar um ein singuläres Objekt
       let k = kommen;

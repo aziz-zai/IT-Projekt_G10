@@ -1,21 +1,20 @@
-import BusinessObject from './BusinessObject';
+import BusinessObject from "./BusinessObject";
 
 /**
  * Represents a Zeitintervall
  */
 
 export default class ZeitintervallBO extends BusinessObject {
+  constructor(aStart, aEnde, aBezeichnung) {
+    super();
+    this.start = aStart;
+    this.ende = aEnde;
+    this.bezeichnung = aBezeichnung;
+  }
 
-    constructor(aStart, aEnde, aBezeichnung) {
-      super();
-      this.start = aStart;
-      this.ende = aEnde;
-      this.bezeichnung = aBezeichnung;
-    }
-    
   /**
    * Sets a new firstname.
-   * 
+   *
    * @param {String} aStart - the new firstname of this CustomerBO.
    */
 
@@ -50,7 +49,7 @@ export default class ZeitintervallBO extends BusinessObject {
       zeitintervall.forEach((z) => {
         Object.setPrototypeOf(z, ZeitintervallBO.prototype);
         result.push(z);
-      })
+      });
     } else {
       // Es handelt sich offenbar um ein singuläres Objekt
       let z = zeitintervall;
