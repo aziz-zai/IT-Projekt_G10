@@ -27,6 +27,7 @@ class CreateProjektarbeit extends Component {
           this.props.handleClose()
       }
 
+      //Alle Member eines projekts getten
       getMembersByProject = () => {
         OneAPI.getAPI().getMembersByProject(this.props.project.id).then(membership =>
           this.setState({
@@ -44,6 +45,7 @@ class CreateProjektarbeit extends Component {
             loadingError: null
           });
         };
+      // Projektarbeit Kommen SOll hinzuügen
       addKommenSoll = () => {
           let newKommen = new KommenBO(this.state.projektarbeitAnfang, "Arbeitsbeginn")
         OneAPI.getAPI().addKommenSoll(newKommen, this.props.user, this.state.erstelltFuer).then(kommen =>{
@@ -66,7 +68,7 @@ class CreateProjektarbeit extends Component {
             loadingError: null
           });
         };
-
+        // Projektarbeit Gehen-soll hinzufügen
       addGehenSoll = (kommen) => {
           let newGehen = new GehenBO(this.state.projektarbeitEnde, "Arbeitsende")
         OneAPI.getAPI().addGehenSoll(newGehen, kommen.id, this.props.user, this.state.erstelltFuer, this.props.activity, this.state.projektArbeitBezeichnung ).then(gehen =>

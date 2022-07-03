@@ -28,7 +28,7 @@ class MemberDetails extends Component {
       this.setState({
         success: true,
       });
-      return membership // call the parent with the project object from backend
+      return membership 
     }).then(membership => this.getUser(membership))
     .catch(e =>
       this.setState({

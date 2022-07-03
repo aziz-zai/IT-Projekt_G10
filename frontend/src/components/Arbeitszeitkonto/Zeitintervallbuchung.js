@@ -18,6 +18,7 @@ export class Zeitintervallbuchung extends Component {
     };
   }
 
+  //Hole die Zeitintervallbuchungen die ist buchungen sind
   getZeitintervallbuchungIst = () => {
     OneAPI.getAPI().getZeitintervallbuchungIst(this.props.user[0].id, this.props.startFilter, this.props.endFilter).then(buchungen =>
       this.setState({
@@ -34,6 +35,7 @@ export class Zeitintervallbuchung extends Component {
     });
   }
 
+  //Hole die Zeitintervallbuchungen die soll buchungen sind
   getZeitintervallbuchungSoll = () => {
     OneAPI.getAPI().getZeitintervallbuchungSoll(this.props.user[0].id, this.props.startFilter, this.props.endFilter).then(buchungen =>
       this.setState({
@@ -50,12 +52,14 @@ export class Zeitintervallbuchung extends Component {
     });
   }
 
+  //Lösche Ist Zeitintervallbuchung
   ZeitintervallbuchungIstDeleted = (deletedBuchung) => {
     this.setState({
       zeitintervallbuchungIst: this.state.zeitintervallbuchungIst.filter(buchung => buchung.id != deletedBuchung.id),
       deletedIstTrue: true
     })
   }
+  //Lösche Soll Zeitintervallbuchung
   ZeitintervallbuchungSollDeleted = (deletedBuchung) => {
     this.setState({
       zeitintervallbuchungSoll: this.state.zeitintervallbuchungSoll.filter(buchung => buchung.id != deletedBuchung.id),

@@ -13,8 +13,8 @@ export default class ProjectBO extends BusinessObject {
   }
 
   /**
-   * Sets a new firstname.
-   * @param {String} aProjektname - the new firstname of this CustomerBO.
+   * Sets a new Projektname.
+   * @param {String} aProjektname - the new projektname of the ProjektBO
    */
   setProjektname(aProjektname) {
     this.projektname = aProjektname;
@@ -22,12 +22,15 @@ export default class ProjectBO extends BusinessObject {
   }
 
   /**
-   * Gets the firstname.
+   * Gets the projektname.
    */
   getProjektname() {
     return this.projektname;
   }
 
+    /**
+   * Laufzeit Getter und Setter.
+   */
   setLaufzeit(aLaufzeit) {
     this.laufzeit = aLaufzeit;
   }
@@ -35,7 +38,9 @@ export default class ProjectBO extends BusinessObject {
   getLaufzeit() {
     return this.laufzeit;
   }
-
+  /**
+   * Auftraggeber Getter und Setter.
+   */
   setAuftraggeber(aAuftraggeber) {
     this.auftraggeber = aAuftraggeber;
   }
@@ -43,7 +48,9 @@ export default class ProjectBO extends BusinessObject {
   getAuftraggeber() {
     return this.auftraggeber;
   }
-
+   /**
+   * Availablehours Getter und Setter.
+   */
   setAvailablehours(aAvailablehours) {
     this.availablehours = aAvailablehours;
   }

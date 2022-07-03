@@ -23,7 +23,7 @@ export class MembershipList extends Component {
 
   getUsers = () => {
     OneAPI.getAPI().getPotentialMembers(this.props.user, this.props.project.getID()).then(userBOs =>
-      this.setState({  // Set new state when AccountBOs have been fetched
+      this.setState({  // Set new state when user have been fetched
         users: userBOs,
         loadingInProgress: false, // loading indicator 
         loadingUserError: null

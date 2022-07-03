@@ -30,6 +30,7 @@ handleFormClosed = () => {
     this.props.onClose();
 }
 
+//Projektarbeit updaten
 updateProjektarbeit = () => {
   let newProjektarbeit = Object.assign(new ProjektarbeitBO(), this.props.zeitintervall);
   newProjektarbeit.setBezeichnung(this.state.zeitintervallBezeichnung)
@@ -46,7 +47,7 @@ updateProjektarbeit = () => {
 
   });
 }
-
+//Kommen Ereignis updaten
 updateKommen = () => {
   let newKommen = Object.assign(new KommenBO(), this.props.ereignis1);
   newKommen.setZeitpunkt(this.state.zeitintervallBeginn)
@@ -62,6 +63,8 @@ updateKommen = () => {
 
   });
 }
+
+//Buchung updaten
 updateZeitintervallbuchung = () => {
   let newBuchung = Object.assign(new ZeitintervallbuchungBO(), this.props.buchung);
   OneAPI.getAPI().updateZeitintervallbuchung(newBuchung, this.props.buchung.id).then(buchung =>
@@ -92,6 +95,7 @@ updateGehen = () => {
   });
 }
 
+//Ereignis updaten
 updateEreignis = (zeitpunkt, obj, isEreignis1) => {
   let newEreignis = Object.assign(new EreignisBO(), obj);
   newEreignis.setZeitpunkt(zeitpunkt)

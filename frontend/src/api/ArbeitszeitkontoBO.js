@@ -13,16 +13,16 @@ export default class ArbeitszeitkontoBO extends BusinessObject {
   }
 
   /**
-   * Sets a new firstname.
+   * Sets a new aUrlaubskonto.
    *
-   * @param {Float} aUrlaubskonto - the new firstname of this ArbeitszeitkontoBO.
+   * @param {Float} aUrlaubskonto - the new aUrlaubskonto of this ArbeitszeitkontoBO.
    */
   setUrlaubskonto(aUrlaubskonto) {
     this.urlaubskonto = aUrlaubskonto;
   }
 
   /**
-   * Gets the firstname.
+   * Gets the aUrlaubskonto.
    */
   getUrlaubskonto() {
     return this.urlaubskonto;

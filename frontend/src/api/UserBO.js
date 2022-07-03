@@ -5,14 +5,14 @@ import BusinessObject from "./BusinessObject";
  */
 export default class UserBO extends BusinessObject {
   /**
-   * Constructs a CustomerBO object with a given firstname and lastname.
+   * Constructs a UserBO object with a given firstname and lastname.
    *
-   * @param {String} aVorname - the Vorname of this CustomerBO.
-   * @param {String} aNachname - the Vorname of this CustomerBO.
-   * @param {String} aBenutzername - the Vorname of this CustomerBO.
-   * @param {String} aEmail - the Vorname of this CustomerBO.
-   * @param {String} aGoogleUserId - the Vorname of this CustomerBO.
-   * @param {String} aUrlaubstage - the Vorname of this CustomerBO.
+   * @param {String} aVorname -Attribut of UserBO.
+   * @param {String} aNachname -Attribut of UserBO.
+   * @param {String} aBenutzername -Attribut of UserBO.
+   * @param {String} aEmail -Attribut of UserBO.
+   * @param {String} aGoogleUserId -Attribut of UserBO.
+   * @param {String} aUrlaubstage -Attribut of UserBO.
    */
   constructor(
     aVorname,
@@ -34,7 +34,7 @@ export default class UserBO extends BusinessObject {
   /**
    * Sets a new firstname.
    *
-   * @param {String} aVorname - the new firstname of this CustomerBO.
+   * @param {String} aVorname - the new firstname of this UserBO.
    */
   setVorname(aVorname) {
     this.vorname = aVorname;
@@ -50,7 +50,7 @@ export default class UserBO extends BusinessObject {
   /**
    * Sets a new lastname.
    *
-   * @param {*} aNachname - the new lastname of this CustomerBO.
+   * @param {*} aNachname - the new lastname of this UserBO.
    */
   setNachname(aNachname) {
     this.nachname = aNachname;
@@ -68,7 +68,7 @@ export default class UserBO extends BusinessObject {
   }
 
   /**
-   * Gets the firstname.
+   * Gets the benutzername.
    */
   getBenutzername() {
     return this.benutzername;
@@ -78,9 +78,7 @@ export default class UserBO extends BusinessObject {
     this.email = aEmail;
   }
 
-  /**
-   * Gets the firstname.
-   */
+
   getEmail() {
     return this.email;
   }
@@ -89,9 +87,7 @@ export default class UserBO extends BusinessObject {
     this.urlaubstage = aUrlaubstage;
   }
 
-  /**
-   * Gets the firstname.
-   */
+
   getUrlaubstage() {
     return this.urlaubstage;
   }
@@ -100,15 +96,12 @@ export default class UserBO extends BusinessObject {
     this.google_user_id = aGoogleUserId;
   }
 
-  /**
-   * Gets the firstname.
-   */
   getGoogleUserId() {
     return this.google_user_id;
   }
 
   /**
-   * Returns an Array of CustomerBOs from a given JSON structure.
+   * Returns an Array of UserBOs from a given JSON structure.
    */
   static fromJSON(users) {
     let result = [];
