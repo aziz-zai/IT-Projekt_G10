@@ -11,7 +11,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import './Zeitintervallbuchung.css'
 import LoadingProgress from '../Dialogs/LoadingProgress';
 import ZeitintervallbuchungUpdateForm from './ZeitintervallbuchungUpdateForm'
-import { getIdTokenResult } from 'firebase/auth';
+
 
 export class ZeitintervallbuchungListEntry extends Component {
 
@@ -38,7 +38,8 @@ export class ZeitintervallbuchungListEntry extends Component {
         erstellt_von: null,
         zeitintervall: null,
         openUpdateForm: false,
-        loading: false
+        loading: false,
+        buch: this.props.buchung
     };
   }
 
@@ -315,6 +316,12 @@ export class ZeitintervallbuchungListEntry extends Component {
       openUpdateForm: false
     })
   }
+  saveBuchung = (obj) =>{
+    this.setState({
+      buch: obj,
+      openUpdateForm: false
+    })
+  }
   saveEreignis1 = (obj) =>{
     this.getEreignis1ById(obj.id)
     this.setState({
@@ -361,14 +368,14 @@ componentDidMount() {
 }
   render() {
       const {buchung} = this.props;
-      const {expandState,  ereignis1, ereignis1Year, ereignis1Month, ereignis1Day,ereignis1Hour, ereignis1Minute, ereignis1Second, 
+      const {expandState, buch,  ereignis1, ereignis1Year, ereignis1Month, ereignis1Day,ereignis1Hour, ereignis1Minute, ereignis1Second, 
         ereignis2, ereignis2Year, ereignis2Month, zeitintervall, ereignis2Day,ereignis2Hour, ereignis2Minute, ereignis2Second, erstellt_von, erstellt_fuer, openUpdateForm} = this.state;
     return (
       <div>
         <Accordion TransitionProps={{ unmountOnExit: true }} defaultExpanded={false} expanded={expandState} sx={{backgroundColor:"#5e2e942d", marginLeft: 1, marginRight:1}}>
           <AccordionSummary 
             expandIcon={<ExpandMoreIcon onClick={this.handleExpandState}/>}
-            id={`customer${buchung.getID()}accountpanel-header`}
+            id={`customer${buch.getID()}accountpanel-header`}
           >
             {this.state.loading ?
               <LoadingProgress show={this.state.loading}/>:
@@ -391,7 +398,7 @@ componentDidMount() {
                </div>
               </Grid>
               <Grid item>
-                    {buchung.ist_buchung ?<Typography sx={{color: "green"}}> IST: {buchung.zeitdifferenz}h</Typography>:<Typography sx={{color: "red"}}> SOLL: {buchung.zeitdifferenz}h</Typography>}
+                    {buch.ist_buchung ?<Typography sx={{color: "green"}}> IST: {buch.zeitdifferenz}h</Typography>:<Typography sx={{color: "red"}}> SOLL: {buch.zeitdifferenz}h</Typography>}
               </Grid>
               <Grid item>
                 <ButtonGroup variant='text' size='small'>
@@ -418,7 +425,7 @@ componentDidMount() {
         </Accordion>
         <ZeitintervallbuchungUpdateForm buchung={buchung} zeitintervall={zeitintervall} ereignis1={ereignis1} ereignis2={ereignis2} show={openUpdateForm} 
         onClose={this.ZeitintervallbuchungUpdateFormClosed} saveProjektarbeit={this.saveProjektarbeit} saveKommen={this.saveKommen} saveGehen={this.saveGehen}
-        saveEreignis1={this.saveEreignis1} saveEreignis2={this.saveEreignis2}/>
+        saveEreignis1={this.saveEreignis1} saveEreignis2={this.saveEreignis2} saveBuchung={this.saveBuchung}/>
       </div>
     )
   }
@@ -429,5 +436,6 @@ ZeitintervallbuchungListEntry.propTypes = {
     handleZeitintervallbuchungDeleted: PropTypes.any,
     handleZeitintervallbuchungSollDeleted: PropTypes.any,
     istBuchung: PropTypes.any,
+    saveBuchung: PropTypes.any,
   }
 export default ZeitintervallbuchungListEntry

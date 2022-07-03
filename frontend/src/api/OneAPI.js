@@ -765,9 +765,9 @@ export default class OneAPI {
     });
   }
 
-  updateZeitintervallbuchung(zeitintervallbuchungBO) {
+  updateZeitintervallbuchung(zeitintervallbuchungBO, id) {
     return this.#fetchAdvanced(
-      this.#updateZeitintervallbuchungURL(zeitintervallbuchungBO.getID()),
+      this.#updateZeitintervallbuchungURL(id),
       {
         method: "PUT",
         headers: {

@@ -7,6 +7,7 @@ import GehenBO from '../../api/GehenBO';
 import ProjektarbeitBO from '../../api/ProjektarbeitBO';
 import EreignisBO from '../../api/EreignisBO';
 import CircularProgress from '@mui/material/CircularProgress';
+import ZeitintervallbuchungBO from '../../api/ZeitintervallbuchungBO';
 import { TextField, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton } from '@mui/material';
 
 export class ZeitintervallbuchungUpdateForm extends Component {
@@ -51,6 +52,20 @@ updateKommen = () => {
   newKommen.setZeitpunkt(this.state.zeitintervallBeginn)
   OneAPI.getAPI().updateKommen(newKommen, this.props.ereignis1.id).then(kommen =>
     this.props.saveKommen(kommen)
+    ).catch(e =>
+      this.setState({ // Reset state with error from catch 
+
+      }),
+    );
+  // set loading to true
+  this.setState({
+
+  });
+}
+updateZeitintervallbuchung = () => {
+  let newBuchung = Object.assign(new ZeitintervallbuchungBO(), this.props.buchung);
+  OneAPI.getAPI().updateZeitintervallbuchung(newBuchung, this.props.buchung.id).then(buchung =>
+    this.props.saveBuchung(buchung)
     ).catch(e =>
       this.setState({ // Reset state with error from catch 
 
@@ -106,6 +121,7 @@ handleUpdate = () => {
   this.updateEreignis(this.state.zeitintervallBeginn, this.props.ereignis1, true);
   this.updateEreignis(this.state.zeitintervallEnde, this.props.ereignis2, false);
 } 
+this.updateZeitintervallbuchung()
 }
 
 dateFilterChanged = (event) => {
@@ -241,5 +257,6 @@ ZeitintervallbuchungUpdateForm.propTypes = {
    saveGehen: PropTypes.any,
    saveEreignis1: PropTypes.any,
    saveEreignis2: PropTypes.any,
+   saveBuchung: PropTypes.any
   }
 export default ZeitintervallbuchungUpdateForm

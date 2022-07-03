@@ -55,7 +55,6 @@ export class Zeitintervallbuchung extends Component {
       zeitintervallbuchungIst: this.state.zeitintervallbuchungIst.filter(buchung => buchung.id != deletedBuchung.id),
       deletedIstTrue: true
     })
-    console.log('deletedBuchung', deletedBuchung, this.state.zeitintervallbuchungIst)
   }
   ZeitintervallbuchungSollDeleted = (deletedBuchung) => {
     this.setState({
@@ -75,6 +74,7 @@ export class Zeitintervallbuchung extends Component {
     })
   }
 
+
 componentDidMount() {
 this.getZeitintervallbuchungIst()
 this.getZeitintervallbuchungSoll()
@@ -88,7 +88,7 @@ this.getZeitintervallbuchungSoll()
       var sollZeitdifferenz = null
       zeitintervallbuchungSoll.map(buchung => sollZeitdifferenz += parseFloat(buchung.zeitdifferenz)) 
     return (
-      <div >
+      <div >{console.log('newSoll', zeitintervallbuchungSoll)}
           {istBuchung ?
         <div>
           <div>
@@ -100,7 +100,7 @@ this.getZeitintervallbuchungSoll()
                       <Alert onClose={this.handleDeletedIstClose}>Buchung erfolgreich gelöscht!</Alert>
               </Stack>:null}</div>
             {zeitintervallbuchungIst ?
-            zeitintervallbuchungIst.map(buchung => <ZeitintervallbuchungListEntry key={buchung.getID()} buchung={buchung} istBuchung={true} handleZeitintervallbuchungIstDeleted={this.ZeitintervallbuchungIstDeleted}/>):null}
+            zeitintervallbuchungIst.map(buchung => <ZeitintervallbuchungListEntry key={buchung.getID()} buchung={buchung} istBuchung={true} handleZeitintervallbuchungIstDeleted={this.ZeitintervallbuchungIstDeleted} />):null}
         </div>
         : <div>
           <div>
@@ -112,7 +112,7 @@ this.getZeitintervallbuchungSoll()
                       <Alert onClose={this.handleDeletedSollClose}>Buchung erfolgreich gelöscht!</Alert>
               </Stack>:null}</div>
             {zeitintervallbuchungSoll ?
-            zeitintervallbuchungSoll.map(buchung => <ZeitintervallbuchungListEntry key={buchung.getID()} buchung={buchung} istBuchung={false} handleZeitintervallbuchungSollDeleted={this.ZeitintervallbuchungSollDeleted}/>):null}
+            zeitintervallbuchungSoll.map(buchung => <ZeitintervallbuchungListEntry key={buchung.getID()} buchung={buchung} istBuchung={false} handleZeitintervallbuchungSollDeleted={this.ZeitintervallbuchungSollDeleted} />):null}
           </div>}
       </div>
     )

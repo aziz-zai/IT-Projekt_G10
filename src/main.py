@@ -1493,8 +1493,8 @@ class ZeitintervallbuchungOperations(Resource):
             Siehe Hinweise oben.
             """
             ze.set_id(id)
-            adm.update_zeitintervallbuchung(ze)
-            return "", 200
+            buch = adm.update_zeitintervallbuchung(ze)
+            return buch , 200
         else:
             return "", 500
 
