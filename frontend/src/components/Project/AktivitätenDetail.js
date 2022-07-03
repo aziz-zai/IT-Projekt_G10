@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {DialogTitle, Dialog, Button, Tooltip, IconButton, Paper } from '@mui/material';
+import {DialogTitle, Dialog, Button, Tooltip, IconButton, Paper, ButtonGroup } from '@mui/material';
 import './Project.css'
 import './Aktivitäten.css'
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
 import OneAPI from '../../api/OneAPI';
 import ProjektarbeitDetails from './ProjektarbeitDetails';
 import { Card, List, ListItem } from '@material-ui/core';
@@ -15,33 +16,48 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
-import Projektarbeitereignis from './Projektarbeitereignis';
 import Projektarbeitbuchung from './Projektarbeitbuchung';
+import CreateProjektarbeit from './CreateProjektarbeit';
+import AktivitätenBO from '../../api/AktivitätenBO';
 
 
 class AktivitätenDetail extends Component {
 
   constructor(props) {
     super(props);
-
+    let bz = "", da = "", cap = ""
+    if(props.aktivität){
+      bz= props.aktivität.bezeichnung;
+      da= props.aktivität.dauer;
+      cap= props.aktivität.capacity;
+}
     // Init state
     this.state = {
       deletingInProgress: false,
       deletingError: null,
       openActivity: false,
       projektarbeiten: [],
-      ereignisbuchungSelected: false,
-      zeitintervallbuchungSelected: true,
       startFilter: null,
       endFilter: null,
       istBuchung: true,
+      openCreateProjektarbeit: false,
+      openUpdateAktivität: false,
+      bezeichnung: bz,
+      dauer: da,
+      kapazität: cap,
     };
   }
 
   openActivityDetails = () => {
+    if(this.props.projektleiter){
     this.setState({
       openActivity: true
-    });
+    });}
+    else{
+      this.setState({
+        openActivity: false
+      });
+    }
   }
 
   closeActivityDetails = () => {
@@ -50,16 +66,25 @@ class AktivitätenDetail extends Component {
     });
   }
 
-  loadProjektarbeiten = () => {
-    OneAPI.getAPI().getProjektarbeitByActivity(this.props.aktivität.id).then(projektarbeiten =>
+  openCreateProjektarbeit= () => {
+    this.setState({
+      openCreateProjektarbeit: true
+    });
+  }
+
+  closeCreateProjektarbeit= () => {
+    this.setState({
+      openCreateProjektarbeit: false
+    });
+  }
+
+  updateAktivität = () => {
+    let newAktivität = new AktivitätenBO(this.state.bezeichnung,this.state.dauer, this.state.kapazität,this.props.project.id)
+    OneAPI.getAPI().updateAktivitäten(newAktivität, this.props.aktivität.id).then(aktivität =>
       this.setState({
-        projektarbeiten: projektarbeiten,
-        loadingInProgress: false, // loading indicator 
-        loadingError: null
+        openUpdateAktivität: false
       })).catch(e =>
         this.setState({ // Reset state with error from catch 
-          loadingInProgress: false,
-          loadingError: e
         })
       );
 
@@ -71,13 +96,13 @@ class AktivitätenDetail extends Component {
 }
 
   deleteAktivität = () => {
-    OneAPI.getAPI().deleteAktivitäten(this.props.aktivität).then(() => {
+    OneAPI.getAPI().deleteAktivitäten(this.props.aktivität.id).then(() => {
       this.setState({  // Set new state when AccountBOs have been fetched
         deletingInProgress: false, // loading indicator 
         deletingError: null
       })
       // console.log(account);
-      this.props.aktivitätDeleted(this.props.aktivität);  // call the parent with the deleted customer
+      this.props.aktivitätDeleted(this.props.aktivität.id);  // call the parent with the deleted customer
     }).catch(e =>
       this.setState({ // Reset state with error from catch 
         deletingInProgress: false,
@@ -128,36 +153,65 @@ class AktivitätenDetail extends Component {
     this.setState({
     istBuchung: false,
   });
+  }
+
+  openUpdateForm = () => {
+    this.setState({
+      openUpdateAktivität: true
+    })
+  }
+  closeUpdateForm = () => {
+    this.setState({
+      openUpdateAktivität: false
+    })
+  }
+
   
+  textFieldValueChange = (event) => {
+    const value = event.target.value;
+
+    let error = false;
+    if (value.trim().length === 0) {
+      error = true;
+    }
+
+    this.setState({
+      [event.target.id]: event.target.value,
+    });
   }
 
   /** Renders the component */
   render() {
-    const {akt_dauer, akt_bezeichnung, akt_capacity, user, aktivität} = this.props;
-    const {openActivity, projektarbeiten, endFilter, startFilter, istBuchung, zeitintervallbuchungSelected, ereignisbuchungSelected} = this.state;
+    const { user, aktivität, projektleiter, project} = this.props;
+    const {openActivity, endFilter, startFilter, istBuchung, openCreateProjektarbeit, openUpdateAktivität,
+    bezeichnung, dauer, kapazität} = this.state;
 
     return (
       <div>
       <Paper onClick={this.openActivityDetails} variant='outlined' class="paperaktivitäten">
-        <div><strong>{akt_bezeichnung}</strong></div>
-        <div><strong>{akt_dauer}</strong> Tage übrig</div>
-        <div><strong>{akt_capacity}</strong>h übrig</div>
+        <div><strong>{bezeichnung}</strong></div>
+        <div><strong>{dauer}</strong> Tage übrig</div>
+        <div><strong>{kapazität}</strong>h übrig</div>
+        {projektleiter ? 
         <Button><DeleteIcon onClick={this.deleteAktivität} color="secondary"/>
-          </Button>
+          </Button>:null}
       </Paper>
        {openActivity?
       <Dialog open={openActivity} onClose={this.closeActivityDetails} maxWidth='md' fullWidth sx={{overflow:"scroll", maxHeight: "100vh"}}>
-        <DialogTitle id='form-dialog-title'>Aktivitätendetails
+        <DialogTitle id='form-dialog-title'>{bezeichnung}
+        <Button onClick={this.openUpdateForm}>
+            <EditIcon />
+            Aktivität bearbeiten
+          </Button>
     <IconButton sx={{ position: 'absolute', right: 1, top: 1, color: 'grey[500]' }} onClick={this.closeActivityDetails}>
        <CloseIcon />
     </IconButton></DialogTitle>
       <List>
         <ListItem>
           <Tooltip title="Projektarbeit hinzufügen">
-          <Button size="large" startIcon={<AddBoxIcon/>}/>
+          <Button size="large" onClick={this.openCreateProjektarbeit}startIcon={<AddBoxIcon/>}>Projektarbeit hinzufügen</Button>
         </Tooltip>
         </ListItem>
-
         <ListItem>
         <div class="buchungContainer">
          <div class="buchungHeader">
@@ -196,19 +250,56 @@ class AktivitätenDetail extends Component {
     </FormControl></div>
          </div>
          <div class="buchungSelection">
-           <div class="selectionItem1"><button class={zeitintervallbuchungSelected ? "selectionBtn" : "selectionBtnAlt"} onClick={this.handleZeitintervallbuchung}>Zeitintervallbuchungen</button></div>
-           <div class="selectionItem2"><button class={ereignisbuchungSelected ? "selectionBtn" : "selectionBtnAlt"} onClick={this.handleEreignisbuchung}>Ereignisbuchungen</button></div>
+           <div class="selectionItem1"><button class="selectionBtn" onClick={this.handleZeitintervallbuchung}>Zeitintervallbuchungen</button></div>
          </div>
          <div class="buchungen">
-           {zeitintervallbuchungSelected ?
-           <Projektarbeitbuchung istBuchung={istBuchung} startFilter={startFilter} endFilter={endFilter} user={user} activityid={aktivität}/>
-          : <Projektarbeitereignis istBuchung={istBuchung} startFilter={startFilter} endFilter={endFilter} user={user}/>}
+           <Projektarbeitbuchung istBuchung={istBuchung} startFilter={startFilter} endFilter={endFilter} user={user} activityid={aktivität.id}/>
          </div>
        </div>
       </ListItem>
       </List>
   </Dialog>:null}
-
+  <CreateProjektarbeit handleClose={this.closeCreateProjektarbeit} show={openCreateProjektarbeit} project={project} user={user} activity={aktivität.id}/>
+  {openUpdateAktivität ?
+               <Dialog open={openUpdateAktivität} onClose={this.closeUpdateForm} maxWidth='md'>
+                 <DialogTitle id='form-dialog-title'>Aktivität bearbeiten
+            <IconButton sx={{ position: 'absolute', right: 1, top: 1, color: 'grey[500]' }} onClick={this.closeUpdateForm}>
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+        <Card sx={{ minWidth: 275 }} variant="outlined" color="yellow">
+        <List>
+          <ListItem>
+          <TextField
+            autoFocus type='text' required
+            id="bezeichnung"
+            label="Bezeichnung"
+            value={bezeichnung}
+            onChange={this.textFieldValueChange}
+            /> 
+          </ListItem>
+          <ListItem>
+          <TextField
+            autoFocus type='text' required
+            id="kapazität"
+            label="Kapazität"
+            value={kapazität}
+            onChange={this.textFieldValueChange}
+            />
+          </ListItem>
+          <ListItem>
+          <TextField
+            autoFocus type='text' required
+            id="dauer"
+            label="Dauer"
+            value={dauer}
+            onChange={this.textFieldValueChange}
+            />
+          </ListItem>
+        </List>
+        <button class="HinzufügenBtn" onClick={this.updateAktivität}>Speichern</button>
+        </Card>
+        </Dialog>:null}
   </div>
     );
   }
@@ -222,6 +313,8 @@ AktivitätenDetail.propTypes = {
   aktivität: PropTypes.any,
   aktivitätDeleted: PropTypes.any,
   user: PropTypes.any,
+  projektleiter: PropTypes.any,
+  project: PropTypes.any,
 }
 
 export default AktivitätenDetail;

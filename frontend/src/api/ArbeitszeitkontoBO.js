@@ -1,21 +1,20 @@
-import BusinessObject from './BusinessObject';
+import BusinessObject from "./BusinessObject";
 
 /**
  * Represents a Arbeitszeitkonto
  */
 export default class ArbeitszeitkontoBO extends BusinessObject {
-
   constructor(aUrlaubskonto, aUser, aArbeitsleistung, aGleitzeit) {
     super();
     this.urlaubskonto = aUrlaubskonto;
     this.user = aUser;
     this.arbeitsleistung = aArbeitsleistung;
-    this.gleitzeit = aGleitzeit
+    this.gleitzeit = aGleitzeit;
   }
 
   /**
    * Sets a new firstname.
-   * 
+   *
    * @param {Float} aUrlaubskonto - the new firstname of this ArbeitszeitkontoBO.
    */
   setUrlaubskonto(aUrlaubskonto) {
@@ -25,7 +24,7 @@ export default class ArbeitszeitkontoBO extends BusinessObject {
   /**
    * Gets the firstname.
    */
-  getUrlaubskonto () {
+  getUrlaubskonto() {
     return this.urlaubskonto;
   }
 
@@ -44,7 +43,7 @@ export default class ArbeitszeitkontoBO extends BusinessObject {
   getArbeitsleistung() {
     return this.arbeitsleistung;
   }
- 
+
   setGleitzeit(aGleitzeit) {
     this.gleitzeit = aGleitzeit;
   }
@@ -57,10 +56,10 @@ export default class ArbeitszeitkontoBO extends BusinessObject {
     let result = [];
 
     if (Array.isArray(arbeitszeitkonto)) {
-        arbeitszeitkonto.forEach((m) => {
+      arbeitszeitkonto.forEach((m) => {
         Object.setPrototypeOf(m, ArbeitszeitkontoBO.prototype);
         result.push(m);
-      })
+      });
     } else {
       // Es handelt sich offenbar um ein singuläres Objekt
       let m = arbeitszeitkonto;

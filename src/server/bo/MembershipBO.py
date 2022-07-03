@@ -1,9 +1,10 @@
 from .BusinessObject import BusinessObject
 
 """
-Klasse Membership
+Klasse Membership mit einfachen Methoden zum Setzen der Klassenvariablen
 
 """
+
 
 class Membership(BusinessObject):
     def __init__(self):
@@ -36,17 +37,21 @@ class Membership(BusinessObject):
         """Setzen des Projektleiters"""
         self._projektleiter = projektleiter
 
-
     def __str__(self):
         """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""
-        return "Membership: {}, {}, {}, {}, {}".format(self.get_id(), self.get_timestamp(), 
-        self.get_user(), self.get_project(), self.get_projektleiter())
+        return "Membership: {}, {}, {}, {}, {}".format(
+            self.get_id(),
+            self.get_timestamp(),
+            self.get_user(),
+            self.get_project(),
+            self.get_projektleiter(),
+        )
 
     @staticmethod
     def from_dict(dictionary=dict()):
         """Umwandeln eines Python dict() in ein Membership()."""
         obj = Membership()
         obj.set_user(dictionary["user"])
-        obj.set_project(dictionary["project"])  
+        obj.set_project(dictionary["project"])
         obj.set_projektleiter(dictionary["projektleiter"])
         return obj

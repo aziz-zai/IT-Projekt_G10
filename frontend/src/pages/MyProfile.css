@@ -1,89 +1,88 @@
-.ProfileWrapper{
-    margin-top: 13rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+.ProfileWrapper {
+  margin-top: 13rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-.ProfileAvatar{
-    width: 12rem;
-    border-radius: 50%;
-    position: relative;
-    top: -5rem;
-    box-shadow: #000000 0px 3px 8px;
+.ProfileAvatar {
+  width: 12rem;
+  border-radius: 50%;
+  position: relative;
+  top: -5rem;
+  box-shadow: #000000 0px 3px 8px;
 }
 
-.ProfileContainer{
-    width: 30rem;
+.ProfileContainer {
+  width: 30rem;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  flex-direction: column;
+  border: 2px solid #ccc;
+  border-radius: 1rem;
+  box-shadow: #5e2e94 0px 3px 8px;
+}
+
+.ProfileContent {
+  position: relative;
+  top: -3rem;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.success {
+  position: relative;
+  top: -2.76rem;
+  height: 1rem;
+}
+
+.saveBtn {
+  border-radius: 50px;
+  background: #5e2e94;
+  white-space: nowrap;
+  padding: 10px 40px;
+  color: #fff;
+  font-size: 20px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+}
+
+.saveBtnWrapper {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  padding: 0.5rem;
+  position: relative;
+  top: -1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.snackBar {
+  background-color: #5e2e94;
+}
+
+@media screen and (max-width: 700px) {
+  .ProfileContainer {
+    width: 20rem;
+    height: auto;
     display: flex;
     justify-items: center;
     align-items: center;
     flex-direction: column;
+    gap: 2rem;
     border: 2px solid #ccc;
     border-radius: 1rem;
     box-shadow: #5e2e94 0px 3px 8px;
-}
-
-
-.ProfileContent{
-    position: relative;
-    top: -3rem;
-    display: flex;
-    justify-items: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-.success{
-    position: relative;
-    top: -2.76rem;
-    height: 1rem
-}
-
-.saveBtn{
-    border-radius: 50px;
-    background: #5e2e94;
-    white-space: nowrap;
-    padding: 10px 40px;
-    color:#fff;
-    font-size: 20px;
-    outline: none;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.2s ease-in-out;
-}
-
-.saveBtnWrapper{
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
-    padding: 0.5rem;
-    position: relative;
-    top: -1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.snackBar{
-    background-color: #5e2e94;
-}
-
-@media screen and (max-width: 700px){
-    .ProfileContainer{
-        width: 20rem;
-        height: auto;
-        display: flex;
-        justify-items: center;
-        align-items: center;
-        flex-direction: column;
-        gap: 2rem;
-        border: 2px solid #ccc;
-        border-radius: 1rem;
-        box-shadow: #5e2e94 0px 3px 8px;
-    }
+  }
 }

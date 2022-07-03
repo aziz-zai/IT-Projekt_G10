@@ -25,9 +25,9 @@ export class ProjektarbeitenSelection extends Component {
   /** gets the balance for this account */
 
   loadProjektarbeiten = () => {
-    OneAPI.getAPI().getProjektarbeitByActivity(this.props.aktivität).then(projektarbeiten =>
+    OneAPI.getAPI().getProjektarbeitByActivity(this.props.aktivität, this.props.user[0].id).then(projektarbeiten =>
       this.setState({
-        projektarbeiten: projektarbeiten,
+        projektarbeiten: projektarbeiten.map(projektarbeit => {return projektarbeit.bezeichnung}),
         loadingInProgress: false, // loading indicator 
         loadingError: null
       })).catch(e =>
@@ -58,10 +58,13 @@ export class ProjektarbeitenSelection extends Component {
   render() {
     const {Cuser, user} = this.props;
     const {projektarbeiten} = this.state;
+    var uniqProjektarbeiten = projektarbeiten.filter(function (value, index, array) { 
+      return array.indexOf(value) === index;
+    });
     return (
       <div>
         <div>
-      <FormControl sx={{ m: 1, minWidth: 120 }}>
+      <FormControl sx={{ m: 1, minWidth: 120 }}> {console.log('test', user)}
         <InputLabel variant="standard" htmlFor="uncontrolled-native">
           Projektarbeit
         </InputLabel>
@@ -74,8 +77,8 @@ export class ProjektarbeitenSelection extends Component {
           onChange={this.handleChange}
         >
           <option value={0}></option>
-           {projektarbeiten ?
-          projektarbeiten.map((projektarbeit, index) => <option value={projektarbeit.bezeichnung}>{projektarbeit.bezeichnung}</option>)
+           {uniqProjektarbeiten ?
+          uniqProjektarbeiten.map((projektarbeit, index) => <option value={projektarbeit}>{projektarbeit}</option>)
           :null}
         </NativeSelect>
       </FormControl>
@@ -87,7 +90,8 @@ export class ProjektarbeitenSelection extends Component {
 
 ProjektarbeitenSelection.propTypes = {
   aktivität: PropTypes.any,
-  handleSelection: PropTypes.any
+  handleSelection: PropTypes.any,
+  user: PropTypes.any,
 }
 
 export default ProjektarbeitenSelection

@@ -1,10 +1,9 @@
-import BusinessObject from './BusinessObject';
+import BusinessObject from "./BusinessObject";
 
 /**
  * Represents a Membership
  */
 export default class MembershipBO extends BusinessObject {
-
   constructor(aUser, aProject, aProjektleiter) {
     super();
     this.user = aUser;
@@ -13,8 +12,6 @@ export default class MembershipBO extends BusinessObject {
   }
 
   /**
-   * .
-   * 
    * @param {String} aUser - the new user of this MembershipBO.
    */
   setUser(aUser) {
@@ -48,7 +45,7 @@ export default class MembershipBO extends BusinessObject {
       membership.forEach((m) => {
         Object.setPrototypeOf(m, MembershipBO.prototype);
         result.push(m);
-      })
+      });
     } else {
       // Es handelt sich offenbar um ein singuläres Objekt
       let m = membership;

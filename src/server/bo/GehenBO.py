@@ -1,9 +1,10 @@
 from .EreignisBO import Ereignis
 
 """
-Klasse Gehen
+Subklasse Gehen von Ereignis
 
 """
+
 
 class Gehen(Ereignis):
     def __init__(self):
@@ -15,8 +16,5 @@ class Gehen(Ereignis):
         obj = Gehen()
         obj.set_zeitpunkt(dictionary["zeitpunkt"])
         obj.set_bezeichnung(dictionary["bezeichnung"])
-        
-        return obj
-  
 
-        
+        return obj

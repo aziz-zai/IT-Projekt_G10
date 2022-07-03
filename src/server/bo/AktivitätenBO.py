@@ -1,12 +1,12 @@
 from .BusinessObject import BusinessObject
 
 """
-Klasse Aktivitäten
+Klasse Aktivitäten mit einfachen Methoden zum setzen der Klassenvariablen
 
 """
 
+
 class Aktivitäten(BusinessObject):
-         
     def __init__(self):
         super().__init__()
         self._bezeichnung = ""
@@ -48,15 +48,21 @@ class Aktivitäten(BusinessObject):
 
     def __str__(self):
         """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""
-        return "Aktivität: {}, {}, {}, {}, {}, {}".format(self.get_id(), self.get_timestamp(), 
-        self.get_bezeichnung(), self.get_dauer(), self.get_capacity(), self.get_project())
+        return "Aktivität: {}, {}, {}, {}, {}, {}".format(
+            self.get_id(),
+            self.get_timestamp(),
+            self.get_bezeichnung(),
+            self.get_dauer(),
+            self.get_capacity(),
+            self.get_project(),
+        )
 
     @staticmethod
     def from_dict(dictionary=dict()):
-        """Umwandeln eines Python dict() in eine Aktivitäten()."""
+        """Umwandeln eines Python dict() in eine Aktivität()."""
         obj = Aktivitäten()
         obj.set_bezeichnung(dictionary["bezeichnung"])
-        obj.set_capacity(dictionary["capacity"])  
+        obj.set_capacity(dictionary["capacity"])
         obj.set_dauer(dictionary["dauer"])
         obj.set_project(dictionary["project"])
         return obj

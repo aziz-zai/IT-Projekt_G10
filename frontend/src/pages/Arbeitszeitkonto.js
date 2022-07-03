@@ -11,6 +11,7 @@ import Ereignisbuchung from '../components/Arbeitszeitkonto/Ereignisbuchung';
 import Zeitintervallbuchung from '../components/Arbeitszeitkonto/Zeitintervallbuchung';
 import TextField from '@mui/material/TextField';
 import Abwesenheit from '../components/Arbeitszeitkonto/Abwesenheit'
+import { LinearProgress } from '@mui/material';
 
 export class Arbeitszeitkonto extends Component {
 
@@ -23,7 +24,8 @@ export class Arbeitszeitkonto extends Component {
       startFilter: null,
       endFilter: null,
       istBuchung: true,
-      openAbwesenheit: false
+      openAbwesenheit: false,
+      loading: false
 
     };
   }
@@ -33,6 +35,7 @@ export class Arbeitszeitkonto extends Component {
     OneAPI.getAPI().getArbeitszeitkonto(this.props.user[0].id).then(arbeitszeitKonto =>
       this.setState({
         arbeitszeitKonto: arbeitszeitKonto,
+        loading: false
       }),
       ).catch(e =>
         this.setState({ // Reset state with error from catch 
@@ -41,6 +44,7 @@ export class Arbeitszeitkonto extends Component {
       );
     // set loading to true
     this.setState({
+      loading: true
     });
   }
 
@@ -98,16 +102,20 @@ componentDidMount(){
   this.loadArbeitszeitkonto();
 }
   render() {
-    const {arbeitszeitKonto, ereignisbuchungSelected, zeitintervallbuchungSelected, startFilter, endFilter, istBuchung, openAbwesenheit} = this.state;
+    const {arbeitszeitKonto, loading, ereignisbuchungSelected, zeitintervallbuchungSelected, startFilter, endFilter, istBuchung, openAbwesenheit} = this.state;
     const {user} = this.props;
     return (
       <div>
-        {arbeitszeitKonto ? 
+        
+        {loading ?
+        <LinearProgress sx={{marginTop: 12, marginBotton: 10}} color="secondary"/>:
+        arbeitszeitKonto ?
         <div class="arbeitszeitKontoHeader">
         <div class="azkHeaderItem">Arbeitsleistung: <strong>{arbeitszeitKonto[0].arbeitsleistung} </strong>Stunden</div>
        <div class="azkHeaderItem">Urlaubskonto: <strong>{arbeitszeitKonto[0].urlaubskonto} </strong>Tage</div>
        <div class="azkHeaderItem">Gleitzeit: <strong>{arbeitszeitKonto[0].gleitzeit}</strong> Stunden</div>
        </div>:null}
+       
        <button class="abwesenheitBtn" onClick={this.openAbwesenheit}> Abwesenheit </button>
        <Abwesenheit show={openAbwesenheit} onClose={this.handleAbwesenheitClose} user={user}/>
        <div class="buchungContainer">

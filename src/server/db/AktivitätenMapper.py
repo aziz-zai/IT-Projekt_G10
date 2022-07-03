@@ -3,10 +3,9 @@ from server.db.Mapper import Mapper
 
 
 class AktivitätenMapper(Mapper):
-
     def __init__(self):
         super().__init__()
-    
+
     def find_by_key(self, key):
         """
         Suchen einer Aktivität anhand der Aktivitäten-ID.
@@ -16,7 +15,9 @@ class AktivitätenMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, bezeichnung, dauer, capacity, project FROM activity WHERE id={}".format(key)
+        command = "SELECT id, timestamp, bezeichnung, dauer, capacity, project FROM activity WHERE id={}".format(
+            key
+        )
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -29,7 +30,7 @@ class AktivitätenMapper(Mapper):
             aktivitäten.set_dauer(dauer),
             aktivitäten.set_capacity(capacity),
             aktivitäten.set_project(project)
-            
+
             result = aktivitäten
 
         except IndexError:
@@ -51,12 +52,13 @@ class AktivitätenMapper(Mapper):
         result = []
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, bezeichnung, dauer, capacity, project FROM activity WHERE project={}".format(project)
+        command = "SELECT id, timestamp, bezeichnung, dauer, capacity, project FROM activity WHERE project={}".format(
+            project
+        )
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        
-        for(id, timestamp, bezeichnung, dauer, capacity, project) in tuples:
+        for (id, timestamp, bezeichnung, dauer, capacity, project) in tuples:
             aktivitäten = Aktivitäten()
             aktivitäten.set_id(id),
             aktivitäten.set_timestamp(timestamp),
@@ -72,7 +74,6 @@ class AktivitätenMapper(Mapper):
 
         return result
 
-
     def insert(self, aktivitäten: Aktivitäten) -> Aktivitäten:
         """
         Einfügen einer neuen Aktivität in die Datenbank.
@@ -83,7 +84,7 @@ class AktivitätenMapper(Mapper):
         cursor.execute("SELECT MAX(id) AS maxid FROM activity")
         tuples = cursor.fetchall()
 
-        for (maxid) in tuples:
+        for maxid in tuples:
             if maxid[0] is not None:
                 aktivitäten.set_id(maxid[0] + 1)
             else:
@@ -93,29 +94,38 @@ class AktivitätenMapper(Mapper):
                 id, timestamp, bezeichnung, dauer, capacity, project
             ) VALUES (%s,%s,%s,%s,%s,%s)
         """
-        data = (aktivitäten.get_id(),
-                aktivitäten.get_timestamp(),
-                aktivitäten.get_bezeichnung(),
-                aktivitäten.get_dauer(),
-                aktivitäten.get_capacity(),
-                aktivitäten.get_project())
+        data = (
+            aktivitäten.get_id(),
+            aktivitäten.get_timestamp(),
+            aktivitäten.get_bezeichnung(),
+            aktivitäten.get_dauer(),
+            aktivitäten.get_capacity(),
+            aktivitäten.get_project(),
+        )
         cursor.execute(command, data)
-        
+
         self._cnx.commit()
         cursor.close()
 
         return aktivitäten
-    
+
     def update(self, aktivitäten: Aktivitäten) -> Aktivitäten:
         """
         Änderung einer bereits bestehenden Aktivität.
         Parameter aktivitäten = AktivitätenBO, das geändert werden soll
-        
+
         """
         cursor = self._cnx.cursor()
 
         command = "UPDATE activity SET timestamp=%s, bezeichnung=%s, dauer=%s, capacity=%s, project=%s WHERE id=%s"
-        data = (aktivitäten.get_timestamp(), aktivitäten.get_bezeichnung(), aktivitäten.get_dauer(), aktivitäten.get_capacity(), aktivitäten.get_project(), aktivitäten.get_id())
+        data = (
+            aktivitäten.get_timestamp(),
+            aktivitäten.get_bezeichnung(),
+            aktivitäten.get_dauer(),
+            aktivitäten.get_capacity(),
+            aktivitäten.get_project(),
+            aktivitäten.get_id(),
+        )
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -127,7 +137,7 @@ class AktivitätenMapper(Mapper):
         """
         Löschen einer Aktivität aus der Datenbank anhand der Aktivitäten-ID.
         Parameter aktivitäten = Aktivitäten-ID
-        
+
         """
         cursor = self._cnx.cursor()
 

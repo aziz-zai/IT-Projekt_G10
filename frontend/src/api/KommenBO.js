@@ -1,17 +1,14 @@
-import EreignisBO from './EreignisBO';
+import EreignisBO from "./EreignisBO";
 
 /**
  * Represents a Kommen Ereignis
  */
 export default class KommenBO extends EreignisBO {
-
-  constructor() {
+  constructor(aZeitpunkt, aBezeichnung) {
     super();
-    
+    this.zeitpunkt = aZeitpunkt;
+    this.bezeichnung = aBezeichnung;
   }
-
-  
-  
   static fromJSON(kommen) {
     let result = [];
 
@@ -19,7 +16,7 @@ export default class KommenBO extends EreignisBO {
       kommen.forEach((k) => {
         Object.setPrototypeOf(k, KommenBO.prototype);
         result.push(k);
-      })
+      });
     } else {
       // Es handelt sich offenbar um ein singuläres Objekt
       let k = kommen;

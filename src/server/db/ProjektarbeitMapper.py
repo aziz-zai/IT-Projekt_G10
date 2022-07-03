@@ -3,22 +3,28 @@ from server.db.Mapper import Mapper
 
 
 class ProjektarbeitMapper(Mapper):
-
     def __init__(self):
         super().__init__()
-    
+
     def find_by_key(self, key):
-        """Suchen einer Projektarbeit mit vorgegebener Projekt ID, da diese eindeutig ist"""
+        """
+        Suchen einer Projektarbeit anhand der Projektarbeit-ID.
+        Parameter key = Projektarbeit-ID
+        """
 
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, bezeichnung, beschreibung, start, ende, activity FROM projektarbeit WHERE id={}".format(key)
+        command = "SELECT id, timestamp, bezeichnung, beschreibung, start, ende, activity FROM projektarbeit WHERE id={}".format(
+            key
+        )
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, bezeichnung, beschreibung, start, ende, activity) = tuples[0]
+            (id, timestamp, bezeichnung, beschreibung, start, ende, activity) = tuples[
+                0
+            ]
             projektarbeit = Projektarbeit()
             projektarbeit.set_id(id),
             projektarbeit.set_timestamp(timestamp)
@@ -40,9 +46,10 @@ class ProjektarbeitMapper(Mapper):
 
         return result
 
-    def find_by_activity_id(self, activity):
-        """Suchen einer Projektarbeit anhand der Aktivitäten-ID. Da diese eindeutig ist,
-        wird genau ein Objekt zurückgegeben.
+    def find_by_activity_id(self, activity, user):
+        """
+        Suchen einer Projektarbeit anhand der Aktivitäten-ID.
+        Parameter activity = Aktivitäten-ID
         """
         result = []
 
@@ -51,12 +58,14 @@ class ProjektarbeitMapper(Mapper):
         FROM projektarbeit 
         WHERE activity={} AND id in (
             SELECT zeitintervall FROM zeitintervallbuchung 
-            WHERE ist_buchung = false)""".format(activity)
+            WHERE ist_buchung = false AND erstellt_für={})""".format(
+            activity,
+            user
+        )
         cursor.execute(command)
         tuples = cursor.fetchall()
 
-        
-        for(id, timestamp, bezeichnung, beschreibung, start, ende, activity) in tuples:
+        for (id, timestamp, bezeichnung, beschreibung, start, ende, activity) in tuples:
             projektarbeit = Projektarbeit()
             projektarbeit.set_id(id),
             projektarbeit.set_timestamp(timestamp)
@@ -74,18 +83,23 @@ class ProjektarbeitMapper(Mapper):
         return result
 
     def find_by_start(self, start):
-        """Suchen einer Projektarbeit anhand der Aktivitäten-ID. Da diese eindeutig ist,
-        wird genau ein Objekt zurückgegeben.
+        """
+        Suchen einer Projektarbeit anhand des Starts.
+        Parameter start = Kommen-ID
         """
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, bezeichnung, beschreibung, start, ende, activity FROM projektarbeit WHERE start={}".format(start)
+        command = "SELECT id, timestamp, bezeichnung, beschreibung, start, ende, activity FROM projektarbeit WHERE start={}".format(
+            start
+        )
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, bezeichnung, beschreibung, start, ende, activity) = tuples[0]
+            (id, timestamp, bezeichnung, beschreibung, start, ende, activity) = tuples[
+                0
+            ]
             projektarbeit = Projektarbeit()
             projektarbeit.set_id(id),
             projektarbeit.set_timestamp(timestamp)
@@ -108,12 +122,15 @@ class ProjektarbeitMapper(Mapper):
         return result
 
     def insert(self, projektarbeit: Projektarbeit) -> Projektarbeit:
-        """Create projektarbeit Object"""
+        """
+        Einfügen einer Projektarbeit in die Datenbank.
+        Parameter projektarbeit = ProjektarbeitBO, das eingefügt werden soll
+        """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM projektarbeit")
         tuples = cursor.fetchall()
 
-        for (maxid) in tuples:
+        for maxid in tuples:
             if maxid[0] is not None:
                 projektarbeit.set_id(maxid[0] + 1)
             else:
@@ -123,24 +140,40 @@ class ProjektarbeitMapper(Mapper):
                 id, timestamp, bezeichnung, beschreibung, start, ende, activity
             ) VALUES (%s,%s,%s,%s,%s,%s,%s)
         """
-        cursor.execute(command, (
-            projektarbeit.get_id(),
+        cursor.execute(
+            command,
+            (
+                projektarbeit.get_id(),
+                projektarbeit.get_timestamp(),
+                projektarbeit.get_bezeichnung(),
+                projektarbeit.get_beschreibung(),
+                projektarbeit.get_start(),
+                projektarbeit.get_ende(),
+                projektarbeit.get_activity(),
+            ),
+        )
+        self._cnx.commit()
+
+        return projektarbeit
+
+    def update(self, projektarbeit: Projektarbeit) -> Projektarbeit:
+        """
+        Änderung einer bereits bestehenden Projektarbeit.
+        Parameter projektarbeit = ProjektarbeitBO, das geändert werden soll
+        """
+
+        cursor = self._cnx.cursor()
+
+        command = "UPDATE projektarbeit SET timestamp=%s, bezeichnung=%s, beschreibung=%s, start=%s, ende=%s, activity=%s WHERE id=%s"
+        data = (
             projektarbeit.get_timestamp(),
             projektarbeit.get_bezeichnung(),
             projektarbeit.get_beschreibung(),
             projektarbeit.get_start(),
             projektarbeit.get_ende(),
-            projektarbeit.get_activity()
-        ))
-        self._cnx.commit()
-
-        return projektarbeit
-    
-    def update(self, projektarbeit: Projektarbeit) -> Projektarbeit:
-        cursor = self._cnx.cursor()
-
-        command = "UPDATE projektarbeit SET timestamp=%s, bezeichnung=%s, beschreibung=%s, start=%s, ende=%s, activity=%s WHERE id=%s"
-        data = (projektarbeit.get_timestamp(), projektarbeit.get_bezeichnung(), projektarbeit.get_beschreibung(), projektarbeit.get_start(), projektarbeit.get_ende(), projektarbeit.get_activity(), projektarbeit.get_id())
+            projektarbeit.get_activity(),
+            projektarbeit.get_id(),
+        )
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -149,7 +182,10 @@ class ProjektarbeitMapper(Mapper):
         return projektarbeit
 
     def delete(self, projektarbeit):
-
+        """
+        Löschen einer Projektarbeit aus der Datenbank anhand der Projektarbeit-ID.
+        Parameter projektarbeit = Projektarbeit-ID
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM projektarbeit WHERE id={}".format(projektarbeit.get_id())

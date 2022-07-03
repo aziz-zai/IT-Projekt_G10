@@ -1,70 +1,87 @@
-# Getting Started with Create React App
+## Contributors
+[Malek Bouaziz](https://github.com/malekbou)<br>
+[Quang Cuong Dong](https://github.com/qd006)<br>
+[Aziz Muslim Zai](https://github.com/aziz-zai)<br>
+[Harbin Tairi](https://github.com/harbin-tairi)<br>
+[Murad Zadran](https://github.com/Zadranm)<br>
+[Elif Demir](https://github.com/ed032)<br>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Frontend - React ⚛️
+All code is located under /frontend. <br>
+As advised per the project requirements we used React & Material-UI.<br>
+To run it install the packages inside the package.json, via your package manager of choice and run it.<br>
+NodeJS comes with the Node Package Manager, which will install all missing dependencies from the package.json file<br>
 
-## Available Scripts
+```
+cd /frontend 
+npm install 
+npm start
+```
+# Backend - Python / Flask
+We advise you to set up a [python virtual enviroment](https://docs.python.org/3.7/tutorial/venv.html), to keep python clean. <br>
+This codes is tested under python version 3.9 <br>
+All code is located under /src. <br>
+To run the application on your own device, clone the repo. <br>
+Activate your virtual enviroment, via the activate script.
+Install the requirements inside requirements.txt & run the application by launching main.py <br>
 
-In the project directory, you can run:
+```
+cd /src
+pip install -r requirements.txt     
+python main.py    
+```
+# Database - MySQL
+- MySQL Community Server 8.0.28:
+    - Download the latest Community server for your OS from here https://dev.mysql.com/downloads/mysql/
+    - Setup the database and import our database dump
+- Google Cloud SQL:
+    This requires the Google Cloud SDK & Google Cloud Proxy.
+    See Google Documentation for install methods.
+    Connection String for Proxy to get secure access to the Google Environment:
+    ```
+    ./cloud_sql_proxy - #hier schreiben
+    ```
+    This method will only work, if we assign you to the project team and grant you access.
+- Docker:
+    - This method requires Docker and Docker-compose
+    - Run the docker-compose up inside the /db directory. 
+    - Connect to the phpmyadmin dashboard under your localhost and import the database dump
+    - Change the connection parameter inside the src/mapper.py to fit your envoirnment
 
-### `npm start`
+Depending on the configuration you chose, you need to update the connection string inside the mapper.py / ShoppingAPI.js  
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# Deployment - Google Cloud Plattform
+Our live version is hosted using the Google App Engine.
+For the deployment the routes need to be changed from localhost to the deployment url. #Hier unsere URL
 
-### `npm test`
+# Deployment on Google Cloud - Backend
+Google App Engine Standard Envoirnment is on Python Version 3.9 <br>
+Google Cloud SQL is on MySQL, access is provided via sqlconnector. <br>
+See .yaml for extra config. <br>/
+Navigate to /src and run the command below<br>
+Commands of use:
+```
+gcloud app deploy
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Deployment on Google Cloud - Frontend
+Google App Engine Standard Envoirnment is on NodeJS 16.15.1 <br>
+See .yaml file for extra config.
+React requires an extra build step to generate static files for deployment, which are located in a seperate folder. <br>
+This needs to be done after every change to the js files.
 
-### `npm run build`
+To update deployed version of the fronentd code see commands below.<br>
+Navigate to /frontend and run the commands below:
+Commands of use:
+```
+npm run build
+gcloud app deploy
+```
+# Routing on Google Cloud
+We decided to use a micro service architecture with seperate services for all applications.<br>
+This allows us to deploy changes to the services individually and we make use of the cloud native scaling capabilities Google provides us with.<br>
+Using the dispatch.yaml we redirected routing to the services on a subdomain level.<br>
+This results in the following 3 URLs:<br>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+#hier unsere URLs

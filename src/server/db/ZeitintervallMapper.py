@@ -3,18 +3,21 @@ from server.db.Mapper import Mapper
 
 
 class ZeitintervallMapper(Mapper):
-
     def __init__(self):
         super().__init__()
-    
+
     def find_by_key(self, key):
-        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
+        """
+        Suchen eines Zeitintervalls anhand der Zeitintervall-ID.
+        Parameter key = Zeitintervall-ID
         """
 
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, bezeichnung, start, ende FROM zeitintervall WHERE id={}".format(key)
+        command = "SELECT id, timestamp, bezeichnung, start, ende FROM zeitintervall WHERE id={}".format(
+            key
+        )
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -36,15 +39,17 @@ class ZeitintervallMapper(Mapper):
         cursor.close()
 
         return result
-        
-    
+
     def insert(self, zeitintervall: Zeitintervall) -> Zeitintervall:
-        """Create activity Object."""
+        """
+        Einfügen eines neuen Zeitintervalls in die Datenbank.
+        Parameter zeitintervall = ZeitintervallBO, das eingefügt werden soll
+        """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM zeitintervall")
         tuples = cursor.fetchall()
 
-        for (maxid) in tuples:
+        for maxid in tuples:
             if maxid[0] is not None:
                 zeitintervall.set_id(maxid[0] + 1)
             else:
@@ -54,21 +59,24 @@ class ZeitintervallMapper(Mapper):
                 id, timestamp, bezeichnung, start, ende
             ) VALUES (%s,%s,%s,%s,%s)
         """
-        cursor.execute(command, (
-            zeitintervall.get_id(),
-            zeitintervall.get_timestamp(),
-            zeitintervall.get_bezeichnung(),
-            zeitintervall.get_start(),
-            zeitintervall.get_ende(),
-        ))
+        cursor.execute(
+            command,
+            (
+                zeitintervall.get_id(),
+                zeitintervall.get_timestamp(),
+                zeitintervall.get_bezeichnung(),
+                zeitintervall.get_start(),
+                zeitintervall.get_ende(),
+            ),
+        )
         self._cnx.commit()
 
         return zeitintervall
-    
-    def update(self, zeitintervall: Zeitintervall) -> Zeitintervall:
-        """Wiederholtes Schreiben eines Objekts in die Datenbank.
 
-        :param zeitintervall das Objekt, das in die DB geschrieben werden soll
+    def update(self, zeitintervall: Zeitintervall) -> Zeitintervall:
+        """
+        Änderung eines bereits bestehenden Zeitintervalls.
+        Parameter zeitintervall = ZeitintervallBO, das geändert werden soll
         """
         cursor = self._cnx.cursor()
 
@@ -77,11 +85,13 @@ class ZeitintervallMapper(Mapper):
         bezeichnung=%s, 
         start=%s,
         ende=%s WHERE id=%s"""
-        data = (zeitintervall.get_timestamp(),  
-        zeitintervall.get_bezeichnung(),
-        zeitintervall.get_start(),
-        zeitintervall.get_ende(),
-        zeitintervall.get_id())
+        data = (
+            zeitintervall.get_timestamp(),
+            zeitintervall.get_bezeichnung(),
+            zeitintervall.get_start(),
+            zeitintervall.get_ende(),
+            zeitintervall.get_id(),
+        )
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -90,7 +100,10 @@ class ZeitintervallMapper(Mapper):
         return zeitintervall
 
     def delete(self, zeitintervall):
-
+        """
+        Löschen eines Zeitintervalls aus der Datenbank anhand der Zeitintervall-ID.
+        Parameter zeitintervall = Zeitintervall-ID
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM zeitintervall WHERE id={}".format(zeitintervall.get_id())

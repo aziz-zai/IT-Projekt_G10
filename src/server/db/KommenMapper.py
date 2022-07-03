@@ -4,18 +4,21 @@ from server.db.Mapper import Mapper
 
 
 class KommenMapper(Mapper):
-
-
     def __init__(self):
         super().__init__()
-    
+
     def find_by_key(self, key):
-        """Suchen eines Kommen-Eintrags mit vorgegebener Kommen ID. Da diese eindeutig ist,
+        """
+        Suchen eines Kommen-Eintrags anhand der Kommen-ID.
+        Parameter key = Kommen-ID
+
         """
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, zeitpunkt, bezeichnung FROM kommen WHERE id={}".format(key)
+        command = "SELECT id, timestamp, zeitpunkt, bezeichnung FROM kommen WHERE id={}".format(
+            key
+        )
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -37,16 +40,21 @@ class KommenMapper(Mapper):
 
         return result
 
-    
     def update(self, kommen: Kommen) -> Kommen:
-        """Wiederholtes Schreiben eines Objekts in die Datenbank.
+        """
+        Änderung eines bereits bestehenden Kommen-Eintrags.
+        Parameter kommen = KommenBO, das geändert werden soll
 
-        :param kommen das Objekt, das in die DB geschrieben werden soll
         """
         cursor = self._cnx.cursor()
 
         command = "UPDATE kommen SET timestamp = %s, zeitpunkt = %s, bezeichnung = %s WHERE id=%s"
-        data = (kommen.get_timestamp(), kommen.get_zeitpunkt(), kommen.get_bezeichnung(), kommen.get_id())
+        data = (
+            kommen.get_timestamp(),
+            kommen.get_zeitpunkt(),
+            kommen.get_bezeichnung(),
+            kommen.get_id(),
+        )
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -54,14 +62,17 @@ class KommenMapper(Mapper):
 
         return kommen
 
-
     def insert(self, kommen: Kommen) -> Kommen:
-        """Create kommen Object."""
+        """
+        Einfügen eines neuen Kommen-Eintrags in die Datenbank.
+        Parameter kommen = KommenBO, das eingefügt werden soll
+
+        """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM kommen")
         tuples = cursor.fetchall()
 
-        for (maxid) in tuples:
+        for maxid in tuples:
             if maxid[0] is not None:
                 kommen.set_id(maxid[0] + 1)
             else:
@@ -71,18 +82,25 @@ class KommenMapper(Mapper):
                 id, timestamp, zeitpunkt, bezeichnung
             ) VALUES (%s,%s,%s,%s)
         """
-        cursor.execute(command, (
-            kommen.get_id(),
-            kommen.get_timestamp(),
-            kommen.get_zeitpunkt(),
-            kommen.get_bezeichnung()
-        ))
+        cursor.execute(
+            command,
+            (
+                kommen.get_id(),
+                kommen.get_timestamp(),
+                kommen.get_zeitpunkt(),
+                kommen.get_bezeichnung(),
+            ),
+        )
         self._cnx.commit()
 
         return kommen
 
     def delete(self, kommen):
+        """
+        Löschen eines Kommen-Eintrags aus der Datenbank anhand der Kommen-ID.
+        Parameter kommen = Kommen-ID
 
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM kommen WHERE id={}".format(kommen.get_id())
@@ -90,4 +108,3 @@ class KommenMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-        

@@ -140,7 +140,7 @@ textFieldValueChange = (event) => {
       const {projektName, laufZeit, auftragGeber, availableHours, projektlaufzeitAnfang, projektlaufzeitEnde} = this.state;
 
     return (
-    <div>{console.log('lautzeit', this.state.laufZeit)}
+    <div>
       <Dialog
         fullScreen
         open={isOpen}

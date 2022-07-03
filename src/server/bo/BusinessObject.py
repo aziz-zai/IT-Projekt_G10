@@ -28,4 +28,3 @@ class BusinessObject(ABC):
     def set_timestamp(self, timestamp):
         """Setzen des Zeitstempels der letzten Änderung"""
         self._timestamp = timestamp
-
