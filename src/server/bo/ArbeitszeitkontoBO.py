@@ -1,7 +1,7 @@
 from .BusinessObject import BusinessObject
 
 """
-Klasse Arbeitszeitkonto
+Klasse Arbeitszeitkonto mit einfachen Methoden zum setzen der Klassenvariablen
 
 """
 

@@ -1,7 +1,7 @@
 from .ZeitintervallBO import Zeitintervall
 
 """
-Klasse Abwesenheit
+Klasse Abwesenheit mit einfachen Methoden zum setzen der Klassenvariablen
 
 """
 
