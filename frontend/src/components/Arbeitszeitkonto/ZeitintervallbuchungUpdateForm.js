@@ -6,33 +6,20 @@ import KommenBO from '../../api/KommenBO';
 import GehenBO from '../../api/GehenBO';
 import ProjektarbeitBO from '../../api/ProjektarbeitBO';
 import EreignisBO from '../../api/EreignisBO';
+import CircularProgress from '@mui/material/CircularProgress';
 import { TextField, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton } from '@mui/material';
 
 export class ZeitintervallbuchungUpdateForm extends Component {
  // Init state
  constructor(props) {
     super(props);
-    let zb = null, ze=null, bz="", bs=""
-    if(props.zeitintervall){
-      if(this.props.buchung.bezeichnung == 'Projektarbeit'){
-        bz= this.props.zeitintervall.bezeichnung
-        bs= this.props.zeitintervall.beschreibung
-      }
-      else{
-        bz= this.props.zeitintervall.bezeichnung
-      }
-    }
-    if(props.ereignis1){
-      zb= this.props.ereignis1.zeitpunkt
-    }
-    if(props.ereignis1){
-      ze= this.props.ereignis2.zeitpunkt
-    }
+
 this.state = {
-  zeitintervallBeginn: zb,
-  zeitintervallEnde: ze,
-  zeitintervallBezeichnung: bz,
-  projektarbeitBeschreibung: bs,
+  zeitintervallBeginn:"",
+  zeitintervallEnde: "",
+  zeitintervallBezeichnung: "",
+  projektarbeitBeschreibung: "",
+  loading: false
 };
 }
 
@@ -81,6 +68,37 @@ textFieldValueChange = (event) => {
     [event.target.id]: event.target.value,
   });
 }
+
+componentDidMount = () => {
+  this.setState({
+    loading: true
+  })
+  setTimeout(() => {
+    let zb = "", ze="", bz="", bs=""
+    if(this.props.zeitintervall){
+      if(this.props.buchung.bezeichnung == 'Projektarbeit'){
+        bz= this.props.zeitintervall.bezeichnung
+        bs= this.props.zeitintervall.beschreibung
+      }
+      else{
+        bz= this.props.zeitintervall.bezeichnung
+      }
+    }
+    if(this.props.ereignis1){
+      zb= this.props.ereignis1.zeitpunkt
+    }
+    if(this.props.ereignis2){
+      ze= this.props.ereignis2.zeitpunkt
+    }
+  this.setState({
+  zeitintervallBeginn: zb,
+  zeitintervallEnde: ze,
+  zeitintervallBezeichnung: bz,
+  projektarbeitBeschreibung: bs,
+  loading: false
+  })
+  }, 5000);
+}
   render() {
       const {show} = this.props;
       const {zeitintervallBeginn, projektarbeitBeschreibung, zeitintervallBezeichnung, zeitintervallEnde} = this.state;
@@ -96,6 +114,8 @@ textFieldValueChange = (event) => {
     <IconButton sx={{ position: 'absolute', right: 1, top: 1, color: 'grey[500]' }} onClick={this.handleFormClosed}>
        <CloseIcon />
     </IconButton></DialogTitle><br/>
+    {this.state.loading ?
+    <CircularProgress/>:
         <DialogContent>
           {(this.props.buchung.bezeichnung == "Projektarbeit") ?
           <DialogContentText id="alert-dialog-description">
@@ -142,12 +162,12 @@ textFieldValueChange = (event) => {
           label="Tätigkeitsbeschreibung"
           placeholder="Eine kurze Beschreibung der Projektarbeit"
           multiline
-          value={projektarbeitBeschreibung}
+          value={projektarbeitBeschreibung ? projektarbeitBeschreibung : this.props.zeitintervall.beschreibung}
           onChange={this.textFieldValueChange}
           fullWidth
         />
             </DialogContentText> :null}<br/><br/>
-        </DialogContent>
+        </DialogContent>}
         <DialogActions>
           <Button onClick={this.handleUpdate} autoFocus>
             Speichern

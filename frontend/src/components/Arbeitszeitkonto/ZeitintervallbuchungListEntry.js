@@ -9,7 +9,9 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import './Zeitintervallbuchung.css'
+import LoadingProgress from '../Dialogs/LoadingProgress';
 import ZeitintervallbuchungUpdateForm from './ZeitintervallbuchungUpdateForm'
+import { getIdTokenResult } from 'firebase/auth';
 
 export class ZeitintervallbuchungListEntry extends Component {
 
@@ -35,7 +37,8 @@ export class ZeitintervallbuchungListEntry extends Component {
         erstellt_fuer: null,
         erstellt_von: null,
         zeitintervall: null,
-        openUpdateForm: false
+        openUpdateForm: false,
+        loading: false
     };
   }
 
@@ -55,7 +58,8 @@ export class ZeitintervallbuchungListEntry extends Component {
         ereignis1Day: day,
         ereignis1Hour: hour,
         ereignis1Minute: minute,
-        ereignis1Second: seconds
+        ereignis1Second: seconds,
+        loading: false
       })}
       ).catch(e =>
         this.setState({ // Reset state with error from catch 
@@ -63,7 +67,7 @@ export class ZeitintervallbuchungListEntry extends Component {
       );
     // set loading to true
     this.setState({
-
+      loading: true
     });
   }
 
@@ -83,7 +87,8 @@ export class ZeitintervallbuchungListEntry extends Component {
         ereignis2Day: day,
         ereignis2Hour: hour,
         ereignis2Minute: minute,
-        ereignis2Second: seconds
+        ereignis2Second: seconds,
+        loading: false
       })}
       ).catch(e =>
         this.setState({ // Reset state with error from catch 
@@ -91,7 +96,7 @@ export class ZeitintervallbuchungListEntry extends Component {
       );
     // set loading to true
     this.setState({
-
+      loading: true
     });
   }
   getEreignis1ById = (zeitintervall) => {
@@ -110,7 +115,8 @@ export class ZeitintervallbuchungListEntry extends Component {
         ereignis1Day: day,
         ereignis1Hour: hour,
         ereignis1Minute: minute,
-        ereignis1Second: seconds
+        ereignis1Second: seconds,
+        loading: false
       })
         }
       ).catch(e =>
@@ -119,7 +125,7 @@ export class ZeitintervallbuchungListEntry extends Component {
       );
     // set loading to true
     this.setState({
-
+      loading: true
     });
   }
 
@@ -139,7 +145,8 @@ export class ZeitintervallbuchungListEntry extends Component {
         ereignis2Day: day,
         ereignis2Hour: hour,
         ereignis2Minute: minute,
-        ereignis2Second: seconds
+        ereignis2Second: seconds,
+        loading: false
       })
         }
       ).catch(e =>
@@ -148,7 +155,7 @@ export class ZeitintervallbuchungListEntry extends Component {
       );
     // set loading to true
     this.setState({
-
+      loading: true
     });
   }
 
@@ -201,7 +208,7 @@ export class ZeitintervallbuchungListEntry extends Component {
       );
     // set loading to true
     this.setState({
-
+      loading: true
     });
   }
 
@@ -221,7 +228,7 @@ export class ZeitintervallbuchungListEntry extends Component {
       );
     // set loading to true
     this.setState({
-
+      loading: true
     });
   }
 
@@ -241,7 +248,7 @@ export class ZeitintervallbuchungListEntry extends Component {
       );
     // set loading to true
     this.setState({
-
+      loading: true
     });
   }
 
@@ -261,7 +268,7 @@ export class ZeitintervallbuchungListEntry extends Component {
       );
     // set loading to true
     this.setState({
-
+      loading: true
     });
   }
 
@@ -329,6 +336,9 @@ componentDidMount() {
             expandIcon={<ExpandMoreIcon onClick={this.handleExpandState}/>}
             id={`customer${buchung.getID()}accountpanel-header`}
           >
+            {this.state.loading ?
+              <LoadingProgress show={this.state.loading}/>:
+              <>
             <Grid container spacing={1} justify='flex-start' alignItems='center'>
             <Grid item>
                     <AccessTimeIcon/>
@@ -363,7 +373,7 @@ componentDidMount() {
               <Grid item>
                 <Typography variant='body2' color={'textSecondary'}>Mehr Infos</Typography>
               </Grid>
-            </Grid>
+            </Grid></>}
           </AccordionSummary>
           <AccordionDetails sx={{backgroundColor:"#54377550"}}>
               {erstellt_von ?
