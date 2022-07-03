@@ -1,20 +1,15 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-
 from server.bo.BusinessObject import BusinessObject
 
 """
-Klasse Buchung
+Klasse Buchung mit einfachen Methoden zum setzen der Klassenvariablen
 
 """
 
 
 class Buchung(BusinessObject):
-    """Gemeinsame Basisklasse aller in diesem Projekt für die Umsetzung des Fachkonzepts relevanten Klassen.
-
-    Zentrales Merkmal ist, dass jedes Buchung eine Nummer besitzt, die man in
-    einer relationalen Datenbank auch als Primärschlüssel bezeichnen würde.
-    """
+    """Gemeinsame Basisklasse für Zeitintervallbuchung und Ereignisbuchung."""
 
     def __init__(self):
         super().__init__()

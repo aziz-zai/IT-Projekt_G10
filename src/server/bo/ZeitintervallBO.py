@@ -1,7 +1,7 @@
 from .BusinessObject import BusinessObject
 
 """
-Klasse Zeitintervall
+Klasse Zeitintervall mit einfachen Methoden zum Setzen der Klassenvariablen
 
 """
 

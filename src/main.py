@@ -38,14 +38,8 @@ Instanzieren von Flask. Am Ende dieser Datei erfolgt dann erst der 'Start' von F
 app = Flask(__name__)
 
 """
-Alle Ressourcen mit dem Präfix /bank für **Cross-Origin Resource Sharing** (CORS) freigeben.
+Alle Ressourcen mit dem Präfix /projectone für **Cross-Origin Resource Sharing** (CORS) freigeben.
 Diese eine Zeile setzt die Installation des Package flask-cors voraus. 
-
-Sofern Frontend und Backend auf getrennte Domains/Rechnern deployed würden, wäre sogar eine Formulierung
-wie etwa diese erforderlich:
-CORS(app, resources={r"/bank/*": {"origins": "*"}})
-Allerdings würde dies dann eine Missbrauch Tür und Tor öffnen, so dass es ratsamer wäre, nicht alle
-"origins" zuzulassen, sondern diese explizit zu nennen. Weitere Infos siehe Doku zum Package flask-cors.
 """
 CORS(app, resources=r"/projectone/*", supports_credentials=True)
 
@@ -61,16 +55,12 @@ api = Api(
 )
 
 """Anlegen eines Namespace
-
-Namespaces erlauben uns die Strukturierung von APIs. In diesem Fall fasst dieser Namespace alle
-Bank-relevanten Operationen unter dem Präfix /bank zusammen. Eine alternative bzw. ergänzende Nutzung
-von Namespace könnte etwa sein, unterschiedliche API-Version voneinander zu trennen, um etwa 
-Abwärtskompatibilität (vgl. Lehrveranstaltungen zu Software Engineering) zu gewährleisten. Dies ließe
-sich z.B. umsetzen durch /bank/v1, /bank/v2 usw."""
+Der Namespace erlaubt die Strukturierung von APIs. In diesem Fall fasst dieser Namespace alle
+Projectone-relevanten Operationen unter dem Präfix /projectone zusammen.
+"""
 projectone = api.namespace("projectone", description="Funktionen des Projectone")
 
 """Nachfolgend werden analog zu unseren BusinessObject-Klassen transferierbare Strukturen angelegt.
-
 BusinessObject dient als Basisklasse, auf der die weiteren Strukturen Customer, Account und Transaction aufsetzen."""
 bo = api.model(
     "BusinessObject",
@@ -398,7 +388,6 @@ class MembershipByIDOperations(Resource):
     @projectone.marshal_with(membership)
     def delete(self, user, project):
         """Löschen eines bestimmten Membership-Objekts.
-
         Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
@@ -436,7 +425,6 @@ class MembershipByProjectOperations(Resource):
     @projectone.marshal_with(user)
     def get(self, project):
         """Auslesen eines bestimmten Membership-Objekts nach Projektid
-
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
@@ -451,7 +439,6 @@ class MembershipByProjectOperations(Resource):
     @projectone.marshal_with(user)
     def get(self, project):
         """Auslesen eines bestimmten Membership-Objekts nach Projektid
-
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
@@ -522,7 +509,6 @@ class ProjektarbeitenOperations(Resource):
     @projectone.marshal_with(projektarbeiten)
     def get(self, id):
         """Auslesen eines bestimmten Projektarbeit-Objekts.
-
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
@@ -623,9 +609,7 @@ class PausenOperations(Resource):
         pau = Pause.from_dict(api.payload)
 
         if pau is not None:
-            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Pausen-Objekts gesetzt.
-            Siehe Hinweise oben.
-            """
+            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Pausen-Objekts gesetzt."""
             pau.set_id(id)
             p = adm.update_pause(pau)
             return p, 200
@@ -635,7 +619,6 @@ class PausenOperations(Resource):
     @projectone.marshal_with(pausen)
     def delete(self, id):
         """Löschen eines bestimmten Pausen-Objekts.
-
         Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
@@ -703,7 +686,7 @@ class ProjectListOperations(Resource):
     @projectone.marshal_with(project)
     @secured
     def delete(self, id):
-        """Löschen eines bestimmten User-Objekts."""
+        """Löschen eines bestimmten Project-Objekts."""
         adm = Administration()
         project = adm.get_project_by_id(id)
         adm.delete_project(project)
@@ -731,12 +714,7 @@ class ProjectListOperations(Resource):
         proposal.set_zeitpunkt(api.payload["zeitpunkt"])
         proposal.set_bezeichnung(api.payload["bezeichnung"])
 
-        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
-            """Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und
-            wird auch dem Client zurückgegeben.
-            """
 
             er = adm.create_ereignis(
                 proposal.get_zeitpunkt(), proposal.get_bezeichnung()
@@ -767,12 +745,7 @@ class ProjectListOperations(Resource):
         proposal.set_zeitpunkt(api.payload["zeitpunkt"])
         proposal.set_bezeichnung(api.payload["bezeichnung"])
 
-        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
-            """Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und
-            wird auch dem Client zurückgegeben.
-            """
 
             er = adm.create_ereignis(
                 proposal.get_zeitpunkt(), proposal.get_bezeichnung()
@@ -809,7 +782,6 @@ class AktivitätenProjectOperations(Resource):
     def get(self, project):
 
         """Auslesen eines bestimmten Aktivitäten-Objekts.
-
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         akt = Administration()
@@ -887,8 +859,7 @@ class AktivitätenOperations(Resource):
 class UserOperations(Resource):
     @projectone.marshal_with(user)
     def get(self, id):
-        """Auslesen eines bestimmten Customer-Objekts.
-
+        """Auslesen eines bestimmten User-Objekts.
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
@@ -898,7 +869,6 @@ class UserOperations(Resource):
     @projectone.marshal_with(user)
     def delete(self, id):
         """Löschen eines bestimmten User-Objekts.
-
         Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
@@ -911,10 +881,9 @@ class UserOperations(Resource):
     @projectone.expect(user)
     def put(self, id):
         """Update eines bestimmten User-Objekts.
-
-        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
+        Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
         verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
-        Customer-Objekts.
+        User-Objekts.
         """
         adm = Administration()
         up = User.from_dict(api.payload)
@@ -930,8 +899,7 @@ class UserByGoogleUserIdOperations(Resource):
     @projectone.marshal_with(user)
     @secured
     def get(self, google_user_id):
-        """Auslesen eines bestimmten Customer-Objekts.
-
+        """Auslesen eines bestimmten User-Objekts.
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
@@ -945,8 +913,7 @@ class UserByGoogleUserIdOperations(Resource):
 class PotentialMembers(Resource):
     @projectone.marshal_with(user)
     def get(self, user, project):
-        """Auslesen eines bestimmten Customer-Objekts.
-
+        """Auslesen eines bestimmten User-Objekts, welcher noch nicht im Projekt Mitglied ist.
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
@@ -977,19 +944,11 @@ class ArbeitszeitkontoOperations(Resource):
 
     @projectone.marshal_with(arbeitszeitkonto)
     def put(self, user):
-        """Update eines bestimmten User-Objekts.
-
-        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
-        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
-        Customer-Objekts.
-        """
+        """Update eines bestimmten User-Objekts."""
         adm = Administration()
         up = Arbeitszeitkonto.from_dict(api.payload)
 
         if up is not None:
-            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
-            Siehe Hinweise oben.
-            """
             up.set_user(user)
             ar = adm.update_arbeitszeitkonto(up)
             return ar, 200
@@ -999,7 +958,6 @@ class ArbeitszeitkontoOperations(Resource):
     @projectone.marshal_with(arbeitszeitkonto)
     def delete(self, user):
         """Löschen eines bestimmten User-Objekts.
-
         Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
@@ -1043,7 +1001,6 @@ class EreignisbuchungenOperations(Resource):
     @projectone.marshal_with(ereignisbuchungen)
     def get(self, id):
         """Auslesen eines bestimmten Ereignisbuchung-Objekts.
-
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
@@ -1052,19 +1009,11 @@ class EreignisbuchungenOperations(Resource):
 
     @projectone.marshal_with(ereignisbuchungen)
     def put(self, id):
-        """Update eines bestimmten Ereignisbuchung-Objekts.
-
-        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
-        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
-        Customer-Objekts.
-        """
+        """Update eines bestimmten Ereignisbuchung-Objekts."""
         adm = Administration()
         er = Ereignisbuchung.from_dict(api.payload)
 
         if er is not None:
-            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
-            Siehe Hinweise oben.
-            """
             er.set_id(id)
             era = adm.update_ereignisbuchung(er)
             return era, 200
@@ -1073,10 +1022,7 @@ class EreignisbuchungenOperations(Resource):
 
     @projectone.marshal_with(ereignisbuchungen)
     def delete(self, id):
-        """Löschen eines bestimmten Ereignisbuchung-Objekts.
-
-        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
+        """Löschen eines bestimmten Ereignisbuchung-Objekts."""
         adm = Administration()
 
         ergd = adm.get_ereignisbuchung_by_id(id)
@@ -1110,7 +1056,7 @@ class EreignisbuchungenOperations(Resource):
 class EreignisbuchungenOperations(Resource):
     @projectone.marshal_with(ereignisbuchungen)
     def get(self, erstellt_fuer, startFilter, endeFilter):
-        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts.
+        """Auslesen eines bestimmten Ereignisbuchungs-Objekts.
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
@@ -1128,7 +1074,7 @@ class EreignisbuchungenOperations(Resource):
 class EreignisbuchungenOperations(Resource):
     @projectone.marshal_with(ereignisbuchungen)
     def get(self, erstellt_fuer, startFilter, endeFilter):
-        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts.
+        """Auslesen eines bestimmten Ererignisbuchungs-Objekts.
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
@@ -1146,7 +1092,7 @@ class EreignisbuchungenOperations(Resource):
 class EreignisbuchungenOperations(Resource):
     @projectone.marshal_with(ereignisbuchungen)
     def get(self, erstellt_fuer, startFilter, endeFilter):
-        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts.
+        """Auslesen eines bestimmten Ereignisbuchung-Objekts.
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
@@ -1174,12 +1120,8 @@ class GehenListOperations(Resource):
         proposal.set_zeitpunkt(gehenZeit)
         proposal.set_bezeichnung("gehen")
 
-        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
-            """Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und
-            wird auch dem Client zurückgegeben.
-            """
+
             g = adm.create_gehen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
             adm.create_ereignisbuchung(
                 erstellt_von=user,
@@ -1214,12 +1156,8 @@ class GehenSollListOperations(Resource):
 
         proposal = Gehen.from_dict(api.payload)
 
-        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
-            """Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und
-            wird auch dem Client zurückgegeben.
-            """
+
             g = adm.create_gehen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
             adm.create_ereignisbuchung(
                 erstellt_von=erstellt_von,
@@ -1238,8 +1176,6 @@ class GehenSollListOperations(Resource):
             adm.create_zeitintervallbuchung(
                 proarb.get_id(), False, erstellt_von, erstellt_fuer, "Projektarbeit"
             )
-
-            adm.update_arbeitszeitkonto_gleitzeit(erstellt_fuer)
             return g, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -1252,31 +1188,19 @@ class GehenSollListOperations(Resource):
 class GehenOperations(Resource):
     @projectone.marshal_with(gehen)
     def get(self, id):
-        """Auslesen eines bestimmten Gehen-Objekts.
-
-        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
         adm = Administration()
         gehen = adm.get_gehen_by_id(id)
         return gehen
 
     @projectone.marshal_with(gehen)
     def put(self, id):
-        """Update eines bestimmten Gehen-Objekts.
-
-        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
-        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
-        Customer-Objekts.
-        """
         adm = Administration()
         ge = Gehen()
         ge.set_zeitpunkt(api.payload["zeitpunkt"])
         ge.set_bezeichnung(api.payload["bezeichnung"])
 
         if ge is not None:
-            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
-            Siehe Hinweise oben.
-            """
+
             ge.set_id(id)
             geh = adm.update_gehen(ge)
             return geh, 200
@@ -1285,10 +1209,7 @@ class GehenOperations(Resource):
 
     @projectone.marshal_with(gehen)
     def delete(self, id):
-        """Löschen eines bestimmten Gehen-Objekts.
-
-        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
+        """Löschen eines bestimmten Gehen-Objekts."""
         adm = Administration()
 
         gehend = adm.get_gehen_by_id(id)
@@ -1313,12 +1234,7 @@ class KommenListOperations(Resource):
         proposal.set_zeitpunkt(kommenZeit)
         proposal.set_bezeichnung("kommen")
 
-        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
-            """Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und
-            wird auch dem Client zurückgegeben.
-            """
 
             k = adm.create_kommen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
             adm.create_ereignisbuchung(
@@ -1353,12 +1269,7 @@ class KommenListOperations(Resource):
 
         proposal = Kommen.from_dict(api.payload)
 
-        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
-            """Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und
-            wird auch dem Client zurückgegeben.
-            """
 
             k = adm.create_kommen(proposal.get_zeitpunkt(), proposal.get_bezeichnung())
             adm.create_ereignisbuchung(
@@ -1382,7 +1293,6 @@ class KommenOperations(Resource):
     @projectone.marshal_with(kommen)
     def get(self, id):
         """Auslesen eines bestimmten Kommen-Objekts.
-
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
@@ -1391,21 +1301,13 @@ class KommenOperations(Resource):
 
     @projectone.marshal_with(kommen)
     def put(self, id):
-        """Update eines bestimmten Kommen-Objekts.
-
-        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
-        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
-        Customer-Objekts.
-        """
+        """Update eines bestimmten Kommen-Objekts."""
         adm = Administration()
         ko = Kommen()
         ko.set_zeitpunkt(api.payload["zeitpunkt"])
         ko.set_bezeichnung(api.payload["bezeichnung"])
 
         if ko is not None:
-            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
-            Siehe Hinweise oben.
-            """
             ko.set_id(id)
             komm = adm.update_kommen(ko)
             return komm, 200
@@ -1414,10 +1316,7 @@ class KommenOperations(Resource):
 
     @projectone.marshal_with(kommen)
     def delete(self, id):
-        """Löschen eines bestimmten Kommen-Objekts.
-
-        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
+        """Löschen eines bestimmten Kommen-Objekts."""
         adm = Administration()
 
         komd = adm.get_kommen_by_id(id)
@@ -1433,22 +1332,11 @@ class ZeitintervallbuchungListOperations(Resource):
         zeitintervallbuchung
     )  # Wir erwarten ein User-Objekt von Client-Seite.
     def post(self):
-        """Anlegen eines neuen Zeitintervallbuchung-Objekts.
-        **ACHTUNG:** Wir fassen die vom Client gesendeten Daten als Vorschlag auf.
-        So ist zum Beispiel die Vergabe der ID nicht Aufgabe des Clients.
-        Selbst wenn der Client eine ID in dem Proposal vergeben sollte, so
-        liegt es an der BankAdministration (Businesslogik), eine korrekte ID
-        zu vergeben. *Das korrigierte Objekt wird schließlich zurückgegeben.*
-        """
         adm = Administration()
         proposal = Zeitintervallbuchung.from_dict(api.payload)
 
-        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
-            """Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und
-            wird auch dem Client zurückgegeben.
-            """
+
             a = adm.create_zeitintervallbuchung(
                 proposal.get_zeitintervall(),
                 proposal.get_ist_buchung(),
@@ -1480,18 +1368,11 @@ class ZeitintervallbuchungOperations(Resource):
 
     @projectone.marshal_with(zeitintervallbuchung)
     def put(self, id):
-        """Update eines bestimmten Zeitintervallbuchung-Objekts.
-        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
-        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
-        Customer-Objekts.
-        """
+        """Update eines bestimmten Zeitintervallbuchung-Objekts."""
         adm = Administration()
         ze = Zeitintervallbuchung.from_dict(api.payload)
 
         if ze is not None:
-            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
-            Siehe Hinweise oben.
-            """
             ze.set_id(id)
             buch = adm.update_zeitintervallbuchung(ze)
             return buch , 200
@@ -1500,9 +1381,7 @@ class ZeitintervallbuchungOperations(Resource):
 
     @projectone.marshal_with(zeitintervallbuchung)
     def delete(self, id):
-        """Löschen eines bestimmten Zeitintervallbuchung-Objekts.
-        Das zu löschende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
+        """Löschen eines bestimmten Zeitintervallbuchung-Objekts."""
         adm = Administration()
 
         zetd = adm.get_zeitintervallbuchung_by_id(id)
@@ -1534,9 +1413,7 @@ class ZeitintervallbuchungOperations(Resource):
 class ZeitintervallbuchungOperations(Resource):
     @projectone.marshal_with(zeitintervallbuchung)
     def get(self, user, project):
-        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts.
-        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
+        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts."""
         adm = Administration()
         zeitintervallbuchung = adm.get_ist_buchungen_by_project(user, project)
         return zeitintervallbuchung
@@ -1548,9 +1425,7 @@ class ZeitintervallbuchungOperations(Resource):
 class ZeitintervallbuchungOperations(Resource):
     @projectone.marshal_with(zeitintervallbuchung)
     def get(self, user, project):
-        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts.
-        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
+        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts."""
         adm = Administration()
         zeitintervallbuchung = adm.get_soll_buchungen_by_project(user, project)
         return zeitintervallbuchung
@@ -1564,9 +1439,7 @@ class ZeitintervallbuchungOperations(Resource):
 class ZeitintervallbuchungOperations(Resource):
     @projectone.marshal_with(zeitintervallbuchung)
     def get(self, erstellt_fuer, startFilter, endeFilter):
-        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts.
-        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
+        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts."""
         adm = Administration()
         zeitintervallbuchung = adm.get_ist_zeitintervallbuchungen_by_zeitspanne(
             erstellt_fuer, startFilter, endeFilter
@@ -1582,9 +1455,7 @@ class ZeitintervallbuchungOperations(Resource):
 class ZeitintervallbuchungOperations(Resource):
     @projectone.marshal_with(zeitintervallbuchung)
     def get(self, erstellt_fuer, startFilter, endeFilter, activity):
-        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts.
-        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
+        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts."""
         adm = Administration()
         zeitintervallbuchung = adm.get_ist_projektarbeitbuchungen_by_zeitspanne(
             erstellt_fuer, startFilter, endeFilter, activity
@@ -1600,9 +1471,7 @@ class ZeitintervallbuchungOperations(Resource):
 class ZeitintervallbuchungOperations(Resource):
     @projectone.marshal_with(zeitintervallbuchung)
     def get(self, erstellt_fuer, startFilter, endeFilter, activity):
-        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts.
-        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
+        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts."""
         adm = Administration()
         zeitintervallbuchung = adm.get_soll_projektarbeitbuchungen_by_zeitspanne(
             erstellt_fuer, startFilter, endeFilter, activity
@@ -1690,31 +1559,21 @@ class EreignisListOperations(Resource):
 class EreignisOperations(Resource):
     @projectone.marshal_with(ereignis)
     def get(self, id):
-        """Auslesen eines bestimmten Ereignis-Objekts.
-
-        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
+        """Auslesen eines bestimmten Ereignis-Objekts."""
         adm = Administration()
         ereignis = adm.get_ereignis_by_id(id)
         return ereignis
 
     @projectone.marshal_with(ereignis)
     def put(self, id):
-        """Update eines bestimmten Ereignis-Objekts.
-
-        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
-        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
-        Customer-Objekts.
-        """
+        """Update eines bestimmten Ereignis-Objekts."""
         adm = Administration()
         proposal = Ereignis()
         proposal.set_zeitpunkt(api.payload["zeitpunkt"])
         proposal.set_bezeichnung(api.payload["bezeichnung"])
 
         if proposal is not None:
-            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
-            Siehe Hinweise oben.
-            """
+
             proposal.set_id(id)
             proposal = adm.update_ereignis(proposal)
             return proposal, 200
@@ -1746,12 +1605,7 @@ class AbwesenheitListOperations(Resource):
         proposal.set_zeitpunkt(api.payload["zeitpunkt"])
         proposal.set_bezeichnung(api.payload["bezeichnung"])
 
-        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
-            """Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und
-            wird auch dem Client zurückgegeben.
-            """
             er = adm.create_ereignis(
                 proposal.get_zeitpunkt(), proposal.get_bezeichnung()
             )
@@ -1783,12 +1637,8 @@ class AbwesenheitListOperations(Resource):
         proposal.set_zeitpunkt(api.payload["zeitpunkt"])
         proposal.set_bezeichnung(api.payload["bezeichnung"])
 
-        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
-            """Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und
-            wird auch dem Client zurückgegeben.
-            """
+
             er = adm.create_ereignis(
                 proposal.get_zeitpunkt(), proposal.get_bezeichnung()
             )
@@ -1825,7 +1675,6 @@ class AbwesenheitOperations(Resource):
     @projectone.marshal_with(abwesenheit)
     def get(self, id):
         """Auslesen eines bestimmten Abwesenheit-Objekts.
-
         Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
         """
         adm = Administration()
@@ -1834,19 +1683,11 @@ class AbwesenheitOperations(Resource):
 
     @projectone.marshal_with(abwesenheit)
     def put(self, id):
-        """Update eines bestimmten Abwesenheit-Objekts.
-
-        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
-        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
-        Customer-Objekts.
-        """
+        """Update eines bestimmten Abwesenheit-Objekts."""
         adm = Administration()
         ab = Abwesenheit.from_dict(api.payload)
 
         if ab is not None:
-            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
-            Siehe Hinweise oben.
-            """
             ab.set_id(id)
             adm.update_abwesenheit(ab)
             return "", 200
@@ -1874,12 +1715,7 @@ class ZeitintervallListOperations(Resource):
         print(api.payload)
         proposal = Zeitintervall.from_dict(api.payload)
 
-        """RATSCHLAG: Prüfen Sie stets die Referenzen auf valide Werte, bevor Sie diese verwenden!"""
         if proposal is not None:
-            """Wir verwenden lediglich Vor- und Nachnamen des Proposals für die Erzeugung
-            eines User-Objekts. Das serverseitig erzeugte Objekt ist das maßgebliche und
-            wird auch dem Client zurückgegeben.
-            """
             a = adm.create_zeitintervall(
                 proposal.get_bezeichnung(), proposal.get_start(), proposal.get_ende()
             )
@@ -1895,29 +1731,16 @@ class ZeitintervallListOperations(Resource):
 class ZeitintervallOperations(Resource):
     @projectone.marshal_with(zeitintervall)
     def get(self, id):
-        """Auslesen eines bestimmten zeitintervall-Objekts.
-
-        Das auszulesende Objekt wird durch die ```id``` in dem URI bestimmt.
-        """
         adm = Administration()
         zeitintervall = adm.get_zeitintervall_by_id(id)
         return zeitintervall
 
     @projectone.marshal_with(zeitintervall)
     def put(self, id):
-        """Update eines bestimmten zeitintervall-Objekts.
-
-        **ACHTUNG:** Relevante id ist die id, die mittels URI bereitgestellt und somit als Methodenparameter
-        verwendet wird. Dieser Parameter überschreibt das ID-Attribut des im Payload der Anfrage übermittelten
-        Customer-Objekts.
-        """
         adm = Administration()
         zi = zeitintervall.from_dict(api.payload)
 
         if zi is not None:
-            """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
-            Siehe Hinweise oben.
-            """
             zi.set_id(id)
             adm.update_zeitintervall(zi)
             return "", 200
@@ -1926,7 +1749,6 @@ class ZeitintervallOperations(Resource):
 
     @projectone.marshal_with(zeitintervall)
     def delete(self, id):
-        """Löschen eines bestimmten zeitintervall-Objekts."""
         adm = Administration()
 
         zi = adm.get_zeitintervall_by_id(id)

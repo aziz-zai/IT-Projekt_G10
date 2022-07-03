@@ -1,7 +1,7 @@
 from .BuchungBO import Buchung
 
 """
-Klasse Ereignisbuchung
+Klasse Ereignisbuchung mit einfachen Methoden zum Setzen der Klassenvariablen
 
 """
 

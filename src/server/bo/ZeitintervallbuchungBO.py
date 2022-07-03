@@ -1,7 +1,7 @@
 from .BuchungBO import Buchung
 
 """
-Klasse Zeitintervallbuchung
+Klasse Zeitintervallbuchung mit einfachen Methoden zum Setzen der Klassenvariablen
 
 """
 

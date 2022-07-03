@@ -1,7 +1,7 @@
 from .ZeitintervallBO import Zeitintervall
 
 """
-Klasse Projektarbeit
+Klasse Projektarbeit mit einfachen Methoden zum Setzen der Klassenvariablen
 
 """
 

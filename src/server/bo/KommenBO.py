@@ -1,8 +1,7 @@
 from .EreignisBO import Ereignis
-from datetime import datetime
 
 """
-Klasse Kommen
+Subklasse Kommen von Ereignis
 
 """
 

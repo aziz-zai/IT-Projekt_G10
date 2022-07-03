@@ -1,7 +1,7 @@
 from .ZeitintervallBO import Zeitintervall
 
 """
-Klasse Pause
+Subklasse Pause von Zeitintervall
 
 """
 
