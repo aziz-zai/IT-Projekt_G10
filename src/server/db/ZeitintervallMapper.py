@@ -8,7 +8,9 @@ class ZeitintervallMapper(Mapper):
         super().__init__()
     
     def find_by_key(self, key):
-        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
+        """
+        Suchen eines Zeitintervalls anhand der Zeitintervall-ID.
+        Parameter key = Zeitintervall-ID
         """
 
         result = None
@@ -39,7 +41,10 @@ class ZeitintervallMapper(Mapper):
         
     
     def insert(self, zeitintervall: Zeitintervall) -> Zeitintervall:
-        """Create activity Object."""
+        """
+        Einfügen eines neuen Zeitintervalls in die Datenbank.
+        Parameter zeitintervall = ZeitintervallBO, das eingefügt werden soll
+        """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM zeitintervall")
         tuples = cursor.fetchall()
@@ -66,9 +71,9 @@ class ZeitintervallMapper(Mapper):
         return zeitintervall
     
     def update(self, zeitintervall: Zeitintervall) -> Zeitintervall:
-        """Wiederholtes Schreiben eines Objekts in die Datenbank.
-
-        :param zeitintervall das Objekt, das in die DB geschrieben werden soll
+        """
+        Änderung eines bereits bestehenden Zeitintervalls.
+        Parameter zeitintervall = ZeitintervallBO, das geändert werden soll
         """
         cursor = self._cnx.cursor()
 
@@ -90,7 +95,10 @@ class ZeitintervallMapper(Mapper):
         return zeitintervall
 
     def delete(self, zeitintervall):
-
+        """
+        Löschen eines Zeitintervalls aus der Datenbank anhand der Zeitintervall-ID.
+        Parameter zeitintervall = Zeitintervall-ID
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM zeitintervall WHERE id={}".format(zeitintervall.get_id())

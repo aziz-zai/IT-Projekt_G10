@@ -12,7 +12,9 @@ class UserMapper(Mapper):
         super().__init__()
 
     def find_by_key(self, key):
-        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
+        """
+        Suchen eines Users anhand der User-ID.
+        Parameter key = User-ID
         """
 
         result = None
@@ -47,7 +49,10 @@ class UserMapper(Mapper):
 
 
     def find_by_google_user_id(self, google_user_id):
-
+        """
+        Suchen eines Users anhand der Goole-User-ID.
+        Parameter google_user_id = Google-User-ID
+        """
         result = None
 
         cursor = self._cnx.cursor()
@@ -78,6 +83,11 @@ class UserMapper(Mapper):
         return result
     
     def find_potential_users(self, user_, project):
+        """
+        Suchen von potentiellen Usern für ein Projekt anhand der User-ID und der Projekt-ID.
+        Parameter user_ = User-ID
+        Parameter project = Projekt-ID
+        """
 
         result = []
 
@@ -109,9 +119,9 @@ class UserMapper(Mapper):
         return result
     
     def update(self, user: User) -> User:
-        """Wiederholtes Schreiben eines Objekts in die Datenbank.
-
-        :param user das Objekt, das in die DB geschrieben werden soll
+        """
+        Änderung eines bereits bestehenden Users.
+        Parameter user = UserBO, das geändert werden soll
         """
         cursor = self._cnx.cursor()
 
@@ -123,7 +133,10 @@ class UserMapper(Mapper):
 
 
     def insert(self, user: User) -> User:
-        """Create user Object."""
+        """
+        Einfügen eines neuen Users in die Datenbank.
+        Parameter user = UserBO, das eingefügt werden soll
+        """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM user ")
         tuples = cursor.fetchall()
@@ -146,7 +159,10 @@ class UserMapper(Mapper):
         return user
 
     def delete(self, user):
-
+        """
+        Löschen eines Users aus der Datenbank anhand der User-ID.
+        Parameter user = User-ID
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM user WHERE id={}".format(user.get_id())

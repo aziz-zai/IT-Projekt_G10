@@ -10,7 +10,10 @@ class ProjectMapper(Mapper):
         super().__init__()
 
     def insert(self, project: Project) -> Project:
-        """Create Project Object"""
+        """
+        Einfügen eines neuen Projekts in die Datenbank.
+        Parameter project = ProjectBO, das eingefügt werden soll
+        """
         cursor = self._cnx.cursor()
         cursor.execute("SELECT MAX(id) AS maxid FROM project ")
         tuples = cursor.fetchall()
@@ -38,9 +41,9 @@ class ProjectMapper(Mapper):
         return project     
 
     def update(self, project: Project) -> Project:
-        """Wiederholtes Schreiben eines Objekts in die Datenbank.
-
-        :param user das Objekt, das in die DB geschrieben werden soll
+        """
+        Änderung eines bereits bestehenden Projekts.
+        Parameter project = ProjectBO, das geändert werden soll
         """
         cursor = self._cnx.cursor()
 
@@ -55,7 +58,10 @@ class ProjectMapper(Mapper):
 
 
     def find_by_key(self, key):
-
+        """
+        Suchen eines Projekts anhand der Projekt-ID.
+        Parameter key = Projekt-ID
+        """
         result = None
         cursor = self._cnx.cursor()
         command = "SELECT id, timestamp, projektname, laufzeit, auftraggeber, availablehours FROM project WHERE id={}".format(key)
@@ -81,7 +87,10 @@ class ProjectMapper(Mapper):
         return result
     
     def find_by_activity(self, activity):
-
+        """
+        Suchen eines Projekts anhand der Aktivitäten-ID.
+        Parameter activity = Aktivitäten-ID
+        """
         result = None
         cursor = self._cnx.cursor()
         command = """SELECT id, timestamp, projektname, laufzeit, auftraggeber, availablehours 
@@ -109,7 +118,10 @@ class ProjectMapper(Mapper):
         return result
 
     def find_laufzeit_by_key(self, project):
-
+        """
+        Suchen einer Projektlaufzeit anhand der Projekt-ID.
+        Parameter project = Projekt-ID
+        """
         result = None
         projektlaufzeit = project.get_laufzeit()
         cursor = self._cnx.cursor()
@@ -139,7 +151,10 @@ class ProjectMapper(Mapper):
         return result
     
     def delete(self, project):
-
+        """
+        Löschen eines Projekts aus der Datenbank anhand der Projekt-ID.
+        Parameter project = Projekt-ID
+        """
         cursor = self._cnx.cursor()
 
         command = "DELETE FROM project WHERE id={}".format(project.get_id())
