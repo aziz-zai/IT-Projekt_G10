@@ -1,10 +1,9 @@
-import BusinessObject from './BusinessObject';
+import BusinessObject from "./BusinessObject";
 
 /**
  * Represents a Ereignis
  */
 export default class EreignisBO extends BusinessObject {
-
   constructor(aZeitpunkt, aBezeichnung) {
     super();
     this.zeitpunkt = aZeitpunkt;
@@ -13,14 +12,13 @@ export default class EreignisBO extends BusinessObject {
 
   /**
    * Sets a new Zeitpunkt.
-   * 
+   *
    * @param {Datetime} aZeitpunkt - the new zeitpunkt of this EreignisBO.
    */
   setZeitpunkt(aZeitpunkt) {
     this.zeitpunkt = aZeitpunkt;
   }
 
- 
   getZeitpunkt() {
     return this.zeitpunkt;
   }
@@ -33,7 +31,6 @@ export default class EreignisBO extends BusinessObject {
     return this.bezeichnung;
   }
 
-  
   static fromJSON(ereignis) {
     let result = [];
 
@@ -41,7 +38,7 @@ export default class EreignisBO extends BusinessObject {
       ereignis.forEach((e) => {
         Object.setPrototypeOf(e, EreignisBO.prototype);
         result.push(e);
-      })
+      });
     } else {
       // Es handelt sich offenbar um ein singuläres Objekt
       let e = ereignis;

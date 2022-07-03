@@ -1,25 +1,24 @@
-import BusinessObject from './BusinessObject';
+import BusinessObject from "./BusinessObject";
 
 /**
  * Represents a Project
  */
 export default class ProjectBO extends BusinessObject {
-
   constructor(aProjektname, aLaufzeit, aAuftraggeber, aAvailablehours) {
     super();
     this.projektname = aProjektname;
     this.laufzeit = aLaufzeit;
     this.auftraggeber = aAuftraggeber;
-    this.availablehours = aAvailablehours
+    this.availablehours = aAvailablehours;
   }
 
   /**
    * Sets a new firstname.
-   * 
    * @param {String} aProjektname - the new firstname of this CustomerBO.
    */
   setProjektname(aProjektname) {
     this.projektname = aProjektname;
+    
   }
 
   /**
@@ -44,7 +43,7 @@ export default class ProjectBO extends BusinessObject {
   getAuftraggeber() {
     return this.auftraggeber;
   }
- 
+
   setAvailablehours(aAvailablehours) {
     this.availablehours = aAvailablehours;
   }
@@ -60,7 +59,7 @@ export default class ProjectBO extends BusinessObject {
       projects.forEach((p) => {
         Object.setPrototypeOf(p, ProjectBO.prototype);
         result.push(p);
-      })
+      });
     } else {
       // Es handelt sich offenbar um ein singuläres Objekt
       let p = projects;

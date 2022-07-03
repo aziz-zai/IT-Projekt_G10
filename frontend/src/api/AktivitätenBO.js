@@ -5,18 +5,17 @@ import BusinessObject from "./BusinessObject";
  */
 
 export default class AktivitätenBO extends BusinessObject {
-
   constructor(aBezeichnung, aDauer, aCapacity, aProject) {
     super();
     this.bezeichnung = aBezeichnung;
     this.dauer = aDauer;
     this.capacity = aCapacity;
-    this.project = aProject
+    this.project = aProject;
   }
 
   /**
    * Sets a new firstname.
-   * 
+   *
    * @param {String} aBezeichnung - the new firstname of this CustomerBO.
    */
   setBezeichnung(aBezeichnung) {
@@ -58,7 +57,7 @@ export default class AktivitätenBO extends BusinessObject {
       aktivitäten.forEach((ak) => {
         Object.setPrototypeOf(ak, AktivitätenBO.prototype);
         result.push(ak);
-      })
+      });
     } else {
       // Es handelt sich offenbar um ein singuläres Objekt
       let ak = aktivitäten;

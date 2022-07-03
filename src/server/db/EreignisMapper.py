@@ -4,11 +4,9 @@ from server.db.Mapper import Mapper
 
 
 class EreignisMapper(Mapper):
-
-
     def __init__(self):
         super().__init__()
-    
+
     def find_by_key(self, key):
         """
         Suchen eines Ereignisses anhand der Ereignis-ID.
@@ -18,7 +16,9 @@ class EreignisMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT timestamp, id, zeitpunkt, bezeichnung FROM ereignis WHERE id={}".format(key)
+        command = "SELECT timestamp, id, zeitpunkt, bezeichnung FROM ereignis WHERE id={}".format(
+            key
+        )
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -30,7 +30,7 @@ class EreignisMapper(Mapper):
             ereignis.set_zeitpunkt(zeitpunkt)
             ereignis.set_bezeichnung(bezeichnung)
             result = ereignis
-            
+
         except IndexError:
             """Der IndexError wird oben beim Zugriff auf tuples[0] auftreten, wenn der vorherige SELECT-Aufruf
             keine Tupel liefert, sondern tuples = cursor.fetchall() eine leere Sequenz zurück gibt."""
@@ -41,24 +41,29 @@ class EreignisMapper(Mapper):
 
         return result
 
-    
     def update(self, ereignis: Ereignis) -> Ereignis:
         """
         Änderung eines bereits bestehenden Ereignisses.
         Parameter ereignis = EreignisBO, das geändert werden soll
-        
+
         """
         cursor = self._cnx.cursor()
 
-        command = "UPDATE ereignis SET timestamp=%s, zeitpunkt=%s, bezeichnung=%s WHERE id=%s"
-        data = (ereignis.get_timestamp(), ereignis.get_zeitpunkt(), ereignis.get_bezeichnung(), ereignis.get_id())
+        command = (
+            "UPDATE ereignis SET timestamp=%s, zeitpunkt=%s, bezeichnung=%s WHERE id=%s"
+        )
+        data = (
+            ereignis.get_timestamp(),
+            ereignis.get_zeitpunkt(),
+            ereignis.get_bezeichnung(),
+            ereignis.get_id(),
+        )
         cursor.execute(command, data)
 
         self._cnx.commit()
         cursor.close()
 
         return ereignis
-
 
     def insert(self, ereignis: Ereignis) -> Ereignis:
         """
@@ -70,7 +75,7 @@ class EreignisMapper(Mapper):
         cursor.execute("SELECT MAX(id) AS maxid FROM ereignis")
         tuples = cursor.fetchall()
 
-        for (maxid) in tuples:
+        for maxid in tuples:
             if maxid[0] is not None:
                 ereignis.set_id(maxid[0] + 1)
             else:
@@ -80,18 +85,22 @@ class EreignisMapper(Mapper):
                 timestamp, id, zeitpunkt, bezeichnung
             ) VALUES (%s,%s,%s,%s)
         """
-        data = (ereignis.get_timestamp(), ereignis.get_id(), ereignis.get_zeitpunkt(), ereignis.get_bezeichnung())
+        data = (
+            ereignis.get_timestamp(),
+            ereignis.get_id(),
+            ereignis.get_zeitpunkt(),
+            ereignis.get_bezeichnung(),
+        )
         cursor.execute(command, data)
 
         self._cnx.commit()
         return ereignis
 
-
     def delete(self, ereignis):
         """
         Löschen eines Ereignisses aus der Datenbank anhand der Ereignis-ID.
         Parameter ereignis = Ereignis-ID
-        
+
         """
         cursor = self._cnx.cursor()
 
@@ -100,4 +109,3 @@ class EreignisMapper(Mapper):
 
         self._cnx.commit()
         cursor.close()
-        
