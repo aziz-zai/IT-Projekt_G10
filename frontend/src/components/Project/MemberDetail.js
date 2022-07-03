@@ -15,6 +15,8 @@ export class Membership extends Component {
         this.state = {
           deletingInProgress: false,
           deletingError: null,
+          istStunden: 0,
+          sollStunden: 0
         };
          // save this state for canceling
         this.baseState = this.state;
@@ -41,13 +43,28 @@ export class Membership extends Component {
       });
     }
 
+    componentDidMount(){
+      const userBuchungenIst = this.props.istBuchungen.filter(buchung => buchung.erstellt_für == this.props.member.id)
+      const userBuchungenSoll = this.props.sollBuchungen.filter(buchung => buchung.erstellt_für == this.props.member.id)
+      console.log('userbuch', userBuchungenIst, userBuchungenSoll)
+      var ist = 0
+      var soll = 0
+      userBuchungenIst.map(buchung => ist += parseFloat(buchung.zeitdifferenz))
+      userBuchungenSoll.map(buchung => soll += parseFloat(buchung.zeitdifferenz))
+      this.setState({
+        istStunden: ist,
+        sollStunden: soll
+      })
+      console.log('istsoll',ist,soll)
+    }
+
     render() {
-        const {member, istStunden, sollStunden, projektleiter} = this.props;
-        
+        const {member, projektleiter} = this.props;
+        const { istStunden, sollStunden} = this.state;
     return (
       <Paper variant='outlined' class="papermitarbeiter">
         <AccountCircleIcon/>      
-        {member.vorname} {member.nachname} &nbsp;&nbsp; <strong>IST: {String(istStunden).padStart(1, "0")}h</strong> &nbsp; <strong>SOLL: {String(sollStunden).padStart(1, "0")}h</strong>
+        {member.vorname} {member.nachname} &nbsp;&nbsp; <strong>IST:{istStunden.toFixed(2)}h</strong> &nbsp; <strong>SOLL:{sollStunden.toFixed(2)}h</strong>
         
         {projektleiter ?<Button><DeleteIcon onClick={this.deleteMember} color="secondary"/>
           </Button>   :null}
@@ -66,7 +83,9 @@ Membership.propTypes = {
   memberDeleted: PropTypes.any,
   istStunden: PropTypes.any,
   sollStunden: PropTypes.any,
-  projektleiter: PropTypes.any
+  projektleiter: PropTypes.any,
+  istBuchungen: PropTypes.any,
+  sollBuchungen: PropTypes.any,
 };
 
 export default Membership;

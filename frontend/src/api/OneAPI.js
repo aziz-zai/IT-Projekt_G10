@@ -83,8 +83,8 @@ export default class OneAPI {
   //Projektarbeit related
   #getProjektarbeitURL = (id) =>
     `${this.#OneServerBaseURL}/projektarbeiten/${id}`;
-  #getProjektarbeitByActivityURL = (activity) =>
-    `${this.#OneServerBaseURL}/projektarbeiten-activity/${activity}`;
+  #getProjektarbeitByActivityURL = (activity, user) =>
+    `${this.#OneServerBaseURL}/projektarbeiten-activity/${activity}/${user}`;
   #getProjektarbeitByStartURL = (start) =>
     `${this.#OneServerBaseURL}/projektarbeit-by-start/${start}`;
   #addProjektarbeitURL = () => `${this.#OneServerBaseURL}/projektarbeiten`;
@@ -549,9 +549,9 @@ export default class OneAPI {
     );
   }
 
-  getProjektarbeitByActivity(activity) {
+  getProjektarbeitByActivity(activity, user) {
     return this.#fetchAdvanced(
-      this.#getProjektarbeitByActivityURL(activity)
+      this.#getProjektarbeitByActivityURL(activity, user)
     ).then((responseJSON) => {
       let projektarbeitenBOs = ProjektarbeitBO.fromJSON(responseJSON);
       // console.info(customerBOs);
@@ -765,9 +765,9 @@ export default class OneAPI {
     });
   }
 
-  updateZeitintervallbuchung(zeitintervallbuchungBO) {
+  updateZeitintervallbuchung(zeitintervallbuchungBO, id) {
     return this.#fetchAdvanced(
-      this.#updateZeitintervallbuchungURL(zeitintervallbuchungBO.getID()),
+      this.#updateZeitintervallbuchungURL(id),
       {
         method: "PUT",
         headers: {
@@ -929,8 +929,8 @@ export default class OneAPI {
     });
   }
 
-  updateGehen(gehenBO) {
-    return this.#fetchAdvanced(this.#updateGehenURL(gehenBO.getID()), {
+  updateGehen(gehenBO, id) {
+    return this.#fetchAdvanced(this.#updateGehenURL(id), {
       method: "PUT",
       headers: {
         Accept: "application/json, text/plain",
@@ -1014,8 +1014,8 @@ export default class OneAPI {
     });
   }
 
-  updateKommen(kommenBO) {
-    return this.#fetchAdvanced(this.#updateKommenURL(kommenBO.getID()), {
+  updateKommen(kommenBO, id) {
+    return this.#fetchAdvanced(this.#updateKommenURL(id), {
       method: "PUT",
       headers: {
         Accept: "application/json, text/plain",
@@ -1182,14 +1182,14 @@ export default class OneAPI {
     });
   }
 
-  updateAktivitäten(id) {
+  updateAktivitäten(aktvitätBO, id) {
     return this.#fetchAdvanced(this.#updateAktivitätenURL(id), {
       method: "PUT",
       headers: {
         Accept: "application/json, text/plain",
         "Content-type": "application/json",
       },
-      body: JSON.stringify(id),
+      body: JSON.stringify(aktvitätBO),
     }).then((responseJSON) => {
       // We always get an array of CustomerBOs.fromJSON
       let responseAktivitätenBO = AktivitätenBO.fromJSON(responseJSON)[0];

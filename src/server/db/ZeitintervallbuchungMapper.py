@@ -391,8 +391,8 @@ class ZeitintervallbuchungMapper(Mapper):
             zeitintervallbuchung.get_erstellt_für(),
             zeitintervallbuchung.get_ist_buchung(),
             zeitintervallbuchung.get_zeitintervall(),
-            zeitintervallbuchung.get_zeitdifferenz(),
             zeitintervallbuchung.get_bezeichnung(),
+            zeitintervallbuchung.get_zeitdifferenz(),
             zeitintervallbuchung.get_id(),
         )
         cursor.execute(command, data)

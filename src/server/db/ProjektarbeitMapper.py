@@ -46,7 +46,7 @@ class ProjektarbeitMapper(Mapper):
 
         return result
 
-    def find_by_activity_id(self, activity):
+    def find_by_activity_id(self, activity, user):
         """
         Suchen einer Projektarbeit anhand der Aktivitäten-ID.
         Parameter activity = Aktivitäten-ID
@@ -58,8 +58,9 @@ class ProjektarbeitMapper(Mapper):
         FROM projektarbeit 
         WHERE activity={} AND id in (
             SELECT zeitintervall FROM zeitintervallbuchung 
-            WHERE ist_buchung = false)""".format(
-            activity
+            WHERE ist_buchung = false AND erstellt_für={})""".format(
+            activity,
+            user
         )
         cursor.execute(command)
         tuples = cursor.fetchall()

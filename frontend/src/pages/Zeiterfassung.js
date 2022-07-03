@@ -179,7 +179,8 @@ export class Zeiterfassung extends Component {
     this.setState(this.baseState)
     }
      ).catch(e =>
-      console.log('projektarbeitIstfail', newProjektarbeitIst)
+      this.setState({
+      })
       );
     // set loading to true
     this.setState({
@@ -357,7 +358,7 @@ dateFilterChanged = (event) => {
     pausenBeginnZeit, pausenEndeZeit, pausenAlert, gehenErrorAlert} = this.state;
     return (
       <div>
-      <div class="selection"> {console.log('Error', gehenErrorAlert, kommen)}
+      <div class="selection"> 
          <ProjectSelection user={user} handleSelection={this.handleProjectSelection}/>
         {projectSelected ?
         <div class="selectionItem"> 
@@ -365,7 +366,7 @@ dateFilterChanged = (event) => {
          <IconButton onClick={this.handleAktSelectionCLose}><CancelIcon sx={{color: "#401F65"}}/></IconButton></div>:null}
         {aktivitätSelected ?
          <div class="selectionItem">
-         <ProjektarbeitenSelection aktivität={aktivität} handleSelection={this.handleProjektarbeitSelection}/>
+         <ProjektarbeitenSelection aktivität={aktivität} user={user} handleSelection={this.handleProjektarbeitSelection}/>
          <IconButton onClick={this.handlePrArSelectionCLose}><CancelIcon sx={{color: "#401F65"}}/></IconButton></div>:null}
       </div>
       <div class="zeitContainer">

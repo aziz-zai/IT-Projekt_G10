@@ -542,18 +542,18 @@ class ProjektarbeitenOperations(Resource):
         return "", 200
 
 
-@projectone.route("/projektarbeiten-activity/<int:activity>")
+@projectone.route("/projektarbeiten-activity/<int:activity>/<int:user>")
 @projectone.response(500, "Falls es zu einem Server-seitigen Fehler kommt.")
 @projectone.param("id", "Die ID des Projektarbeit-Objekts")
 class ProjektarbeitenByActivityIdOperations(Resource):
     @projectone.marshal_with(projektarbeiten)
-    def get(self, activity):
+    def get(self, activity, user):
         """Auslesen eines bestimmten Projektarbeit-Objekts anhand der Aktivitäten-ID.
 
         Das auszulesende Objekt wird durch die ```Activity-ID``` in dem URI bestimmt.
         """
         adm = Administration()
-        projektarbeitenac = adm.get_projektarbeit_by_activity_id(activity)
+        projektarbeitenac = adm.get_projektarbeit_by_activity_id(activity, user)
         return projektarbeitenac
 
 
@@ -937,6 +937,9 @@ class ArbeitszeitkontoOperations(Resource):
         """
         adm = Administration()
         arb = adm.get_arbeitszeitkonto_by_userID(user)
+        adm.update_arbeitszeitkonto_ist_arbeitsleistung(user)
+        adm.update_arbeitszeitkonto_gleitzeit(user)
+        adm.update_arbeitszeitkonto_abwesenheit(user)
         return arb
 
     @projectone.marshal_with(arbeitszeitkonto)
@@ -1134,11 +1137,7 @@ class GehenListOperations(Resource):
             zeitintervallbuchung = adm.create_zeitintervallbuchung(
                 proarb.get_id(), True, user, user, "Projektarbeit"
             )
-
-            adm.update_arbeitszeitkonto_ist_arbeitsleistung(user)
-            adm.update_aktivitäten_capacity(activity, zeitintervallbuchung)
-            adm.update_project_availablehours(activity, zeitintervallbuchung)
-            adm.update_arbeitszeitkonto_gleitzeit(user)
+            
             return g, 200
         else:
             # Wenn irgendetwas schiefgeht, dann geben wir nichts zurück und werfen einen Server-Fehler.
@@ -1197,10 +1196,7 @@ class GehenOperations(Resource):
     def put(self, id):
         adm = Administration()
         ge = Gehen()
-        zeitpunkt_js_string = api.payload["zeitpunkt"]
-        zeitpunkt_py_date = datetime.strptime(zeitpunkt_js_string, "%Y-%m-%d %H:%M:%S")
-        zeitpunkt_py_string = zeitpunkt_py_date.strftime("%Y-%m-%dT%H:%M:%S")
-        ge.set_zeitpunkt(zeitpunkt_py_string)
+        ge.set_zeitpunkt(api.payload["zeitpunkt"])
         ge.set_bezeichnung(api.payload["bezeichnung"])
 
         if ge is not None:
@@ -1308,10 +1304,7 @@ class KommenOperations(Resource):
         """Update eines bestimmten Kommen-Objekts."""
         adm = Administration()
         ko = Kommen()
-        zeitpunkt_js_string = api.payload["zeitpunkt"]
-        zeitpunkt_py_date = datetime.strptime(zeitpunkt_js_string, "%Y-%m-%d %H:%M:%S")
-        zeitpunkt_py_string = zeitpunkt_py_date.strftime("%Y-%m-%dT%H:%M:%S")
-        ko.set_zeitpunkt(zeitpunkt_py_string)
+        ko.set_zeitpunkt(api.payload["zeitpunkt"])
         ko.set_bezeichnung(api.payload["bezeichnung"])
 
         if ko is not None:
@@ -1381,8 +1374,8 @@ class ZeitintervallbuchungOperations(Resource):
 
         if ze is not None:
             ze.set_id(id)
-            adm.update_zeitintervallbuchung(ze)
-            return "", 200
+            buch = adm.update_zeitintervallbuchung(ze)
+            return buch , 200
         else:
             return "", 500
 

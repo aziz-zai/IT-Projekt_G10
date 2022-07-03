@@ -10,8 +10,12 @@ export default class ZeitintervallbuchungBO extends BusinessObject {
    * @param {String} aZeitdifferenz - the Vorname of this CustomerBO.
    * @param {String} aZeitintervall - the Vorname of this CustomerBO.
    */
-  constructor(aZeitdifferenz, aZeitintervall) {
+  constructor(aErstelltVon, aErstelltFuer, aIstBuchung, aBezeichnung, aZeitdifferenz, aZeitintervall) {
     super();
+    this.erstellt_von = aErstelltVon;
+    this.erstellt_für = aErstelltFuer;
+    this.ist_buchung = aIstBuchung;
+    this.bezeichnung = aBezeichnung;
     this.zeitdifferenz = aZeitdifferenz;
     this.zeitintervall = aZeitintervall;
   }
@@ -24,12 +28,51 @@ export default class ZeitintervallbuchungBO extends BusinessObject {
   setZeitdifferenz(aZeitdifferenz) {
     this.zeitdifferenz = aZeitdifferenz;
   }
+    /**
+   * Gets the firstname.
+   */
+     getZeitdifferenz() {
+      return this.zeitdifferenz;
+    }
 
   /**
    * Gets the firstname.
    */
-  getZeitdifferenz() {
-    return this.zeitdifferenz;
+  getBezeichnung() {
+    return this.bezeichnung;
+  }
+  setBezeichnung(aBezeichnung) {
+    this.bezeichnung = aBezeichnung;
+  }
+
+  /**
+   * Gets the firstname.
+   */
+  getErstelltVon() {
+    return this.erstellt_von;
+  }
+  setErstelltVon(aErstelltVon) {
+    this.erstellt_von = aErstelltVon;
+  }
+
+  /**
+   * Gets the firstname.
+   */
+  getErstelltFuer() {
+    return this.erstellt_für;
+  }
+  setErstelltFuer(aErstelltFuer) {
+    this.erstellt_für = aErstelltFuer;
+  }
+
+  /**
+   * Gets the firstname.
+   */
+  getistBuchung() {
+    return this.ist_buchung;
+  }
+  setistBuchung(aIstBuchung) {
+    this.ist_buchung = aIstBuchung;
   }
 
   /**

@@ -25,7 +25,7 @@ export class ProjektarbeitenSelection extends Component {
   /** gets the balance for this account */
 
   loadProjektarbeiten = () => {
-    OneAPI.getAPI().getProjektarbeitByActivity(this.props.aktivität).then(projektarbeiten =>
+    OneAPI.getAPI().getProjektarbeitByActivity(this.props.aktivität, this.props.user[0].id).then(projektarbeiten =>
       this.setState({
         projektarbeiten: projektarbeiten.map(projektarbeit => {return projektarbeit.bezeichnung}),
         loadingInProgress: false, // loading indicator 
@@ -64,7 +64,7 @@ export class ProjektarbeitenSelection extends Component {
     return (
       <div>
         <div>
-      <FormControl sx={{ m: 1, minWidth: 120 }}>
+      <FormControl sx={{ m: 1, minWidth: 120 }}> {console.log('test', user)}
         <InputLabel variant="standard" htmlFor="uncontrolled-native">
           Projektarbeit
         </InputLabel>
@@ -76,7 +76,7 @@ export class ProjektarbeitenSelection extends Component {
           }}
           onChange={this.handleChange}
         >
-          <option value={0}></option>{console.log('test',uniqProjektarbeiten )}
+          <option value={0}></option>
            {uniqProjektarbeiten ?
           uniqProjektarbeiten.map((projektarbeit, index) => <option value={projektarbeit}>{projektarbeit}</option>)
           :null}
@@ -90,7 +90,8 @@ export class ProjektarbeitenSelection extends Component {
 
 ProjektarbeitenSelection.propTypes = {
   aktivität: PropTypes.any,
-  handleSelection: PropTypes.any
+  handleSelection: PropTypes.any,
+  user: PropTypes.any,
 }
 
 export default ProjektarbeitenSelection

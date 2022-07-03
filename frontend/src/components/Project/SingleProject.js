@@ -635,8 +635,7 @@ this.setState({
         </Typography> 
           {
             aktivitäten.map(aktivität => <AktivitätenDetail key={aktivität.getID()} project={project} 
-            aktivitätDeleted={this.aktivitätDeleted} aktivität={aktivität.getID()} akt_bezeichnung={aktivität.getBezeichnung()} akt_dauer={aktivität.getDauer()} 
-            akt_capacity={aktivität.getCapacity()} user={user} projektleiter={projektleiterIsUser ? true:false}/>)
+            aktivitätDeleted={this.aktivitätDeleted} aktivität={aktivität}  user={user} projektleiter={projektleiterIsUser ? true:false}/>)
           }
             <LoadingProgress show={loadingInProgress} />
         </div>
@@ -645,7 +644,7 @@ this.setState({
         Projektmitarbeiter
         </Typography> 
         {
-            membership.map(member => <MemberDetail key={member.id}
+            membership.map(member => <MemberDetail key={member.id} istBuchungen={zeitintervallbuchungIst} sollBuchungen={zeitintervallbuchungSoll}
             member={member} project={project.id} memberDeleted={this.memberDeleted} istStunden={IstZeitdifferenz} sollStunden={sollZeitdifferenz}
             projektleiter={projektleiterIsUser ? true:false}/> )
           }

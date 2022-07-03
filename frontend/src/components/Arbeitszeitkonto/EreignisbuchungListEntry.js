@@ -15,6 +15,7 @@ import DoubleArrowIcon from "@mui/icons-material/DoubleArrow";
 import TimerIcon from "@mui/icons-material/Timer";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
+import LoadingProgress from "../Dialogs/LoadingProgress";
 
 export class EreignisbuchungListEntry extends Component {
   // Init state
@@ -31,6 +32,7 @@ export class EreignisbuchungListEntry extends Component {
       ereignisSecond: null,
       erstellt_fuer: null,
       erstellt_von: null,
+      loading: false
     };
   }
 
@@ -53,6 +55,7 @@ export class EreignisbuchungListEntry extends Component {
           ereignisHour: hour,
           ereignisMinute: minute,
           ereignisSecond: seconds,
+          loading: false
         });
       })
       .catch((e) =>
@@ -61,7 +64,7 @@ export class EreignisbuchungListEntry extends Component {
         })
       );
     // set loading to true
-    this.setState({});
+    this.setState({loading: true});
   };
 
   getGehenById = () => {
@@ -83,6 +86,7 @@ export class EreignisbuchungListEntry extends Component {
           ereignisHour: hour,
           ereignisMinute: minute,
           ereignisSecond: seconds,
+          loading: false
         });
       })
       .catch((e) =>
@@ -91,7 +95,7 @@ export class EreignisbuchungListEntry extends Component {
         })
       );
     // set loading to true
-    this.setState({});
+    this.setState({loading: true});
   };
   getEreignisById = () => {
     OneAPI.getAPI()
@@ -112,6 +116,7 @@ export class EreignisbuchungListEntry extends Component {
           ereignisHour: hour,
           ereignisMinute: minute,
           ereignisSecond: seconds,
+          loading: false
         });
       })
       .catch((e) =>
@@ -120,7 +125,7 @@ export class EreignisbuchungListEntry extends Component {
         })
       );
     // set loading to true
-    this.setState({});
+    this.setState({loading: true});
   };
 
   getErstelltFuerById = () => {
@@ -129,6 +134,7 @@ export class EreignisbuchungListEntry extends Component {
       .then((user) =>
         this.setState({
           erstellt_fuer: user,
+          loading: false
         })
       )
       .catch((e) =>
@@ -137,7 +143,7 @@ export class EreignisbuchungListEntry extends Component {
         })
       );
     // set loading to true
-    this.setState({});
+    this.setState({loading: true});
   };
 
   getErstelltVonById = () => {
@@ -146,6 +152,7 @@ export class EreignisbuchungListEntry extends Component {
       .then((user) =>
         this.setState({
           erstellt_von: user,
+          loading: false
         })
       )
       .catch((e) =>
@@ -154,7 +161,7 @@ export class EreignisbuchungListEntry extends Component {
         })
       );
     // set loading to true
-    this.setState({});
+    this.setState({loading: true});
   };
   deleteEreignisbuchung = () => {
     OneAPI.getAPI()
@@ -208,7 +215,7 @@ export class EreignisbuchungListEntry extends Component {
       ereignisSecond,
       erstellt_von,
       erstellt_fuer,
-    } = this.state;
+      loading} = this.state;
     return (
       <div>
         <Accordion
@@ -221,6 +228,9 @@ export class EreignisbuchungListEntry extends Component {
             expandIcon={<ExpandMoreIcon onClick={this.handleExpandState} />}
             id={`customer${ereignisbuchung.getID()}accountpanel-header`}
           >
+            {loading ?
+            <LoadingProgress show={loading}/>:
+            <>
             <Grid
               container
               spacing={1}
@@ -279,7 +289,7 @@ export class EreignisbuchungListEntry extends Component {
                   Mehr Infos
                 </Typography>
               </Grid>
-            </Grid>
+            </Grid></>}
           </AccordionSummary>
           <AccordionDetails sx={{ backgroundColor: "#54377550" }}>
             {erstellt_von ? (
