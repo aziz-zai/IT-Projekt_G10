@@ -6,8 +6,8 @@ Klasse Kommen
 
 """
 
-class Kommen(Ereignis):
 
+class Kommen(Ereignis):
     def __init__(self):
         super().__init__()
 
@@ -17,7 +17,5 @@ class Kommen(Ereignis):
         obj = Kommen()
         obj.set_zeitpunkt(dictionary["zeitpunkt"])
         obj.set_bezeichnung(dictionary["bezeichnung"])
-        
-        return obj
 
-        
+        return obj

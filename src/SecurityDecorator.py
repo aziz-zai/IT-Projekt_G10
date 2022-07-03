@@ -3,7 +3,6 @@ from google.auth.transport import requests
 import google.oauth2.id_token
 
 from server.Administration import Administration
-from server.bo.UserBO import User
 
 
 def secured(function):
@@ -23,7 +22,7 @@ def secured(function):
 
     def wrapper(*args, **kwargs):
         # Verify Firebase auth.
-        id_token = request.cookies.get('token')
+        id_token = request.cookies.get("token")
         error_message = None
         claims = None
         objects = None
@@ -36,14 +35,15 @@ def secured(function):
                 # session store (see for instance
                 # http://flask.pocoo.org/docs/1.0/quickstart/#sessions).
                 claims = google.oauth2.id_token.verify_firebase_token(
-                    id_token, firebase_request_adapter)
+                    id_token, firebase_request_adapter
+                )
 
                 if claims is not None:
-                    
+
                     google_user_id = claims.get("user_id")
                     email = claims.get("email")
                     benutzername = claims.get("name")
-                    
+
                     adm = Administration()
                     user = adm.get_user_by_google_user_id(google_user_id=google_user_id)
                     if user is not None:
@@ -52,31 +52,36 @@ def secured(function):
                         Wohl aber können sich der zugehörige Klarname (name) und die
                         E-Mail-Adresse ändern. Daher werden diese beiden Daten sicherheitshalber
                         in unserem System geupdated."""
-                        user.email= email
+                        user.email = email
                         user.benutzername = benutzername
                         user.google_user_id = google_user_id
                         adm.save_user(user=user)
                     else:
-                        """Fall: Der Benutzer war bislang noch nicht eingelogged. 
+                        """Fall: Der Benutzer war bislang noch nicht eingelogged.
                         Wir legen daher ein neues User-Objekt an, um dieses ggf. später
                         nutzen zu können.
                         """
-                        createdUser=adm.create_user("", "", benutzername, email, google_user_id)
-                        adm.create_arbeitszeitkonto(urlaubskonto=createdUser.get_urlaubstage(), user=createdUser.get_id(), arbeitsleistung=0, gleitzeit=0)
+                        createdUser = adm.create_user(
+                            "", "", benutzername, email, google_user_id
+                        )
+                        adm.create_arbeitszeitkonto(
+                            urlaubskonto=createdUser.get_urlaubstage(),
+                            user=createdUser.get_id(),
+                            arbeitsleistung=0,
+                            gleitzeit=0,
+                        )
                     print(request.method, request.path, "angefragt durch:", email)
 
                     objects = function(*args, **kwargs)
                     return objects
                 else:
-                    return '', 401  # UNAUTHORIZED !!!
+                    return "", 401  # UNAUTHORIZED !!!
             except ValueError as exc:
                 # This will be raised if the token is expired or any other
                 # verification checks fail.
                 error_message = str(exc)
                 return exc, 401  # UNAUTHORIZED !!!
 
-        return '', 401  # UNAUTHORIZED !!!
+        return "", 401  # UNAUTHORIZED !!!
 
     return wrapper
-
-

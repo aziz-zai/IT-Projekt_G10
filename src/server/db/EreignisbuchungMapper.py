@@ -1,11 +1,11 @@
 from server.bo.EreignisbuchungBo import Ereignisbuchung
 from server.db.Mapper import Mapper
 
-class EreignisbuchungMapper(Mapper):
 
+class EreignisbuchungMapper(Mapper):
     def __init__(self):
         super().__init__()
-    
+
     def find_by_key(self, key):
         """
         Suchen einer Ereignisbuchung anhand der Ereignisbuchungs-ID.
@@ -15,12 +15,22 @@ class EreignisbuchungMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung FROM ereignisbuchung WHERE id={}".format(key)
+        command = "SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung FROM ereignisbuchung WHERE id={}".format(
+            key
+        )
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung) = tuples[0]
+            (
+                id,
+                timestamp,
+                erstellt_von,
+                erstellt_für,
+                ist_buchung,
+                ereignis,
+                bezeichnung,
+            ) = tuples[0]
             ereignisbuchung = Ereignisbuchung()
             ereignisbuchung.set_id(id)
             ereignisbuchung.set_timestamp(timestamp)
@@ -29,7 +39,6 @@ class EreignisbuchungMapper(Mapper):
             ereignisbuchung.set_ist_buchung(ist_buchung)
             ereignisbuchung.set_ereignis(ereignis)
             ereignisbuchung.set_bezeichnung(bezeichnung)
-           
 
             result = ereignisbuchung
         except IndexError:
@@ -43,20 +52,28 @@ class EreignisbuchungMapper(Mapper):
         return result
 
     def find_soll_ereignisbuchungen_by_user(self, erstellt_für):
-        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
-        """
+        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,"""
         cursor = self._cnx.cursor()
         command = """SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung 
         FROM projectone.ereignisbuchung
         WHERE (erstellt_für={} OR erstellt_von={}) AND ist_buchung=False
         order by timestamp desc
-        """.format(erstellt_für, erstellt_für)
+        """.format(
+            erstellt_für, erstellt_für
+        )
         cursor.execute(command)
         tuples = cursor.fetchall()
-        result= []
+        result = []
 
-        
-        for (id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung) in tuples:
+        for (
+            id,
+            timestamp,
+            erstellt_von,
+            erstellt_für,
+            ist_buchung,
+            ereignis,
+            bezeichnung,
+        ) in tuples:
             ereignisbuchung = Ereignisbuchung()
             ereignisbuchung.set_id(id)
             ereignisbuchung.set_timestamp(timestamp)
@@ -73,20 +90,28 @@ class EreignisbuchungMapper(Mapper):
         return result
 
     def find_ist_ereignisbuchungen_by_user(self, erstellt_für):
-        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,
-        """
+        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,"""
         cursor = self._cnx.cursor()
         command = """SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung 
         FROM projectone.ereignisbuchung
         WHERE (erstellt_für={} OR erstellt_von={}) AND ist_buchung=True
         order by timestamp desc
-        """.format(erstellt_für, erstellt_für)
+        """.format(
+            erstellt_für, erstellt_für
+        )
         cursor.execute(command)
         tuples = cursor.fetchall()
-        result= []
+        result = []
 
-        
-        for (id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung) in tuples:
+        for (
+            id,
+            timestamp,
+            erstellt_von,
+            erstellt_für,
+            ist_buchung,
+            ereignis,
+            bezeichnung,
+        ) in tuples:
             ereignisbuchung = Ereignisbuchung()
             ereignisbuchung.set_id(id)
             ereignisbuchung.set_timestamp(timestamp)
@@ -101,17 +126,25 @@ class EreignisbuchungMapper(Mapper):
         cursor.close()
 
         return result
-    
+
     def update(self, ereignisbuchung: Ereignisbuchung) -> Ereignisbuchung:
         """
         Änderung einer bereits bestehenden Ereignisbuchung.
         Parameter ereignisbuchung = EreignisbuchungBO, das geändert werden soll
-        
+
         """
         cursor = self._cnx.cursor()
 
         command = "UPDATE ereignisbuchung SET timestamp = %s, erstellt_von = %s, erstellt_für = %s, ist_buchung = %s, ereignis = %s, bezeichnung = %s WHERE id = %s"
-        data = (ereignisbuchung.get_timestamp(), ereignisbuchung.get_erstellt_von(), ereignisbuchung.get_erstellt_für(), ereignisbuchung.get_ist_buchung(), ereignisbuchung.get_ereignis(), ereignisbuchung.get_bezeichnung(), ereignisbuchung.get_id())
+        data = (
+            ereignisbuchung.get_timestamp(),
+            ereignisbuchung.get_erstellt_von(),
+            ereignisbuchung.get_erstellt_für(),
+            ereignisbuchung.get_ist_buchung(),
+            ereignisbuchung.get_ereignis(),
+            ereignisbuchung.get_bezeichnung(),
+            ereignisbuchung.get_id(),
+        )
         cursor.execute(command, data)
 
         self._cnx.commit()
@@ -129,7 +162,7 @@ class EreignisbuchungMapper(Mapper):
         cursor.execute("SELECT MAX(id) AS maxid FROM ereignisbuchung")
         tuples = cursor.fetchall()
 
-        for (maxid) in tuples:
+        for maxid in tuples:
             if maxid[0] is not None:
                 ereignisbuchung.set_id(maxid[0] + 1)
             else:
@@ -139,31 +172,34 @@ class EreignisbuchungMapper(Mapper):
                 id, timestamp, erstellt_von, erstellt_für, ist_buchung, ereignis, bezeichnung
             ) VALUES (%s,%s,%s,%s,%s,%s,%s)
         """
-        cursor.execute(command, (
-            ereignisbuchung.get_id(),
-            ereignisbuchung.get_timestamp(),
-            ereignisbuchung.get_erstellt_von(),
-            ereignisbuchung.get_erstellt_für(),
-            ereignisbuchung.get_ist_buchung(),
-            ereignisbuchung.get_ereignis(),
-            ereignisbuchung.get_bezeichnung()
-        ))
+        cursor.execute(
+            command,
+            (
+                ereignisbuchung.get_id(),
+                ereignisbuchung.get_timestamp(),
+                ereignisbuchung.get_erstellt_von(),
+                ereignisbuchung.get_erstellt_für(),
+                ereignisbuchung.get_ist_buchung(),
+                ereignisbuchung.get_ereignis(),
+                ereignisbuchung.get_bezeichnung(),
+            ),
+        )
         self._cnx.commit()
 
         return ereignisbuchung
-
 
     def delete(self, ereignisbuchung):
         """
         Löschen einer Ereignisbuchung aus der Datenbank anhand der Ereignisbuchungs-ID.
         Parameter ereignisbuchung = Ereignisbuchungs-ID
-        
+
         """
         cursor = self._cnx.cursor()
 
-        command = "DELETE FROM ereignisbuchung WHERE id={}".format(ereignisbuchung.get_id())
+        command = "DELETE FROM ereignisbuchung WHERE id={}".format(
+            ereignisbuchung.get_id()
+        )
         cursor.execute(command)
 
         self._cnx.commit()
         cursor.close()
-        

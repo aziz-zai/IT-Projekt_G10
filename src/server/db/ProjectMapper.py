@@ -1,11 +1,9 @@
-
-from re import U
 from server.bo.ProjectBO import Project
 from server.bo.ZeitintervallBO import Zeitintervall
 from server.db.Mapper import Mapper
 
+
 class ProjectMapper(Mapper):
-    
     def __init__(self):
         super().__init__()
 
@@ -18,7 +16,7 @@ class ProjectMapper(Mapper):
         cursor.execute("SELECT MAX(id) AS maxid FROM project ")
         tuples = cursor.fetchall()
 
-        for (maxid) in tuples:
+        for maxid in tuples:
             if maxid[0] is not None:
                 project.set_id(maxid[0] + 1)
             else:
@@ -28,17 +26,19 @@ class ProjectMapper(Mapper):
                 id, timestamp, projektname, laufzeit, auftraggeber, availablehours
             ) VALUES (%s,%s,%s,%s,%s,%s)
         """
-        data = (project.get_id(),
+        data = (
+            project.get_id(),
             project.get_timestamp(),
             project.get_projektname(),
             project.get_laufzeit(),
             project.get_auftraggeber(),
-            project.get_availablehours())
+            project.get_availablehours(),
+        )
         cursor.execute(command, data)
 
         self._cnx.commit()
 
-        return project     
+        return project
 
     def update(self, project: Project) -> Project:
         """
@@ -48,14 +48,20 @@ class ProjectMapper(Mapper):
         cursor = self._cnx.cursor()
 
         command = "UPDATE project SET timestamp=%s, projektname=%s, laufzeit=%s, auftraggeber=%s, availablehours=%s WHERE id=%s"
-        data = (project.get_timestamp(), project.get_projektname(), project.get_laufzeit(), project.get_auftraggeber(), project.get_availablehours(), project.get_id())
+        data = (
+            project.get_timestamp(),
+            project.get_projektname(),
+            project.get_laufzeit(),
+            project.get_auftraggeber(),
+            project.get_availablehours(),
+            project.get_id(),
+        )
         cursor.execute(command, data)
 
         self._cnx.commit()
         cursor.close()
 
-        return project   
-
+        return project
 
     def find_by_key(self, key):
         """
@@ -64,12 +70,21 @@ class ProjectMapper(Mapper):
         """
         result = None
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, projektname, laufzeit, auftraggeber, availablehours FROM project WHERE id={}".format(key)
+        command = "SELECT id, timestamp, projektname, laufzeit, auftraggeber, availablehours FROM project WHERE id={}".format(
+            key
+        )
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, projektname, laufzeit, auftraggeber, availablehours) = tuples[0]
+            (
+                id,
+                timestamp,
+                projektname,
+                laufzeit,
+                auftraggeber,
+                availablehours,
+            ) = tuples[0]
             project = Project()
             project.set_id(id)
             project.set_timestamp(timestamp)
@@ -80,12 +95,12 @@ class ProjectMapper(Mapper):
             result = project
         except IndexError:
             result = None
-        
+
         self._cnx.commit()
         cursor.close()
 
         return result
-    
+
     def find_by_activity(self, activity):
         """
         Suchen eines Projekts anhand der Aktivitäten-ID.
@@ -95,12 +110,21 @@ class ProjectMapper(Mapper):
         cursor = self._cnx.cursor()
         command = """SELECT id, timestamp, projektname, laufzeit, auftraggeber, availablehours 
         FROM projectone.project 
-        WHERE id in(SELECT project FROM projectone.activity WHERE id={})""".format(activity)
+        WHERE id in(SELECT project FROM projectone.activity WHERE id={})""".format(
+            activity
+        )
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp, projektname, laufzeit, auftraggeber, availablehours) = tuples[0]
+            (
+                id,
+                timestamp,
+                projektname,
+                laufzeit,
+                auftraggeber,
+                availablehours,
+            ) = tuples[0]
             project = Project()
             project.set_id(id)
             project.set_timestamp(timestamp)
@@ -111,7 +135,7 @@ class ProjectMapper(Mapper):
             result = project
         except IndexError:
             result = None
-        
+
         self._cnx.commit()
         cursor.close()
 
@@ -129,12 +153,14 @@ class ProjectMapper(Mapper):
         FROM projectone.zeitintervall
         WHERE id in (SELECT id FROM projectone.project
         WHERE laufzeit={})
-        """.format(projektlaufzeit)
+        """.format(
+            projektlaufzeit
+        )
         cursor.execute(command)
         tuples = cursor.fetchall()
 
         try:
-            (id, timestamp,bezeichnung, start, ende) = tuples[0]
+            (id, timestamp, bezeichnung, start, ende) = tuples[0]
             zeitintervall = Zeitintervall()
             zeitintervall.set_id(id)
             zeitintervall.set_timestamp(timestamp)
@@ -144,12 +170,12 @@ class ProjectMapper(Mapper):
             result = zeitintervall
         except IndexError:
             result = None
-        
+
         self._cnx.commit()
         cursor.close()
 
         return result
-    
+
     def delete(self, project):
         """
         Löschen eines Projekts aus der Datenbank anhand der Projekt-ID.

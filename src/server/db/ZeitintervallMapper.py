@@ -3,10 +3,9 @@ from server.db.Mapper import Mapper
 
 
 class ZeitintervallMapper(Mapper):
-
     def __init__(self):
         super().__init__()
-    
+
     def find_by_key(self, key):
         """
         Suchen eines Zeitintervalls anhand der Zeitintervall-ID.
@@ -16,7 +15,9 @@ class ZeitintervallMapper(Mapper):
         result = None
 
         cursor = self._cnx.cursor()
-        command = "SELECT id, timestamp, bezeichnung, start, ende FROM zeitintervall WHERE id={}".format(key)
+        command = "SELECT id, timestamp, bezeichnung, start, ende FROM zeitintervall WHERE id={}".format(
+            key
+        )
         cursor.execute(command)
         tuples = cursor.fetchall()
 
@@ -38,8 +39,7 @@ class ZeitintervallMapper(Mapper):
         cursor.close()
 
         return result
-        
-    
+
     def insert(self, zeitintervall: Zeitintervall) -> Zeitintervall:
         """
         Einfügen eines neuen Zeitintervalls in die Datenbank.
@@ -49,7 +49,7 @@ class ZeitintervallMapper(Mapper):
         cursor.execute("SELECT MAX(id) AS maxid FROM zeitintervall")
         tuples = cursor.fetchall()
 
-        for (maxid) in tuples:
+        for maxid in tuples:
             if maxid[0] is not None:
                 zeitintervall.set_id(maxid[0] + 1)
             else:
@@ -59,17 +59,20 @@ class ZeitintervallMapper(Mapper):
                 id, timestamp, bezeichnung, start, ende
             ) VALUES (%s,%s,%s,%s,%s)
         """
-        cursor.execute(command, (
-            zeitintervall.get_id(),
-            zeitintervall.get_timestamp(),
-            zeitintervall.get_bezeichnung(),
-            zeitintervall.get_start(),
-            zeitintervall.get_ende(),
-        ))
+        cursor.execute(
+            command,
+            (
+                zeitintervall.get_id(),
+                zeitintervall.get_timestamp(),
+                zeitintervall.get_bezeichnung(),
+                zeitintervall.get_start(),
+                zeitintervall.get_ende(),
+            ),
+        )
         self._cnx.commit()
 
         return zeitintervall
-    
+
     def update(self, zeitintervall: Zeitintervall) -> Zeitintervall:
         """
         Änderung eines bereits bestehenden Zeitintervalls.
@@ -82,11 +85,13 @@ class ZeitintervallMapper(Mapper):
         bezeichnung=%s, 
         start=%s,
         ende=%s WHERE id=%s"""
-        data = (zeitintervall.get_timestamp(),  
-        zeitintervall.get_bezeichnung(),
-        zeitintervall.get_start(),
-        zeitintervall.get_ende(),
-        zeitintervall.get_id())
+        data = (
+            zeitintervall.get_timestamp(),
+            zeitintervall.get_bezeichnung(),
+            zeitintervall.get_start(),
+            zeitintervall.get_ende(),
+            zeitintervall.get_id(),
+        )
         cursor.execute(command, data)
 
         self._cnx.commit()
