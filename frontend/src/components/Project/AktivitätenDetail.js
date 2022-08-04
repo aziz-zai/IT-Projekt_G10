@@ -45,7 +45,24 @@ class AktivitätenDetail extends Component {
       bezeichnung: bz,
       dauer: da,
       kapazität: cap,
+      zeitintervallbuchungSoll: [],
+      zeitintervallbuchungIst: [],
+      tageVerbraucht: 0
     };
+  }
+ 
+  getZeitintervallbuchungIst = () => {
+    OneAPI.getAPI().getProjektarbeitbuchungIst(0,null, null, this.props.aktivität.id).then(buchungen =>
+      this.setState({
+        zeitintervallbuchungIst: buchungen,
+      })
+      ).catch(e =>
+        this.setState({ // Reset state with error from catch 
+        })
+      );
+    // set loading to true
+    this.setState({
+    });
   }
 
   openActivityDetails = () => {
@@ -81,6 +98,7 @@ class AktivitätenDetail extends Component {
   //Aktivität updaten
   updateAktivität = () => {
     let newAktivität = new AktivitätenBO(this.state.bezeichnung,this.state.dauer, this.state.kapazität,this.props.project.id)
+    newAktivität.setTimestamp(this.props.aktivität.timestamp)
     OneAPI.getAPI().updateAktivitäten(newAktivität, this.props.aktivität.id).then(aktivität =>
       this.setState({
         openUpdateAktivität: false
@@ -182,18 +200,34 @@ class AktivitätenDetail extends Component {
     });
   }
 
+  getTageVerbraucht = () => {
+    const timestamp = new Date(this.props.aktivität.timestamp)
+    const now = new Date()
+    const Days = Math.round((now-timestamp) /(1000 * 3600 * 24))
+    this.setState({
+     tageVerbraucht: Days
+    })
+
+  }
+
+  componentDidMount(){
+    this.getZeitintervallbuchungIst();
+    this.getTageVerbraucht()
+  }
+
   /** Renders the component */
   render() {
     const { user, aktivität, projektleiter, project} = this.props;
     const {openActivity, endFilter, startFilter, istBuchung, openCreateProjektarbeit, openUpdateAktivität,
-    bezeichnung, dauer, kapazität} = this.state;
-
+    bezeichnung, dauer, kapazität, zeitintervallbuchungIst, tageVerbraucht} = this.state;
+    var IstZeitdifferenz = 0
+    zeitintervallbuchungIst.map(buchung => IstZeitdifferenz += parseFloat(buchung.zeitdifferenz)) 
     return (
       <div>
       <Paper onClick={this.openActivityDetails} variant='outlined' class="paperaktivitäten">
         <div><strong>{bezeichnung}</strong></div>
-        <div><strong>{dauer}</strong> Tage übrig</div>
-        <div><strong>{kapazität}</strong>h übrig</div>
+        <div><strong>{tageVerbraucht}/{dauer}</strong> Tage</div>
+        <div><strong>{IstZeitdifferenz.toFixed(0)}/{kapazität}</strong>h</div>
         {projektleiter ? 
         <Button><DeleteIcon onClick={this.deleteAktivität} color="secondary"/>
           </Button>:null}

@@ -52,6 +52,7 @@ export class SingleProject extends Component {
           zeitintervallEnde: null,
           zeitintervallbuchungIst: [],
           zeitintervallbuchungSoll: [],
+          zeitdifferenzVerbraucht: 0
         };
     }
     
@@ -68,14 +69,15 @@ export class SingleProject extends Component {
       this.setState({
       });
     }
-
-    getProjektarbeitbuchungByProjectIst = () => {
-      OneAPI.getAPI().getProjektarbeitbuchungByProjectIst(this.props.user, this.props.project.id).then(zeitintervallbuchung =>
-        this.setState({
-          zeitintervallbuchungIst: zeitintervallbuchung
-        })
+  
+    getZeitdifferenzForProject= () => {
+      OneAPI.getAPI().getZeitdifferenzForProject(this.props.project.id).then(zeitdifferenz =>
+          this.setState({
+            zeitdifferenzVerbraucht: zeitdifferenz
+          })
         ).catch(e =>
           this.setState({ // Reset state with error from catch 
+           
           })
         );
       // set loading to true
@@ -83,19 +85,7 @@ export class SingleProject extends Component {
       });
     }
 
-    getProjektarbeitbuchungByProjectSoll = () => {
-      OneAPI.getAPI().getProjektarbeitbuchungByProjectSoll(this.props.user, this.props.project.id).then(zeitintervallbuchung =>
-        this.setState({
-          zeitintervallbuchungSoll: zeitintervallbuchung
-        })
-        ).catch(e =>
-          this.setState({ // Reset state with error from catch 
-          })
-        );
-      // set loading to true
-      this.setState({
-      });
-    }
+ 
 
     handleProjektleiterCheck = (projektleiter) => {
       if(projektleiter[0].id === this.props.user){
@@ -229,23 +219,11 @@ export class SingleProject extends Component {
             });
           };
           
-      transformProjektlaufzeitDate = (zeitintervall) => {
-        var Jahr = 0 
-        var Monat = 0
-        var Tag = 0
-        var dateFormat = 0
-        const zeitintervallDate = new Date(zeitintervall.zeitpunkt)
-        Jahr = zeitintervallDate.getFullYear()
-        Monat = zeitintervallDate.getMonth() + 1
-        Tag = zeitintervallDate.getDate()
-        dateFormat = `${String(Jahr).padStart(4, "0")}-${String(Monat).padStart(2, "0")}-${String(Tag).padStart(2, "0")}` 
-        return dateFormat
-      }
+
        getProjektlaufzeitAnfang = (zeitintervall) => {
          OneAPI.getAPI().getEreignis(zeitintervall[0].start).then(zeitintervallStart =>{
-                const Start = this.transformProjektlaufzeitDate(zeitintervallStart[0])
           this.setState({
-             zeitintervallStartTime: Start,
+             zeitintervallStartTime: zeitintervallStart[0].zeitpunkt,
              zeitintervallStart: zeitintervallStart[0],
              loadingInProgress: false, // loading indicator 
              loadingError: null
@@ -263,9 +241,8 @@ export class SingleProject extends Component {
 
            getProjektlaufzeitEnde = (zeitintervall) => {
             OneAPI.getAPI().getEreignis(zeitintervall[0].ende).then(zeitintervallEnde =>{
-              const Ende = this.transformProjektlaufzeitDate(zeitintervallEnde[0])
               this.setState({
-                zeitintervallEndeTime: Ende,
+                zeitintervallEndeTime: zeitintervallEnde[0].zeitpunkt,
                 zeitintervallEnde: zeitintervallEnde[0],
                 loadingInProgress: false, // loading indicator 
                 loadingError: null
@@ -282,7 +259,7 @@ export class SingleProject extends Component {
       });
     };
     updateLaufzeitStart = () => {
-      let zeitpunkt = this.state.zeitintervallStartTime + "T00:00"
+      let zeitpunkt = this.state.zeitintervallStartTime 
       let updatedEreignis = Object.assign(new EreignisBO(), this.state.zeitintervallStart);
       updatedEreignis.setZeitpunkt(zeitpunkt)
       OneAPI.getAPI().updateEreignis(updatedEreignis).then(zeitintervallStart =>{
@@ -304,7 +281,7 @@ export class SingleProject extends Component {
         });
         };
         updateLaufzeitEnde = () => {
-          let zeitpunkt = this.state.zeitintervallEndeTime + "T00:00"
+          let zeitpunkt = this.state.zeitintervallEndeTime 
           let updatedEreignis = Object.assign(new EreignisBO(), this.state.zeitintervallEnde);
           updatedEreignis.setZeitpunkt(zeitpunkt)
           OneAPI.getAPI().updateEreignis(updatedEreignis).then(zeitintervallEnde =>{
@@ -418,15 +395,14 @@ this.setState({
     this.loadAktivitäten();
     this.getMembersByProject();
     this.getProjektlaufzeit();
-    this.getProjektarbeitbuchungByProjectSoll();
-    this.getProjektarbeitbuchungByProjectIst();
+    this.getZeitdifferenzForProject();
     }
 
   render() {
     const {project, user} = this.props;
     const {openAkt, membership, aktivitäten, projektleiter, 
     isOpen, projektfarbe, loadingInProgress, openMember, projekttitel, projektName, laufZeit, auftragGeber, availableHours, 
-    zeitintervall, zeitintervallEndeTime, zeitintervallStartTime, zeitintervallbuchungIst, zeitintervallbuchungSoll, projektleiterIsUser} = this.state
+    zeitintervall, zeitintervallEndeTime, zeitdifferenzVerbraucht, zeitintervallStartTime, zeitintervallbuchungIst, zeitintervallbuchungSoll, projektleiterIsUser} = this.state
     var IstZeitdifferenz = 0
     zeitintervallbuchungIst.map(buchung => IstZeitdifferenz += parseFloat(buchung.zeitdifferenz))
     var sollZeitdifferenz = 0
@@ -439,7 +415,7 @@ this.setState({
           {projektName}
         </Typography>
         <Typography variant="body2"class="ProjektContent" >
-          Verfügbare Stunden: {availableHours}h<br/>
+          Verfügbare Stunden: {zeitdifferenzVerbraucht ? zeitdifferenzVerbraucht.toFixed(0): 0}/{availableHours}h<br/>
           Projektleiter: {projektleiter[0] ?
            projektleiter[0].vorname : null}
         </Typography>
@@ -506,7 +482,7 @@ this.setState({
             id="zeitintervallStartTime"
             label="Projektlaufzeit Von"
             value={zeitintervallStartTime}
-            type="date"
+            type="datetime-local"
             onChange={this.textFieldValueChange}
             InputLabelProps={{
               shrink: true,
@@ -518,7 +494,7 @@ this.setState({
             id="zeitintervallEndeTime"
             label="Projektlaufzeit Bis"
             value={zeitintervallEndeTime}
-            type="date"
+            type="datetime-local"
             onChange={this.textFieldValueChange}
             InputLabelProps={{
               shrink: true,
@@ -543,7 +519,7 @@ this.setState({
             label="Verfügbare Stunden"
             value={availableHours}
             onChange={this.textFieldValueChange}
-            />
+            /><Typography sx={{color:"red"}}>(-{zeitdifferenzVerbraucht.toFixed(1)}h)</Typography>
           </ListItem>
           <ListItem>
             <div class="addBtnFmly">
@@ -581,7 +557,7 @@ this.setState({
             id="zeitintervallStartTime"
             label="Projektlaufzeit Von"
             value={zeitintervallStartTime}
-            type="date"
+            type="datetime-local"
             onChange={this.textFieldValueChange}
             InputLabelProps={{
               shrink: true,
@@ -594,7 +570,7 @@ this.setState({
             id="zeitintervallEndeTime"
             label="Projektlaufzeit Bis"
             value={zeitintervallEndeTime}
-            type="date"
+            type="datetime-local"
             onChange={this.textFieldValueChange}
             InputLabelProps={{
               shrink: true,
@@ -621,7 +597,7 @@ this.setState({
             label="Verfügbare Stunden"
             value={availableHours}
             onChange={this.textFieldValueChange}
-            />
+            /><Typography sx={{color:"red"}}>(-{zeitdifferenzVerbraucht.toFixed(1)}h)</Typography>
           </ListItem>
           <Aktivitäten isOpen={openAkt} onClose={this.closeAkt} project={project} handleClose={this.addAktvität}>
             </Aktivitäten>
@@ -644,7 +620,7 @@ this.setState({
         Projektmitarbeiter
         </Typography> 
         {
-            membership.map(member => <MemberDetail key={member.id} istBuchungen={zeitintervallbuchungIst} sollBuchungen={zeitintervallbuchungSoll}
+            membership.map(member => <MemberDetail key={member.id}
             member={member} project={project.id} memberDeleted={this.memberDeleted} istStunden={IstZeitdifferenz} sollStunden={sollZeitdifferenz}
             projektleiter={projektleiterIsUser ? true:false}/> )
           }

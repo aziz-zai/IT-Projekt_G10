@@ -64,7 +64,7 @@ export class ProjektarbeitenSelection extends Component {
     return (
       <div>
         <div>
-      <FormControl sx={{ m: 1, minWidth: 120 }}> {console.log('test', user)}
+      <FormControl sx={{ m: 1, minWidth: 120 }}>
         <InputLabel variant="standard" htmlFor="uncontrolled-native">
           Projektarbeit
         </InputLabel>

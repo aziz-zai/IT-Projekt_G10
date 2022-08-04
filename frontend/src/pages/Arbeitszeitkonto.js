@@ -111,9 +111,9 @@ componentDidMount(){
         <LinearProgress sx={{marginTop: 12, marginBotton: 10}} color="secondary"/>:
         arbeitszeitKonto ?
         <div class="arbeitszeitKontoHeader">
-        <div class="azkHeaderItem">Arbeitsleistung: <strong>{arbeitszeitKonto[0].arbeitsleistung} </strong>Stunden</div>
+        <div class="azkHeaderItem">Arbeitsleistung: <strong>{arbeitszeitKonto[0].arbeitsleistung.toFixed(0)} </strong>Stunden</div>
        <div class="azkHeaderItem">Urlaubskonto: <strong>{arbeitszeitKonto[0].urlaubskonto} </strong>Tage</div>
-       <div class="azkHeaderItem">Gleitzeit: <strong>{arbeitszeitKonto[0].gleitzeit}</strong> Stunden</div>
+       <div class="azkHeaderItem">Gleitzeit: <strong>{arbeitszeitKonto[0].gleitzeit.toFixed(0)}</strong> Stunden</div>
        </div>:null}
        
        <button class="abwesenheitBtn" onClick={this.openAbwesenheit}> Abwesenheit </button>

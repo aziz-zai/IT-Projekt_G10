@@ -99,12 +99,14 @@ this.getZeitintervallbuchungSoll()
   render() {
       const {istBuchung} = this.props;
       const {zeitintervallbuchungIst, zeitintervallbuchungSoll, deletedSollTrue, deletedIstTrue} = this.state;
-      var IstZeitdifferenz = null
-      zeitintervallbuchungIst.map(buchung => IstZeitdifferenz += parseFloat(buchung.zeitdifferenz)) 
-      var sollZeitdifferenz = null
-      zeitintervallbuchungSoll.map(buchung => sollZeitdifferenz += parseFloat(buchung.zeitdifferenz)) 
+      var IstZeitdifferenz = 0
+      const projektarbeitIstBuchungen = zeitintervallbuchungIst.filter(buchung => buchung.bezeichnung == 'Projektarbeit') 
+      projektarbeitIstBuchungen.map(buchung => IstZeitdifferenz += parseFloat(buchung.zeitdifferenz)) 
+      var sollZeitdifferenz = 0
+      const projektarbeitSollBuchungen = zeitintervallbuchungSoll.filter(buchung => buchung.bezeichnung == 'Projektarbeit') 
+      projektarbeitSollBuchungen.map(buchung => sollZeitdifferenz += parseFloat(buchung.zeitdifferenz)) 
     return (
-      <div >{console.log('newSoll', zeitintervallbuchungSoll)}
+      <div >
           {istBuchung ?
         <div>
           <div>

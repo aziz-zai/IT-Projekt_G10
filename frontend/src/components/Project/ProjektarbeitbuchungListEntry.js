@@ -42,7 +42,7 @@ export class ProjektarbeitbuchungListEntry extends Component {
     OneAPI.getAPI().getKommen(zeitintervall.start).then(kommen =>{
         const ereignisZeitpunkt = new Date(kommen[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
-        const month = ereignisZeitpunkt.getMonth()
+        const month = ereignisZeitpunkt.getMonth() +1
         const day = ereignisZeitpunkt.getDate()
         const hour = ereignisZeitpunkt.getHours()
         const minute = ereignisZeitpunkt.getMinutes()
@@ -70,7 +70,7 @@ export class ProjektarbeitbuchungListEntry extends Component {
     OneAPI.getAPI().getGehen(zeitintervall.ende).then(gehen =>{
         const ereignisZeitpunkt = new Date(gehen[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
-        const month = ereignisZeitpunkt.getMonth()
+        const month = ereignisZeitpunkt.getMonth() +1
         const day = ereignisZeitpunkt.getDate()
         const hour = ereignisZeitpunkt.getHours()
         const minute = ereignisZeitpunkt.getMinutes()
@@ -97,7 +97,7 @@ export class ProjektarbeitbuchungListEntry extends Component {
     OneAPI.getAPI().getEreignis(zeitintervall.start).then(ereignis =>{
         const ereignisZeitpunkt = new Date(ereignis[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
-        const month = ereignisZeitpunkt.getMonth()
+        const month = ereignisZeitpunkt.getMonth() +1
         const day = ereignisZeitpunkt.getDate()
         const hour = ereignisZeitpunkt.getHours()
         const minute = ereignisZeitpunkt.getMinutes()
@@ -126,7 +126,7 @@ export class ProjektarbeitbuchungListEntry extends Component {
     OneAPI.getAPI().getEreignis(zeitintervall.ende).then(ereignis =>{
         const ereignisZeitpunkt = new Date(ereignis[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
-        const month = ereignisZeitpunkt.getMonth()
+        const month = ereignisZeitpunkt.getMonth() +1
         const day = ereignisZeitpunkt.getDate()
         const hour = ereignisZeitpunkt.getHours()
         const minute = ereignisZeitpunkt.getMinutes()
@@ -346,7 +346,7 @@ componentDidMount() {
           <AccordionDetails sx={{backgroundColor:"#54377550"}}>
               {erstellt_von ?
               <div class="erstellerIntervall">
-           {erstellt_von[0].vorname}  {erstellt_von[0].nachname}&nbsp;&nbsp;<DoubleArrowIcon sx={{color:"#5e2e94"}}/>&nbsp;&nbsp;{erstellt_fuer[0].vorname}  {erstellt_fuer[0].nachname}</div>:null}
+           {erstellt_von[0].vorname ? erstellt_von[0].vorname :null}  {erstellt_von[0].nachname ? erstellt_von[0].nachname :null}&nbsp;&nbsp;<DoubleArrowIcon sx={{color:"#5e2e94"}}/>&nbsp;&nbsp;{erstellt_fuer[0].vorname}  {erstellt_fuer[0].nachname}</div>:null}
               {(buchung.bezeichnung == 'Projektarbeit') ? zeitintervall ?<div>Tätigkeitsbeschreibung: {zeitintervall.beschreibung}</div>:null:null}
           </AccordionDetails>
         </Accordion>

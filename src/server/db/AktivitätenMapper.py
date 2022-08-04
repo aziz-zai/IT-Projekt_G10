@@ -61,7 +61,7 @@ class AktivitätenMapper(Mapper):
         for (id, timestamp, bezeichnung, dauer, capacity, project) in tuples:
             aktivitäten = Aktivitäten()
             aktivitäten.set_id(id),
-            aktivitäten.set_timestamp(timestamp),
+            aktivitäten.set_timestamp(timestamp.strftime("%Y-%m-%dT%H:%M")),
             aktivitäten.set_bezeichnung(bezeichnung),
             aktivitäten.set_dauer(dauer),
             aktivitäten.set_capacity(capacity),

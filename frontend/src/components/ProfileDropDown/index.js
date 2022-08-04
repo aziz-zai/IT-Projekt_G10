@@ -95,7 +95,7 @@ export class ProfileDropDown extends Component {
           user ?
             <div>
               <IconButton  ref={this.#avatarButtonRef} onClick={this.handleAvatarButtonClick}>
-                <Avatar src={user.photoURL} />
+                <Avatar src={user.photoURL} ><AccountCircleIcon/></Avatar>
               </IconButton>
               <Popover open={open} anchorEl={this.#avatarButtonRef.current} onClose={this.handleClose}
                 anchorOrigin={{
@@ -136,10 +136,7 @@ export class ProfileDropDown extends Component {
               </Popover>
               {deleteDialog?
               <Dialog open={deleteDialog}>
-                {console.log("delete", deleteDialog)}
                 <DialogTitle id='delete-dialog-title'>Profil löschen                 
-                {console.log("user.id?", this.props.dbuser)}
-
             <IconButton sx={{ position: 'absolute', right: 1, top: 1, color: 'grey[500]' }} onClick={this.closeDeleteDialog}>
               <CloseIcon />
             </IconButton>

@@ -205,6 +205,7 @@ export default class OneAPI {
     `${this.#OneServerBaseURL}/zeitintervall/${id}`;
   #deleteZeitintervallURL = (id) =>
     `${this.#OneServerBaseURL}/zeitintervall/${id}`;
+  #getZeitdifferenzForProjectURL = (project) => `${this.#OneServerBaseURL}/zeitintervallbuchung-ist-by-project/${project}`;
 
   /**
    * Get the Singelton instance
@@ -1340,6 +1341,15 @@ export default class OneAPI {
         let zeitintervallBOs = ZeitintervallBO.fromJSON(responseJSON);
         return new Promise(function (resolve) {
           resolve(zeitintervallBOs);
+        });
+      }
+    );
+  }
+  getZeitdifferenzForProject(project) {
+    return this.#fetchAdvanced(this.#getZeitdifferenzForProjectURL(project)).then(
+      (responseJSON) => {
+        return new Promise(function (resolve) {
+          resolve(responseJSON);
         });
       }
     );

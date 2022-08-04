@@ -16,7 +16,9 @@ export class Membership extends Component {
           deletingInProgress: false,
           deletingError: null,
           istStunden: 0,
-          sollStunden: 0
+          sollStunden: 0,
+          zeitintervallbuchungIst: [],
+          zeitintervallbuchungSoll: []
         };
          // save this state for canceling
         this.baseState = this.state;
@@ -43,19 +45,50 @@ export class Membership extends Component {
       });
     }
 
-    componentDidMount(){
-      const userBuchungenIst = this.props.istBuchungen.filter(buchung => buchung.erstellt_für == this.props.member.id)
-      const userBuchungenSoll = this.props.sollBuchungen.filter(buchung => buchung.erstellt_für == this.props.member.id)
-      console.log('userbuch', userBuchungenIst, userBuchungenSoll)
-      var ist = 0
-      var soll = 0
-      userBuchungenIst.map(buchung => ist += parseFloat(buchung.zeitdifferenz))
-      userBuchungenSoll.map(buchung => soll += parseFloat(buchung.zeitdifferenz))
+    getProjektarbeitbuchungByProjectIst = () => {
+      OneAPI.getAPI().getProjektarbeitbuchungByProjectIst(this.props.member.id, this.props.project).then(zeitintervallbuchung =>{
+        this.setState({
+          zeitintervallbuchungIst: zeitintervallbuchung
+        })
+        var ist = 0
+        zeitintervallbuchung.map(buchung => ist += parseFloat(buchung.zeitdifferenz))
+        this.setState({
+          istStunden: ist
+        }) 
+      }
+        ).catch(e =>
+          this.setState({ // Reset state with error from catch 
+          })
+        );
+      // set loading to true
       this.setState({
-        istStunden: ist,
-        sollStunden: soll
-      })
-      console.log('istsoll',ist,soll)
+      });
+    }
+
+    getProjektarbeitbuchungByProjectSoll = () => {
+      OneAPI.getAPI().getProjektarbeitbuchungByProjectSoll(this.props.member.id, this.props.project).then(zeitintervallbuchung =>{
+        this.setState({
+          zeitintervallbuchungSoll: zeitintervallbuchung
+        })
+        var soll = 0
+        zeitintervallbuchung.map(buchung => soll += parseFloat(buchung.zeitdifferenz))
+        this.setState({
+          sollStunden: soll
+        }) 
+      
+      }
+        ).catch(e =>
+          this.setState({ // Reset state with error from catch 
+          })
+        );
+      // set loading to true
+      this.setState({
+      });
+    }
+
+    componentDidMount(){
+    this.getProjektarbeitbuchungByProjectIst();
+    this.getProjektarbeitbuchungByProjectSoll();
     }
 
     render() {

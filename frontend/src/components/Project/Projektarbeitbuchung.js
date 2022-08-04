@@ -19,7 +19,7 @@ export class Projektarbeitbuchung extends Component {
   }
 
   getZeitintervallbuchungIst = () => {
-    OneAPI.getAPI().getProjektarbeitbuchungIst(this.props.user, this.props.startFilter, this.props.endFilter, this.props.activityid).then(buchungen =>
+    OneAPI.getAPI().getProjektarbeitbuchungIst(0, this.props.startFilter, this.props.endFilter, this.props.activityid).then(buchungen =>
       this.setState({
         zeitintervallbuchungIst: buchungen,
       })
@@ -33,7 +33,7 @@ export class Projektarbeitbuchung extends Component {
   }
 
   getZeitintervallbuchungSoll = () => {
-    OneAPI.getAPI().getProjektarbeitbuchungSoll(this.props.user, this.props.startFilter, this.props.endFilter, this.props.activityid).then(buchungen =>
+    OneAPI.getAPI().getProjektarbeitbuchungSoll(0, this.props.startFilter, this.props.endFilter, this.props.activityid).then(buchungen =>
       this.setState({
         zeitintervallbuchungSoll: buchungen,
         
@@ -80,9 +80,9 @@ this.getZeitintervallbuchungSoll()
   render() {
       const {istBuchung, user} = this.props;
       const {zeitintervallbuchungIst, zeitintervallbuchungSoll, deletedSollTrue, deletedIstTrue} = this.state;
-      var IstZeitdifferenz = null
+      var IstZeitdifferenz = 0
       zeitintervallbuchungIst.map(buchung => IstZeitdifferenz += parseFloat(buchung.zeitdifferenz)) 
-      var sollZeitdifferenz = null
+      var sollZeitdifferenz = 0
       zeitintervallbuchungSoll.map(buchung => sollZeitdifferenz += parseFloat(buchung.zeitdifferenz)) 
     return (
       <div > 

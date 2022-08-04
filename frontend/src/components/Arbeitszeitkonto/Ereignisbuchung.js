@@ -150,8 +150,8 @@ export class Ereignisbuchung extends Component {
                   <EreignisbuchungListEntry
                     key={ereignisbuchung.getID()}
                     ereignisbuchung={ereignisbuchung}
-                    istBuchung={true}
-                    ereignisbuchungSollDeleted={this.EreignisbuchungIstDeleted}
+                    istBuchung={false}
+                    ereignisbuchungSollDeleted={this.EreignisbuchungSollDeleted}
                   />
                 ))
               : null}

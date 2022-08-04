@@ -419,7 +419,7 @@ class Administration(object):
         for buchung in zeitintervallbuchungen:
             projektarbeit = self.get_projektarbeit_by_id(buchung.get_zeitintervall())
             if (buchung.get_bezeichnung() == "Projektarbeit") and (
-                projektarbeit.get_activity() == activity
+                projektarbeit.get_activity() == activity and buchung.get_ist_buchung() == False
             ):
                 result.append(buchung)
         return result
@@ -428,6 +428,7 @@ class Administration(object):
         self, user, startFilter, endFilter, activity
     ):
         """Gibt die Ist-Projektarbeitbuchung anhand einer Zeitspanne, die als Filter genutzt wird, zurück."""
+        
         zeitintervallbuchungen = self.get_ist_zeitintervallbuchungen_by_zeitspanne(
             user, startFilter, endFilter
         )
@@ -435,7 +436,7 @@ class Administration(object):
         for buchung in zeitintervallbuchungen:
             projektarbeit = self.get_projektarbeit_by_id(buchung.get_zeitintervall())
             if (buchung.get_bezeichnung() == "Projektarbeit") and (
-                projektarbeit.get_activity() == activity
+                projektarbeit.get_activity() == activity and buchung.get_ist_buchung() == True
             ):
                 result.append(buchung)
         return result
@@ -445,7 +446,7 @@ class Administration(object):
         buchungen_of_user = self.get_ist_zeitintervallbuchungen_by_user(user)
         result = []
         for buchung in buchungen_of_user:
-            if buchung.get_bezeichnung() == "Projektarbeit":
+            if buchung.get_bezeichnung() == "Projektarbeit" and buchung.get_erstellt_für() == user:
                 projektarbeit = self.get_projektarbeit_by_id(
                     buchung.get_zeitintervall()
                 )
@@ -454,12 +455,16 @@ class Administration(object):
                     result.append(buchung)
         return result
 
+    def get_ist_buchungen_for_project(self, project):
+        with ZeitintervallbuchungMapper() as mapper:
+            return mapper.find_ist_buchungen_by_project(project)
+
     def get_soll_buchungen_by_project(self, user, project):
         """GIbt die Soll-Buchungen eines Users im Projekt zurück."""
         buchungen_of_user = self.get_soll_zeitintervallbuchungen_by_user(user)
         result = []
         for buchung in buchungen_of_user:
-            if buchung.get_bezeichnung() == "Projektarbeit":
+            if buchung.get_bezeichnung() == "Projektarbeit" and buchung.get_erstellt_für() == user:
                 projektarbeit = self.get_projektarbeit_by_id(
                     buchung.get_zeitintervall()
                 )
@@ -472,7 +477,11 @@ class Administration(object):
         self, user, startFilter, endFilter
     ):
         """Gibt die SOll-Zeitintervallbuchungen anhand einer Zeitspanne, die als Filter genutzt wird, zurück."""
-        zeitintervallbuchungen = self.get_soll_zeitintervallbuchungen_by_user(user)
+        zeitintervallbuchungen = []
+        if (user == 0):
+            zeitintervallbuchungen = self.get_all_zeitintervallbuchungen()
+        else:
+            zeitintervallbuchungen = self.get_soll_zeitintervallbuchungen_by_user(user)
         if (startFilter != "null" or "") and (endFilter != "null" or ""):
             startTime = datetime.strptime(startFilter, "%Y-%m-%dT%H:%M")
             endTime = datetime.strptime(endFilter, "%Y-%m-%dT%H:%M")
@@ -518,7 +527,11 @@ class Administration(object):
         self, user, startFilter, endFilter
     ):
         """Gibt die Ist-Zeitintervallbuchungen anhand einer Zeitspanne, die als Filter genutzt wird, zurück."""
-        zeitintervallbuchungen = self.get_ist_zeitintervallbuchungen_by_user(user)
+        zeitintervallbuchungen = []
+        if (user == 0):
+            zeitintervallbuchungen = self.get_all_zeitintervallbuchungen()
+        else:
+            zeitintervallbuchungen = self.get_ist_zeitintervallbuchungen_by_user(user)
         if (startFilter != "null" or "") and (endFilter != "null" or ""):
             startTime = datetime.strptime(startFilter, "%Y-%m-%dT%H:%M")
             endTime = datetime.strptime(endFilter, "%Y-%m-%dT%H:%M")
@@ -563,6 +576,10 @@ class Administration(object):
     def get_ist_zeitintervallbuchungen_by_user(self, erstellt_für):
         with ZeitintervallbuchungMapper() as mapper:
             return mapper.find_ist_buchungen_by_user(erstellt_für)
+
+    def get_all_zeitintervallbuchungen(self):
+        with ZeitintervallbuchungMapper() as mapper:
+            return mapper.find_all_buchungen()
 
     def get_ist_projektarbeit_buchungen_by_user(self, erstellt_für):
         with ZeitintervallbuchungMapper() as mapper:

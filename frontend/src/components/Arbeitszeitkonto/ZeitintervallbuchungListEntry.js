@@ -39,7 +39,8 @@ export class ZeitintervallbuchungListEntry extends Component {
         zeitintervall: null,
         openUpdateForm: false,
         loading: false,
-        buch: this.props.buchung
+        buch: this.props.buchung,
+        istDifferenz: this.props.buchung.zeitdifferenz + "h",
     };
   }
 
@@ -48,7 +49,7 @@ export class ZeitintervallbuchungListEntry extends Component {
     OneAPI.getAPI().getKommen(ereignisID).then(kommen =>{
         const ereignisZeitpunkt = new Date(kommen[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
-        const month = ereignisZeitpunkt.getMonth()
+        const month = ereignisZeitpunkt.getMonth() +1
         const day = ereignisZeitpunkt.getDate()
         const hour = ereignisZeitpunkt.getHours()
         const minute = ereignisZeitpunkt.getMinutes()
@@ -78,7 +79,7 @@ export class ZeitintervallbuchungListEntry extends Component {
     OneAPI.getAPI().getGehen(ereignisID).then(gehen =>{
         const ereignisZeitpunkt = new Date(gehen[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
-        const month = ereignisZeitpunkt.getMonth()
+        const month = ereignisZeitpunkt.getMonth() +1
         const day = ereignisZeitpunkt.getDate()
         const hour = ereignisZeitpunkt.getHours()
         const minute = ereignisZeitpunkt.getMinutes()
@@ -108,7 +109,7 @@ export class ZeitintervallbuchungListEntry extends Component {
     OneAPI.getAPI().getEreignis(ereignisID).then(ereignis =>{
         const ereignisZeitpunkt = new Date(ereignis[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
-        const month = ereignisZeitpunkt.getMonth()
+        const month = ereignisZeitpunkt.getMonth() +1
         const day = ereignisZeitpunkt.getDate()
         const hour = ereignisZeitpunkt.getHours()
         const minute = ereignisZeitpunkt.getMinutes()
@@ -138,7 +139,7 @@ export class ZeitintervallbuchungListEntry extends Component {
     OneAPI.getAPI().getEreignis(ereignisID).then(ereignis =>{
         const ereignisZeitpunkt = new Date(ereignis[0].zeitpunkt)
         const year = ereignisZeitpunkt.getFullYear()
-        const month = ereignisZeitpunkt.getMonth()
+        const month = ereignisZeitpunkt.getMonth() +1
         const day = ereignisZeitpunkt.getDate()
         const hour = ereignisZeitpunkt.getHours()
         const minute = ereignisZeitpunkt.getMinutes()
@@ -207,8 +208,8 @@ export class ZeitintervallbuchungListEntry extends Component {
       })
         return zeitintervall}
       ).then(zeitintervall=>{
-        this.getEreignis1ById(zeitintervall[0]);
-        this.getEreignis2ById(zeitintervall[0])
+        this.getEreignis1ById(zeitintervall[0].start);
+        this.getEreignis2ById(zeitintervall[0].ende)
       }).catch(e =>
         this.setState({ // Reset state with error from catch 
 
@@ -250,7 +251,8 @@ export class ZeitintervallbuchungListEntry extends Component {
       return zeitintervall}
       ).then(zeitintervall=>{
         this.getEreignis1ById(zeitintervall[0].start);
-        this.getEreignis2ById(zeitintervall[0].ende)
+        this.getEreignis2ById(zeitintervall[0].ende);
+        this.istDifferenz();
       }).catch(e =>
         this.setState({ // Reset state with error from catch 
 
@@ -270,8 +272,8 @@ export class ZeitintervallbuchungListEntry extends Component {
       })
       return zeitintervall}
       ).then(zeitintervall=>{
-        this.getEreignis1ById(zeitintervall[0]);
-        this.getEreignis2ById(zeitintervall[0])
+        this.getEreignis1ById(zeitintervall[0].start);
+        this.getEreignis2ById(zeitintervall[0].ende)
       }).catch(e =>
         this.setState({ // Reset state with error from catch 
 
@@ -363,6 +365,15 @@ export class ZeitintervallbuchungListEntry extends Component {
     })
   }
 
+  istDifferenz(){
+    if(this.state.zeitintervall.bezeichnung == 'Urlaub' || 'Krankheitsausfall' || 'Gleitzeit'){
+      const dif = Math.round(this.props.buchung.zeitdifferenz/24)
+      this.setState({
+        istDifferenz: dif + " Tage"
+      })
+    }
+  }
+
 componentDidMount() {
   if(this.props.buchung){
     if(this.props.buchung.bezeichnung == 'Projektlaufzeit'){
@@ -376,12 +387,13 @@ componentDidMount() {
     }
     else if(this.props.buchung.bezeichnung == 'Pause'){
       this.getPause();
-    }}
+    }
+  }
 }
   render() {
       const {buchung} = this.props;
       const {expandState, buch,  ereignis1, ereignis1Year, ereignis1Month, ereignis1Day,ereignis1Hour, ereignis1Minute, ereignis1Second, 
-        ereignis2, ereignis2Year, ereignis2Month, zeitintervall, ereignis2Day,ereignis2Hour, ereignis2Minute, ereignis2Second, erstellt_von, erstellt_fuer, openUpdateForm} = this.state;
+        ereignis2, ereignis2Year, ereignis2Month, zeitintervall, istDifferenz, ereignis2Day,ereignis2Hour, ereignis2Minute, ereignis2Second, erstellt_von, erstellt_fuer, openUpdateForm} = this.state;
     return (
       <div>
         <Accordion TransitionProps={{ unmountOnExit: true }} defaultExpanded={false} expanded={expandState} sx={{backgroundColor:"#5e2e942d", marginLeft: 1, marginRight:1}}>
@@ -410,7 +422,7 @@ componentDidMount() {
                </div>
               </Grid>
               <Grid item>
-                    {buch.ist_buchung ?<Typography sx={{color: "green"}}> IST: {buch.zeitdifferenz}h</Typography>:<Typography sx={{color: "red"}}> SOLL: {buch.zeitdifferenz}h</Typography>}
+                    {buch.ist_buchung ?<Typography sx={{color: "green"}}> IST: {istDifferenz}</Typography>:<Typography sx={{color: "red"}}> SOLL: {buch.zeitdifferenz}h</Typography>}
               </Grid>
               <Grid item>
                 <ButtonGroup variant='text' size='small'>
@@ -431,7 +443,7 @@ componentDidMount() {
           <AccordionDetails sx={{backgroundColor:"#54377550"}}>
               {erstellt_von ?
               <div class="erstellerIntervall">
-           {erstellt_von[0].vorname}  {erstellt_von[0].nachname}&nbsp;&nbsp;<DoubleArrowIcon sx={{color:"#5e2e94"}}/>&nbsp;&nbsp;{erstellt_fuer[0].vorname}  {erstellt_fuer[0].nachname}</div>:null}
+           {erstellt_von[0].vorname ? erstellt_von[0].vorname:null}  {erstellt_von[0].nachname ? erstellt_von[0].nachname :null}&nbsp;&nbsp;<DoubleArrowIcon sx={{color:"#5e2e94"}}/>&nbsp;&nbsp;{erstellt_fuer[0].vorname}  {erstellt_fuer[0].nachname}</div>:null}
               {(buchung.bezeichnung == 'Projektarbeit') ? zeitintervall ?<div>Tätigkeitsbeschreibung: {zeitintervall.beschreibung}</div>:null:null}
           </AccordionDetails>
         </Accordion>

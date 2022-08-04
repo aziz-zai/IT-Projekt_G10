@@ -13,6 +13,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import ReplacementImage from '../media/ReplacementAvatar.svg'
 
 export class MyProfile extends Component {
   constructor(props) {
@@ -131,6 +132,9 @@ export class MyProfile extends Component {
                   class="ProfileAvatar"
                   src={Cuser.photoURL}
                   alt="No Profilephoto"
+                  onError={(e) => {
+                    e.target.src = ReplacementImage //replacement image imported above
+                 }}
                 />
               </div>
               <div class="ProfileContent">

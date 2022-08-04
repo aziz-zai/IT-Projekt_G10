@@ -37,7 +37,6 @@
     height: 100%;
     -o-object-fit: cover;
     object-fit: cover;
-    background: #232a34;
 }
 
 .homeContent{
@@ -48,6 +47,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: -9rem
 }
 
 .homeTitle{

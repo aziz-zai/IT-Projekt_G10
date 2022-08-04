@@ -99,7 +99,7 @@ updateGehen = () => {
 updateEreignis = (zeitpunkt, obj, isEreignis1) => {
   let newEreignis = Object.assign(new EreignisBO(), obj);
   newEreignis.setZeitpunkt(zeitpunkt)
-  OneAPI.getAPI().updateKommen(newEreignis, obj.id).then(ereignis =>{
+  OneAPI.getAPI().updateEreignis(newEreignis, obj.id).then(ereignis =>{
     if(isEreignis1){
     this.props.saveEreignis1(ereignis)
     }

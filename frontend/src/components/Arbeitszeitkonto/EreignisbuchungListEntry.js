@@ -16,6 +16,7 @@ import TimerIcon from "@mui/icons-material/Timer";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
 import LoadingProgress from "../Dialogs/LoadingProgress";
+import EreignisbuchungUpdateForm from "./EreignisbuchungUpdateForm";
 
 export class EreignisbuchungListEntry extends Component {
   // Init state
@@ -32,18 +33,20 @@ export class EreignisbuchungListEntry extends Component {
       ereignisSecond: null,
       erstellt_fuer: null,
       erstellt_von: null,
-      loading: false
+      loading: false,
+      openUpdateForm: false
     };
   }
 
   // Hole das Kommen der ereignisbuchung
-  getKommenById = () => {
+  getKommenById = (ereignisId) => {
+    const ereignisID = ereignisId ? ereignisId : this.props.ereignisbuchung.ereignis 
     OneAPI.getAPI()
-      .getKommen(this.props.ereignisbuchung.ereignis)
+      .getKommen(ereignisID)
       .then((kommen) => {
         const ereignisZeitpunkt = new Date(kommen[0].zeitpunkt);
         const year = ereignisZeitpunkt.getFullYear();
-        const month = ereignisZeitpunkt.getMonth();
+        const month = ereignisZeitpunkt.getMonth() +1;
         const day = ereignisZeitpunkt.getDate();
         const hour = ereignisZeitpunkt.getHours();
         const minute = ereignisZeitpunkt.getMinutes();
@@ -70,13 +73,14 @@ export class EreignisbuchungListEntry extends Component {
 
   
   // Hole das Gehen der ereignisbuchung
-  getGehenById = () => {
+  getGehenById = (ereignisId) => {
+    const ereignisID = ereignisId ? ereignisId : this.props.ereignisbuchung.ereignis 
     OneAPI.getAPI()
-      .getGehen(this.props.ereignisbuchung.ereignis)
+      .getGehen(ereignisID)
       .then((gehen) => {
         const ereignisZeitpunkt = new Date(gehen[0].zeitpunkt);
         const year = ereignisZeitpunkt.getFullYear();
-        const month = ereignisZeitpunkt.getMonth();
+        const month = ereignisZeitpunkt.getMonth() +1;
         const day = ereignisZeitpunkt.getDate();
         const hour = ereignisZeitpunkt.getHours();
         const minute = ereignisZeitpunkt.getMinutes();
@@ -102,13 +106,14 @@ export class EreignisbuchungListEntry extends Component {
   };
   
   // Hole das Ereignis der ereignisbuchung
-  getEreignisById = () => {
+  getEreignisById = (ereignisId) => {
+    const ereignisID = ereignisId ? ereignisId : this.props.ereignisbuchung.ereignis 
     OneAPI.getAPI()
-      .getEreignis(this.props.ereignisbuchung.ereignis)
+      .getEreignis(ereignisID)
       .then((ereignis) => {
         const ereignisZeitpunkt = new Date(ereignis[0].zeitpunkt);
         const year = ereignisZeitpunkt.getFullYear();
-        const month = ereignisZeitpunkt.getMonth();
+        const month = ereignisZeitpunkt.getMonth() +1;
         const day = ereignisZeitpunkt.getDate();
         const hour = ereignisZeitpunkt.getHours();
         const minute = ereignisZeitpunkt.getMinutes();
@@ -198,12 +203,42 @@ export class EreignisbuchungListEntry extends Component {
       expandState: !this.state.expandState,
     });
     {
-      console.log("expandState", this.state.expandState);
     }
     this.getErstelltFuerById();
     this.getErstelltVonById();
   };
 
+  openUpdateForm = () =>{
+    this.setState({
+      openUpdateForm: true,
+    })
+  }
+  closeUpdateForm = () =>{
+    this.setState({
+      openUpdateForm: false,
+    })
+  }
+  saveGehen = (obj) =>{
+    this.getGehenById(obj.id)
+    this.setState({
+      ereignis: obj,
+      openUpdateForm: false
+    })
+  }
+  saveKommen = (obj) =>{
+    this.getKommenById(obj.id)
+    this.setState({
+      ereignis: obj,
+      openUpdateForm: false
+    })
+  }
+  saveEreignis = (obj) =>{
+    this.getEreignisById(obj.id)
+    this.setState({
+      ereignis: obj,
+      openUpdateForm: false
+    })
+  }
   componentDidMount() {
     if (this.props.ereignisbuchung.bezeichnung == "Arbeitsbeginn") {
       this.getKommenById();
@@ -226,7 +261,7 @@ export class EreignisbuchungListEntry extends Component {
       ereignisSecond,
       erstellt_von,
       erstellt_fuer,
-      loading} = this.state;
+      loading, openUpdateForm} = this.state;
     return (
       <div>
         <Accordion
@@ -284,7 +319,10 @@ export class EreignisbuchungListEntry extends Component {
               <Grid item>
                 <ButtonGroup variant="text" size="small">
                   <Button color="primary">
-                    <EditIcon />
+                    <EditIcon onClick={this.openUpdateForm}/>
+                    <EreignisbuchungUpdateForm show={openUpdateForm} 
+                    onClose={this.closeUpdateForm} ereignis={ereignis} buchung={ereignisbuchung}
+                    saveKommen={this.saveKommen} saveGehen={this.saveGehen} saveEreignis={this.saveEreignis}/>
                   </Button>
                   <Button
                     color="secondary"

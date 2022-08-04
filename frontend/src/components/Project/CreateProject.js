@@ -76,7 +76,7 @@ export class CreateProject extends Component {
 
   //ProjektlaufzeitBeginn hinzuüfen dem Projekt
   addProjektlaufzeitAnfang = () => {
-    let zeitpunkt = this.state.projektlaufzeitAnfang + "T00:00"
+    let zeitpunkt = this.state.projektlaufzeitAnfang 
     let newProjektlaufzeitEreignis = new EreignisBO(zeitpunkt, "Projektanfang" );
     OneAPI.getAPI().addProjektlaufzeitBeginn(newProjektlaufzeitEreignis, this.props.user[0].id, this.state.projektName).then(ereignis => {
       // Backend call sucessfull
@@ -99,7 +99,7 @@ export class CreateProject extends Component {
 
 //Projektlaufzeit Ende dem Projekt hinzuüfne
 addProjektlaufzeitEnde = (ereignis) => {
-  let zeitpunkt = this.state.projektlaufzeitAnfang + "T00:00"
+  let zeitpunkt = this.state.projektlaufzeitEnde
   let newProjektlaufzeitEreignis = new EreignisBO(zeitpunkt, "Projektende" );
   OneAPI.getAPI().addProjektlaufzeitEnde(newProjektlaufzeitEreignis, this.props.user[0].id, ereignis.id, this.state.projektName).then(zeitintervall => {
     // Backend call sucessfull
@@ -186,7 +186,7 @@ textFieldValueChange = (event) => {
             id="projektlaufzeitAnfang"
             label="Projektlaufzeit Von"
             value={projektlaufzeitAnfang}
-            type="date"
+            type="datetime-local"
             onChange={this.textFieldValueChange}
             InputLabelProps={{
               shrink: true,
@@ -198,7 +198,7 @@ textFieldValueChange = (event) => {
             id="projektlaufzeitEnde"
             label="Projektlaufzeit Bis"
             value={projektlaufzeitEnde}
-            type="date"
+            type="datetime-local"
             onChange={this.textFieldValueChange}
             InputLabelProps={{
               shrink: true,

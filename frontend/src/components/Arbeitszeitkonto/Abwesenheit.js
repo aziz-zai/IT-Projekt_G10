@@ -81,7 +81,6 @@ export class Abwesenheit extends Component {
           this.setState({
             // Reset state with error from catch
           }),
-        console.log("sadsad")
       );
     // set loading to true
     this.setState({});
@@ -132,7 +131,6 @@ export class Abwesenheit extends Component {
         aria-describedby="alert-dialog-description"
       >
         {" "}
-        {console.log("check", this.state.abwesenheitOhneEnde)}
         <DialogTitle id="alert-dialog-title">Abwesenheit erfassen</DialogTitle>
         <DialogContent>
           <DialogContentText>Abwesenheitsart wählen:</DialogContentText>

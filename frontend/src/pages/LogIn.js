@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './LogIn.css'
-import Video from '../media/background.mp4'
+import background from '../media/background.jpg'
 import NavBar from '../components/NavBar'
 import { FcGoogle } from 'react-icons/fc';
 import SideBar from '../components/SideBar'
@@ -39,7 +39,7 @@ export class LogIn extends Component {
             <>  
 			<div className="homeContainer">
                 <div className="homeBackground">
-                    <video className="homeVideo" autoPlay loop muted src={Video} type='video/mp4' ></video>
+                    <img className="homeVideo" src={background}  ></img>
                 </div>
                 <div className="homeContent">
                     <h1 className="homeTitle">Project.ONE</h1>

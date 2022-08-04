@@ -170,6 +170,42 @@ class ZeitintervallbuchungMapper(Mapper):
 
         return result
 
+    def find_all_buchungen(self):
+        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,"""
+        cursor = self._cnx.cursor()
+        command = """SELECT id, timestamp, erstellt_von, erstellt_für, ist_buchung,zeitintervall, bezeichnung, zeitdifferenz 
+        FROM projectone.zeitintervallbuchung
+        """
+        cursor.execute(command)
+        tuples = cursor.fetchall()
+        result = []
+
+        for (
+            id,
+            timestamp,
+            erstellt_von,
+            erstellt_für,
+            ist_buchung,
+            zeitintervall,
+            bezeichnung,
+            zeitdifferenz,
+        ) in tuples:
+            zeitintervallbuchung = Zeitintervallbuchung()
+            zeitintervallbuchung.set_id(id)
+            zeitintervallbuchung.set_timestamp(timestamp)
+            zeitintervallbuchung.set_erstellt_von(erstellt_von)
+            zeitintervallbuchung.set_erstellt_für(erstellt_für)
+            zeitintervallbuchung.set_ist_buchung(ist_buchung)
+            zeitintervallbuchung.set_zeitintervall(zeitintervall)
+            zeitintervallbuchung.set_bezeichnung(bezeichnung)
+            zeitintervallbuchung.set_zeitdifferenz(zeitdifferenz)
+            result.append(zeitintervallbuchung)
+
+        self._cnx.commit()
+        cursor.close()
+
+        return result
+
     def find_ist_buchungen_by_user(self, user):
         """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,"""
         cursor = self._cnx.cursor()
@@ -209,6 +245,26 @@ class ZeitintervallbuchungMapper(Mapper):
         cursor.close()
 
         return result
+
+    def find_ist_buchungen_by_project(self, project):
+        """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,"""
+        cursor = self._cnx.cursor()
+        command = """SELECT SUM(zeitdifferenz)
+        FROM projectone.zeitintervallbuchung
+        WHERE bezeichnung = 'Projektarbeit' AND ist_buchung = True
+        AND zeitintervall in (SELECT id FROM projektarbeit
+        WHERE activity in (SELECT id FROM activity WHERE project in (SELECT id FROM project WHERE id={})))
+        """.format(project)
+        cursor.execute(command)
+        result = 0
+        result = cursor.fetchone()
+
+        self._cnx.commit()
+        cursor.close()
+        if result[0] is None:
+            return 0
+        else:
+            return result[0]
 
     def find_pause_buchungen_by_user(self, user):
         """Suchen eines Benutzers mit vorgegebener User ID. Da diese eindeutig ist,"""

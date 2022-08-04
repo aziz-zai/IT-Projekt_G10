@@ -24,7 +24,6 @@ from server.bo.ProjectBO import Project
 from server.bo.ArbeitszeitkontoBO import Arbeitszeitkonto
 from server.bo.ZeitintervallbuchungBO import Zeitintervallbuchung
 from server.bo.AbwesenheitBO import Abwesenheit
-
 from datetime import datetime
 
 # Außerdem nutzen wir einen selbstgeschriebenen Decorator, der die Authentifikation übernimmt
@@ -35,7 +34,7 @@ from SecurityDecorator import secured
 """
 Instanzieren von Flask. Am Ende dieser Datei erfolgt dann erst der 'Start' von Flask.
 """
-app = Flask(__name__, static_folder="./build", static_url_path='/')
+app = Flask(__name__, static_folder='./build', static_url_path='/')
 
 """
 Alle Ressourcen mit dem Präfix /projectone für **Cross-Origin Resource Sharing** (CORS) freigeben.
@@ -56,6 +55,7 @@ def handle_404(e):
         return "Fehler", 404
     else:
         return redirect(url_for('index'))
+
 """
 In dem folgenden Abschnitt bauen wir ein Modell auf, das die Datenstruktur beschreibt, 
 auf deren Basis Clients und Server Daten austauschen. Grundlage hierfür ist das Package flask-restx. 
@@ -850,6 +850,8 @@ class AktivitätenOperations(Resource):
 
         adm = Administration()
         ak = Aktivitäten.from_dict(api.payload)
+        timestamp = datetime.strptime(api.payload['timestamp'], "%Y-%m-%dT%H:%M")
+        ak.set_timestamp(timestamp)
 
         if ak is not None:
             """Hierdurch wird die id des zu überschreibenden (vgl. Update) Account-Objekts gesetzt.
@@ -1430,6 +1432,16 @@ class ZeitintervallbuchungOperations(Resource):
         adm = Administration()
         zeitintervallbuchung = adm.get_ist_buchungen_by_project(user, project)
         return zeitintervallbuchung
+
+@projectone.route("/zeitintervallbuchung-ist-by-project/<int:project>")
+@projectone.response(500, "Falls es zu einem Server-seitigen Fehler kommt.")
+@projectone.param("id", "Die ID des zeitintervallbuchung-user-Objekts")
+class ZeitintervallbuchungOperations(Resource):
+    def get(self, project):
+        """Auslesen eines bestimmten Zeitintervallbuchung-Objekts."""
+        adm = Administration()
+        gesamt_zeitdiff = adm.get_ist_buchungen_for_project(project)
+        return gesamt_zeitdiff
 
 
 @projectone.route("/zeitintervallbuchung-soll-by-akt/<int:user>/<int:project>")
