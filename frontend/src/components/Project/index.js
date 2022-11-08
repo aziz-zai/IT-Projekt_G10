@@ -1,83 +1,94 @@
-import React, { Component } from 'react'
-import OneAPI from '../../api/OneAPI'
-import PropTypes from 'prop-types'
-import { SingleProject } from './SingleProject';
-import Grid from '@mui/material/Grid';
-import AddCard from './AddCard';
-
+import Grid from "@mui/material/Grid";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
+import OneAPI from "../../api/OneAPI";
+import AddCard from "./AddCard";
+import { SingleProject } from "./SingleProject";
 
 export class Project extends Component {
-    constructor(props) {
-        super(props);
-    
-        // Init state
-        this.state = {
-          project: [],
-        };
-      }
-      getMembershipByUser = () => {
-        OneAPI.getAPI().getMembershipByUser(this.props.user[0].id).then(project =>
-          this.setState({
-            project: project
-          })
-          ).catch(e =>
-            this.setState({ // Reset state with error from catch 
-              project: null,
-            })
-          );
-        // set loading to true
+  constructor(props) {
+    super(props);
+    let user = props.user;
+    // Init state
+    this.state = {
+      project: user,
+    };
+  }
+  getMembershipByUser = () => {
+    OneAPI.getAPI()
+      .getMembershipByUser(this.props.user[0].id)
+      .then((project) =>
         this.setState({
-        });
-      }
-      projectFormClosed = project => {
-        // project is not null and therefore created
-       
-        if (project) {
-          const newProjectList = [...this.state.project, project];
-          this.setState({
-            project: newProjectList,
-          });
-         
-        } else {
-          this.setState({
-          });
-        }
-      }
-
-      projectDeleted = project => {
-        const newProjectList = this.state.project.filter(projectFromState => projectFromState.getID() !== project.getID());
+          project: project,
+        })
+      )
+      .catch((e) =>
         this.setState({
-          project: newProjectList
-        });
-      }
-  
-      componentDidMount() {
-        this.getMembershipByUser()
-      }
+          // Reset state with error from catch
+          project: null,
+        })
+      );
+    // set loading to true
+    this.setState({});
+  };
+  projectFormClosed = (project) => {
+    // project is not null and therefore created
 
+    if (project) {
+      const newProjectList = [...this.state.project, project];
+      this.setState({
+        project: newProjectList,
+      });
+    } else {
+      this.setState({});
+    }
+  };
+
+  projectDeleted = (project) => {
+    const newProjectList = this.state.project.filter(
+      (projectFromState) => projectFromState.getID() !== project.getID()
+    );
+    this.setState({
+      project: newProjectList,
+    });
+  };
+
+  componentDidMount() {
+    this.getMembershipByUser();
+  }
 
   render() {
-    const {project} = this.state;
-    const {user} = this.props;
+    const { project } = this.state;
+    const { user } = this.props;
     return (
-<div class="ProjectCardWrapper">
-    <Grid container spacing={{ xs: 4, md: 6, xl: 8}} columns={{ xs: 1, sm: 6, md: 8, xl: 10}} sx={{justifyContent: "center", alignItems:"center"}}>
-       {project ?
-        project.map((project, index) => (
-          <Grid item xs={1} sm={2} md={1.7} xl={1.5} key={index}>
-            <SingleProject handleProjectDelete={this.projectDeleted} project={project} user={user[0].id} />
-          </Grid>)):
-          null}
-  <Grid item xs={1} sm={2} md={1.7} xl={1.5}>
-      <AddCard onClose={this.projectFormClosed}user={user}/>
-  </Grid> 
-  </Grid>
-  </div>
-    )
+      <div class="ProjectCardWrapper">
+        <Grid
+          container
+          spacing={{ xs: 4, md: 6, xl: 8 }}
+          columns={{ xs: 1, sm: 6, md: 8, xl: 10 }}
+          sx={{ justifyContent: "center", alignItems: "center" }}
+        >
+          {project
+            ? project.map((project, index) => (
+                <Grid item xs={1} sm={2} md={1.7} xl={1.5} key={index}>
+                  <SingleProject
+                    handleProjectDelete={this.projectDeleted}
+                    project={project}
+                    user={user[0].id}
+                  />
+                </Grid>
+              ))
+            : null}
+          <Grid item xs={1} sm={2} md={1.7} xl={1.5}>
+            <AddCard onClose={this.projectFormClosed} user={user} />
+          </Grid>
+        </Grid>
+      </div>
+    );
   }
 }
 
 Project.propTypes = {
-    user: PropTypes.any,
-  }
-export default Project
+  user: PropTypes.any,
+};
+export default Project;

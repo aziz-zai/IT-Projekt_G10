@@ -1,19 +1,21 @@
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import { TextField, List, AppBar, ListItem, Dialog, 
-IconButton, Button, Container, Toolbar, CardContent, CardActions, Card, Typography} from '@mui/material';
-import './Project.css'
 import CloseIcon from '@mui/icons-material/Close';
-import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SaveIcon from '@mui/icons-material/Save';
+import {
+  AppBar, Button, Card, CardActions, CardContent, Container, Dialog,
+  IconButton, List, ListItem, TextField, Toolbar, Typography
+} from '@mui/material';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import EreignisBO from '../../api/EreignisBO';
 import OneAPI from '../../api/OneAPI';
 import ProjectBO from '../../api/ProjectBO';
-import EreignisBO from '../../api/EreignisBO';
+import LoadingProgress from '../Dialogs/LoadingProgress';
 import Aktivitäten from './Aktivitäten';
 import AktivitätenDetail from './AktivitätenDetail';
-import LoadingProgress from '../Dialogs/LoadingProgress'
+import MemberDetail from './MemberDetail';
 import MemberList from './MemberList';
-import MemberDetail from './MemberDetail'
+import './Project.css';
 
 export class SingleProject extends Component {
     constructor(props) {
@@ -28,6 +30,7 @@ export class SingleProject extends Component {
         // Init state
         this.state = {
           isOpen: false,
+          customTitel: "",
           projektleiter: [],
           projektfarbe: "ProjectCard",
           projekttitel: "ProjektTitel",
@@ -597,7 +600,12 @@ this.setState({
             label="Verfügbare Stunden"
             value={availableHours}
             onChange={this.textFieldValueChange}
-            /><Typography sx={{color:"red"}}>(-{zeitdifferenzVerbraucht.toFixed(1)}h)</Typography>
+            />
+            
+            <h1>{customTitel}</h1>
+
+
+
           </ListItem>
           <Aktivitäten isOpen={openAkt} onClose={this.closeAkt} project={project} handleClose={this.addAktvität}>
             </Aktivitäten>

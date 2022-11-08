@@ -62,6 +62,7 @@ class User(BusinessObject):
 
     def set_urlaubstage(self, urlaubstage):
         self._urlaubstage = urlaubstage
+    
 
     def __str__(self):
         """Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz."""

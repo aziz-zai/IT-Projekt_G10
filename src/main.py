@@ -389,6 +389,7 @@ class MembershipOperations(Resource):
 @projectone.param("id", "Die ID des Membership-Objekts")
 class MembershipByIDOperations(Resource):
     @projectone.marshal_with(membership)
+    @secured
     def get(self, user, project):
         """Auslesen eines bestimmten Membership-Objekts.
 
